@@ -59,6 +59,7 @@ python -m recomp.emu.run --coverage     # record executed code (out/coverage.jso
 python recomp/lift/build.py             # lift the executed functions and build out/lift/lift.dll
 python -m recomp.emu.run --hybrid       # run with lifted functions (checked against the emulator)
 python recomp/lift/find_bad.py          # bisect a lifted function that breaks the game
+python recomp/lift/fn_test.py 0xADDR arm r0 r1 ...   # one lifted function vs the original, outside the game
 ```
 
 Hybrid mode checks every lifted leaf function against the emulator on its first calls
@@ -102,7 +103,10 @@ out/            analyzer output (generated, ignored)
 
 - Milestone M0 (analysis and coverage report): done.
 - M1 (lifter, hybrid execution): the game boots to the main menu with every function it executes on the
-  way lifted to C (about 4,900 functions). Switch tables and indirect jumps still run in the emulator.
+  way lifted to C (about 5,400 functions), switch tables included. About 99% of the instructions executed
+  at the main menu run as native C (`KHUX_PROFILE=1` writes `out/lift/profile.json`); the rest is mostly
+  VFP code in the sound library and worker-thread code, which stays emulated.
 - The emulator is the reference used to develop the private server and the specification for the native
   runtime.
-- Next: lift switch tables and indirect calls natively, then a native runtime replacing the Python one.
+- Next: a native runtime replacing the Python one (libc, JNI, OpenGL ES, threads), so the lifted code runs
+  without Unicorn or Python.

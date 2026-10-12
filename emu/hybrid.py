@@ -14,6 +14,7 @@ otherwise the function is reported and reverted to emulation for the rest of the
 """
 import ctypes as C
 import json
+import os
 import struct
 import time
 
@@ -40,7 +41,8 @@ class CPU(C.Structure):
     _fields_ = [("r", C.c_uint32 * 16), ("n", C.c_uint32), ("z", C.c_uint32), ("c", C.c_uint32),
                 ("v", C.c_uint32), ("pc", C.c_uint32), ("logging", C.c_uint32), ("wn", C.c_uint32),
                 ("wcap", C.c_uint32), ("mem", C.c_void_p), ("wlog", C.POINTER(WLog)),
-                ("emu", C.c_void_p), ("tail", C.c_uint32), ("lpc", C.c_uint32)]
+                ("emu", C.c_void_p), ("tail", C.c_uint32), ("lpc", C.c_uint32), ("icount_pad", C.c_uint32),
+                ("icount", C.c_uint64)]
 
 
 LiftFn = C.CFUNCTYPE(None, C.POINTER(CPU))
@@ -108,8 +110,12 @@ class Hybrid:
         self._emu_cb = EmuFn(self._emu_call)              # keep a reference: C holds the pointer
         self.cpu.emu = C.cast(self._emu_cb, C.c_void_p)
         self.pending_fault = None
+        self.esc = {} if os.environ.get("KHUX_PROFILE") else None   # (entry, continue pc) -> count
+        self.tramp_hits = {}
         self.verified, self.mismatch, self.tries = set(), {}, {}
         self.vcount = {}          # entry -> number of matching compared calls
+        self.unverifiable = set() # call tree reaches imports: cannot be undone and re-run
+        self.taint = False        # set when a verification run touched an import
         self.calls = 0
         self.native_calls = 0
         no_tramp = 0
@@ -126,8 +132,10 @@ class Hybrid:
         if no_tramp:
             emu.log(f"hybrid: {no_tramp} functions without a trampoline (worker threads run their C code)")
         self.uc.ctl_remove_cache(0x1000, 0x1011000)
-        self.uc.hook_add(UC_HOOK_INTR, self._on_intr)
+        self.uc.hook_add(UC_HOOK_INTR, self._on_intr_safe)
         emu.log(f"hybrid: {len(self.funcs)} lifted functions patched (verify={'on' if verify else 'off'})")
+        if os.environ.get("KHUX_PROFILE"):
+            self._start_profile()
 
     # ------------------------------------------------------------------ trampolines
     def _make_trampoline(self, entry, thumb):
@@ -165,6 +173,10 @@ class Hybrid:
         e.call style (LR = RETURN_MAGIC, stopped by the trap hook), then hand the registers back."""
         e, cpu = self.e, self.cpu
         ret = cpu.r[14]
+        if cpu.logging:
+            self.taint = True                       # verification run would touch an import: abandon it
+            cpu.pc = 0xFFFFFFFF
+            return
         try:
             for k, rid in enumerate(REG_IDS):
                 e.set_reg(rid, cpu.r[k])
@@ -223,6 +235,15 @@ class Hybrid:
         set_reg(UC_ARM_REG_PC, self.cpu.pc)
 
     # ------------------------------------------------------------------ interrupt hook
+    def _on_intr_safe(self, uc, intno, user):
+        try:
+            self._on_intr(uc, intno, user)
+        except Exception as ex:
+            import traceback
+            self.e.log(f"!! hybrid: host exception in the SVC hook: {ex!r} {traceback.format_exc()}")
+            self.e.fault = f"hybrid hook exception: {ex!r}"
+            uc.emu_stop()
+
     def _on_intr(self, uc, intno, _):
         if intno != 2:
             return
@@ -238,15 +259,18 @@ class Hybrid:
         if sched is not None and sched.current.tid != 1 and entry in self.tramp:
             # guest worker thread: its slice must stay suspendable, so run the original code
             self.e.set_reg(UC_ARM_REG_PC, self.tramp[entry])
+            if self.esc is not None:
+                self.tramp_hits[entry] = self.tramp_hits.get(entry, 0) + 1
             return
         self.calls += 1
         if self.calls % 20000 == 0:
             self.report()
-        if self.verify and f[2] and entry not in self.verified:
+        if self.verify and entry not in self.verified and entry not in self.unverifiable:
             self._verified_call(entry, f, cpsr)
             return
         self._load_cpu(cpsr)
         self.cpu.logging = 0
+        lr_in = self.cpu.r[14]
         try:
             self._rt_run(C.byref(self.cpu), entry | (1 if f[0] else 0))
         except OSError as ex:                      # access violation inside lifted code
@@ -258,6 +282,9 @@ class Hybrid:
             uc.emu_stop()
             return
         self.native_calls += 1
+        if self.esc is not None and self.cpu.pc != lr_in:
+            k = (entry, self.cpu.pc)          # lifted code handed back to the emulator somewhere else
+            self.esc[k] = self.esc.get(k, 0) + 1
         self._store_cpu(cpsr)
         if self.pending_fault:
             self.e.log(f"!! hybrid: fault below lifted {entry:#x}: {self.pending_fault}")
@@ -272,9 +299,10 @@ class Hybrid:
         # 1. lifted version, stores logged
         self._load_cpu(cpsr)
         self.cpu.logging, self.cpu.wn = 1, 0
+        self.taint = False
         crash = None
         try:
-            f[1](C.byref(self.cpu))
+            self._rt_run(C.byref(self.cpu), entry | (1 if thumb else 0))
         except OSError as ex:
             crash = str(ex)
         self.cpu.logging = 0
@@ -295,11 +323,25 @@ class Hybrid:
         for rid, v in zip(REG_IDS, start_regs):
             self.e.set_reg(rid, v)
         self.e.set_reg(UC_ARM_REG_CPSR, cpsr)
+        if self.taint:
+            self._give_up(entry, cpsr)
+            return
         # stop where the C version returned: entries reached by a jump (IDA-split mid-function labels) return
         # through their parent's frame, not to LR
-        e_written = self._emulate(entry, cpsr, orig, c_pc if not crash else lr)
-        if e_written is None:
-            self._revert(entry, "emulated reference faulted")
+        self.ref_taint = False
+        e_written, ok = self._emulate(entry, cpsr, orig, c_pc if not crash else lr)
+        if self.ref_taint or not ok:
+            # the reference reached an import or failed: undo its stores, restore the registers and run this
+            # call normally (a partial reference run must never leak into the game state)
+            for b in e_written:
+                if b in orig:
+                    self._poke(b, bytes([orig[b]]))
+            for rid, v in zip(REG_IDS, start_regs):
+                self.e.set_reg(rid, v)
+            self.e.set_reg(UC_ARM_REG_CPSR, cpsr)
+            if not self.ref_taint:
+                self.e.log(f"!! hybrid: reference run of {entry:#x} {self.e.sym(entry)} failed; not verifiable")
+            self._give_up(entry, cpsr)
             return
         if crash:
             self._revert(entry, f"native crash: {crash}")
@@ -315,8 +357,8 @@ class Hybrid:
         e_flags = ((ec >> 31) & 1, (ec >> 30) & 1, (ec >> 29) & 1, (ec >> 28) & 1)
         diffs = []
         for k in range(15):
-            if k == 14:
-                continue      # emulated run returns through a stop address; LR compared via the return pc
+            if k in (12, 14):
+                continue      # ip: call-clobbered scratch (PLT stubs set it); LR: compared via the return pc
             if c_regs[k] != e_regs[k]:
                 diffs.append(f"r{k} C={c_regs[k]:#x} emu={e_regs[k]:#x}")
         # condition flags are not preserved across calls (AAPCS), so callers never read them: not compared
@@ -337,6 +379,17 @@ class Hybrid:
             self.vcount[entry] = n
             if n >= VERIFY_CALLS:
                 self.verified.add(entry)
+
+    def _give_up(self, entry, cpsr):
+        """The call tree reaches imports, so this function cannot be checked by undo/re-run. Mark it and run
+        this call normally: the original code via its trampoline, or the C version when there is none."""
+        self.unverifiable.add(entry)
+        if entry in self.tramp:
+            self.e.set_reg(UC_ARM_REG_PC, self.tramp[entry])
+            return
+        self._load_cpu(cpsr)
+        self._rt_run(C.byref(self.cpu), entry | (1 if self.funcs[entry][0] else 0))
+        self._store_cpu(cpsr)
 
     def _ref_cpu(self):
         """A second Unicorn instance over the same host memory, used only for reference runs. Running the
@@ -362,6 +415,25 @@ class Hybrid:
                         if o is not None and addr + b not in o:
                             o[addr + b] = self._host(addr + b, 1)[0]
             ref.hook_add(UC_HOOK_MEM_WRITE, on_write)
+
+            def on_host_code(uc, addr, size, _):
+                self.ref_taint = True
+                uc.emu_stop()
+            from unicorn import UC_HOOK_CODE
+            from .core import KUSER_PAGE, TRAP_BASE, TRAP_SIZE
+            ref.hook_add(UC_HOOK_CODE, on_host_code, begin=TRAP_BASE, end=TRAP_BASE + TRAP_SIZE - 1)
+            ref.hook_add(UC_HOOK_CODE, on_host_code, begin=KUSER_PAGE, end=KUSER_PAGE + 0xFFF)
+
+            def on_ref_svc(uc, intno, _):
+                # a callee's entry carries our SVC patch (shared memory): run its original code instead
+                cpsr = uc.reg_read(UC_ARM_REG_CPSR)
+                entry = uc.reg_read(UC_ARM_REG_PC) - (2 if cpsr & 0x20 else 4)
+                if intno == 2 and entry in self.tramp:
+                    uc.reg_write(UC_ARM_REG_PC, self.tramp[entry])
+                else:
+                    self.ref_taint = True
+                    uc.emu_stop()
+            ref.hook_add(UC_HOOK_INTR, on_ref_svc)
             self.ref = ref
         return self.ref
 
@@ -385,7 +457,7 @@ class Hybrid:
         ok = True
         try:
             ref.emu_start(entry | (1 if thumb else 0), stop, count=REF_MAX_INSNS)
-            if ref.reg_read(UC_ARM_REG_PC) != stop:
+            if ref.reg_read(UC_ARM_REG_PC) != stop and not getattr(self, "ref_taint", False):
                 self.e.log(f"!! hybrid: emulated {entry:#x} did not return within {REF_MAX_INSNS} instructions")
                 ok = False
         except UcError as ex:
@@ -402,7 +474,7 @@ class Hybrid:
         rc = ref.reg_read(UC_ARM_REG_CPSR)
         self.e.set_reg(UC_ARM_REG_CPSR, (cpsr & 0x0FFFFFDF) | (rc & 0xF0000000) | (0x20 if ret & 1 else 0))
         self.e.set_reg(UC_ARM_REG_PC, ret)
-        return written if ok else None
+        return written, ok
 
     def _revert(self, entry, why):
         self.mismatch[entry] = why
@@ -414,10 +486,50 @@ class Hybrid:
             self.uc.ctl_remove_cache(entry, entry + 4)
         self.report()
 
+    # ------------------------------------------------------------------ profile
+    def _start_profile(self):
+        """KHUX_PROFILE=1: count guest instructions run natively (CPU.icount) and in the emulator (block hook,
+        attributed to the containing function); written to out/lift/profile.json every few seconds."""
+        import bisect
+        import threading
+        from unicorn import UC_HOOK_BLOCK
+        from .core import IMAGE_HI, IMAGE_LO
+        an = json.loads((paths.OUT / "analysis.json").read_text())
+        starts = sorted(int(f["addr"], 16) for f in an["functions"])
+        names = {int(f["addr"], 16): f.get("name") for f in an["functions"]}
+        emu_insns = {}
+        self.emu_total = 0
+
+        def on_block(uc, addr, size, _):
+            n = size // (2 if self.e.reg(UC_ARM_REG_CPSR) & 0x20 else 4) or 1
+            k = bisect.bisect_right(starts, addr) - 1
+            f = starts[k] if k >= 0 else addr
+            emu_insns[f] = emu_insns.get(f, 0) + n
+            self.emu_total += n
+        self.uc.hook_add(UC_HOOK_BLOCK, on_block, begin=IMAGE_LO, end=IMAGE_HI)
+
+        def writer():
+            while True:
+                time.sleep(5)
+                native = self.cpu.icount
+                top = sorted(emu_insns.items(), key=lambda kv: -kv[1])[:40]
+                total = native + self.emu_total
+                out = {"native_insns": native, "emulated_insns": self.emu_total,
+                       "lifted_pc_now": f"{self.cpu.lpc:#x} {self.e.sym(self.cpu.lpc)}",
+                       "escapes": [[f"{a:#x}", f"{pc:#x}", self.e.sym(pc), n] for (a, pc), n in
+                                   sorted(self.esc.items(), key=lambda kv: -kv[1])[:30]],
+                       "worker_trampolines": [[f"{a:#x}", self.e.sym(a), n] for a, n in
+                                              sorted(self.tramp_hits.items(), key=lambda kv: -kv[1])[:15]],
+                       "native_share": round(native / total, 4) if total else 0,
+                       "top_emulated": [[f"{f:#x}", names.get(f), n, f in self.funcs] for f, n in top]}
+                (paths.OUT / "lift" / "profile.json").write_text(json.dumps(out, indent=1))
+        threading.Thread(target=writer, daemon=True).start()
+        self.e.log("hybrid: profiling to out/lift/profile.json")
+
     # ------------------------------------------------------------------ report
     def report(self):
         r = {"lifted": len(self.funcs) + len(self.mismatch), "verified": len(self.verified),
-             "compared_ok": len(self.vcount),
+             "compared_ok": len(self.vcount), "unverifiable": len(self.unverifiable),
              "reverted": len(self.mismatch), "calls": self.calls, "native_calls": self.native_calls,
              "mismatches": {f"{a:#x}": w for a, w in sorted(self.mismatch.items())}}
         (paths.OUT / "lift" / "hybrid_report.json").write_text(json.dumps(r, indent=1))

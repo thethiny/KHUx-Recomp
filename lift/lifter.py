@@ -115,16 +115,33 @@ class FuncLifter:
         return (f"uint32_t sc_ = c->c; uint32_t sv_ = SHIFT({base}, {typ}, {amt}, c->c, &sc_);",
                 "sv_", "sc_")
 
+    def pc_target(self, expr, interwork):
+        """Expression for a computed PC value: loads to PC interwork on bit 0, data-processing writes stay in
+        the current instruction set."""
+        if interwork:
+            return f"({expr})"
+        return f"(({expr}) | 1u)" if self.mode == THUMB else f"(({expr}) & ~1u)"
+
+    def jump_to(self, expr, interwork):
+        """Control goes to a computed address. At an analysed switch site, known case targets inside this
+        function become gotos; at an analysed indirect jump it is a tail call; otherwise (returns) it hands the
+        address back to the caller."""
+        v = self.pc_target(expr, interwork)
+        cases = [t for t in self.switch_at.get(self.pc, ()) if t in self.addrs]
+        if cases:
+            body = " ".join(f"case 0x{t:X}u: goto L_{t:X};" for t in sorted(set(cases)))
+            return (f"{{ uint32_t j_ = {v}; switch (j_ & ~1u) {{ {body} default: break; }} "
+                    f"c->pc = j_; return; }}")
+        if self.pc in self.indirect:
+            return f"TAIL({v});"
+        return f"c->pc = {v}; return;"
+
     def write_reg(self, k, expr, interwork=False):
         """Assign a register; writing PC returns from the function (the emulator continues there).
         ARMv5: loads to PC (ldr/ldm/pop) interwork on bit 0, but data-processing writes (mov/add pc, ...) stay
         in the current instruction set - e.g. a Thumb switch's `mov pc, r0` with an even r0 stays Thumb."""
         if k == 15:
-            if interwork:
-                return f"c->pc = {expr}; return;"
-            if self.mode == THUMB:
-                return f"c->pc = ({expr}) | 1u; return;"
-            return f"c->pc = ({expr}) & ~1u; return;"
+            return self.jump_to(expr, interwork)
         return f"c->r[{k}] = {expr};"
 
     def call_target(self, t, tmode):
@@ -178,8 +195,6 @@ class FuncLifter:
         self.ins = i
         iid = i.id
         ops = i.operands
-        if self.uses_lr_as_data(i):
-            raise Unsupported("uses lr as data")
         body = self.body(i, iid, ops)
         cc = i.cc
         if self.mode == ARM and cc not in ALWAYS and iid != A.ARM_INS_B:
@@ -189,6 +204,12 @@ class FuncLifter:
     def body(self, i, iid, ops):
         nxt = self.pc + i.size
         uf = i.update_flags
+        if self.mode == ARM:
+            # Capstone reports update_flags for ARM adc/sbc/rsc even without the S suffix (they read the
+            # carry). For data-processing and multiply encodings (bits 27:26 == 00) the S bit (20) decides.
+            w = struct.unpack("<I", i.bytes[:4])[0]
+            if (w >> 26) & 3 == 0:
+                uf = bool((w >> 20) & 1)
 
         # ---------------- branches
         if iid == A.ARM_INS_B:
@@ -198,13 +219,18 @@ class FuncLifter:
                 return go
             return f"if ({COND[i.cc]}) {{ {go} }}"
         if iid == A.ARM_INS_BX:
-            return f"c->pc = {self.rd(ops[0].reg)}; return;"
+            return self.jump_to(self.rd(ops[0].reg), True)
         if iid in (A.ARM_INS_BL, A.ARM_INS_BLX):
             ret = nxt | (1 if self.mode == THUMB else 0)
             if ops[0].type == A.ARM_OP_IMM:
                 t = ops[0].imm
                 if self.pc in self.switch_at:
-                    raise Unsupported("switch helper call")
+                    cases = self.switch_at[self.pc]
+                    if not cases or any(t not in self.addrs for t in cases):
+                        raise Unsupported("switch helper call")
+                    body = " ".join(f"case {k}: c->r[14] = 0x{t | 1:X}u; goto L_{t:X};"
+                                    for k, t in enumerate(cases))
+                    return f"switch (c->r[0]) {{ {body} default: break; }} c->pc = 0x{self.pc | 1:X}u; return;"
                 if t in self.addrs and t not in self.fn_mode:      # Thumb-1 far branch inside the function
                     return f"c->r[14] = 0x{ret:X}u; goto L_{t:X};"
                 tmode = self.mode if iid == A.ARM_INS_BL else (THUMB if self.mode == ARM else ARM)
@@ -270,6 +296,43 @@ class FuncLifter:
                 code += "c->n = (uint32_t)(p_ >> 63); c->z = p_ == 0; "
             return "{ " + code + "}"
 
+        if iid in (A.ARM_INS_SXTB, A.ARM_INS_SXTH, A.ARM_INS_UXTB, A.ARM_INS_UXTH):
+            src = self.rd(ops[1].reg)
+            if ops[1].shift.type == A.ARM_SFT_ROR and ops[1].shift.value:
+                r = ops[1].shift.value
+                src = f"(({src} >> {r}) | ({src} << {32 - r}))"
+            cast = {A.ARM_INS_SXTB: "(uint32_t)(int32_t)(int8_t)", A.ARM_INS_SXTH: "(uint32_t)(int32_t)(int16_t)",
+                    A.ARM_INS_UXTB: "(uint32_t)(uint8_t)", A.ARM_INS_UXTH: "(uint32_t)(uint16_t)"}[iid]
+            return self.write_reg(self.ridx(ops[0].reg), f"{cast}{src}")
+        if iid in (A.ARM_INS_UBFX, A.ARM_INS_SBFX):
+            lsb, w = ops[2].imm, ops[3].imm
+            src = self.rd(ops[1].reg)
+            if iid == A.ARM_INS_UBFX:
+                mask = (1 << w) - 1
+                return self.write_reg(self.ridx(ops[0].reg), f"(({src} >> {lsb}) & 0x{mask:X}u)")
+            return self.write_reg(self.ridx(ops[0].reg),
+                                  f"(uint32_t)((int32_t)({src} << {32 - lsb - w}) >> {32 - w})")
+        if iid in (A.ARM_INS_BFI, A.ARM_INS_BFC):
+            d = self.ridx(ops[0].reg)
+            if iid == A.ARM_INS_BFI:
+                src, lsb, w = self.rd(ops[1].reg), ops[2].imm, ops[3].imm
+            else:
+                src, lsb, w = "0u", ops[1].imm, ops[2].imm
+            mask = (((1 << w) - 1) << lsb) & 0xFFFFFFFF
+            return self.write_reg(d, f"((c->r[{d}] & 0x{(~mask) & 0xFFFFFFFF:X}u) | (({src} << {lsb}) & 0x{mask:X}u))")
+        if iid == A.ARM_INS_MOVW:
+            return self.write_reg(self.ridx(ops[0].reg), f"0x{ops[1].imm & 0xFFFF:X}u")
+        if iid == A.ARM_INS_MOVT:
+            d = self.ridx(ops[0].reg)
+            return self.write_reg(d, f"((c->r[{d}] & 0xFFFFu) | 0x{(ops[1].imm & 0xFFFF) << 16:X}u)")
+        if iid == A.ARM_INS_REV:
+            v = self.rd(ops[1].reg)
+            return self.write_reg(self.ridx(ops[0].reg),
+                                  f"((({v}) >> 24) | ((({v}) >> 8) & 0xFF00u) | ((({v}) << 8) & 0xFF0000u) | (({v}) << 24))")
+        if iid == A.ARM_INS_REV16:
+            v = self.rd(ops[1].reg)
+            return self.write_reg(self.ridx(ops[0].reg),
+                                  f"(((({v}) >> 8) & 0x00FF00FFu) | ((({v}) << 8) & 0xFF00FF00u))")
         if iid == A.ARM_INS_CLZ:
             return self.write_reg(self.ridx(ops[0].reg), f"CLZ({self.rd(ops[1].reg)})")
 
@@ -341,34 +404,36 @@ class FuncLifter:
             code += "(void)r_;"
         return "{ " + code + " }"
 
+    def post_offset(self, po):
+        """C expression for a post-index offset operand (immediate or optionally shifted register)."""
+        if po.type == A.ARM_OP_IMM:
+            v = po.imm
+            if po.subtracted and v > 0:
+                v = -v
+            return f"(uint32_t){v}" if v >= 0 else f"-(uint32_t){-v}"
+        if po.type == A.ARM_OP_REG:
+            r = self.rd(po.reg)
+            if po.shift.type not in (A.ARM_SFT_INVALID,) and po.shift.value:
+                typ, by_reg = SHIFTS[po.shift.type]
+                if by_reg:
+                    raise Unsupported("register-shifted post index")
+                r = f"SHIFT({r}, {typ}, {po.shift.value}, c->c, &dc_)"
+            return f"-(uint32_t){r}" if po.subtracted else f"(uint32_t){r}"
+        raise Unsupported("post-index operand")
+
     def loadstore(self, i, iid, ops):
         t = self.ridx(ops[0].reg)
         mem = ops[1]
         if mem.type != A.ARM_OP_MEM:
             raise Unsupported("ldr/str operand")
         base, off = self.mem_addr(mem)
-        post = i.post_index if hasattr(i, "post_index") else False
+        post = getattr(i, "post_index", False) or len(ops) > 2
         wb = i.writeback
         code = "uint32_t dc_ = 0; (void)dc_; "
         if post:
             if len(ops) < 3:
                 raise Unsupported("post-index without offset")
-            po = ops[2]
-            if po.type == A.ARM_OP_IMM:
-                v = po.imm
-                if po.subtracted and v > 0:
-                    v = -v
-                poff = f"(uint32_t){v}" if v >= 0 else f"-(uint32_t){-v}"
-            elif po.type == A.ARM_OP_REG:
-                r = self.rd(po.reg)
-                if po.shift.type not in (A.ARM_SFT_INVALID,) and po.shift.value:
-                    typ, by_reg = SHIFTS[po.shift.type]
-                    if by_reg:
-                        raise Unsupported("register-shifted post index")
-                    r = f"SHIFT({r}, {typ}, {po.shift.value}, c->c, &dc_)"
-                poff = f"-(uint32_t){r}" if po.subtracted else f"(uint32_t){r}"
-            else:
-                raise Unsupported("post-index operand")
+            poff = self.post_offset(ops[2])
             code += f"uint32_t a_ = {base}; "
             wbexpr = f"a_ + {poff}"
         else:
@@ -393,18 +458,19 @@ class FuncLifter:
         t1, t2 = self.ridx(ops[0].reg), self.ridx(ops[1].reg)
         mem = ops[2]
         base, off = self.mem_addr(mem)
-        post = getattr(i, "post_index", False)
-        if post or i.writeback:
-            if post:
-                raise Unsupported("ldrd/strd post-index")
-        code = "uint32_t dc_ = 0; (void)dc_; " + f"uint32_t a_ = {base} + {off}; "
+        post = getattr(i, "post_index", False) or len(ops) > 3
+        code = "uint32_t dc_ = 0; (void)dc_; "
+        if post:
+            code += f"uint32_t a_ = {base}; uint32_t wb_ = a_ + {self.post_offset(ops[3])}; "
+        else:
+            code += f"uint32_t a_ = {base} + {off}; uint32_t wb_ = a_; "
         bk = self.ridx(mem.mem.base)
         if iid == A.ARM_INS_LDRD:
             code += f"uint32_t v0_ = R32(a_), v1_ = R32(a_ + 4); c->r[{t1}] = v0_; c->r[{t2}] = v1_; "
         else:
             code += f"W32(c, a_, {self.rd(ops[0].reg)}); W32(c, a_ + 4, {self.rd(ops[1].reg)}); "
-        if i.writeback:
-            code += f"c->r[{bk}] = a_; "
+        if i.writeback or post:
+            code += f"c->r[{bk}] = wb_; "
         return "{ " + code + " }"
 
     def multi(self, i, iid, ops):
@@ -471,7 +537,8 @@ class FuncLifter:
         self.mode = mode
         addrs = sorted(res["sizes"])
         self.addrs = set(addrs)
-        self.switch_at = {sw["at"] for sw in res["switches"]}
+        self.switch_at = {sw["at"]: list(sw["targets"]) for sw in res["switches"]}
+        self.indirect = set(res["indirect_jumps"])
         self.escapes = 0
         tb = 1 if mode == THUMB else 0
         lines = [f"void F_{entry:X}(CPU *c) {{", f"  goto L_{entry:X};"]   # code may sit below the entry
@@ -494,7 +561,7 @@ class FuncLifter:
                     code = f"c->pc = 0x{pc | tb:X}u; return; /* escape: {str(ex)[:60]} */"
                     self.escapes += 1
             text = f"{i.mnemonic} {i.op_str}" if i is not None else "?"
-            lines.append(f"L_{pc:X}: /* {text.replace('*/', '* /')} */ c->lpc = 0x{pc:X}u; {code}")
+            lines.append(f"L_{pc:X}: /* {text.replace('*/', '* /')} */ c->lpc = 0x{pc:X}u; c->icount++; {code}")
             if not ends and (k + 1 >= len(addrs) or addrs[k + 1] != nxt):
                 if nxt in self.addrs:
                     lines.append(f"  goto L_{nxt:X};")

@@ -307,11 +307,19 @@ def analyze_function(d, entry, mode, lo, hi, case_helpers, fn_starts, plt_range,
                     pc = tgt
                     continue
                 res["calls"].append((tgt, tmode))
+                # a conditional call (ARM bleq, ...) to a fragment or noreturn function still falls through
+                # when the condition fails, e.g. __divdf3's `bleq` into the shared special-case handler
                 if tgt in fragments:  # far branch into our own epilogue: it returns for us
                     res["returns"] = True
-                    break
+                    if not cond:
+                        break
+                    pc = nxt
+                    continue
                 if tgt in noreturn:
-                    break
+                    if not cond:
+                        break
+                    pc = nxt
+                    continue
                 after_call = tgt
                 pc = nxt
                 continue

@@ -36,6 +36,8 @@ typedef struct CPU {
     void (*emu)(struct CPU *c, uint32_t target);
     uint32_t tail;         /* set with c->pc by a tail call: continue at c->pc with the same LR */
     uint32_t lpc;          /* guest address of the instruction being executed (crash reports) */
+    uint32_t icount_pad;
+    uint64_t icount;       /* guest instructions executed in lifted code (profiling) */
 } CPU;
 
 /* Call guest function `target` (Thumb bit set for Thumb code): a lifted, enabled function runs directly,
