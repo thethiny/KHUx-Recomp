@@ -32,7 +32,7 @@ The game files are not part of this repository. Put them in one folder:
 | File | Needed by |
 |---|---|
 | `libcocos2dcpp.so` (v1.0.1, armeabi) | emulator, analyzer |
-| `khux_1.0.1_shortmovie_aligned.apk` | emulator (assets, Java side) |
+| KHUx v1.0.1 APK, named `khux_1.0.1.apk` (or set `KHUX_APK` to its path or file name) | emulator (assets, Java side) |
 | `libcocos2dcpp_decompile/index.txt`, `names.txt` | analyzer, function tracing |
 
 Then either set `KHUX_INPUT` to that folder, or place it at `../Input/1.0.1` relative to this repository.

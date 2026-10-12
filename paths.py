@@ -2,7 +2,7 @@
 
 Inputs (not part of this repository) live in one folder that holds the v1.0.1 build:
     libcocos2dcpp.so                         the armeabi native library
-    khux_1.0.1_shortmovie_aligned.apk        the APK (assets, Java side)
+    khux_1.0.1.apk                           the KHUx v1.0.1 APK (assets, Java side); KHUX_APK picks another file
     libcocos2dcpp_decompile/index.txt        function index from the IDA export (optional, tracing only)
 
 Set KHUX_INPUT to that folder. Without it, the folder is looked up relative to this repository at
@@ -34,7 +34,7 @@ def input_dir() -> Path:
         return _RELATIVE_INPUT
     raise FileNotFoundError(
         f"v1.0.1 input folder not found: set KHUX_INPUT, or provide {_RELATIVE_INPUT} "
-        "(it must contain libcocos2dcpp.so and khux_1.0.1_shortmovie_aligned.apk)")
+        "(it must contain libcocos2dcpp.so and the KHUx v1.0.1 APK)")
 
 
 def require(name: str) -> Path:
@@ -50,7 +50,16 @@ def so() -> Path:
 
 
 def apk() -> Path:
-    return require("khux_1.0.1_shortmovie_aligned.apk")
+    """The KHUx v1.0.1 APK: KHUX_APK (a path, or a file name inside the input folder), else khux_1.0.1.apk."""
+    env = os.environ.get("KHUX_APK", "").strip()
+    if env:
+        p = Path(env).expanduser()
+        if not p.is_absolute():
+            p = input_dir() / p
+        if not p.is_file():
+            raise FileNotFoundError(f"KHUX_APK={env!r}: {p} not found")
+        return p
+    return require("khux_1.0.1.apk")
 
 
 def decompile_dir() -> Path:
