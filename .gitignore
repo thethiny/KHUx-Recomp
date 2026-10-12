@@ -1,0 +1,24 @@
+# Generated analysis output (python analyze.py)
+out/
+
+# Emulated device filesystem: game data downloaded at runtime, saves, prefs
+fs/
+
+# Third-party binaries copied in locally (ANGLE libEGL / libGLESv2)
+emu/angle/
+
+# Game data extracted from the resources
+stage_maps/
+
+# Runtime logs and event streams
+*.log
+*.jsonl
+
+# Python
+__pycache__/
+*.pyc
+
+# Assistant notes (kept local)
+JOURNAL.md
+CLAUDE.md
+.claude/
