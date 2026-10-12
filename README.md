@@ -12,6 +12,11 @@ recompilation of that library into portable C.
 - **Analyzer** (`analyze.py`): reads the ELF and the function index and produces the function list,
   ARM/Thumb modes, PLT map, switch tables, noreturn calls and a coverage report. This is the input to the
   recompiler.
+- **Lifter** (`lift/`): translates ARM and Thumb-1 functions into portable C99 (`lift/lifter.py`, runtime
+  header `lift/rt.h`) and builds them into `out/lift/lift.dll` (`lift/build.py`).
+- **Hybrid mode** (`emu/hybrid.py`): lifted functions run natively in place of their emulated originals.
+  Emulator and C code share one block of guest memory. Anything the C code cannot follow (unsupported
+  instructions, switch tables, indirect jumps) is handed back to the emulator at that exact instruction.
 
 The function addresses, names and the index the tools rely on come from manual reverse engineering of the
 binary. The code that uses them was written with AI assistance.
@@ -24,6 +29,7 @@ binary. The code that uses them was written with AI assistance.
   them. The emulator renders OpenGL ES 2.0 through them.
 - A private server for the game listening on port 80 of `127.0.0.1` (see `REDIRECT_IP` in `emu/net.py`).
   Every hostname the game resolves is redirected there.
+- For the lifter: Visual Studio 2022 with the C++ workload (MSVC). `lift/build.py` runs `vcvars64.bat` and `cl`.
 
 ## Inputs
 
@@ -49,7 +55,14 @@ python -m recomp.emu.boot_to_title      # wait for the title screen and tap thro
 python -m recomp.emu.play_quest         # play the quest or raid offered on screen
 python -m recomp.emu.campaign 10 2400   # play quests back to back
 python recomp/analyze.py                # write out/analysis.json and out/report.md
+python -m recomp.emu.run --coverage     # record executed code (out/coverage.json)
+python recomp/lift/build.py             # lift the executed functions and build out/lift/lift.dll
+python -m recomp.emu.run --hybrid       # run with lifted functions (checked against the emulator)
+python recomp/lift/find_bad.py          # bisect a lifted function that breaks the game
 ```
+
+Hybrid mode checks every lifted leaf function against the emulator on its first calls
+(`KHUX_VERIFY_CALLS`, default 20) and writes `out/lift/hybrid_report.json`. `--no-verify` skips the checks.
 
 While the emulator runs, a control channel on `127.0.0.1:8765` exposes the scene, the UI tree, taps and
 swipes, text lookups and memory reads:
@@ -67,6 +80,7 @@ Debug switches: `KHUX_TRACE_FUNCS=0xADDR,...`, `KHUX_TRACE_PARSE=Class`, `KHUX_B
 ```
 paths.py        input and output locations
 analyze.py      binary analysis for the recompiler
+lift/           lifter (ARM/Thumb to C), runtime header, build and bisect tools
 emu/            Unicorn emulator and Python runtime
   core.py         CPU, memory, ELF loading, guest calls
   libc.py         libc and file system (the device file system maps into fs/)
@@ -76,6 +90,8 @@ emu/            Unicorn emulator and Python runtime
   gles.py         OpenGL ES through ANGLE
   net.py          sockets and DNS
   control.py      control channel
+  coverage.py     executed-code recording (with ARM/Thumb mode)
+  hybrid.py       runs lifted C functions inside the emulator
   run.py          entry point
   auto_battle.py, play_quest.py, campaign.py   automated play for testing
 fs/             emulated device storage (generated, ignored)
@@ -85,7 +101,8 @@ out/            analyzer output (generated, ignored)
 ## Status
 
 - Milestone M0 (analysis and coverage report): done.
+- M1 (lifter, hybrid execution): the game boots to the main menu with every function it executes on the
+  way lifted to C (about 4,900 functions). Switch tables and indirect jumps still run in the emulator.
 - The emulator is the reference used to develop the private server and the specification for the native
   runtime.
-- Next: the lifter (ARM and Thumb to C), checked function by function against the emulator, then a native
-  runtime replacing the Python one.
+- Next: lift switch tables and indirect calls natively, then a native runtime replacing the Python one.

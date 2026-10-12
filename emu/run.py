@@ -1,7 +1,8 @@
 """Boot libcocos2dcpp.so v1.0.1 under Unicorn.
 
-Usage: python -m recomp.emu.run [--fresh] [--trace-imports] [--dbg-files]
-  --fresh  wipe the emulated app data first (fresh install)
+Usage: python -m recomp.emu.run [--fresh] [--trace-imports] [--dbg-files] [--hybrid [--no-verify]] [--coverage]
+  --fresh   wipe the emulated app data first (fresh install)
+  --hybrid  run lifted functions from out/lift/lift.dll (see emu/hybrid.py)
 Control the running game with: python -m recomp.emu.ctl (see control.py)
 """
 import sys
@@ -29,6 +30,12 @@ def step(emu, what, fn, *args):
 
 
 def main():
+    # guest strings can hold any character; never let the Windows console encoding kill the emulator
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(errors="backslashreplace")
+        except AttributeError:
+            pass
     if "--fresh" in sys.argv:
         # wipe the emulated device's app data (save, UserDefault prefs, downloaded m files) - like a
         # fresh install. A half-finished download leaves a save the game never recovers from.
@@ -55,6 +62,15 @@ def main():
         emu.on(0xA3F76C, lambda e: e.log(f"  [getData] {e.std_string(e.reg(UC_ARM_REG_R2))}"))
     emu.log(f"loaded: {len(emu.slot_of)} import slots, {len(emu.data_imports)} data imports, "
             f"{len(emu.init_array)} constructors")
+
+    if "--coverage" in sys.argv:
+        # record executed code blocks to out/coverage.json (the hybrid patches only executed functions)
+        from . import coverage
+        coverage.install(emu)
+    if "--hybrid" in sys.argv:
+        # lifted C functions (recomp/lift) run in place of their emulated originals, checked on first call
+        from . import hybrid
+        hybrid.install(emu, verify="--no-verify" not in sys.argv)
 
     ctors = [c for c in emu.init_array if c not in (0, 0xFFFFFFFF)]
     for k, ctor in enumerate(ctors):

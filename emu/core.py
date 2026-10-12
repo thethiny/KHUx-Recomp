@@ -112,11 +112,12 @@ class Emu:
         self.logfile = None
 
         uc = self.uc
-        uc.mem_map(IMAGE_LO, IMAGE_HI - IMAGE_LO, UC_PROT_ALL)
-        uc.mem_map(TRAP_BASE, TRAP_SIZE, UC_PROT_ALL)
+        self._reserve_guest_space()
+        self.map(IMAGE_LO, IMAGE_HI - IMAGE_LO)
+        self.map(TRAP_BASE, TRAP_SIZE)
         uc.mem_write(TRAP_BASE, ARM_BX_LR * (TRAP_SIZE // 4))
-        uc.mem_map(HEAP_BASE, HEAP_SIZE, UC_PROT_ALL)
-        uc.mem_map(STACK_BASE, STACK_SIZE, UC_PROT_ALL)
+        self.map(HEAP_BASE, HEAP_SIZE)
+        self.map(STACK_BASE, STACK_SIZE)
         self.heap = Heap(self, HEAP_BASE, HEAP_SIZE)
         # enable VFP/NEON: the game is soft-float, but the SQEX sound library uses VFP instructions
         from unicorn.arm_const import UC_ARM_REG_C1_C0_2, UC_ARM_REG_FPEXC
@@ -128,7 +129,7 @@ class Emu:
         uc.hook_add(UC_HOOK_CODE, self._on_trap, begin=TRAP_BASE, end=TRAP_BASE + TRAP_SIZE - 1)
 
         # Linux ARM kuser helpers (ARMv5 has no atomics): fixed addresses in the vector page
-        uc.mem_map(KUSER_PAGE, 0x1000, UC_PROT_ALL)
+        self.map(KUSER_PAGE, 0x1000)
         uc.mem_write(KUSER_PAGE, ARM_BX_LR * 0x400)
         uc.mem_write(KUSER_PAGE + 0xFFC, struct.pack("<I", 5))   # __kuser_helper_version
         self.tls = self.heap_tls = None
@@ -136,6 +137,27 @@ class Emu:
         uc.hook_add(UC_HOOK_MEM_READ_UNMAPPED | UC_HOOK_MEM_WRITE_UNMAPPED | UC_HOOK_MEM_FETCH_UNMAPPED,
                     self._on_unmapped)
         self.load(so or paths.so())
+
+    # ------------------------------------------------------------------ guest memory
+    def _reserve_guest_space(self):
+        """The whole 4 GB guest address space is one reserved block of host memory: guest address a lives at
+        host address self.host_base + a. Regions are committed and handed to Unicorn with uc_mem_map_ptr, so
+        recompiled C code (which gets host_base) reads and writes the very same bytes as the emulator."""
+        import ctypes
+        k32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        k32.VirtualAlloc.restype = ctypes.c_void_p
+        k32.VirtualAlloc.argtypes = (ctypes.c_void_p, ctypes.c_size_t, ctypes.c_uint32, ctypes.c_uint32)
+        self._valloc = k32.VirtualAlloc
+        self.host_base = self._valloc(None, 1 << 32, 0x2000, 0x04)          # MEM_RESERVE, PAGE_READWRITE
+        if not self.host_base:
+            raise MemoryError(f"cannot reserve the 4 GB guest space (error {ctypes.get_last_error()})")
+
+    def map(self, lo, size):
+        """Commit a guest region in the shared host block and map it into Unicorn."""
+        if not self._valloc(self.host_base + lo, size, 0x1000, 0x04):        # MEM_COMMIT, PAGE_READWRITE
+            import ctypes
+            raise MemoryError(f"cannot commit guest 0x{lo:08X}+0x{size:X} (error {ctypes.get_last_error()})")
+        self.uc.mem_map_ptr(lo, size, UC_PROT_ALL, self.host_base + lo)
 
     # ------------------------------------------------------------------ logging
     def log(self, msg):
