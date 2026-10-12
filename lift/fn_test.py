@@ -93,6 +93,7 @@ def run_lifted(img, entry, thumb, args):
     C.memmove(base + IMG_LO, img, len(img))
     cpu = CPU()
     cpu.mem = base
+    cpu.vfp_on = 1            # VFP registers start at zero, as in the bare Unicorn
     for k, v in enumerate(args):
         cpu.r[k] = v
     cpu.r[13] = STACK_LO + STACK_SIZE - 0x100

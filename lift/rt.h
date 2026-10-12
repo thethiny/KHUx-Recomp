@@ -38,6 +38,18 @@ typedef struct CPU {
     uint32_t lpc;          /* guest address of the instruction being executed (crash reports) */
     uint32_t icount_pad;
     uint64_t icount;       /* guest instructions executed in lifted code (profiling) */
+    /* VFP state, loaded from the emulator on first use (vfp_on = 0 means vf/fpscr are stale). The host writes
+     * it back to the emulator when vfp_on is set, whenever control returns there. */
+    uint32_t vfp_on;
+    uint32_t fpscr;
+    void *uc;              /* emulator handle and its uc_reg_read_batch, for rt_vfp_load */
+    void *uc_read_batch;
+    union {
+        uint64_t d[32];    /* d0..d31 */
+        uint32_t s[64];    /* s0..s31 alias d0..d15 (s[2k] is the low half of d[k]) */
+        float f[64];
+        double df[32];
+    } vf;
 } CPU;
 
 /* Call guest function `target` (Thumb bit set for Thumb code): a lifted, enabled function runs directly,
@@ -53,6 +65,10 @@ EXPORT void rt_run(CPU *c, uint32_t target);
  * LR): run it in C when lifted, otherwise escape to it - the emulator cannot run it as a call, since it never
  * returns to the call site. */
 void rt_call_frag(CPU *c, uint32_t target);
+
+/* Fetch the VFP registers and FPSCR from the emulator (defined in lift_table.c). */
+void rt_vfp_load(CPU *c);
+#define VFP_USE() do { if (!c->vfp_on) rt_vfp_load(c); } while (0)
 
 /* ---------------------------------------------------------------- memory */
 #define HA(a) (c->mem + (uint32_t)(a))
@@ -134,6 +150,36 @@ INLINE uint32_t CLZ(uint32_t v) {
     while (!(v & 0x80000000u)) { v <<= 1; n++; }
     return n;
 }
+
+/* ---------------------------------------------------------------- VFP
+ * Arithmetic runs in host single/double precision with round-to-nearest, which matches the VFP's default mode
+ * (no flush-to-zero; Android starts threads with FPSCR = 0). Products of vmla/vmls are rounded before the add,
+ * as on the VFP (no fused multiply-add). */
+INLINE void FCMP(CPU *c, double a, double b) {
+    uint32_t f;
+    if (a != a || b != b) f = 0x3u;          /* unordered: C, V */
+    else if (a == b) f = 0x6u;               /* Z, C */
+    else if (a < b) f = 0x8u;                /* N */
+    else f = 0x2u;                           /* C */
+    c->fpscr = (c->fpscr & 0x0FFFFFFFu) | (f << 28);
+}
+INLINE void FPFLAGS(CPU *c) {                /* vmrs APSR_nzcv, fpscr */
+    c->n = c->fpscr >> 31; c->z = (c->fpscr >> 30) & 1; c->c = (c->fpscr >> 29) & 1; c->v = (c->fpscr >> 28) & 1;
+}
+/* float/double to integer, rounding toward zero, saturating; NaN gives 0 */
+INLINE uint32_t CVT_S32(double v) {
+    if (v != v) return 0;
+    if (v >= 2147483648.0) return 0x7FFFFFFFu;
+    if (v <= -2147483649.0) return 0x80000000u;
+    return (uint32_t)(int32_t)v;
+}
+INLINE uint32_t CVT_U32(double v) {
+    if (v != v || v <= -1.0) return 0;
+    if (v >= 4294967296.0) return 0xFFFFFFFFu;
+    return (uint32_t)(int64_t)v;
+}
+INLINE float F32(uint32_t bits) { union { uint32_t u; float f; } x; x.u = bits; return x.f; }
+INLINE uint64_t RD64(CPU *c, uint32_t a) { return (uint64_t)R32(a) | ((uint64_t)R32(a + 4) << 32); }
 
 /* ---------------------------------------------------------------- export table */
 typedef void (*LiftFn)(CPU *);

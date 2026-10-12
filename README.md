@@ -104,8 +104,10 @@ out/            analyzer output (generated, ignored)
 - Milestone M0 (analysis and coverage report): done.
 - M1 (lifter, hybrid execution): the game boots to the main menu with every function it executes on the
   way lifted to C (about 5,400 functions), switch tables included. About 99% of the instructions executed
-  at the main menu run as native C (`KHUX_PROFILE=1` writes `out/lift/profile.json`); the rest is mostly
-  VFP code in the sound library and worker-thread code, which stays emulated.
+  at the main menu run as native C (`KHUX_PROFILE=1` writes `out/lift/profile.json`). VFP (single and
+  double precision floating point) and the ARMv5TE DSP multiplies are lifted too, so only 2 instructions in the
+  lifted set still hand control back to the emulator. What stays emulated is worker-thread code (asset
+  loading, sound) and two zlib pieces the checker reverts.
 - The emulator is the reference used to develop the private server and the specification for the native
   runtime.
 - Next: a native runtime replacing the Python one (libc, JNI, OpenGL ES, threads), so the lifted code runs

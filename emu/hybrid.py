@@ -19,7 +19,8 @@ import struct
 import time
 
 from unicorn import UC_HOOK_INTR, UC_HOOK_MEM_WRITE, UcError
-from unicorn.arm_const import (UC_ARM_REG_CPSR, UC_ARM_REG_LR, UC_ARM_REG_PC, UC_ARM_REG_R0, UC_ARM_REG_SP)
+from unicorn.arm_const import (UC_ARM_REG_CPSR, UC_ARM_REG_D0, UC_ARM_REG_FPSCR, UC_ARM_REG_LR, UC_ARM_REG_PC,
+                               UC_ARM_REG_R0, UC_ARM_REG_SP)
 
 from .. import paths
 from .core import RETURN_MAGIC
@@ -42,7 +43,8 @@ class CPU(C.Structure):
                 ("v", C.c_uint32), ("pc", C.c_uint32), ("logging", C.c_uint32), ("wn", C.c_uint32),
                 ("wcap", C.c_uint32), ("mem", C.c_void_p), ("wlog", C.POINTER(WLog)),
                 ("emu", C.c_void_p), ("tail", C.c_uint32), ("lpc", C.c_uint32), ("icount_pad", C.c_uint32),
-                ("icount", C.c_uint64)]
+                ("icount", C.c_uint64), ("vfp_on", C.c_uint32), ("fpscr", C.c_uint32), ("uc", C.c_void_p),
+                ("uc_read_batch", C.c_void_p), ("vf", C.c_uint64 * 32)]
 
 
 LiftFn = C.CFUNCTYPE(None, C.POINTER(CPU))
@@ -54,6 +56,24 @@ class Entry(C.Structure):
 
 
 REG_IDS = [UC_ARM_REG_R0 + k for k in range(13)] + [UC_ARM_REG_SP, UC_ARM_REG_LR]
+VFP_IDS = [UC_ARM_REG_D0 + k for k in range(32)] + [UC_ARM_REG_FPSCR]
+
+
+class VfpIO:
+    """Batch transfer of d0..d31 + FPSCR between a Unicorn instance and a block of memory (the CPU struct's
+    vf/fpscr fields, or a scratch buffer), one uc_reg_{read,write}_batch call each way."""
+
+    def __init__(self, d_addr, fpscr_addr):
+        from unicorn.unicorn_py3.unicorn import uclib
+        self.read_fn, self.write_fn = uclib.uc_reg_read_batch, uclib.uc_reg_write_batch
+        self.ids = (C.c_long * 33)(*VFP_IDS)
+        self.ptrs = (C.c_void_p * 33)(*[d_addr + 8 * k for k in range(32)], fpscr_addr)
+
+    def read(self, uc):
+        self.read_fn(uc._uch, self.ids, self.ptrs, 33)
+
+    def write(self, uc):
+        self.write_fn(uc._uch, self.ids, self.ptrs, 33)
 
 
 class Hybrid:
@@ -109,6 +129,14 @@ class Hybrid:
         self.cpu.wcap = WLOG_CAP
         self._emu_cb = EmuFn(self._emu_call)              # keep a reference: C holds the pointer
         self.cpu.emu = C.cast(self._emu_cb, C.c_void_p)
+        # VFP registers: the C code fetches them itself on first use (rt_vfp_load -> uc_reg_read_batch)
+        from unicorn.unicorn_py3.unicorn import uclib
+        self.cpu.uc = self.uc._uch
+        self.cpu.uc_read_batch = C.cast(uclib.uc_reg_read_batch, C.c_void_p).value
+        base = C.addressof(self.cpu)
+        self.vfp_io = VfpIO(base + CPU.vf.offset, base + CPU.fpscr.offset)
+        self.vfp_buf = (C.c_uint64 * 33)()              # scratch copy for reference runs
+        self.vfp_buf_io = VfpIO(C.addressof(self.vfp_buf), C.addressof(self.vfp_buf) + 8 * 32)
         self.pending_fault = None
         self.esc = {} if os.environ.get("KHUX_PROFILE") else None   # (entry, continue pc) -> count
         self.tramp_hits = {}
@@ -178,6 +206,8 @@ class Hybrid:
             cpu.pc = 0xFFFFFFFF
             return
         try:
+            if cpu.vfp_on:
+                self.vfp_io.write(self.uc)          # the callee sees the C code's VFP registers
             for k, rid in enumerate(REG_IDS):
                 e.set_reg(rid, cpu.r[k])
             cpsr = e.reg(UC_ARM_REG_CPSR)
@@ -198,6 +228,7 @@ class Hybrid:
             c = e.reg(UC_ARM_REG_CPSR)
             cpu.n, cpu.z, cpu.c, cpu.v = (c >> 31) & 1, (c >> 30) & 1, (c >> 29) & 1, (c >> 28) & 1
             cpu.r[14] = ret
+            cpu.vfp_on = 0                          # the callee may have changed them: reload on next use
             if e.fault:
                 self.pending_fault, e.fault = e.fault, None
                 cpu.pc = 0xFFFFFFFF                 # not the caller's return address: the C chain unwinds
@@ -221,6 +252,7 @@ class Hybrid:
             self.cpu.r[k] = reg(rid)
         self.cpu.n, self.cpu.z = (cpsr >> 31) & 1, (cpsr >> 30) & 1
         self.cpu.c, self.cpu.v = (cpsr >> 29) & 1, (cpsr >> 28) & 1
+        self.cpu.vfp_on = 0
 
     def _regs_of_cpu(self):
         return [self.cpu.r[k] for k in range(15)], (self.cpu.n, self.cpu.z, self.cpu.c, self.cpu.v)
@@ -233,6 +265,8 @@ class Hybrid:
         cpsr |= 0x20 if self.cpu.pc & 1 else 0
         set_reg(UC_ARM_REG_CPSR, cpsr)
         set_reg(UC_ARM_REG_PC, self.cpu.pc)
+        if self.cpu.vfp_on:
+            self.vfp_io.write(self.uc)
 
     # ------------------------------------------------------------------ interrupt hook
     def _on_intr_safe(self, uc, intno, user):
@@ -309,6 +343,7 @@ class Hybrid:
         wn = self.cpu.wn
         c_regs, c_flags = self._regs_of_cpu()
         c_pc = self.cpu.pc
+        c_vfp = list(self.cpu.vf) if self.cpu.vfp_on else None
         logs = [(self.wlog[k].addr, self.wlog[k].size, self.wlog[k].old_lo) for k in range(min(wn, WLOG_CAP))]
         c_final, orig = {}, {}
         for a, n, _ in logs:
@@ -329,6 +364,8 @@ class Hybrid:
         # stop where the C version returned: entries reached by a jump (IDA-split mid-function labels) return
         # through their parent's frame, not to LR
         self.ref_taint = False
+        self.vfp_buf_io.read(self.uc)
+        start_vfp = list(self.vfp_buf)
         e_written, ok = self._emulate(entry, cpsr, orig, c_pc if not crash else lr)
         if self.ref_taint or not ok:
             # the reference reached an import or failed: undo its stores, restore the registers and run this
@@ -339,6 +376,8 @@ class Hybrid:
             for rid, v in zip(REG_IDS, start_regs):
                 self.e.set_reg(rid, v)
             self.e.set_reg(UC_ARM_REG_CPSR, cpsr)
+            self.vfp_buf[:] = start_vfp
+            self.vfp_buf_io.write(self.uc)
             if not self.ref_taint:
                 self.e.log(f"!! hybrid: reference run of {entry:#x} {self.e.sym(entry)} failed; not verifiable")
             self._give_up(entry, cpsr)
@@ -361,6 +400,11 @@ class Hybrid:
                 continue      # ip: call-clobbered scratch (PLT stubs set it); LR: compared via the return pc
             if c_regs[k] != e_regs[k]:
                 diffs.append(f"r{k} C={c_regs[k]:#x} emu={e_regs[k]:#x}")
+        if c_vfp is not None:
+            self.vfp_buf_io.read(self.uc)            # the reference run's VFP result (copied to the game CPU)
+            for k in range(32):
+                if c_vfp[k] != self.vfp_buf[k]:
+                    diffs.append(f"d{k} C={c_vfp[k]:#x} emu={self.vfp_buf[k]:#x}")
         # condition flags are not preserved across calls (AAPCS), so callers never read them: not compared
         # the return address matched: the reference run stopped exactly where the C version returned
         for b in set(c_final) | set(e_written):
@@ -449,6 +493,8 @@ class Hybrid:
         for rid in REG_IDS:
             ref.reg_write(rid, self.e.reg(rid))
         ref.reg_write(UC_ARM_REG_CPSR, cpsr)
+        self.vfp_buf_io.read(self.uc)
+        self.vfp_buf_io.write(ref)
         patch = self._host(entry, len(self.orig[entry]))
         self._poke(entry, self.orig[entry])
         ref.ctl_remove_cache(entry, entry + 4)
@@ -471,6 +517,8 @@ class Hybrid:
             self.uc.ctl_remove_cache(entry, entry + 4)
         for rid in REG_IDS:
             self.e.set_reg(rid, ref.reg_read(rid))
+        self.vfp_buf_io.read(ref)
+        self.vfp_buf_io.write(self.uc)
         rc = ref.reg_read(UC_ARM_REG_CPSR)
         self.e.set_reg(UC_ARM_REG_CPSR, (cpsr & 0x0FFFFFDF) | (rc & 0xF0000000) | (0x20 if ret & 1 else 0))
         self.e.set_reg(UC_ARM_REG_PC, ret)

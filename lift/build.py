@@ -71,6 +71,18 @@ void rt_call_frag(CPU *c, uint32_t target) {
     rt_call(c, target);
 }
 
+typedef int (*UcBatch)(void *uc, const int *regs, void **vals, int count);
+
+void rt_vfp_load(CPU *c) {
+    int ids[33];
+    void *vals[33];
+    for (int k = 0; k < 32; k++) { ids[k] = UC_REG_D0 + k; vals[k] = &c->vf.d[k]; }
+    ids[32] = UC_REG_FPSCR;
+    vals[32] = &c->fpscr;
+    ((UcBatch)c->uc_read_batch)(c->uc, ids, vals, 33);
+    c->vfp_on = 1;
+}
+
 EXPORT void rt_run(CPU *c, uint32_t target) {
     for (;;) {
         LiftFn f = lookup(target);
@@ -163,7 +175,7 @@ def main():
     files = []
     for k in range(0, len(lifted), PER_FILE):
         part = lifted[k:k + PER_FILE]
-        src = ['#include "rt.h"', "#pragma warning(disable: 4102 4101 4146)"]
+        src = ['#include "rt.h"', "#include <math.h>", "#pragma warning(disable: 4102 4101 4146)"]
         src += [code for _, _, code, _ in part]
         f = OUT / f"lift_{k // PER_FILE:03d}.c"
         f.write_text("\n\n".join(src) + "\n")
@@ -179,6 +191,9 @@ def main():
     text_lo, text_hi = img.sec[".text"]
     table.append(f"#define TEXT_LO 0x{text_lo:X}u")
     table.append(f"#define TEXT_HI 0x{text_hi:X}u")
+    from unicorn import arm_const as UA
+    table.append(f"#define UC_REG_D0 {UA.UC_ARM_REG_D0}")
+    table.append(f"#define UC_REG_FPSCR {UA.UC_ARM_REG_FPSCR}")
     table.append(RT_CALL)
     tf = OUT / "lift_table.c"
     tf.write_text("\n".join(table) + "\n")

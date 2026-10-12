@@ -51,6 +51,9 @@ COMPARE = {A.ARM_INS_CMP, A.ARM_INS_CMN, A.ARM_INS_TST, A.ARM_INS_TEQ}
 UNARY = {A.ARM_INS_MOV, A.ARM_INS_MVN}
 SHIFT_INS = {A.ARM_INS_LSL: 0, A.ARM_INS_LSR: 1, A.ARM_INS_ASR: 2, A.ARM_INS_ROR: 3, A.ARM_INS_RRX: 4}
 MOVS_ID = getattr(A, "ARM_INS_MOVS", None)
+DSP_MUL = {getattr(A, "ARM_INS_" + n.upper()): n for n in (
+    "smulbb", "smulbt", "smultb", "smultt", "smlabb", "smlabt", "smlatb", "smlatt", "smulwb", "smulwt",
+    "smlawb", "smlawt", "smlalbb", "smlalbt", "smlaltb", "smlaltt", "mls")}
 
 LOADS = {A.ARM_INS_LDR: ("R32", 4), A.ARM_INS_LDRB: ("R8", 1), A.ARM_INS_LDRH: ("R16", 2),
          A.ARM_INS_LDRSB: ("RS8", 1), A.ARM_INS_LDRSH: ("RS16", 2)}
@@ -67,6 +70,7 @@ class FuncLifter:
         self.fn_mode = fn_mode or {}       # function entry -> ARM/THUMB
         self.plt = plt or {}               # plt stub -> internal target (with Thumb bit) or None
         self.reg_index = {}
+        self.vreg = {}                     # VFP register id -> ("s" | "d" | "q", number), or a system register
         for rid in range(1, 200):
             n = cs_reg_name(rid)
             if not n:
@@ -76,6 +80,10 @@ class FuncLifter:
                 idx = int(n[1:])
             if idx is not None:
                 self.reg_index[rid] = idx
+            elif n[0] in "sdq" and n[1:].isdigit():
+                self.vreg[rid] = (n[0], int(n[1:]))
+            elif n in ("apsr_nzcv", "fpscr"):
+                self.vreg[rid] = (n, 0)
         self.img = img
 
     # ------------------------------------------------------------------ operands
@@ -336,6 +344,19 @@ class FuncLifter:
         if iid == A.ARM_INS_CLZ:
             return self.write_reg(self.ridx(ops[0].reg), f"CLZ({self.rd(ops[1].reg)})")
 
+        # ---------------- VFP, DSP multiplies, saturation
+        if i.mnemonic.startswith("v"):
+            return "VFP_USE(); " + self.vfp(i, ops)
+        if iid in DSP_MUL:
+            return self.dsp_mul(iid, ops)
+        if iid in (A.ARM_INS_USAT, A.ARM_INS_SSAT):
+            return self.saturate(iid, ops)
+        if iid in (A.ARM_INS_QADD, A.ARM_INS_QSUB):
+            op = "+" if iid == A.ARM_INS_QADD else "-"
+            e = f"(int64_t)(int32_t){self.rd(ops[1].reg)} {op} (int64_t)(int32_t){self.rd(ops[2].reg)}"
+            sat = "(q_ > 0x7FFFFFFFLL ? 0x7FFFFFFFu : q_ < -0x80000000LL ? 0x80000000u : (uint32_t)q_)"
+            return "{ int64_t q_ = " + e + "; " + self.write_reg(self.ridx(ops[0].reg), sat) + " }"
+
         # ---------------- loads / stores
         if iid in LOADS or iid in STORES:
             return self.loadstore(i, iid, ops)
@@ -507,6 +528,217 @@ class FuncLifter:
             if wb:
                 code += f"c->r[{bk}] = {newb}; "
         return "{ " + code + "}"
+
+    # ------------------------------------------------------------------ DSP multiplies, saturation
+    def dsp_mul(self, iid, ops):
+        """ARMv5TE halfword multiplies (smulXY, smlaXY, smulwY, smlawY, smlalXY) and ARMv6T2 mls. The sticky Q
+        flag set by smla overflow is not modelled (only readable through mrs)."""
+        def half(o, top):
+            v = self.rd(o.reg)
+            return f"((int32_t){v} >> 16)" if top else f"(int32_t)(int16_t){v}"
+        name = DSP_MUL[iid]
+        if name == "mls":
+            e = f"({self.rd(ops[3].reg)} - {self.rd(ops[1].reg)} * {self.rd(ops[2].reg)})"
+            return self.write_reg(self.ridx(ops[0].reg), e)
+        if name.startswith("smlal"):                     # smlalXY lo, hi, rn, rm
+            lo, hi = self.ridx(ops[0].reg), self.ridx(ops[1].reg)
+            prod = f"(int64_t)({half(ops[2], name[5] == 't')} * {half(ops[3], name[6] == 't')})"
+            return (f"{{ uint64_t p_ = (((uint64_t)c->r[{hi}] << 32) | c->r[{lo}]) + (uint64_t){prod}; "
+                    f"c->r[{lo}] = (uint32_t)p_; c->r[{hi}] = (uint32_t)(p_ >> 32); }}")
+        if name[4] == "w":                                # smulwY / smlawY: (rn * half(rm)) >> 16
+            prod = (f"(uint32_t)(((int64_t)(int32_t){self.rd(ops[1].reg)} * "
+                    f"{half(ops[2], name[5] == 't')}) >> 16)")
+        else:                                             # smulXY / smlaXY
+            prod = f"(uint32_t)({half(ops[1], name[4] == 't')} * {half(ops[2], name[5] == 't')})"
+        if name.startswith("smla"):
+            prod += f" + {self.rd(ops[3].reg)}"
+        return self.write_reg(self.ridx(ops[0].reg), f"({prod})")
+
+    def saturate(self, iid, ops):
+        v = self.rd(ops[2].reg)
+        if ops[2].shift.type != A.ARM_SFT_INVALID and ops[2].shift.value:
+            typ, by_reg = SHIFTS[ops[2].shift.type]
+            if by_reg:
+                raise Unsupported("register-shifted saturate operand")
+            v = f"SHIFT({v}, {typ}, {ops[2].shift.value}, c->c, &dc_)"
+        bits = ops[1].imm
+        if iid == A.ARM_INS_USAT:
+            hi = (1 << bits) - 1
+            e = f"(sv_ < 0 ? 0u : sv_ > {hi}LL ? {hi}u : (uint32_t)sv_)"
+        else:
+            hi, lo = (1 << (bits - 1)) - 1, -(1 << (bits - 1))
+            e = f"(sv_ < ({lo}LL) ? (uint32_t)({lo}LL) : sv_ > {hi}LL ? {hi}u : (uint32_t)sv_)"
+        return ("{ uint32_t dc_ = 0; (void)dc_; int64_t sv_ = (int32_t)" + v + "; " +
+                self.write_reg(self.ridx(ops[0].reg), e) + " }")
+
+    # ------------------------------------------------------------------ VFP
+    def vr(self, o):
+        """("s" | "d", number) of a VFP data register operand."""
+        if o.type != A.ARM_OP_REG or self.vreg.get(o.reg, ("",))[0] not in ("s", "d"):
+            raise Unsupported("vfp operand")
+        return self.vreg[o.reg]
+
+    @staticmethod
+    def vval(r):
+        """C lvalue of VFP register r as a float / double."""
+        return f"c->vf.f[{r[1]}]" if r[0] == "s" else f"c->vf.df[{r[1]}]"
+
+    @staticmethod
+    def vraw(r):
+        """C lvalue of VFP register r as raw bits."""
+        return f"c->vf.s[{r[1]}]" if r[0] == "s" else f"c->vf.d[{r[1]}]"
+
+    @staticmethod
+    def vload(r, a):
+        return f"c->vf.s[{r[1]}] = R32({a}); " if r[0] == "s" else f"c->vf.d[{r[1]}] = RD64(c, {a}); "
+
+    @staticmethod
+    def vstore(r, a):
+        if r[0] == "s":
+            return f"W32(c, {a}, c->vf.s[{r[1]}]); "
+        return f"W32(c, {a}, (uint32_t)c->vf.d[{r[1]}]); W32(c, {a} + 4, (uint32_t)(c->vf.d[{r[1]}] >> 32)); "
+
+    def vclass(self, o):
+        if o.type == A.ARM_OP_REG and o.reg in self.reg_index:
+            return "r"
+        if o.type == A.ARM_OP_REG and o.reg in self.vreg:
+            return self.vreg[o.reg][0]
+        return "F" if o.type == A.ARM_OP_FP else "?"
+
+    def vfp(self, i, ops):
+        """VFPv3 instructions (data in CPU.vf, flags in CPU.fpscr). Capstone reports some under the old FPA-style
+        ids (FCONSTS, FMSTAT, ...), so this dispatches on the mnemonic."""
+        parts = i.mnemonic.split(".")
+        base, dts = parts[0], parts[1:]
+        if self.mode == ARM and i.cc not in ALWAYS:
+            base = base[:-2]                               # condition suffix (vmovmi.f32)
+        if any(o.type == A.ARM_OP_REG and self.vreg.get(o.reg, ("",))[0] == "q" for o in ops):
+            raise Unsupported(f"neon {i.mnemonic}")
+
+        if base in ("vldr", "vstr"):
+            r = self.vr(ops[0])
+            a, off = self.mem_addr(ops[1])
+            code = f"uint32_t a_ = {a} + {off}; "
+            code += self.vload(r, "a_") if base == "vldr" else self.vstore(r, "a_")
+            return "{ " + code + "}"
+
+        if base in ("vpush", "vpop", "vldmia", "vstmia", "vldmdb", "vstmdb"):
+            if base in ("vpush", "vpop"):
+                bk, lst, wb = 13, [self.vr(o) for o in ops], True
+                kind = "db" if base == "vpush" else "ia"
+            else:
+                bk, lst, wb = self.ridx(ops[0].reg), [self.vr(o) for o in ops[1:]], i.writeback
+                kind = base[-2:]
+            size = 4 if lst[0][0] == "s" else 8
+            total = size * len(lst)
+            code = f"uint32_t b_ = c->r[{bk}]; uint32_t a_ = {'b_' if kind == 'ia' else f'b_ - {total}'}; "
+            load = base in ("vpop", "vldmia", "vldmdb")
+            for k, r in enumerate(lst):
+                code += self.vload(r, f"a_ + {k * size}") if load else self.vstore(r, f"a_ + {k * size}")
+            if wb:
+                code += f"c->r[{bk}] = b_ {'+' if kind == 'ia' else '-'} {total}; "
+            return "{ " + code + "}"
+
+        if base == "vmov":
+            if any(getattr(o, "vector_index", -1) not in (-1, None) for o in ops):
+                raise Unsupported("vmov scalar")
+            cls = "".join(self.vclass(o) for o in ops)
+            if cls == "sr":
+                return f"c->vf.s[{self.vr(ops[0])[1]}] = {self.rd(ops[1].reg)};"
+            if cls == "rs":
+                return self.write_reg(self.ridx(ops[0].reg), f"c->vf.s[{self.vr(ops[1])[1]}]")
+            if cls == "rrd":
+                k = self.vr(ops[2])[1]
+                return (f"{{ uint64_t v_ = c->vf.d[{k}]; c->r[{self.ridx(ops[0].reg)}] = (uint32_t)v_; "
+                        f"c->r[{self.ridx(ops[1].reg)}] = (uint32_t)(v_ >> 32); }}")
+            if cls == "drr":
+                return (f"c->vf.d[{self.vr(ops[0])[1]}] = (uint64_t){self.rd(ops[1].reg)} | "
+                        f"((uint64_t){self.rd(ops[2].reg)} << 32);")
+            if cls == "ssrr":
+                return (f"{{ uint32_t v0_ = {self.rd(ops[2].reg)}, v1_ = {self.rd(ops[3].reg)}; "
+                        f"c->vf.s[{self.vr(ops[0])[1]}] = v0_; c->vf.s[{self.vr(ops[1])[1]}] = v1_; }}")
+            if cls == "rrss":
+                return (f"{{ uint32_t v0_ = c->vf.s[{self.vr(ops[2])[1]}], v1_ = c->vf.s[{self.vr(ops[3])[1]}]; "
+                        f"c->r[{self.ridx(ops[0].reg)}] = v0_; c->r[{self.ridx(ops[1].reg)}] = v1_; }}")
+            if cls in ("ss", "dd"):
+                return f"{self.vraw(self.vr(ops[0]))} = {self.vraw(self.vr(ops[1]))};"
+            if cls == "sF":
+                bits = struct.unpack("<I", struct.pack("<f", ops[1].fp))[0]
+                return f"c->vf.s[{self.vr(ops[0])[1]}] = 0x{bits:X}u;"
+            if cls == "dF":
+                bits = struct.unpack("<Q", struct.pack("<d", ops[1].fp))[0]
+                return f"c->vf.d[{self.vr(ops[0])[1]}] = 0x{bits:X}ull;"
+            raise Unsupported(f"vmov form {cls}")
+
+        if base == "vmrs":
+            if len(ops) != 2 or self.vreg.get(ops[1].reg, ("",))[0] != "fpscr":
+                raise Unsupported("vmrs source")
+            if self.vreg.get(ops[0].reg, ("",))[0] == "apsr_nzcv":
+                return "FPFLAGS(c);"
+            return self.write_reg(self.ridx(ops[0].reg), "c->fpscr")
+        if base == "vmsr":
+            if len(ops) != 2 or self.vreg.get(ops[0].reg, ("",))[0] != "fpscr":
+                raise Unsupported("vmsr target")
+            return f"c->fpscr = {self.rd(ops[1].reg)};"
+
+        if base in ("vcmp", "vcmpe"):
+            a = self.vr(ops[0])
+            if ops[1].type in (A.ARM_OP_IMM, A.ARM_OP_FP):
+                b = "0.0"
+            else:
+                b = f"(double){self.vval(self.vr(ops[1]))}"
+            return f"FCMP(c, (double){self.vval(a)}, {b});"
+
+        if base == "vcvt":
+            if len(ops) != 2 or len(dts) != 2:
+                raise Unsupported(f"vcvt form {i.mnemonic}")
+            to, frm = dts
+            d, m = self.vr(ops[0]), self.vr(ops[1])
+            fl = {"f32": "float", "f64": "double"}
+            if to in fl and frm in fl:
+                return f"{self.vval(d)} = ({fl[to]}){self.vval(m)};"
+            if to in fl and frm in ("s32", "u32"):
+                cast = "(int32_t)" if frm == "s32" else ""
+                return f"{self.vval(d)} = ({fl[to]}){cast}c->vf.s[{m[1]}];"
+            if to in ("s32", "u32") and frm in fl:
+                return f"c->vf.s[{d[1]}] = CVT_{to.upper()}((double){self.vval(m)});"
+            raise Unsupported(f"vcvt {i.mnemonic}")
+
+        if base in ("vneg", "vabs"):
+            d, m = self.vr(ops[0]), self.vr(ops[1])
+            if d[0] == "s":
+                op = "^ 0x80000000u" if base == "vneg" else "& 0x7FFFFFFFu"
+            else:
+                op = "^ 0x8000000000000000ull" if base == "vneg" else "& 0x7FFFFFFFFFFFFFFFull"
+            return f"{self.vraw(d)} = {self.vraw(m)} {op};"
+        if base == "vsqrt":
+            d, m = self.vr(ops[0]), self.vr(ops[1])
+            return f"{self.vval(d)} = {'sqrtf' if d[0] == 's' else 'sqrt'}({self.vval(m)});"
+
+        if base in ("vadd", "vsub", "vmul", "vdiv", "vnmul", "vmla", "vmls", "vnmla", "vnmls"):
+            if len(ops) == 3:
+                d, n, m = (self.vr(o) for o in ops)
+            elif len(ops) == 2:
+                d, m = self.vr(ops[0]), self.vr(ops[1])
+                n = d
+            else:
+                raise Unsupported("vfp arith operands")
+            if not (d[0] == n[0] == m[0]):
+                raise Unsupported("vfp mixed precision")
+            t = "float" if d[0] == "s" else "double"
+            vd, vn, vm = self.vval(d), self.vval(n), self.vval(m)
+            if base in ("vadd", "vsub", "vmul", "vdiv"):
+                op = {"vadd": "+", "vsub": "-", "vmul": "*", "vdiv": "/"}[base]
+                return f"{{ {t} a_ = {vn}, b_ = {vm}; {vd} = a_ {op} b_; }}"
+            # the product is rounded on its own, then added (VFP vmla is not fused)
+            code = f"{{ {t} p_ = {vn} * {vm}; "
+            code += {"vnmul": f"{vd} = -p_; ",
+                     "vmla": f"{vd} = {vd} + p_; ",
+                     "vmls": f"{vd} = {vd} - p_; ",
+                     "vnmla": f"{vd} = -{vd} - p_; ",
+                     "vnmls": f"{vd} = -{vd} + p_; "}[base]
+            return code + "}"
+        raise Unsupported(f"{i.mnemonic} {i.op_str}")
 
     def rd_reg_index(self, k):
         if k == 15:
