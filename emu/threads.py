@@ -16,6 +16,8 @@ from .core import GuestFault
 from .libc import imp
 
 SLICE_INSNS = 200_000
+# time the workers get after each frame (KHUX_WORKER_BUDGET_MS); on a device they run in parallel instead
+WORKER_BUDGET_S = float(__import__("os").environ.get("KHUX_WORKER_BUDGET_MS", "30")) / 1000
 STACK_SIZE = 1 << 20
 ETIMEDOUT, EBUSY = 110, 16
 
@@ -53,11 +55,15 @@ class Scheduler:
         self.mutex_owner = {}    # mutex addr -> (tid, depth)
         self.cond_seq = {}       # cond addr -> signal counter
         self.nested = False
+        self.suspended = set()   # workers paused inside lifted C frames (hybrid.py): not resumable from here
+        self.on_switch = []      # called with the thread being activated
 
     # ------------------------------------------------------------------ per-thread state
     def _activate(self, t):
         e = self.emu
         self.current = t
+        for listener in self.on_switch:          # e.g. hybrid mode: the DLL's per-thread errno pointer
+            listener(t)
         e.libc.errno_ptr = t.errno_ptr
         e.libc.tls_keys = t.tls_keys
         e.tls = t.kuser_tls
@@ -99,11 +105,14 @@ class Scheduler:
     # ------------------------------------------------------------------ running
     def runnable(self):
         return [t for t in self.threads.values()
-                if t.tid != 1 and not t.done and (not t.blocked or t.blocked.ready())]
+                if t.tid != 1 and not t.done and t not in self.suspended
+                and (not t.blocked or t.blocked.ready())]
 
-    def run_workers(self, budget_s=0.03):
+    def run_workers(self, budget_s=None):
         """Main loop, between frames: run workers round-robin until they all block or the time budget is
         used (CPU-heavy work such as MasterDataManager::save needs many slices)."""
+        if budget_s is None:
+            budget_s = WORKER_BUDGET_S
         deadline = time.perf_counter() + budget_s
         while time.perf_counter() < deadline:
             ready = self.runnable()

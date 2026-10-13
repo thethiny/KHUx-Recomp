@@ -10,6 +10,8 @@
 #define KHUX_LIFT_RT_H
 
 #include <stdint.h>
+#include <string.h>
+#include <stdlib.h>
 
 #ifdef _MSC_VER
 #define EXPORT __declspec(dllexport)
@@ -36,7 +38,7 @@ typedef struct CPU {
     void (*emu)(struct CPU *c, uint32_t target);
     uint32_t tail;         /* set with c->pc by a tail call: continue at c->pc with the same LR */
     uint32_t lpc;          /* guest address of the instruction being executed (crash reports) */
-    uint32_t icount_pad;
+    uint32_t wfull;        /* the store log overflowed: the run is void (wn still counts valid entries) */
     uint64_t icount;       /* guest instructions executed in lifted code (profiling) */
     /* VFP state, loaded from the emulator on first use (vfp_on = 0 means vf/fpscr are stale). The host writes
      * it back to the emulator when vfp_on is set, whenever control returns there. */
@@ -66,6 +68,9 @@ EXPORT void rt_run(CPU *c, uint32_t target);
  * returns to the call site. */
 void rt_call_frag(CPU *c, uint32_t target);
 
+/* Undo every logged store, newest first (defined in lift_table.c). */
+EXPORT void rt_undo(CPU *c);
+
 /* Fetch the VFP registers and FPSCR from the emulator (defined in lift_table.c). */
 void rt_vfp_load(CPU *c);
 #define VFP_USE() do { if (!c->vfp_on) rt_vfp_load(c); } while (0)
@@ -78,21 +83,71 @@ void rt_vfp_load(CPU *c);
 #define RS8(a)  ((uint32_t)(int32_t)*(int8_t *)HA(a))
 #define RS16(a) ((uint32_t)(int32_t)*(int16_t *)HA(a))
 
-INLINE void wlog(CPU *c, uint32_t a, uint32_t size) {
+/* Record a store about to happen. When the log is full the store is skipped (returns 0) and wfull is set: the
+ * run is then void and gets undone, so every store that did happen must be in the log. wn always counts only
+ * the entries written by this run (older entries past it are stale). */
+INLINE int wlog(CPU *c, uint32_t a, uint32_t size) {
     if (c->wn < c->wcap) {
         WLog *w = &c->wlog[c->wn++];
         w->addr = a;
         w->size = size;
         w->old_lo = size == 1 ? R8(a) : size == 2 ? R16(a) : R32(a);
-        w->old_hi = 0;
-    } else {
-        c->wn = c->wcap + 1;   /* overflow marker: the test is inconclusive */
+        w->old_hi = c->lpc;    /* guest pc of the store (diagnostics) */
+        return 1;
     }
+    c->wfull = 1;
+    return 0;
 }
 
-INLINE void W8(CPU *c, uint32_t a, uint32_t v)  { if (c->logging) wlog(c, a, 1); R8(a) = (uint8_t)v; }
-INLINE void W16(CPU *c, uint32_t a, uint32_t v) { if (c->logging) wlog(c, a, 2); R16(a) = (uint16_t)v; }
-INLINE void W32(CPU *c, uint32_t a, uint32_t v) { if (c->logging) wlog(c, a, 4); R32(a) = v; }
+INLINE void W8(CPU *c, uint32_t a, uint32_t v)  { if (c->logging && !wlog(c, a, 1)) return; R8(a) = (uint8_t)v; }
+INLINE void W16(CPU *c, uint32_t a, uint32_t v) { if (c->logging && !wlog(c, a, 2)) return; R16(a) = (uint16_t)v; }
+INLINE void W32(CPU *c, uint32_t a, uint32_t v) { if (c->logging && !wlog(c, a, 4)) return; R32(a) = v; }
+
+/* Make room in the store log for a block write of n bytes at a (4-byte entries, bytes for the tail).
+ * Returns 0 when it does not fit: the run is then void (wn past wcap) and the write must be skipped. */
+INLINE int LOGRANGE(CPU *c, uint32_t a, uint32_t n) {
+    if (!c->logging || !n) return 1;
+    if ((uint64_t)c->wn + n / 4 + 3 > c->wcap) { c->wfull = 1; return 0; }
+    uint32_t k = 0;
+    for (; k + 4 <= n; k += 4) wlog(c, a + k, 4);
+    for (; k < n; k++) wlog(c, a + k, 1);
+    return 1;
+}
+INLINE void MEMMOVE(CPU *c, uint32_t d, uint32_t s, uint32_t n) {
+    if (n && LOGRANGE(c, d, n)) memmove(HA(d), HA(s), n);
+}
+INLINE void MEMSET(CPU *c, uint32_t d, uint32_t v, uint32_t n) {
+    if (n && LOGRANGE(c, d, n)) memset(HA(d), (int)(v & 0xFF), n);
+}
+INLINE uint32_t SIGN3(int v) { return v < 0 ? 0xFFFFFFFFu : v > 0 ? 1u : 0u; }
+
+/* ---------------------------------------------------------------- exclusives, barriers
+ * strex succeeds when memory still holds the value its ldrex read: a host compare-exchange, so it stays atomic
+ * once guest threads are host threads. Returns 0 on success, 1 on failure (the strex status). */
+#ifdef _MSC_VER
+#include <intrin.h>
+#define FENCE() _mm_mfence()
+INLINE uint32_t STREX32(CPU *c, uint32_t a, uint32_t old, uint32_t v) {
+    if (c->logging && !wlog(c, a, 4)) return 1;
+    return (uint32_t)_InterlockedCompareExchange((volatile long *)HA(a), (long)v, (long)old) != old;
+}
+INLINE uint32_t STREX16(CPU *c, uint32_t a, uint32_t old, uint32_t v) {
+    if (c->logging && !wlog(c, a, 2)) return 1;
+    return (uint16_t)_InterlockedCompareExchange16((volatile short *)HA(a), (short)v, (short)old) != (uint16_t)old;
+}
+INLINE uint32_t STREX8(CPU *c, uint32_t a, uint32_t old, uint32_t v) {
+    if (c->logging && !wlog(c, a, 1)) return 1;
+    return (uint8_t)_InterlockedCompareExchange8((volatile char *)HA(a), (char)v, (char)old) != (uint8_t)old;
+}
+#else
+#define FENCE() __sync_synchronize()
+#define STREX_GEN(n, T) INLINE uint32_t STREX##n(CPU *c, uint32_t a, uint32_t old, uint32_t v) { \
+    if (c->logging && !wlog(c, a, n / 8)) return 1; \
+    return !__sync_bool_compare_and_swap((volatile T *)HA(a), (T)old, (T)v); }
+STREX_GEN(32, uint32_t)
+STREX_GEN(16, uint16_t)
+STREX_GEN(8, uint8_t)
+#endif
 
 /* ---------------------------------------------------------------- flags */
 INLINE uint32_t ADC_F(CPU *c, uint32_t a, uint32_t b, uint32_t cin) {
@@ -179,6 +234,10 @@ INLINE uint32_t CVT_U32(double v) {
     return (uint32_t)(int64_t)v;
 }
 INLINE float F32(uint32_t bits) { union { uint32_t u; float f; } x; x.u = bits; return x.f; }
+/* soft-float ABI values in core registers (double in r0:r1, float in r0) */
+INLINE double D64(uint32_t lo, uint32_t hi) { union { uint64_t u; double d; } x; x.u = lo | ((uint64_t)hi << 32); return x.d; }
+INLINE void RET_D(CPU *c, double v) { union { uint64_t u; double d; } x; x.d = v; c->r[0] = (uint32_t)x.u; c->r[1] = (uint32_t)(x.u >> 32); }
+INLINE uint32_t FBITS(float f) { union { uint32_t u; float f; } x; x.f = f; return x.u; }
 INLINE uint64_t RD64(CPU *c, uint32_t a) { return (uint64_t)R32(a) | ((uint64_t)R32(a + 4) << 32); }
 
 /* ---------------------------------------------------------------- export table */

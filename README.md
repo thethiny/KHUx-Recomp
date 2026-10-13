@@ -99,15 +99,45 @@ fs/             emulated device storage (generated, ignored)
 out/            analyzer output (generated, ignored)
 ```
 
+## Progress
+
+```
+Decompiled        ████████████████████   99.0%
+Lifted            ████████████████████  100.0%
+Rewritten         ░░░░░░░░░░░░░░░░░░░░    0.0%
+1:1 binary match  ░░░░░░░░░░░░░░░░░░░░    0.0%
+Recompiled        ░░░░░░░░░░░░░░░░░░░░    0.0%
+```
+
+Updated by `python recomp/progress.py`.
+
+- **Decompiled**: 56,014 of 56,604 functions have Hex-Rays pseudocode (590 failed). Reference only.
+- **Lifted**: 56,363 of 56,363 analysed functions translate to C (machine-generated, one C function per guest function, 69 instructions left to the emulator). 8,491 of them run and are checked against the emulator in game.
+- **Rewritten**: Readable, maintainable source (named types and variables, no register-level code). Not started.
+- **1:1 binary match**: Source that rebuilds the original ARM binary byte for byte (a matching decompilation). Not started.
+- **Recompiled**: A native executable that runs without the emulator. In hybrid mode about 99.97% of the executed instructions already run as native C, and memory/string functions, math, the heap, stdio streams and OpenGL ES are native, but APK assets, threads, JNI, sockets and audio still go through the Python runtime (milestone M2).
+
 ## Status
 
 - Milestone M0 (analysis and coverage report): done.
-- M1 (lifter, hybrid execution): the game boots to the main menu with every function it executes on the
-  way lifted to C (about 5,400 functions), switch tables included. About 99% of the instructions executed
-  at the main menu run as native C (`KHUX_PROFILE=1` writes `out/lift/profile.json`). VFP (single and
-  double precision floating point) and the ARMv5TE DSP multiplies are lifted too, so only 2 instructions in the
-  lifted set still hand control back to the emulator. What stays emulated is worker-thread code (asset
-  loading, sound) and two zlib pieces the checker reverts.
+- M1 (lifter, hybrid execution): done. The game boots to the main menu with every function it executes lifted
+  to C.
+- M2 (native runtime), in progress:
+  - Every function of the library lifts and compiles (`lift/build.py --all --out out/lift_all`: 56,363
+    functions, 0 errors). IDA's split pieces of a function (fragments, Thumb-1 long-branch pieces, switch
+    dispatch halves) are absorbed into it, and `__gnu_thumb1_case_*` switches dispatch natively.
+  - Lifted C covers VFP, the ARMv5TE DSP multiplies, ldrex/strex (as compare-exchange), barriers and the
+    ARMv6 extend/add instructions.
+  - In C: memory and string functions, math, `qsort`, the guest heap (`lift/rt_heap.c`), stdio streams
+    (`lift/rt_files.c`) and OpenGL ES (`lift/gl_table.py`). Lifted code calls them directly; the Python
+    runtime calls the same code.
+  - Worker threads run lifted C speculatively: stores are logged, and an import that cannot be rolled back
+    undoes the run and falls back to the original code.
+  - Story quests and battles play in hybrid mode. At the main menu 99.9% of the executed instructions run
+    as native C. The town runs at about 140 fps, and title to main menu takes about 17 seconds.
+  - Left for M2: APK assets and the remaining POSIX file calls, JNI, real host threads (with them the sound thread stops sharing
+    the frame), sockets, audio, and a standalone host program that loads the library image without
+    Unicorn or Python.
 - The emulator is the reference used to develop the private server and the specification for the native
   runtime.
 - Next: a native runtime replacing the Python one (libc, JNI, OpenGL ES, threads), so the lifted code runs

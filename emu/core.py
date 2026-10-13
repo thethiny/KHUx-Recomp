@@ -103,6 +103,8 @@ class Emu:
         self.uc = Uc(UC_ARCH_ARM, UC_MODE_ARM)
         self.trace_imports = trace_imports
         self.handlers = {}       # import name -> handler
+        self.hooked = set()      # addresses with emu.on hooks
+        self.hook_listeners = [] # called with each newly hooked address
         self.slots = {}          # slot addr -> import name
         self.slot_of = {}        # import name -> slot addr
         self.next_slot = TRAP_BASE
@@ -381,6 +383,9 @@ class Emu:
         """Call cb(emu) whenever guest execution reaches addr (Thumb bit ignored)."""
         a = addr & ~1
         self.uc.hook_add(UC_HOOK_CODE, lambda uc, pc, size, _: cb(self), begin=a, end=a)
+        self.hooked.add(a)
+        for listener in self.hook_listeners:       # e.g. hybrid mode: keep this address in emulated code
+            listener(a)
 
     def std_string(self, p):
         """libc++ (32-bit) std::string at guest address p."""

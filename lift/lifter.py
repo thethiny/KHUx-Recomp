@@ -55,6 +55,9 @@ DSP_MUL = {getattr(A, "ARM_INS_" + n.upper()): n for n in (
     "smulbb", "smulbt", "smultb", "smultt", "smlabb", "smlabt", "smlatb", "smlatt", "smulwb", "smulwt",
     "smlawb", "smlawt", "smlalbb", "smlalbt", "smlaltb", "smlaltt", "mls")}
 
+EXCL_LOAD = {A.ARM_INS_LDREX: "R32", A.ARM_INS_LDREXB: "R8", A.ARM_INS_LDREXH: "R16"}
+EXCL_STORE = {A.ARM_INS_STREX: "STREX32", A.ARM_INS_STREXB: "STREX8", A.ARM_INS_STREXH: "STREX16"}
+
 LOADS = {A.ARM_INS_LDR: ("R32", 4), A.ARM_INS_LDRB: ("R8", 1), A.ARM_INS_LDRH: ("R16", 2),
          A.ARM_INS_LDRSB: ("RS8", 1), A.ARM_INS_LDRSH: ("RS16", 2)}
 STORES = {A.ARM_INS_STR: ("W32", 4), A.ARM_INS_STRB: ("W8", 1), A.ARM_INS_STRH: ("W16", 2)}
@@ -85,6 +88,7 @@ class FuncLifter:
             elif n in ("apsr_nzcv", "fpscr"):
                 self.vreg[rid] = (n, 0)
         self.img = img
+        self.cs_reg_name = cs_reg_name
 
     # ------------------------------------------------------------------ operands
     def ridx(self, rid):
@@ -136,6 +140,11 @@ class FuncLifter:
         address back to the caller."""
         v = self.pc_target(expr, interwork)
         cases = [t for t in self.switch_at.get(self.pc, ()) if t in self.addrs]
+        if self.far_rets and not cases:
+            # a piece reached by a far-branch bl may return through LR to just after that bl: stay in C
+            body = " ".join(f"case 0x{r:X}u: goto L_{r & ~1:X};" for r in sorted(self.far_rets))
+            tail = f"TAIL(j_);" if self.pc in self.indirect else "c->pc = j_; return;"
+            return f"{{ uint32_t j_ = {v}; switch (j_) {{ {body} default: break; }} {tail} }}"
         if cases:
             body = " ".join(f"case 0x{t:X}u: goto L_{t:X};" for t in sorted(set(cases)))
             return (f"{{ uint32_t j_ = {v}; switch (j_ & ~1u) {{ {body} default: break; }} "
@@ -239,7 +248,8 @@ class FuncLifter:
                     body = " ".join(f"case {k}: c->r[14] = 0x{t | 1:X}u; goto L_{t:X};"
                                     for k, t in enumerate(cases))
                     return f"switch (c->r[0]) {{ {body} default: break; }} c->pc = 0x{self.pc | 1:X}u; return;"
-                if t in self.addrs and t not in self.fn_mode:      # Thumb-1 far branch inside the function
+                if t in self.addrs and (t not in self.fn_mode or t in self.fragments):
+                    # Thumb-1 far branch inside the function (or into an absorbed fragment)
                     return f"c->r[14] = 0x{ret:X}u; goto L_{t:X};"
                 tmode = self.mode if iid == A.ARM_INS_BL else (THUMB if self.mode == ARM else ARM)
                 target = self.call_target(t, tmode)
@@ -312,6 +322,39 @@ class FuncLifter:
             cast = {A.ARM_INS_SXTB: "(uint32_t)(int32_t)(int8_t)", A.ARM_INS_SXTH: "(uint32_t)(int32_t)(int16_t)",
                     A.ARM_INS_UXTB: "(uint32_t)(uint8_t)", A.ARM_INS_UXTH: "(uint32_t)(uint16_t)"}[iid]
             return self.write_reg(self.ridx(ops[0].reg), f"{cast}{src}")
+        if iid in (A.ARM_INS_UXTAB, A.ARM_INS_UXTAH, A.ARM_INS_SXTAB, A.ARM_INS_SXTAH):
+            src = self.rd(ops[2].reg)
+            if ops[2].shift.type == A.ARM_SFT_ROR and ops[2].shift.value:
+                r = ops[2].shift.value
+                src = f"(({src} >> {r}) | ({src} << {32 - r}))"
+            cast = {A.ARM_INS_SXTAB: "(uint32_t)(int32_t)(int8_t)", A.ARM_INS_SXTAH: "(uint32_t)(int32_t)(int16_t)",
+                    A.ARM_INS_UXTAB: "(uint32_t)(uint8_t)", A.ARM_INS_UXTAH: "(uint32_t)(uint16_t)"}[iid]
+            return self.write_reg(self.ridx(ops[0].reg), f"({self.rd(ops[1].reg)} + {cast}{src})")
+        if iid == A.ARM_INS_MRS:
+            if self.vreg.get(ops[1].reg, ("",))[0] not in ("apsr", "apsr_nzcv") and \
+                    (self.cs_reg_name(ops[1].reg) or "") not in ("apsr", "cpsr"):
+                raise Unsupported(f"mrs {i.op_str}")
+            return self.write_reg(self.ridx(ops[0].reg),
+                                  "((c->n << 31) | (c->z << 30) | (c->c << 29) | (c->v << 28) | 0x10u)")
+        if iid in (A.ARM_INS_DMB, A.ARM_INS_DSB, A.ARM_INS_ISB):
+            return "FENCE();"
+        if iid in EXCL_LOAD:
+            self.uses_excl = True
+            a, off = self.mem_addr(ops[1])
+            fn = EXCL_LOAD[iid]
+            return (f"{{ uint32_t a_ = {a} + {off}; xa_ = a_; xv_ = {fn}(a_); "
+                    f"{self.write_reg(self.ridx(ops[0].reg), 'xv_')} }}")
+        if iid in EXCL_STORE:
+            self.uses_excl = True
+            a, off = self.mem_addr(ops[2])
+            fn = EXCL_STORE[iid]
+            # succeeds only if memory still holds what ldrex read (compare-exchange; correct with real threads)
+            return (f"{{ uint32_t a_ = {a} + {off}; "
+                    f"c->r[{self.ridx(ops[0].reg)}] = (a_ == xa_) ? {fn}(c, a_, xv_, {self.rd(ops[1].reg)}) : 1u; "
+                    f"xa_ = 0xFFFFFFFFu; }}")
+        if iid == A.ARM_INS_CLREX:
+            self.uses_excl = True
+            return "xa_ = 0xFFFFFFFFu;"
         if iid in (A.ARM_INS_UBFX, A.ARM_INS_SBFX):
             lsb, w = ops[2].imm, ops[3].imm
             src = self.rd(ops[1].reg)
@@ -520,7 +563,7 @@ class FuncLifter:
                 else:
                     code += f"c->r[{r}] = l{k}_; "
             if ret:
-                code += f"c->pc = {ret}; return; "
+                code += self.jump_to(ret, True) + " "
         else:
             for k, r in enumerate(regs):
                 val = self.rd_reg_index(r)
@@ -772,6 +815,15 @@ class FuncLifter:
         self.switch_at = {sw["at"]: list(sw["targets"]) for sw in res["switches"]}
         self.indirect = set(res["indirect_jumps"])
         self.escapes = 0
+        self.uses_excl = False
+        # return addresses of far-branch bls (jumps into this function or an absorbed fragment that set LR)
+        self.far_rets = set()
+        for pc in addrs:
+            i = d.one(pc, mode)
+            if i is not None and i.id in (A.ARM_INS_BL, A.ARM_INS_BLX) and i.operands and                     i.operands[0].type == A.ARM_OP_IMM:
+                t = i.operands[0].imm
+                if t in self.addrs and (t not in self.fn_mode or t in self.fragments) and                         pc not in self.switch_at and (pc + i.size) in self.addrs:
+                    self.far_rets.add((pc + i.size) | (1 if mode == THUMB else 0))
         tb = 1 if mode == THUMB else 0
         lines = [f"void F_{entry:X}(CPU *c) {{", f"  goto L_{entry:X};"]   # code may sit below the entry
         for k, pc in enumerate(addrs):
@@ -800,6 +852,8 @@ class FuncLifter:
                 else:
                     lines.append("  " + self.leave(nxt))
         lines.append("}")
+        if self.uses_excl:   # exclusive monitor: address and value seen by the last ldrex
+            lines.insert(1, "  uint32_t xa_ = 0xFFFFFFFFu, xv_ = 0; (void)xa_; (void)xv_;")
         return chr(10).join(lines)
 
     def ends_flow(self, i):

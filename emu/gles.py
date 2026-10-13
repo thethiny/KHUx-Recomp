@@ -48,8 +48,21 @@ class GLState:
         self.pack_alignment = 4
         self.strings = {}
         self.keep = []
-        self.draw_calls = 0
+        self._draws = 0
+        self.native_draws = None         # ctypes counter of draws made natively (lift.dll), when in use
         self._init_window(title)
+
+    @property
+    def draw_calls(self):
+        return self._draws + (self.native_draws.value if self.native_draws is not None else 0)
+
+    @draw_calls.setter
+    def draw_calls(self, v):
+        if self.native_draws is not None:
+            v -= self.native_draws.value
+            if v < 0:                    # reset: clear both counters
+                self.native_draws.value, v = 0, 0
+        self._draws = v
 
     def _init_window(self, title):
         global gl, egl

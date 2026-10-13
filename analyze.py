@@ -302,9 +302,14 @@ def analyze_function(d, entry, mode, lo, hi, case_helpers, fn_starts, plt_range,
                     work.extend((t, None) for t in tgts)
                     break
                 if lo <= tgt < hi and tgt not in fn_starts:
-                    # Thumb-1 far branch: BL into the same function, LR is dead
+                    # Thumb-1 far branch: BL into the same function, LR is dead (a conditional one, ARM
+                    # bleq into an absorbed fragment, also falls through)
                     res["far_branches"].append(pc)
-                    pc = tgt
+                    if cond:
+                        work.append((tgt, cmp_state))
+                        pc = nxt
+                    else:
+                        pc = tgt
                     continue
                 res["calls"].append((tgt, tmode))
                 # a conditional call (ARM bleq, ...) to a fragment or noreturn function still falls through
