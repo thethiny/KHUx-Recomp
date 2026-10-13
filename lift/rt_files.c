@@ -5,6 +5,10 @@
  * Included by the generated lift_table.c. */
 #include <stdio.h>
 #include <direct.h>
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>
 
 EXPORT char rt_fs_root[1024];              /* host folder for the device file system */
 EXPORT char rt_so_guest[256];              /* the library's device path ... */
@@ -14,9 +18,16 @@ EXPORT uint32_t rt_file_opens;             /* streams opened here (diagnostics) 
 #define MAX_FILES 512
 static struct { uint32_t g; FILE *f; int eof; } files[MAX_FILES];
 
+/* the table is shared by all guest threads (host threads in the standalone host); a stream itself is used by
+ * one thread at a time, as on the device */
+static SRWLOCK files_lock = SRWLOCK_INIT;
+
 static int file_slot(uint32_t g) {
-    for (int k = 0; k < MAX_FILES; k++) if (files[k].f && files[k].g == g) return k;
-    return -1;
+    int r = -1;
+    AcquireSRWLockShared(&files_lock);
+    for (int k = 0; k < MAX_FILES; k++) if (files[k].f && files[k].g == g) { r = k; break; }
+    ReleaseSRWLockShared(&files_lock);
+    return r;
 }
 
 /* host path for a device path; creates the parent folders when `create` */
@@ -44,19 +55,25 @@ static int native_fopen(CPU *c) {
     m[k++] = 'b';
     m[k] = 0;
     int writing = strchr(m, 'w') || strchr(m, 'a');
-    for (int j = 0; j < MAX_FILES; j++) if (!files[j].f) { slot = j; break; }
-    if (slot < 0 || !host_path(path, host, sizeof(host), writing)) return 0;
+    if (!host_path(path, host, sizeof(host), writing)) return 0;
     FILE *f = fopen(host, m);
     if (!f) {
-        if (rt_errno_ptr) R32(rt_errno_ptr) = 2;          /* ENOENT */
+        uint32_t ep = rt_errno_fn ? rt_errno_fn() : rt_errno_ptr;
+        if (ep) R32(ep) = 2;                                 /* ENOENT */
         c->r[0] = 0;
         return 1;
     }
     uint32_t fp = rt_heap_malloc(c, 84);                    /* the guest's FILE (bionic: 84 bytes) */
     if (!fp) { fclose(f); return 0; }
-    files[slot].g = fp;
-    files[slot].f = f;
-    files[slot].eof = 0;
+    AcquireSRWLockExclusive(&files_lock);
+    for (int j = 0; j < MAX_FILES; j++) if (!files[j].f) { slot = j; break; }
+    if (slot >= 0) {
+        files[slot].g = fp;
+        files[slot].f = f;
+        files[slot].eof = 0;
+    }
+    ReleaseSRWLockExclusive(&files_lock);
+    if (slot < 0) { fclose(f); rt_heap_free(c, fp); return 0; }
     rt_file_opens++;
     c->r[0] = fp;
     return 1;
@@ -65,9 +82,13 @@ static int native_fopen(CPU *c) {
 static int native_fclose(CPU *c) {
     int k;
     if (c->logging || (k = file_slot(c->r[0])) < 0) return 0;
-    fclose(files[k].f);
+    AcquireSRWLockExclusive(&files_lock);
+    FILE *f = files[k].f;
+    uint32_t g = files[k].g;
     files[k].f = 0;
-    rt_heap_free(c, files[k].g);
+    ReleaseSRWLockExclusive(&files_lock);
+    fclose(f);
+    rt_heap_free(c, g);
     c->r[0] = 0;
     return 1;
 }

@@ -200,6 +200,7 @@ def analyze_function(d, entry, mode, lo, hi, case_helpers, fn_starts, plt_range,
         adr = None         # (reg, value) of the last adr (thumb inline switch)
         after_call = None  # callee of the call that immediately precedes pc
         lits = {}          # reg -> literal-pool word loaded into it (PIC "ldr rX,=off; add rX,pc")
+        pcv = {}           # reg -> absolute address computed by "add rX, pc" (the GOT base, usually)
         while pc not in seen:
             stop = None
             i = None
@@ -251,11 +252,27 @@ def analyze_function(d, entry, mode, lo, hi, case_helpers, fn_starts, plt_range,
                         res["data"].add(lit + k)
             if i.id == A.ARM_INS_CMP and len(ops) == 2 and ops[1].type == A.ARM_OP_IMM:
                 cmp_state = (ops[0].reg, ops[1].imm)
+            new_pcv = None
             if i.id == A.ARM_INS_ADD and ops and ops[0].type == A.ARM_OP_REG and ops[0].reg in lits and                     any(o.type == A.ARM_OP_REG and o.reg == A.ARM_REG_PC for o in ops[1:]):
-                res["code_refs"].append((lits[ops[0].reg] + pc + (4 if mode == THUMB else 8)) & 0xFFFFFFFF)
+                new_pcv = (lits[ops[0].reg] + pc + (4 if mode == THUMB else 8)) & 0xFFFFFFFF
+                res["code_refs"].append(new_pcv)
+            elif i.id == A.ARM_INS_ADD and ops and all(o.type == A.ARM_OP_REG for o in ops) and len(ops) in (2, 3):
+                # GOT-relative address: "ldr rA,=GOT-pc; add rA,pc; ldr rB,=sym-GOT; add rD,rB,rA" (rD = &sym)
+                srcs = [o.reg for o in (ops if len(ops) == 2 else ops[1:])]
+                a_, b_ = srcs
+                v = None
+                if a_ in pcv and b_ in lits:
+                    v = pcv[a_] + lits[b_]
+                elif b_ in pcv and a_ in lits:
+                    v = pcv[b_] + lits[a_]
+                if v is not None:
+                    res["code_refs"].append(v & 0xFFFFFFFF)
             if ops and ops[0].type == A.ARM_OP_REG and i.id not in (
                     A.ARM_INS_STR, A.ARM_INS_STRB, A.ARM_INS_STRH, A.ARM_INS_CMP, A.ARM_INS_CMN, A.ARM_INS_TST):
                 lits.pop(ops[0].reg, None)
+                pcv.pop(ops[0].reg, None)
+                if new_pcv is not None:
+                    pcv[ops[0].reg] = new_pcv
             if i.id == A.ARM_INS_LDR and len(ops) == 2 and ops[1].type == A.ARM_OP_MEM and                     ops[1].mem.base == A.ARM_REG_PC and ops[1].mem.index == 0:
                 base = (pc + 4) & ~3 if mode == THUMB else pc + 8
                 v = d.img.u32(base + ops[1].mem.disp)
@@ -301,7 +318,11 @@ def analyze_function(d, entry, mode, lo, hi, case_helpers, fn_starts, plt_range,
                         res["data"].add(a)
                     work.extend((t, None) for t in tgts)
                     break
-                if lo <= tgt < hi and tgt not in fn_starts:
+                if lo <= tgt < hi and tgt not in fn_starts and mode == ARM and tgt not in fragments:
+                    # ARM has a long b: a bl to an unknown address is a call to a function IDA missed (e.g. a
+                    # one-instruction thunk folded into its neighbour). It becomes a function (code_refs).
+                    res["code_refs"].append(tgt | (1 if tmode == THUMB else 0))
+                elif lo <= tgt < hi and tgt not in fn_starts:
                     # Thumb-1 far branch: BL into the same function, LR is dead (a conditional one, ARM
                     # bleq into an absorbed fragment, also falls through)
                     res["far_branches"].append(pc)
@@ -696,7 +717,7 @@ def main():
     # gaps that start (after alignment padding) with a function prologue = likely dead or missed functions
     prologue_gaps = []
     for ga, gn in gaps:
-        for off in (0, 2):
+        for off in range(0, min(gn - 4, 16), 2):
             h = img.read(ga + off, 2)
             if h and gn > off + 4 and h[1] == 0xB5:  # thumb push {..., lr}
                 prologue_gaps.append((ga + off, gn - off))

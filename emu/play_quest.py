@@ -9,7 +9,7 @@ import subprocess
 import sys
 import time
 
-from .ctl import get
+from .ctl import get, skip_story
 
 
 def screen():
@@ -111,7 +111,7 @@ def main():
         if sc in ("SceneActionMap", "SceneRaidBattle"):
             break
         if sc == "SceneFlashDrama":
-            get("tap", x=568, y=320)
+            skip_story() or get("tap", x=568, y=320)
         time.sleep(2)
     subprocess.run([sys.executable, "-u", "-m", "recomp.emu.auto_battle", limit])
     for _ in range(30):                           # result screens
@@ -120,7 +120,7 @@ def main():
                      "SceneFlashDrama", ""):
             break
         if s == "SceneFlashDrama":                # after-quest story drama
-            get("tap", x=568, y=320)
+            skip_story() or get("tap", x=568, y=320)
         if s == "SceneBattleResult":
             b = button(name="Button_Ok")
             if b:

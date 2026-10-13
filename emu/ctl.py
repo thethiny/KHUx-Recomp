@@ -24,6 +24,17 @@ def get(path, **q):
         return json.loads(r.read())
 
 
+def skip_story():
+    """Tap the story's SKIP control if one is on screen (FlashSkipAnimation, top left of SceneLight / dramas).
+    Returns True when it tapped."""
+    for w in get("ui", all=1).get("widgets", []):
+        r = w["rect"]
+        if "skip" in w["name"].lower() and r[2] > r[0] and r[3] > r[1] and 0 <= r[0] < 1136 and 0 <= r[1] < 640:
+            get("tap", x=(r[0] + r[2]) / 2, y=(r[1] + r[3]) / 2)
+            return True
+    return False
+
+
 def main(argv):
     sys.stdout.reconfigure(encoding="utf-8")
     if not argv:

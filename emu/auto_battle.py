@@ -9,9 +9,33 @@ the screen to walk on. Stops when the screen leaves SceneActionMap, on a crash, 
 import sys
 import time
 
-from .ctl import get
+from .ctl import get, skip_story
 
 VERBOSE = bool(__import__("os").environ.get("KHUX_BATTLE_VERBOSE"))
+
+
+def atlas_number(text):
+    """TextAtlas text as a number: digit atlases map a=0 ... j=9, some show plain digits."""
+    digits = "".join(str(ord(c) - 97) if "a" <= c <= "j" else c for c in (text or ""))
+    return int(digits) if digits.isdigit() else None
+
+
+def special_ready(widgets):
+    """(medal x, medal y, gauge, cost) when the front medal's special attack is affordable, else None. The gauge is
+    PlayerStatusIndicator's Avatar_Burst_Num, the cost the deck's AbilityInfo Avatar_Burst_Num."""
+    gauge = cost = None
+    for w in widgets:
+        if w["name"] != "Avatar_Burst_Num":
+            continue
+        if "PlayerStatusIndicator" in w["path"]:
+            gauge = atlas_number(w.get("text"))
+        elif "/AbilityInfo/" in w["path"]:
+            cost = atlas_number(w.get("text"))
+    if gauge is None or not cost or gauge < cost:
+        return None
+    medal = next((w for w in get("ui", all=1).get("widgets", []) if w["name"] == "AttackMedal_Anm"), None)
+    x, y = (medal["rect"][0], medal["rect"][1]) if medal else (80, 470)
+    return max(x, 30), min(max(y, 90), 610), gauge, cost
 
 
 def main():
@@ -100,8 +124,9 @@ def main():
         else:
             bare = 0
         if any(x in screen for x in ("SceneLight", "SceneFlashDrama")) or screen[1:2] == ["LoadingIndicator"]:
-            # mid-stage story (SceneLight + SpeechDisp, drama) or loading: tap on, the battle continues after
-            get("tap", x=568, y=320)
+            # mid-stage story (SceneLight + SpeechDisp, drama) or loading: SKIP it, else tap on
+            if not skip_story():
+                get("tap", x=568, y=320)
             time.sleep(3)
             continue
         if "SceneActionMap" not in screen and "SceneRaidBattle" not in screen:
@@ -160,6 +185,13 @@ def main():
             pts = sorted((w["rect"][0], min(w["rect"][3] + 45, 600)) for w in enemies)
             (x0, y0), (x1, y1) = pts[0], pts[-1]
             get("swipe", x0=x0 - 40, y0=y0, x1=x1 + 40, y1=y1)
+        elif enemies and (special := special_ready(widgets)):
+            # "Swipe a glowing Medal to unleash a special attack!": flick the front medal at the enemy
+            r = enemies[0]["rect"]
+            mx, my, gauge, cost = special
+            get("swipe", x0=mx, y0=my, x1=r[0], y1=min(r[3] + 45, 600), frames=8)
+            attack_taps += 1
+            print(f"{time.time() - t0:5.0f}s special attack (gauge {gauge}, cost {cost})")
         elif enemies:
             r = enemies[0]["rect"]
             get("tap", x=r[0], y=min(r[3] + 45, 600))

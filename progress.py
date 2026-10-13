@@ -85,6 +85,10 @@ def main():
     share = native_share()
     manual = json.loads(MANUAL.read_text()) if MANUAL.exists() else {}
     rewritten, matching, recompiled = (manual.get(k, 0) for k in ("rewritten", "matching", "recompiled"))
+    # the native host links the full lift: every function in it runs natively, with no emulator
+    full = HERE / "out" / "lift_all" / "lifted.json"
+    if not recompiled and (HERE / "out" / "host" / "khux.exe").exists() and full.exists():
+        recompiled = min(len(json.loads(full.read_text())), lift_total)
 
     game_txt = f" {game:,} of them run and are checked against the emulator in game." if game else ""
     share_txt = (f" In hybrid mode about {share * 100:.2f}% of the executed instructions already run as native C,"
@@ -102,9 +106,12 @@ def main():
          "Source that rebuilds the original ARM binary byte for byte (a matching decompilation)."
          + (f" {matching:,} functions." if matching else " Not started.")),
         ("Recompiled", 100 * recompiled / lift_total,
-         "A native executable that runs without the emulator." + (f" {recompiled:,} functions." if recompiled else
-         share_txt + " and memory/string functions, math, the heap, stdio streams and OpenGL ES are native, but APK "
-         "assets, threads, JNI, sockets and audio still go through the Python runtime (milestone M2).")),
+         "A native executable that runs without the emulator." + (
+             f" The native host (`host/`, Windows) runs all {recompiled:,} lifted functions natively, with real "
+             "threads, sound, sockets, JNI and OpenGL ES, and no emulator or Python: it plays the game through "
+             "login, the main menu and quests against the private server." if recompiled else
+             share_txt + " and memory/string functions, math, the heap, stdio streams and OpenGL ES are native, but APK "
+             "assets, threads, JNI, sockets and audio still go through the Python runtime (milestone M2).")),
     ]
     w = max(len(r[0]) for r in rows)
     out = ["## Progress", "", "```"]

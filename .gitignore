@@ -22,3 +22,9 @@ __pycache__/
 JOURNAL.md
 CLAUDE.md
 .claude/
+
+# Game files installed from your own APK (host/install.py)
+game/
+
+# WebView2 SDK, fetched from NuGet by host/build.py
+host/third_party/

@@ -143,7 +143,7 @@ class FuncLifter:
         if self.far_rets and not cases:
             # a piece reached by a far-branch bl may return through LR to just after that bl: stay in C
             body = " ".join(f"case 0x{r:X}u: goto L_{r & ~1:X};" for r in sorted(self.far_rets))
-            tail = f"TAIL(j_);" if self.pc in self.indirect else "c->pc = j_; return;"
+            tail = self.far_tail("j_") if self.pc in self.indirect else "c->pc = j_; return;"
             return f"{{ uint32_t j_ = {v}; switch (j_) {{ {body} default: break; }} {tail} }}"
         if cases:
             body = " ".join(f"case 0x{t:X}u: goto L_{t:X};" for t in sorted(set(cases)))
@@ -152,6 +152,13 @@ class FuncLifter:
         if self.pc in self.indirect:
             return f"TAIL({v});"
         return f"c->pc = {v}; return;"
+
+    def far_tail(self, target):
+        """A tail call in a function that has far-return sites. An absorbed piece entered by a far-branch bl
+        (now a goto) can tail-call out with LR still pointing back into this function: as a TAIL the C frame
+        would be gone when the callee returns there. Call it instead and continue at a local return site."""
+        body = " ".join(f"case 0x{r:X}u: goto L_{r & ~1:X};" for r in sorted(self.far_rets))
+        return f"{{ rt_call(c, {target}); switch (c->pc) {{ {body} default: break; }} return; }}"
 
     def write_reg(self, k, expr, interwork=False):
         """Assign a register; writing PC returns from the function (the emulator continues there).
@@ -179,6 +186,8 @@ class FuncLifter:
             return f"c->pc = 0x{target:X}u; return;"     # escape: the emulator jumps into the fragment
         if t in self.fn_mode or t in self.plt:
             target = self.call_target(t, self.mode)
+            if self.far_rets:
+                return self.far_tail(f"0x{target:X}u")
             return f"TAIL(0x{target:X}u);"
         return f"c->pc = 0x{t | (1 if self.mode == THUMB else 0):X}u; return;"
 

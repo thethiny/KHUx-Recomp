@@ -8,6 +8,7 @@ Instructions the lifter cannot translate become escapes to the emulator (see lif
 rejects outright are listed in out/lift/unsupported.txt and stay emulated.
 """
 import argparse
+import hashlib
 import json
 import subprocess
 import sys
@@ -23,7 +24,7 @@ import paths  # noqa: E402
 from lifter import FuncLifter, Unsupported  # noqa: E402
 
 OUT = paths.OUT / "lift"
-PER_FILE = 400                 # small files keep every core busy under cl /MP
+BUCKET = 0x10000               # .text bytes per C file (~400 functions): small files keep every core busy
 CRLF = chr(13) + chr(10)
 VCVARS = Path(r"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat")
 
@@ -69,13 +70,25 @@ NATIVE_IMPORTS = {
         "fopen", "fclose", "fread", "fwrite", "fgets", "fseek", "fseeko", "ftell", "ftello", "feof", "fputs",
         "fputc")},
     "fputwc": "return native_fputc(c);",
-    "__errno": "if (!rt_errno_ptr) return 0; c->r[0] = rt_errno_ptr;",
+    "__errno": "{ uint32_t p = rt_errno_fn ? rt_errno_fn() : rt_errno_ptr; if (!p) return 0; c->r[0] = p; }",
     # guest heap (lift/rt_heap.c), once the host has handed it over (rt_heap_ctl set)
     "malloc": "if (!rt_heap_ctl) return 0; c->r[0] = rt_heap_malloc(c, c->r[0]);",
     "calloc": "if (!rt_heap_ctl) return 0; c->r[0] = rt_heap_calloc(c, c->r[0], c->r[1]);",
     "realloc": "if (!rt_heap_ctl) return 0; c->r[0] = rt_heap_realloc(c, c->r[0], c->r[1]);",
     "free": "if (!rt_heap_ctl) return 0; rt_heap_free(c, c->r[0]);",
 }
+
+
+def write_if_changed(path, text, extra=""):
+    """Write a generated file only when its content (plus `extra`, text it depends on) changed; True if written.
+    A sidecar .sha1 keeps the hash, so an unchanged file keeps its object file."""
+    h = hashlib.sha1((text + extra).encode()).hexdigest()
+    side = path.with_suffix(".sha1")
+    if path.exists() and side.exists() and side.read_text() == h:
+        return False
+    path.write_text(text)
+    side.write_text(h)
+    return True
 
 
 def native_import_c(plt):
@@ -98,11 +111,11 @@ def native_import_c(plt):
         "static int native_by_id(CPU *c, int id) {", "    switch (id) {", *lib_cases, *gl_cases,
         "    default: return 0;", "    }", "}",
         "EXPORT int rt_native_call(CPU *c, int id) { return native_by_id(c, id); }",
-        "static uint32_t slot_addr[256]; static int slot_id[256], slot_n;",
+        "static uint32_t slot_addr[1024]; static int slot_id[1024], slot_n;",
         "/* host import slots (function pointers handed to the guest, e.g. by eglGetProcAddress) */",
         "EXPORT void rt_native_slot(uint32_t addr, int id) {",
         "    for (int k = 0; k < slot_n; k++) if (slot_addr[k] == addr) { slot_id[k] = id; return; }",
-        "    if (slot_n < 256) { slot_addr[slot_n] = addr; slot_id[slot_n++] = id; }", "}",
+        "    if (slot_n < 1024) { slot_addr[slot_n] = addr; slot_id[slot_n++] = id; }", "}",
         "static int native_import(CPU *c, uint32_t target) {", "    switch (target & ~1u) {", *plt_cases,
         "    default: break;", "    }",
         "    for (int k = 0; k < slot_n; k++) if (slot_addr[k] == (target & ~1u)) return native_by_id(c, slot_id[k]);",
@@ -110,16 +123,35 @@ def native_import_c(plt):
 
 
 RT_CALL = """
-static LiftFn lookup(uint32_t target) {
+/* index of the enabled lifted function at target (mode must match), or -1 */
+static int lookup_idx(uint32_t target) {
     uint32_t a = target & ~1u;
     int lo = 0, hi = lift_count - 1;
     while (lo <= hi) {
         int mid = (lo + hi) >> 1;
         uint32_t m = lift_table[mid].addr & ~1u;
-        if (m == a) return (lift_enabled[mid] && lift_table[mid].addr == target) ? lift_table[mid].fn : 0;
+        if (m == a) return (lift_enabled[mid] && lift_table[mid].addr == target) ? mid : -1;
         if (m < a) lo = mid + 1; else hi = mid - 1;
     }
-    return 0;
+    return -1;
+}
+
+static LiftFn lookup(uint32_t target) {
+    int k = lookup_idx(target);
+    return k < 0 ? 0 : lift_table[k].fn;
+}
+
+EXPORT LiftFn rt_lookup(uint32_t target) { return lookup(target); }
+
+/* Entry hooks: a function whose lift_enabled value has bit 1 set calls rt_hook(c, entry) first (the host's
+ * event reporting; registers hold the arguments). */
+EXPORT void (*rt_hook)(CPU *c, uint32_t target);
+
+static LiftFn lookup_hooked(CPU *c, uint32_t target) {
+    int k = lookup_idx(target);
+    if (k < 0) return 0;
+    if ((lift_enabled[k] & 2) && rt_hook) rt_hook(c, target);
+    return lift_table[k].fn;
 }
 
 /* Outside the game's own code (PLT stubs -> imports, host function slots): proper functions that always return
@@ -131,7 +163,7 @@ static int external(uint32_t target) {
 
 void rt_call(CPU *c, uint32_t target) {
     for (;;) {
-        LiftFn f = lookup(target);
+        LiftFn f = lookup_hooked(c, target);
         c->tail = 0;
         if (!f) {
             if (external(target)) {
@@ -182,7 +214,7 @@ void rt_vfp_load(CPU *c) {
 
 EXPORT void rt_run(CPU *c, uint32_t target) {
     for (;;) {
-        LiftFn f = lookup(target);
+        LiftFn f = lookup_hooked(c, target);
         c->tail = 0;
         if (!f) { c->pc = target; return; }
         f(c);
@@ -246,6 +278,14 @@ def candidates(only_leaves=False, everything=False):
     img = AN.Image(paths.so())
     d = AN.Disasm(img)
     fn = [(int(f["addr"], 16), f["mode"]) for f in an["functions"]]
+    # code after a function's end that starts with a push-lr prologue and nothing references directly (a
+    # callback IDA folded into the function before it): lifted as a function of its own, in the prologue's mode
+    known = {a for a, _ in fn}
+    for ga, _ in an.get("prologue_gaps", []):
+        a = int(ga, 16)
+        if a not in known:
+            fn.append((a, AN.THUMB if img.read(a, 2)[1] == 0xB5 else AN.ARM))
+    fn.sort()
     fn_starts = {a for a, _ in fn}
     fn_mode = dict(fn)
     frags = {int(x, 16) for x in an["fragments"]}
@@ -255,11 +295,13 @@ def candidates(only_leaves=False, everything=False):
     noret = {int(x, 16) for x in an["noreturn"]}
     frags = {int(x, 16) for x in an["fragments"]}
     executed = None
+    cov = paths.OUT / "coverage.json"
     if not everything and not only_leaves:
-        cov = paths.OUT / "coverage.json"
         if not cov.exists():
             sys.exit("no out/coverage.json: run the emulator once with --coverage (or pass --leaves / --all)")
         executed = set(json.loads(cov.read_text())["blocks"])
+    # --all: every function, but in the mode a recorded run executed it in when the static guess differs
+    seen_modes = set(json.loads(cov.read_text())["blocks"]) if everything and cov.exists() else set()
     starts_nofrag = fn_starts - frags
     # __gnu_thumb1_case_* switch helpers (direct or through PLT stubs), as analyze.py finds them: their call
     # sites become native switch dispatch
@@ -286,6 +328,11 @@ def candidates(only_leaves=False, everything=False):
                 continue
             if m not in seen:
                 m = seen[0]              # the static analysis guessed the mode wrong: trust what ran
+                fn_mode[a] = m
+        elif seen_modes:
+            seen = [mm for mm, bit in ((AN.ARM, 0), (AN.THUMB, 1)) if (a | bit) in seen_modes]
+            if seen and m not in seen:
+                m = seen[0]
                 fn_mode[a] = m
         # fragments (IDA-split pieces that run in their parent's frame) are absorbed: decoding continues into
         # them, so a function and its pieces become one C function whose jumps between pieces are gotos
@@ -334,17 +381,25 @@ def main():
           f"unsupported {len(unsupported)}: {reasons.most_common(12)}", flush=True)
 
     OUT.mkdir(parents=True, exist_ok=True)
-    for old in OUT.glob("lift_*.c"):
-        old.unlink()
     (OUT / "unsupported.txt").write_text("\n".join(unsupported))
-    files = []
-    for k in range(0, len(lifted), PER_FILE):
-        part = lifted[k:k + PER_FILE]
+    # one file per BUCKET bytes of .text: a function that changes (or appears) rewrites only its own file, and
+    # only rewritten files are recompiled (incremental build)
+    text_lo, text_hi = img.sec[".text"]
+    buckets = {}
+    for item in lifted:
+        buckets.setdefault((item[0] - text_lo) // BUCKET, []).append(item)
+    files, changed = [], []
+    for k in sorted(buckets):
         src = ['#include "rt.h"', "#include <math.h>", "#pragma warning(disable: 4102 4101 4146)"]
-        src += [code for _, _, code, _ in part]
-        f = OUT / f"lift_{k // PER_FILE:03d}.c"
-        f.write_text("\n\n".join(src) + "\n")
+        src += [code for _, _, code, _ in buckets[k]]
+        f = OUT / f"lift_{k:04d}.c"
+        if write_if_changed(f, "\n\n".join(src) + "\n"):
+            changed.append(f)
         files.append(f)
+    for old in OUT.glob("lift_*.c"):              # files of buckets that no longer exist
+        if old not in files and old.name != "lift_table.c":
+            old.unlink()
+            old.with_suffix(".obj").unlink(missing_ok=True)
     table = ['#include "rt.h"']
     table += [f"void F_{a:X}(CPU *c);" for a, _, _, _ in lifted]
     table.append("EXPORT const LiftEntry lift_table[] = {")
@@ -353,7 +408,6 @@ def main():
     table.append("};")
     table.append(f"EXPORT const int lift_count = {len(lifted)};")
     table.append(f"EXPORT uint8_t lift_enabled[{max(len(lifted), 1)}];   /* set by the host */")
-    text_lo, text_hi = img.sec[".text"]
     table.append(f"#define TEXT_LO 0x{text_lo:X}u")
     table.append(f"#define TEXT_HI 0x{text_hi:X}u")
     from unicorn import arm_const as UA
@@ -362,27 +416,47 @@ def main():
     an_plt = json.loads((paths.OUT / "analysis.json").read_text())["plt"]
     table.append('#include "rt_heap.c"')
     table.append('#include "rt_files.c"')
-    table.append(native_import_c({int(k, 16): v["name"] for k, v in an_plt.items() if v["target"] is None}))
+    real_imports = {int(k, 16): v["name"] for k, v in an_plt.items() if v["target"] is None}
+    table.append(native_import_c(real_imports))
+    # PLT stubs of real imports, for a host that runs without the emulator (it binds the imports itself)
+    table.append("typedef struct PltEntry { uint32_t addr; const char *name; } PltEntry;")
+    table.append("EXPORT const PltEntry rt_plt[] = {")
+    table += [f'  {{0x{a:X}u, "{n}"}},' for a, n in sorted(real_imports.items())]
+    table.append("};")
+    table.append(f"EXPORT const int rt_plt_count = {len(real_imports)};")
     table.append(RT_CALL)
+    # lift_table.c #includes the runtime sources: their text is part of its content for change detection
+    runtime = "".join((HERE / n).read_text() for n in ("rt_heap.c", "rt_files.c"))
     tf = OUT / "lift_table.c"
-    tf.write_text("\n".join(table) + "\n")
+    if write_if_changed(tf, "\n".join(table) + "\n", extra=runtime):
+        changed.append(tf)
     files.append(tf)
     json.dump([[a, m, leaf] for a, m, _, leaf in lifted], open(OUT / "lifted.json", "w"))
     print(f"wrote {len(files)} C files ({time.time() - t0:.0f}s)", flush=True)
     if args.no_compile:
         return
 
-    srcs = " ".join(f'"{f.name}"' for f in files)
+    # everything recompiles when the shared header or the compiler flags change
+    flags = f'/nologo /O1 /MP /W2 /wd4102 /wd4101 /wd4146 /I "{HERE}"'
+    stamp = OUT / "build_stamp.txt"
+    want = hashlib.sha1(((HERE / "rt.h").read_text() + flags).encode()).hexdigest()
+    if not stamp.exists() or stamp.read_text() != want:
+        changed = list(files)
+    changed = [f for f in files if f in changed or not f.with_suffix(".obj").exists()]
+    print(f"compiling {len(changed)} of {len(files)} files", flush=True)
     bat = OUT / "build.bat"
-    bat.write_text(CRLF.join([
-        "@echo off",
-        f'call "{VCVARS}" >nul',
-        f'cl /nologo /O1 /LD /MP /W2 /wd4102 /wd4101 /wd4146 /I "{HERE}" {srcs} /Fe:lift.dll /link /NOLOGO',
-        ""]))
+    lines = ["@echo off", f'call "{VCVARS}" >nul']
+    if changed:
+        names = " ".join(chr(34) + f.name + chr(34) for f in changed)
+        lines.append(f"cl /c {flags} {names} || exit /b 1")
+    lines.append("link /nologo /DLL /OUT:lift.dll lift_*.obj || exit /b 1")
+    bat.write_text(CRLF.join(lines + [""]))
     r = subprocess.run(["cmd", "/c", str(bat)], cwd=str(OUT), capture_output=True, text=True)
     log = (r.stdout + r.stderr)
     (OUT / "build.log").write_text(log)
     errs = [l for l in log.splitlines() if " error " in l or "fatal error" in l]
+    if r.returncode == 0:
+        stamp.write_text(want)
     print(f"cl exit {r.returncode}, {len(errs)} errors ({time.time() - t0:.0f}s)")
     for l in errs[:20]:
         print("  " + l)

@@ -24,17 +24,36 @@
 
 EXPORT uint32_t rt_heap_ctl;                  /* guest address of the HeapCtl, set by the host */
 
+/* One recursive lock for the whole heap: guest threads are host threads in the standalone host. Uncontended in
+ * the emulator (one host thread). */
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>
+static volatile long heap_owner;
+static int heap_depth;
+static void heap_lock(void) {
+    long me = (long)GetCurrentThreadId();
+    if (heap_owner == me) { heap_depth++; return; }
+    while (_InterlockedCompareExchange(&heap_owner, me, 0) != 0) YieldProcessor();
+    heap_depth = 1;
+}
+static void heap_unlock(void) {
+    if (--heap_depth == 0) _InterlockedExchange(&heap_owner, 0);
+}
+#define LOCKED(T, call) { T r_; heap_lock(); r_ = call; heap_unlock(); return r_; }
+
 static uint32_t heap_size(uint32_t n) { n = (n + 15u) & ~15u; return n < 16u ? 16u : n; }
 
 INLINE uint32_t HDR_SIZE(CPU *c, uint32_t p) { return R32(p - 16u); }
 INLINE uint32_t HDR_TAG(CPU *c, uint32_t p) { return R32(p - 12u); }
 
-EXPORT uint32_t rt_heap_usable(CPU *c, uint32_t p) {
+static uint32_t heap_usable(CPU *c, uint32_t p) {
     if (!p || HDR_TAG(c, p) != HEAP_TAG_USED) return 0;
     return HDR_SIZE(c, p);
 }
 
-EXPORT uint32_t rt_heap_malloc(CPU *c, uint32_t req) {
+static uint32_t heap_malloc(CPU *c, uint32_t req) {
     uint32_t ctl = rt_heap_ctl, n = heap_size(req), p;
     if (req > 0xF0000000u) return 0;
     if (n <= HEAP_SMALL_MAX) {
@@ -68,7 +87,7 @@ EXPORT uint32_t rt_heap_malloc(CPU *c, uint32_t req) {
 }
 
 /* Returns 0, or 1 when p was not a live block (the host reports it). */
-EXPORT uint32_t rt_heap_free(CPU *c, uint32_t p) {
+static uint32_t heap_free(CPU *c, uint32_t p) {
     uint32_t ctl = rt_heap_ctl;
     if (!p) return 0;
     if (HDR_TAG(c, p) != HEAP_TAG_USED) return 1;
@@ -85,7 +104,7 @@ EXPORT uint32_t rt_heap_free(CPU *c, uint32_t p) {
 }
 
 /* realloc fast path: the most recent allocation grows without copying. */
-EXPORT uint32_t rt_heap_grow_in_place(CPU *c, uint32_t p, uint32_t req) {
+static uint32_t heap_grow_in_place(CPU *c, uint32_t p, uint32_t req) {
     uint32_t ctl = rt_heap_ctl, n = heap_size(req);
     if (!p || HDR_TAG(c, p) != HEAP_TAG_USED) return 0;
     uint32_t old = HDR_SIZE(c, p);
@@ -95,25 +114,33 @@ EXPORT uint32_t rt_heap_grow_in_place(CPU *c, uint32_t p, uint32_t req) {
     return 1;
 }
 
-EXPORT uint32_t rt_heap_realloc(CPU *c, uint32_t p, uint32_t n) {
-    if (!p) return rt_heap_malloc(c, n);
-    if (!n) { rt_heap_free(c, p); return 0; }
-    uint32_t old = rt_heap_usable(c, p);
-    if (old >= n || rt_heap_grow_in_place(c, p, n)) return p;
-    uint32_t q = rt_heap_malloc(c, n);
+static uint32_t heap_realloc(CPU *c, uint32_t p, uint32_t n) {
+    if (!p) return heap_malloc(c, n);
+    if (!n) { heap_free(c, p); return 0; }
+    uint32_t old = heap_usable(c, p);
+    if (old >= n || heap_grow_in_place(c, p, n)) return p;
+    uint32_t q = heap_malloc(c, n);
     if (!q) return 0;
     MEMMOVE(c, q, p, old);
-    rt_heap_free(c, p);
+    heap_free(c, p);
     return q;
 }
 
-EXPORT uint32_t rt_heap_calloc(CPU *c, uint32_t count, uint32_t size) {
+static uint32_t heap_calloc(CPU *c, uint32_t count, uint32_t size) {
     uint64_t total = (uint64_t)count * size;
     if (total > 0xF0000000u) return 0;
-    uint32_t p = rt_heap_malloc(c, (uint32_t)total);
+    uint32_t p = heap_malloc(c, (uint32_t)total);
     if (p) MEMSET(c, p, 0, (uint32_t)total);
     return p;
 }
+
+EXPORT uint32_t rt_heap_usable(CPU *c, uint32_t p) LOCKED(uint32_t, heap_usable(c, p))
+EXPORT uint32_t rt_heap_malloc(CPU *c, uint32_t n) LOCKED(uint32_t, heap_malloc(c, n))
+/* Returns 0, or 1 when p was not a live block (the host reports it). */
+EXPORT uint32_t rt_heap_free(CPU *c, uint32_t p) LOCKED(uint32_t, heap_free(c, p))
+EXPORT uint32_t rt_heap_grow_in_place(CPU *c, uint32_t p, uint32_t n) LOCKED(uint32_t, heap_grow_in_place(c, p, n))
+EXPORT uint32_t rt_heap_realloc(CPU *c, uint32_t p, uint32_t n) LOCKED(uint32_t, heap_realloc(c, p, n))
+EXPORT uint32_t rt_heap_calloc(CPU *c, uint32_t count, uint32_t size) LOCKED(uint32_t, heap_calloc(c, count, size))
 
 /* ---------------------------------------------------------------- qsort, errno
  * qsort as emu/libc.py does it: a stable sort of the elements of a copy (the comparator reads the copy, never
@@ -171,6 +198,7 @@ static int native_qsort(CPU *c) {
 }
 
 EXPORT uint32_t rt_errno_ptr;                    /* the current guest thread's errno, set by the host */
+EXPORT uint32_t (*rt_errno_fn)(void);            /* or this: per host thread (standalone host) */
 
 /* Host side: the HeapCtl size, so it can be allocated and handed over. */
 EXPORT uint32_t rt_heap_ctl_size(void) { return HC_SIZE; }

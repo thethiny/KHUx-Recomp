@@ -10,7 +10,7 @@ import subprocess
 import sys
 import time
 
-from .ctl import get
+from .ctl import get, skip_story
 from .play_quest import button, screen, tap_w, widgets
 
 
@@ -79,7 +79,7 @@ def to_quest_select(timeout=240):
         elif s == "SceneNotice" and (close := button(name="Button_Close")):
             tap_w(close)               # startup notice WebView popup
         elif s in ("SceneFlashDrama", "SceneLight", "SceneNotice", ""):
-            get("tap", x=568, y=320)
+            skip_story() or get("tap", x=568, y=320)
         time.sleep(3)
     return False
 

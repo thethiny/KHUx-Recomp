@@ -106,16 +106,16 @@ Decompiled        ████████████████████  
 Lifted            ████████████████████  100.0%
 Rewritten         ░░░░░░░░░░░░░░░░░░░░    0.0%
 1:1 binary match  ░░░░░░░░░░░░░░░░░░░░    0.0%
-Recompiled        ░░░░░░░░░░░░░░░░░░░░    0.0%
+Recompiled        ████████████████████  100.0%
 ```
 
 Updated by `python recomp/progress.py`.
 
 - **Decompiled**: 56,014 of 56,604 functions have Hex-Rays pseudocode (590 failed). Reference only.
-- **Lifted**: 56,363 of 56,363 analysed functions translate to C (machine-generated, one C function per guest function, 69 instructions left to the emulator). 8,491 of them run and are checked against the emulator in game.
+- **Lifted**: 56,381 of 56,381 analysed functions translate to C (machine-generated, one C function per guest function, 65 instructions left to the emulator). 8,494 of them run and are checked against the emulator in game.
 - **Rewritten**: Readable, maintainable source (named types and variables, no register-level code). Not started.
 - **1:1 binary match**: Source that rebuilds the original ARM binary byte for byte (a matching decompilation). Not started.
-- **Recompiled**: A native executable that runs without the emulator. In hybrid mode about 99.97% of the executed instructions already run as native C, and memory/string functions, math, the heap, stdio streams and OpenGL ES are native, but APK assets, threads, JNI, sockets and audio still go through the Python runtime (milestone M2).
+- **Recompiled**: A native executable that runs without the emulator. The native host (`host/`, Windows) runs all 56,381 lifted functions natively, with real threads, sound, sockets, JNI and OpenGL ES, and no emulator or Python: it plays the game through login, the main menu and quests against the private server.
 
 ## Status
 
@@ -142,3 +142,7 @@ Updated by `python recomp/progress.py`.
   runtime.
 - Next: a native runtime replacing the Python one (libc, JNI, OpenGL ES, threads), so the lifted code runs
   without Unicorn or Python.
+
+## License
+
+MIT, see [LICENSE](LICENSE). Credit is required: keep the copyright notice in copies and derived work. Game data and assets are not covered (they belong to Square Enix).
