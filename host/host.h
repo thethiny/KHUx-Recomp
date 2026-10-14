@@ -178,6 +178,7 @@ uint32_t jstring_new(const char *utf8);
 uint32_t jclass_ref(const char *name);
 uint32_t jarray_new(char type, uint32_t n, const void *data);
 void android_video_poll(CPU *c);
+void android_iap_poll(CPU *c);
 extern int screen_w, screen_h;
 
 /* touch input queued by the window (main thread consumes) */

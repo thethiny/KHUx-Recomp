@@ -4,6 +4,7 @@
  * methods are logged once and return a default, as on the emulator. */
 #include "host.h"
 #include <math.h>
+#include <time.h>
 
 uint32_t jni_env, jni_vm;
 int screen_w = 1136, screen_h = 640;
@@ -450,6 +451,73 @@ void android_video_poll(CPU *c) {
     }
 }
 
+/* Google Play billing (org/cocos2dx/cpp/GooglePlayManager): a store that always succeeds, so purchases reach the
+ * server's /purchase/prepare (72) and /purchase/finish (73) - the private server grants them for free. The client
+ * expects every answer later, from Java (onFinishInitialize / onRequestProductsResult / onPurchaseFinish): calling
+ * them inside initWithKey / purchase re-enters a static-init guard or takes the "connection busy" resume path, so
+ * they are queued and run by android_iap_poll on the main thread, like the video callbacks. */
+#define GPM "org/cocos2dx/cpp/GooglePlayManager"
+enum { IAP_INIT = 1, IAP_PRODUCTS, IAP_PURCHASE };
+static struct { int kind; uint32_t h; } iap_events[32];
+static int n_iap_events;
+static volatile LONG iap_order;
+static SRWLOCK iap_lock = SRWLOCK_INIT;
+static void iap_push(int kind, uint32_t h) {
+    AcquireSRWLockExclusive(&iap_lock);
+    if (n_iap_events < 32) { iap_events[n_iap_events].kind = kind; iap_events[n_iap_events++].h = h; }
+    ReleaseSRWLockExclusive(&iap_lock);
+}
+static JV j_gpm_instance(JObj *s, JV *a, int n) { return jv_h(jobject_new(GPM)); }
+static JV j_gpm_init(JObj *s, JV *a, int n) { iap_push(IAP_INIT, 0); return jv_j(1); }
+static JV j_gpm_products(JObj *s, JV *a, int n) { iap_push(IAP_PRODUCTS, a[0].h); return jv_j(0); }
+static JV j_gpm_purchase(JObj *s, JV *a, int n) { iap_push(IAP_PURCHASE, a[0].h); return jv_j(0); }
+
+void android_iap_poll(CPU *c) {
+    static uint32_t cls, cb_init, cb_products, cb_purchase;
+    if (!cls) {
+        cls = jclass_ref(GPM);
+        cb_init = sym("Java_org_cocos2dx_cpp_GooglePlayManager_onFinishInitialize");
+        cb_products = sym("Java_org_cocos2dx_cpp_GooglePlayManager_onRequestProductsResult");
+        cb_purchase = sym("Java_org_cocos2dx_cpp_GooglePlayManager_onPurchaseFinish");
+    }
+    for (;;) {
+        AcquireSRWLockExclusive(&iap_lock);
+        int kind = 0;
+        uint32_t h = 0;
+        if (n_iap_events) {
+            kind = iap_events[0].kind;
+            h = iap_events[0].h;
+            memmove(iap_events, iap_events + 1, sizeof(iap_events[0]) * (size_t)--n_iap_events);
+        }
+        ReleaseSRWLockExclusive(&iap_lock);
+        if (!kind) return;
+        if (kind == IAP_INIT) {
+            hlog("  store: initialized");
+            GCALL(c, cb_init, jni_env, cls, 1);
+        } else if (kind == IAP_PRODUCTS) {
+            JObj *skus = jget(h);
+            uint32_t m = skus && skus->kind == J_ARRAY ? skus->n : 0;
+            uint32_t prices = jarray_new('L', m, NULL), curs = jarray_new('L', m, NULL);
+            JObj *po = jget(prices), *co = jget(curs);
+            for (uint32_t k = 0; k < m; k++) {
+                po->refs[k] = jstring_new("FREE");          /* never "owned.": that marks an owned item */
+                co->refs[k] = jstring_new("USD");
+            }
+            hlog("  store: %u products", m);
+            GCALL(c, cb_products, jni_env, cls, 1, h, prices, curs);
+        } else {
+            const char *sku = jv_str(jv_h(h));
+            char json[512];
+            LONG k = InterlockedIncrement(&iap_order);
+            snprintf(json, sizeof(json), "{\"orderId\":\"KHUX.%ld\",\"packageName\":\"%s\",\"productId\":\"%s\","
+                     "\"purchaseTime\":%llu,\"purchaseState\":0,\"purchaseToken\":\"khux-%ld\"}",
+                     (long)k, PACKAGE, sku ? sku : "", (unsigned long long)time(NULL) * 1000ULL, (long)k);
+            hlog("  store: purchase %s", sku ? sku : "?");
+            GCALL(c, cb_purchase, jni_env, cls, 1, h, jstring_new(json), jstring_new(""));
+        }
+    }
+}
+
 /* text input dialog (ui::EditBox): a Windows input box (gl.c), or the control channel's `text`. The answer goes back
  * through nativeSetEditTextDialogResult(byte[] utf8) on the main thread (main loop / ctl), as Android's dialog does. */
 volatile LONG edit_dialog_open;
@@ -571,6 +639,10 @@ static const JavaImpl JAVA[] = {
     {"java/util/UUID.getMostSignificantBits", j_uuid_hi},
     {"java/util/UUID.getLeastSignificantBits", j_uuid_lo},
     {"java/util/UUID.toString", j_uuid_str},
+    {GPM ".getInstance", j_gpm_instance},
+    {GPM ".initWithKey", j_gpm_init},
+    {GPM ".sendProductsRequest", j_gpm_products},
+    {GPM ".purchase", j_gpm_purchase},
     {VIDEO ".createVideoWidget", j_video_create},
     {VIDEO ".startVideo", j_video_start},
     {"org/cocos2dx/lib/Cocos2dxBitmap.getFontSizeAccordingHeight", j_font_size},

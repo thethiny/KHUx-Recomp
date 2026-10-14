@@ -143,6 +143,7 @@ int main(int argc, char **argv) {
             free(answer);
         }
         android_video_poll(c);
+        android_iap_poll(c);
         *L.gl_draws = 0;
         GCALL(c, render, jni_env, ctl_renderer);
         ctl_frame(c, frame);
