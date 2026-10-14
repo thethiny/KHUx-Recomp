@@ -388,13 +388,29 @@ def analyze_function(d, entry, mode, lo, hi, case_helpers, fn_starts, plt_range,
                         pc = nxt
                         continue
                     break
-                if mode == THUMB and i.id == A.ARM_INS_MOV and adr and cmp_state:
+                if mode == THUMB and i.id == A.ARM_INS_MOV and adr:
                     # lsls r0,#2; adr r1,T; adds r0,r1; ldr r0,[r0]; adds r0,r1; mov pc,r0
-                    n = cmp_state[1] + 1
                     tbl = adr[1]
+                    if cmp_state:
+                        n = cmp_state[1] + 1
+                        kind = "thumb_adr"
+                    else:
+                        # an outlined dispatcher (e.g. sub_6B4524): the bound check is in the caller
+                        # (cmp r0,#N; bhi; bl helper). Read entries while they point near the table: case
+                        # targets are close by, the bytes after the table are not.
+                        n = 0
+                        while n < 256:
+                            v = struct.unpack("<i", d.img.read(tbl + 4 * n, 4))[0]
+                            if not (-0x8000 <= v <= 0x8000) or (tbl + v) & 1:
+                                break
+                            n += 1
+                        kind = "thumb_adr_unbounded"
+                        if not n:
+                            res["indirect_jumps"].append(pc)
+                            break
                     vals = struct.unpack(f"<{n}i", d.img.read(tbl, 4 * n))
                     tgts = [(tbl + v) & ~1 for v in vals]
-                    res["switches"].append({"at": pc, "kind": "thumb_adr", "n": n, "table": tbl,
+                    res["switches"].append({"at": pc, "kind": kind, "n": n, "table": tbl,
                                             "targets": tgts})
                     res["data"].update(range(tbl, tbl + 4 * n, 2))
                     work.extend((t, None) for t in tgts)
