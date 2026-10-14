@@ -27,7 +27,7 @@ def get(path, **q):
 
 # Story / cut-scene screens: SceneFlashDrama (drama) and SceneLight (+ SpeechDisp, talk between the characters).
 # Every driver checks this one list through is_story / advance_story - add new story scenes HERE only.
-STORY_SCENES = ("SceneFlashDrama", "SceneLight")
+STORY_SCENES = ("SceneFlashDrama", "SceneLight", "SceneParade")   # FlashDrama scenes with a SKIP
 
 
 def is_story(screen):

@@ -42,6 +42,10 @@ def to_quest_select(timeout=240):
         if s in ("SceneActionMap", "SceneRaidBattle"):     # a battle (re)started: play it out
             subprocess.run([sys.executable, "-u", "-m", "recomp.emu.auto_battle", "2400"])
             continue
+        if s == "SceneLoginBonus":              # daily login bonus: no buttons, a tap closes it
+            get("tap", x=568, y=600)
+            time.sleep(3)
+            continue
         if "FlashMovieView" in (get("state").get("screen") or []):
             get("tap", x=568, y=320)            # movie over a scene (new world, boss appears, ...)
             time.sleep(3)
