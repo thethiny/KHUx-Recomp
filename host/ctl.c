@@ -39,6 +39,7 @@
 #define A_GLView_getScaleX 0x8D4554u
 #define A_GLView_getScaleY 0x8D4558u
 #define A_RESOURCE_SET_REVISION 0x4EABEEu
+#define A_cxa_throw 0xC983D4u
 #define NODE_CHILDREN 0x180u
 
 uint32_t ctl_renderer;
@@ -539,6 +540,54 @@ static char *serve_main(Req *r) {
         int frames = qget(r->q, "frames", v, sizeof(v)) ? atoi(v) : 12, hold = qget(r->q, "hold", v2, sizeof(v2)) ? atoi(v2) : 0;
         return swipe_json((float)atof(a[0]), (float)atof(a[1]), (float)atof(a[2]), (float)atof(a[3]), frames, hold);
     }
+    if (!strcmp(r->path, "poke")) {
+        /* DEV/TEST HARNESS ONLY: poke?addr=0x..&byte=N writes one guest byte (insta-win sets the "final team
+         * fought" flag, StageActorManager+124, before the stage finish) */
+        if (!qget(r->q, "addr", v, sizeof(v)) || !qget(r->q, "byte", v2, sizeof(v2)))
+            return _strdup("{\"error\": \"poke needs addr and byte\"}");
+        uint32_t addr = (uint32_t)strtoul(v, NULL, 16);
+        if (addr < 0x1000 || addr >= JHANDLE_BASE) return _strdup("{\"error\": \"bad address\"}");
+        *(uint8_t *)GP(addr) = (uint8_t)strtoul(v2, NULL, 0);
+        return _strdup("{\"ok\": true}");
+    }
+    if (!strcmp(r->path, "call")) {
+        /* DEV/TEST HARNESS ONLY: call?fn=0x..&args=0x..,5 calls a guest function on the main thread (up to 8
+         * integer arguments, hex or decimal; "zero" passes a pointer to 64 zeroed bytes, e.g. an empty
+         * shared_ptr) and returns r0; e.g. rush mode tops up the special gauge with
+         * SceneBattleBase::addPlayerCP(scene, n) */
+        char as[256] = "";
+        if (!qget(r->q, "fn", v, sizeof(v))) return _strdup("{\"error\": \"call needs fn\"}");
+        qget(r->q, "args", as, sizeof(as));
+        uint32_t a[8], tmp[8];
+        int n = 0, nt = 0;
+        for (char *tok = strtok(as, ","); tok && n < 8; tok = strtok(NULL, ",")) {
+            if (!strcmp(tok, "zero")) a[n++] = tmp[nt++] = gzalloc(64);   /* a pointer to 64 zero bytes */
+            else a[n++] = (uint32_t)strtoul(tok, NULL, 0);
+        }
+        uint32_t ida = (uint32_t)strtoul(v, NULL, 16) & ~1u, fn = 0;
+        for (int lo = 0, hi = L.count - 1; lo <= hi && !fn;) {        /* the lifted entry (Thumb bit included) */
+            int mid = (lo + hi) / 2;
+            uint32_t at = L.table[mid].addr & ~1u;
+            if (at == ida) fn = L.table[mid].addr;
+            else if (at < ida) lo = mid + 1;
+            else hi = mid - 1;
+        }
+        if (!fn) return _strdup("{\"error\": \"not a lifted function\"}");
+        uint32_t r0 = guest_call(mc, fn, n, a);
+        for (int k = 0; k < nt; k++) gfree(tmp[k]);
+        SB b = {0};
+        sb_fmt(&b, "{\"r0\": \"0x%x\"}", r0);
+        return b.s;
+    }
+    if (!strcmp(r->path, "key")) {
+        /* key?code=4: an Android key press as Cocos2dxRenderer.nativeKeyDown (4 = BACK, the phone's back button) */
+        int code = qget(r->q, "code", v, sizeof(v)) ? atoi(v) : 4;
+        uint32_t handled = GCALL(mc, sym("Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeKeyDown"), jni_env, ctl_renderer,
+                                 (uint32_t)code);
+        SB b = {0};
+        sb_fmt(&b, "{\"key\": %d, \"handled\": %u}", code, handled & 0xFF);
+        return b.s;
+    }
     if (!strcmp(r->path, "text")) {
         char s[512] = "";
         qget(r->q, "s", s, sizeof(s));
@@ -560,13 +609,25 @@ static char *serve_main(Req *r) {
     }
     if (!strcmp(r->path, "warp")) {
         /* DEV/TEST HARNESS ONLY: warp?avatar=0x..&to=0x.. puts the player next to another map actor through the
-         * game's own walkability-checked AvatarActor::setSefeMoveMapPotision (map position at +624/+628) */
-        if (!qget(r->q, "avatar", v, sizeof(v)) || !qget(r->q, "to", v2, sizeof(v2)))
-            return _strdup("{\"error\": \"warp needs avatar and to\"}");
-        uint32_t avatar = (uint32_t)strtoul(v, NULL, 16), to = (uint32_t)strtoul(v2, NULL, 16);
-        float x = *(float *)GP(to + 624), y = *(float *)GP(to + 628);
+         * game's own walkability-checked AvatarActor::setSefeMoveMapPotision (map position at +624/+628);
+         * warp?avatar=0x..&x=..&y=.. targets a map position instead (an area gate, which is not an actor) */
+        char vx[32], vy[32];
+        if (!qget(r->q, "avatar", v, sizeof(v)))
+            return _strdup("{\"error\": \"warp needs avatar and to (or x and y)\"}");
+        uint32_t avatar = (uint32_t)strtoul(v, NULL, 16);
+        float x, y;
+        if (qget(r->q, "to", v2, sizeof(v2))) {
+            uint32_t to = (uint32_t)strtoul(v2, NULL, 16);
+            x = *(float *)GP(to + 624);
+            y = *(float *)GP(to + 628);
+        } else if (qget(r->q, "x", vx, sizeof(vx)) && qget(r->q, "y", vy, sizeof(vy))) {
+            x = (float)atof(vx);
+            y = (float)atof(vy);
+        } else return _strdup("{\"error\": \"warp needs to, or x and y\"}");
         uint32_t fn = sym("_ZN11AvatarActor22setSefeMoveMapPotisionERN7cocos2d4Vec2E"), vec = gzalloc(8);
-        static const float off[7][2] = {{0, -80}, {80, 0}, {-80, 0}, {0, 80}, {0, -160}, {160, 0}, {-160, 0}};
+        /* side spots first: an enemy encounter is distance < radius (150-200) with y counted twice
+         * (EnemyActor::isEncount), so (+-80, 0) lands inside it and the battle starts at once */
+        static const float off[7][2] = {{80, 0}, {-80, 0}, {0, -60}, {0, 60}, {160, 0}, {-160, 0}, {0, -160}};
         SB b = {0};
         for (int k = 0; k < 7; k++) {
             float p[2] = {x + off[k][0], y + off[k][1]};
@@ -680,6 +741,19 @@ void ctl_frame(CPU *c, int frame) {
 }
 
 /* ---------------------------------------------------------------- hooks (any thread) */
+/* a guest C string, or "?" when the pointer is not readable */
+static const char *guest_cstr(uint32_t p, char *out, size_t cap) {
+    snprintf(out, cap, "?");
+    if (p < 0x1000 || p >= JHANDLE_BASE) return out;
+    __try {
+        const char *g = (const char *)GP(p);
+        size_t n = 0;
+        while (n + 1 < cap && g[n]) { out[n] = g[n]; n++; }
+        out[n] = 0;
+    } __except (EXCEPTION_EXECUTE_HANDLER) { snprintf(out, cap, "?"); }
+    return out;
+}
+
 static void on_hook(CPU *c, uint32_t target) {
     uint32_t a = target & ~1u;
     char fields[2600];
@@ -713,6 +787,37 @@ static void on_hook(CPU *c, uint32_t target) {
         snprintf(fields, sizeof(fields), "\"action\": %u, \"status\": %u", c->r[1], c->r[2]);
         snprintf(key, sizeof(key), "%u", c->r[1]);
         event_full("api", fields, key);
+    } else if (a == A_cxa_throw) {
+        /* __cxa_throw(obj, type_info, dtor): the host cannot unwind yet, so name the throw before it dies.
+         * type_info+4 is the mangled name; libc++ logic_error/runtime_error keep their message at obj+4. */
+        char type[160], what[400], esc[900];
+        uint32_t name = 0;
+        __try { name = *(uint32_t *)GP(c->r[1] + 4); } __except (EXCEPTION_EXECUTE_HANDLER) {}
+        guest_cstr(name, type, sizeof(type));
+        what[0] = 0;
+        if (strstr(type, "St12out_of_range") || strstr(type, "St11logic_error") || strstr(type, "St13runtime_error") ||
+            strstr(type, "St16invalid_argument") || strstr(type, "St12length_error")) {
+            uint32_t msg = 0;
+            __try { msg = *(uint32_t *)GP(c->r[0] + 4); } __except (EXCEPTION_EXECUTE_HANDLER) {}
+            guest_cstr(msg, what, sizeof(what));
+        }
+        size_t e = 0;
+        for (const char *q = what; *q && e + 2 < sizeof(esc); q++) {
+            if (*q == '"' || *q == 92) esc[e++] = 92;
+            esc[e++] = (unsigned char)*q < 32 ? ' ' : *q;
+        }
+        esc[e] = 0;
+        hlog("!! C++ throw %s (\"%s\") from lr=0x%08X", type, esc, c->r[14]);
+        snprintf(fields, sizeof(fields), "\"type\": \"%s\", \"what\": \"%s\", \"lr\": %u", type, esc, c->r[14]);
+        event_full("throw", fields, NULL);
+        /* likely return addresses (Thumb, inside .text) on the guest stack: the real thrower is among the first */
+        __try {
+            int shown = 0;
+            for (uint32_t o = 0; o < 0x800 && shown < 16; o += 4) {
+                uint32_t v = *(uint32_t *)GP(c->r[13] + o);
+                if ((v & 1) && v >= 0x400000u && v < 0xD00000u) { hlog("   [sp+0x%X] %08X", o, v); shown++; }
+            }
+        } __except (EXCEPTION_EXECUTE_HANDLER) {}
     } else if (a == A_RESOURCE_SET_REVISION) {
         snprintf(fields, sizeof(fields), "\"revision\": %u, \"size\": %u", c->r[1], c->r[2]);
         event_full("resource_revision_saved", fields, NULL);
@@ -722,7 +827,7 @@ static void on_hook(CPU *c, uint32_t target) {
 void ctl_hooks(void) {
     *L.hook = on_hook;
     uint32_t hooks[] = {A_Director_runWithScene, A_Director_pushScene, A_Director_replaceScene, A_Director_popScene,
-                        A_Director_setOpenGLView, A_APIManager_onRespond, A_RESOURCE_SET_REVISION};
+                        A_Director_setOpenGLView, A_APIManager_onRespond, A_RESOURCE_SET_REVISION, A_cxa_throw};
     for (int k = 0; k < (int)(sizeof(hooks) / sizeof(*hooks)); k++) hook_on(hooks[k]);
 }
 
@@ -801,7 +906,7 @@ static DWORD WINAPI client(LPVOID p) {
         qget(q, "for", cond, sizeof(cond));
         body = wait_json(cond, qget(q, "since", v, sizeof(v)) ? atoi(v) : n_events,
                          qget(q, "timeout", v2, sizeof(v2)) ? atof(v2) : 60);
-    } else if (!strcmp(path, "ui") || !strcmp(path, "tap") || !strcmp(path, "swipe") || !strcmp(path, "text") ||
+    } else if (!strcmp(path, "ui") || !strcmp(path, "tap") || !strcmp(path, "swipe") || !strcmp(path, "text") || !strcmp(path, "key") || !strcmp(path, "call") || !strcmp(path, "poke") ||
                !strcmp(path, "peek") || !strcmp(path, "textdata") || !strcmp(path, "warp")) body = run_on_main(path, q);
     else body = _strdup("{\"error\": \"unknown endpoint\", \"endpoints\": [\"state\", \"events?since=\", "
                         "\"wait?for=\", \"ui\", \"tap\", \"swipe\", \"text\", \"peek\", \"textdata\"]}");

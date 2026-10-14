@@ -5,11 +5,12 @@ python -m recomp.emu.play_quest [battle_max_seconds]
 Begin -> keyblade Confirm -> support -> Start (103) -> auto_battle -> result screens -> back to quest select.
 Guide popups (Txt + Button_OK 'OK') are acknowledged wherever they appear.
 """
+import os
 import subprocess
 import sys
 import time
 
-from .ctl import get, skip_story
+from .ctl import STORY_SCENES, advance_story, get, is_story
 
 
 def screen():
@@ -75,6 +76,38 @@ def begin():
         get("tap", x=773, y=399)
 
 
+A_STAGE_FINISH = 0x600EF0     # SceneActionMap::stageFinishNotification: what the game runs after the last enemy
+A_ENEMY_ADD_DAMAGE = 0x74B794  # EnemyActor::addDamage(this, damage, shared_ptr<const master::Burst>*)
+
+
+def instawin(timeout=60):
+    """DEV/TEST ONLY (KHUX_INSTAWIN=1, native exe): once the map is in field mode, run the game's own stage
+    finish - the finish animation, /stage/clear (action 106) and the results - without fighting. The clear
+    carries no loot (no enemies were beaten); story progress and missions count. Raids are not covered."""
+    from .auto_battle import scene_mode
+    t0 = time.time()
+    while time.time() - t0 < timeout:
+        allw = get("ui", all=1).get("widgets", [])
+        if scene_mode(allw) == 2:
+            sc = next(w for w in allw if w["class"] == "SceneActionMap")
+            # the Coliseum decides clear (118) or retire (117) with SceneActionMap::init's predicate $_10:
+            # StageActorManager::isAnnihilationMapEnemy - every enemy on the map dead (EnemyActor::isDied: HP at
+            # its SafeBuffer +8 down to the floor at +0). Story stages ($_8) don't need it. Defeat them all with
+            # the game's own EnemyActor::addDamage(enemy, n, &empty Burst shared_ptr), then finish.
+            for w in allw:
+                if w["class"] == "EnemyActor":
+                    get("call", fn=hex(A_ENEMY_ADD_DAMAGE), args=f"{w['addr']},10000000,zero")
+            since = get("state")["events"]
+            get("call", fn=hex(A_STAGE_FINISH), args=sc["addr"])
+            ok = wait_api((106, 118), since, 30)
+            print("instawin:", "stage cleared" if ok else "no clear (106/118) after the finish call")
+            return ok
+        if is_story(screen()):
+            advance_story()
+        time.sleep(1)
+    return False
+
+
 def main():
     limit = sys.argv[1] if len(sys.argv) > 1 else "1200"
     since = get("state")["events"]
@@ -110,17 +143,19 @@ def main():
         sc = screen()
         if sc in ("SceneActionMap", "SceneRaidBattle"):
             break
-        if sc == "SceneFlashDrama":
-            skip_story() or get("tap", x=568, y=320)
+        if is_story(sc):                          # story before the map
+            advance_story()
         time.sleep(2)
-    subprocess.run([sys.executable, "-u", "-m", "recomp.emu.auto_battle", limit])
+    if os.environ.get("KHUX_INSTAWIN") and screen() == "SceneActionMap" and instawin():
+        pass
+    else:
+        subprocess.run([sys.executable, "-u", "-m", "recomp.emu.auto_battle", limit])
     for _ in range(30):                           # result screens
         s = screen()
-        if s not in ("SceneBattleResult", "LoadingIndicator", "SceneActionMap", "SceneRaidBattle",
-                     "SceneFlashDrama", ""):
+        if s not in ("SceneBattleResult", "LoadingIndicator", "SceneActionMap", "SceneRaidBattle", "") + STORY_SCENES:
             break
-        if s == "SceneFlashDrama":                # after-quest story drama
-            skip_story() or get("tap", x=568, y=320)
+        if is_story(s):                           # after-quest story
+            advance_story()
         if s == "SceneBattleResult":
             b = button(name="Button_Ok")
             if b:

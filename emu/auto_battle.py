@@ -1,6 +1,11 @@
 """Blind battle driver (dev helper): attack whatever enemy the UI shows, acknowledge tutorial prompts.
 
-python -m recomp.emu.auto_battle [max_seconds]
+python -m recomp.emu.auto_battle [max_seconds] [--rush]
+
+--rush (or KHUX_RUSH=1, which play_quest / campaign pass on): skip the regular enemies. Warp (dev-only control
+endpoint) next to the quest boss (the EnemyActor under the BossName_Panel); in an area without the boss, warp to
+the area gate (MapGateMarker) and step into it. The game lets you finish a quest by beating only the boss.
+Rush also keeps the special gauge full (SceneBattleBase::addPlayerCP through the dev-only control 'call').
 
 Each round: if a prompt with an OK button is up, log its text and tap OK; else if enemy level labels
 (LV_NumLabel) are on screen, tap just below the first one (the enemy body); else tap the right side of
@@ -9,9 +14,121 @@ the screen to walk on. Stops when the screen leaves SceneActionMap, on a crash, 
 import sys
 import time
 
-from .ctl import get, skip_story
+from .ctl import advance_story, get, is_story
 
 VERBOSE = bool(__import__("os").environ.get("KHUX_BATTLE_VERBOSE"))
+RUSH = "--rush" in sys.argv or bool(__import__("os").environ.get("KHUX_RUSH"))
+
+
+def peek32(addr, n=4):
+    return [int(x, 16) for x in get("peek", addr=hex(addr), n=n)["words"]]
+
+
+def avatar_map_pos(actor):
+    """An actor's map position (+624/+628, floats). The map has scale 1, so screen and map coordinates differ
+    only by the camera offset."""
+    import struct
+    return [struct.unpack("<f", struct.pack("<I", x))[0] for x in peek32(int(actor["addr"], 16) + 624, 8)]
+
+
+def scene_mode(allw):
+    """SceneActionMap mode, *(*(scene+800)+24) (SceneActionMap::update): 1 battle, 2 field, 3 interlude,
+    4 stage title, 5 talk; None when unknown."""
+    sc = next((w for w in allw if w["class"] == "SceneActionMap"), None)
+    if not sc:
+        return None
+    mgr = peek32(int(sc["addr"], 16) + 800)[0]
+    return peek32(mgr + 24)[0] if mgr else None
+
+
+def group_leader(allw, boss):
+    """The enemy that starts the boss's battle. Enemies come in groups: only the leader (state +672 == 2) is
+    checked for an encounter (StageActorManager::checkEncount); the rest (state 1, the boss too) join it."""
+    bx, by = avatar_map_pos(boss)
+    best = None
+    for w in allw:
+        if w["class"] != "EnemyActor" or peek32(int(w["addr"], 16) + 672)[0] != 2:
+            continue
+        x, y = avatar_map_pos(w)
+        d = (x - bx) ** 2 + (y - by) ** 2
+        if best is None or d < best[0]:
+            best = (d, w)
+    return best[1] if best else boss
+
+
+A_ADD_PLAYER_CP = 0x5FAD2C   # SceneBattleBase::addPlayerCP(this, n): StageState::addCP + gauge UI + setPossibleBurst
+
+
+def rush_fill_gauge(widgets):
+    """--rush: fill the special gauge (native exe only: needs the 'call' endpoint). The gauge is CP: one point on
+    screen is 10000 CP (PlayerStatusIndicator::setCP shows CP / 10000), the maximum comes from the keyblade's burst
+    (90000 = 9 points) and StageState::addCP clamps to it, so adding a million means "full". (SafeBuffer keeps the
+    stored value encrypted: read it through the game's functions, never raw.)"""
+    if not any(w["name"] == "Avatar_Burst_Num" and "PlayerStatusIndicator" in w["path"] for w in widgets):
+        return
+    scene = next((w for w in get("ui", all=1).get("widgets", [])
+                  if w["class"] in ("SceneActionMap", "SceneRaidBattle")), None)      # both are SceneBattleBase
+    if scene:
+        get("call", fn=hex(A_ADD_PLAYER_CP), args=f"{scene['addr']},1000000")
+
+
+def rush_step(t0, tried):
+    """--rush: warp toward the boss or the area gate. Returns True when it acted (the caller waits a round)."""
+    allw = get("ui", all=1).get("widgets", [])
+    avatar = next((w for w in allw if w["class"] == "AvatarActor"), None)
+    if not avatar:
+        return False
+    ax, ay = avatar["rect"][:2]
+    panel = next((w for w in allw if w["name"] == "BossName_Panel"), None)
+    if panel:
+        px, py = (panel["rect"][0] + panel["rect"][2]) / 2, panel["rect"][3]
+        foes = [w for w in allw if w["class"] == "EnemyActor" and w["rect"][1] >= py]
+        boss = min(foes, key=lambda w: (w["rect"][0] - px) ** 2 + (w["rect"][1] - py) ** 2, default=None)
+        if boss is None:
+            return False
+        mode = scene_mode(allw)
+        if mode == 1:
+            # in the battle: hit the body. Actors are anchored at their feet and a big boss's level label floats
+            # ~300 px higher, so the usual "45 px below the label" lands on empty ground; aim halfway between
+            lab = next((w for w in allw if w["name"] == "LV_NumLabel" and "/BossName_Panel/" in w["path"]), None)
+            bx, by = boss["rect"][:2]
+            ty = (by + lab["rect"][1]) / 2 if lab else by - 60
+            tx, ty = min(max(bx, 230), 1076), min(max(ty, 90), 600)       # x >= 230: clear of the medal deck
+            rush_fill_gauge(get("ui").get("widgets", []))
+            special = special_ready(get("ui").get("widgets", []))
+            if special:
+                mx, my, gauge, cost = special
+                get("swipe", x0=mx, y0=my, x1=tx, y1=ty, frames=8)
+                print(f"{time.time() - t0:5.0f}s rush: special on the boss (gauge {gauge}, cost {cost})")
+            else:
+                get("tap", x=tx, y=ty)
+            return True
+        if mode != 2:
+            return False                                  # interlude / talk / title: let the main loop handle it
+        leader = group_leader(allw, boss)
+        key = ("boss", leader["addr"])
+        if tried.get(key, 0) >= 3:
+            return False
+        tried[key] = tried.get(key, 0) + 1
+        print(f"{time.time() - t0:5.0f}s rush: warp into the boss's group: "
+              f"{get('warp', avatar=avatar['addr'], to=leader['addr'])}")
+        return True
+    gate = next((w for w in allw if w["class"] == "MapGateMarker"), None)
+    if gate:
+        gx, gy = gate["rect"][:2]
+        if (gx - ax) ** 2 + (gy - ay) ** 2 < 120 ** 2:
+            return False
+        key = ("gate", gate["addr"])
+        tried[key] = tried.get(key, 0) + 1
+        if tried[key] <= 2:
+            mx, my = avatar_map_pos(avatar)
+            print(f"{time.time() - t0:5.0f}s rush: warp to the gate: "
+                  f"{get('warp', avatar=avatar['addr'], x=mx + gx - ax, y=my + gy - ay)}")
+        else:                                             # next to it after the warp: step onto it
+            gate = next((w for w in get("ui", all=1).get("widgets", []) if w.get("addr") == gate["addr"]), gate)
+            get("tap", x=min(max(gate["rect"][0], 60), 1076), y=min(max(gate["rect"][1], 90), 600))
+        return True
+    return False
 
 
 def atlas_number(text):
@@ -39,7 +156,9 @@ def special_ready(widgets):
 
 
 def main():
-    limit = float(sys.argv[1]) if len(sys.argv) > 1 else 300
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    limit = float(args[0]) if args else 300
+    rush_tried = {}
     t0 = time.time()
     since = get("state")["events"]
     last_prompt = None
@@ -123,10 +242,9 @@ def main():
                 continue
         else:
             bare = 0
-        if any(x in screen for x in ("SceneLight", "SceneFlashDrama")) or screen[1:2] == ["LoadingIndicator"]:
-            # mid-stage story (SceneLight + SpeechDisp, drama) or loading: SKIP it, else tap on
-            if not skip_story():
-                get("tap", x=568, y=320)
+        if is_story(screen) or screen[1:2] == ["LoadingIndicator"]:
+            # mid-stage story or loading: SKIP it, else tap on
+            advance_story()
             time.sleep(3)
             continue
         if "SceneActionMap" not in screen and "SceneRaidBattle" not in screen:
@@ -164,7 +282,19 @@ def main():
             if marks:
                 x, y = marks[walk_step % len(marks)]
                 walk_step += 1
-                get("tap", x=min(max(x, 40), 1096), y=min(max(y + 30, 90), 600))
+                tx, ty = min(max(x, 230), 1096), min(max(y + 30, 90), 600)
+                if RUSH:
+                    rush_fill_gauge(widgets)
+                special = special_ready(get("ui")["widgets"]) if RUSH else None
+                if special:                       # rush: full gauge, specials on every part
+                    mx, my, gauge, cost = special
+                    get("swipe", x0=mx, y0=my, x1=tx, y1=ty, frames=8)
+                    print(f"{time.time() - t0:5.0f}s rush raid special (gauge {gauge}, cost {cost})")
+                else:
+                    get("tap", x=min(max(x, 40), 1096), y=min(max(y + 30, 90), 600))
+            time.sleep(2.0)
+            continue
+        if RUSH and rush_step(t0, rush_tried):
             time.sleep(2.0)
             continue
         enemies = [w for w in widgets if w["name"] == "LV_NumLabel" and 40 <= w["rect"][0] <= 1096
@@ -185,6 +315,13 @@ def main():
             pts = sorted((w["rect"][0], min(w["rect"][3] + 45, 600)) for w in enemies)
             (x0, y0), (x1, y1) = pts[0], pts[-1]
             get("swipe", x0=x0 - 40, y0=y0, x1=x1 + 40, y1=y1)
+        elif enemies and RUSH and (rush_fill_gauge(widgets) or True) and (special := special_ready(get("ui")["widgets"])):
+            # rush keeps the gauge full in every battle (the boss battle hides BossName_Panel: no rush_step there)
+            r = enemies[0]["rect"]
+            mx, my, gauge, cost = special
+            get("swipe", x0=mx, y0=my, x1=r[0], y1=min(r[3] + 45, 600), frames=8)
+            attack_taps += 1
+            print(f"{time.time() - t0:5.0f}s rush special attack (gauge {gauge}, cost {cost})")
         elif enemies and (special := special_ready(widgets)):
             # "Swipe a glowing Medal to unleash a special attack!": flick the front medal at the enemy
             r = enemies[0]["rect"]

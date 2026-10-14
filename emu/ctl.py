@@ -8,6 +8,7 @@
   python -m recomp.emu.ctl tap name=Button_OK | text=OK
   python -m recomp.emu.ctl swipe X0 Y0 X1 Y1 [frames=N] [hold=N]
   python -m recomp.emu.ctl text Sora [0]      # IME text into the focused TextField (+Enter unless 0)
+  python -m recomp.emu.ctl key [4]            # Android key press, 4 = BACK (native exe only)
 """
 import json
 import sys
@@ -22,6 +23,22 @@ def get(path, **q):
     timeout = float(q.get("timeout", 30)) + 10
     with urllib.request.urlopen(url, timeout=timeout) as r:
         return json.loads(r.read())
+
+
+# Story / cut-scene screens: SceneFlashDrama (drama) and SceneLight (+ SpeechDisp, talk between the characters).
+# Every driver checks this one list through is_story / advance_story - add new story scenes HERE only.
+STORY_SCENES = ("SceneFlashDrama", "SceneLight")
+
+
+def is_story(screen):
+    """screen: a scene name, or the state's screen list."""
+    names = [screen] if isinstance(screen, str) else list(screen or [])
+    return any(n in STORY_SCENES for n in names)
+
+
+def advance_story():
+    """Move a story on: its SKIP control when there is one, else a tap mid-screen."""
+    return skip_story() or get("tap", x=568, y=320)
 
 
 def skip_story():
@@ -59,6 +76,8 @@ def main(argv):
     elif cmd == "swipe":
         extra = dict(a.split("=", 1) for a in rest[4:])          # frames=N hold=N
         out = get("swipe", x0=rest[0], y0=rest[1], x1=rest[2], y1=rest[3], **extra)
+    elif cmd == "key":                                           # native exe only; 4 = Android BACK
+        out = get("key", code=rest[0] if rest else 4)
     elif cmd == "text":
         out = get("text", s=rest[0], enter=rest[1] if len(rest) > 1 else 1)
     else:

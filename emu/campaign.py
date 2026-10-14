@@ -10,7 +10,7 @@ import subprocess
 import sys
 import time
 
-from .ctl import get, skip_story
+from .ctl import STORY_SCENES, advance_story, get, is_story
 from .play_quest import button, screen, tap_w, widgets
 
 
@@ -78,8 +78,8 @@ def to_quest_select(timeout=240):
             tap_w(ok)
         elif s == "SceneNotice" and (close := button(name="Button_Close")):
             tap_w(close)               # startup notice WebView popup
-        elif s in ("SceneFlashDrama", "SceneLight", "SceneNotice", ""):
-            skip_story() or get("tap", x=568, y=320)
+        elif is_story(s) or s in ("SceneNotice", ""):
+            advance_story()
         time.sleep(3)
     return False
 
@@ -88,7 +88,7 @@ def main():
     rounds = int(sys.argv[1]) if len(sys.argv) > 1 else 10
     limit = sys.argv[2] if len(sys.argv) > 2 else "2400"
     for r in range(rounds):
-        if screen() in ("SceneActionMap", "SceneRaidBattle", "SceneLight", "SceneFlashDrama"):
+        if screen() in ("SceneActionMap", "SceneRaidBattle") + STORY_SCENES:
             print(f"round {r}: finishing the battle in progress", flush=True)
             subprocess.run([sys.executable, "-u", "-m", "recomp.emu.auto_battle", limit])
         if not to_quest_select():
