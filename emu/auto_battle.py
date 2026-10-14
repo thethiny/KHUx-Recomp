@@ -5,7 +5,8 @@ python -m recomp.emu.auto_battle [max_seconds] [--rush]
 --rush (or KHUX_RUSH=1, which play_quest / campaign pass on): skip the regular enemies. Warp (dev-only control
 endpoint) next to the quest boss (the EnemyActor under the BossName_Panel); in an area without the boss, warp to
 the area gate (MapGateMarker) and step into it. The game lets you finish a quest by beating only the boss.
-Rush also keeps the special gauge full (SceneBattleBase::addPlayerCP through the dev-only control 'call').
+Rush also keeps the special gauge and the HP full (SceneBattleBase::addPlayerCP / addPlayerHP through the dev-only control
+'call', on both the native exe and the emulator).
 
 Each round: if a prompt with an OK button is up, log its text and tap OK; else if enemy level labels
 (LV_NumLabel) are on screen, tap just below the first one (the enemy body); else tap the right side of
@@ -57,10 +58,11 @@ def group_leader(allw, boss):
 
 
 A_ADD_PLAYER_CP = 0x5FAD2C   # SceneBattleBase::addPlayerCP(this, n): StageState::addCP + gauge UI + setPossibleBurst
+A_ADD_PLAYER_HP = 0x5FAC9C   # SceneBattleBase::addPlayerHP(this, n): StageState::addDamage(-n) (clamped to max) + HP UI
 
 
 def rush_fill_gauge(widgets):
-    """--rush: fill the special gauge (native exe only: needs the 'call' endpoint). The gauge is CP: one point on
+    """--rush: fill the special gauge (needs the 'call' endpoint: native exe and emulator). The gauge is CP: one point on
     screen is 10000 CP (PlayerStatusIndicator::setCP shows CP / 10000), the maximum comes from the keyblade's burst
     (90000 = 9 points) and StageState::addCP clamps to it, so adding a million means "full". (SafeBuffer keeps the
     stored value encrypted: read it through the game's functions, never raw.)"""
@@ -70,6 +72,15 @@ def rush_fill_gauge(widgets):
                   if w["class"] in ("SceneActionMap", "SceneRaidBattle")), None)      # both are SceneBattleBase
     if scene:
         get("call", fn=hex(A_ADD_PLAYER_CP), args=f"{scene['addr']},1000000")
+
+
+def rush_heal():
+    """--rush: keep the player's HP full (both the native exe and the emulator have the 'call' endpoint).
+    SceneBattleBase::addPlayerHP heals through StageState::addDamage(-n), which clamps to the max."""
+    scene = next((w for w in get("ui", all=1).get("widgets", [])
+                  if w["class"] in ("SceneActionMap", "SceneRaidBattle")), None)
+    if scene:
+        get("call", fn=hex(A_ADD_PLAYER_HP), args=f"{scene['addr']},100000000")
 
 
 def rush_step(t0, tried):
@@ -250,6 +261,8 @@ def main():
         if "SceneActionMap" not in screen and "SceneRaidBattle" not in screen:
             print("left battle:", st.get("screen"))
             break
+        if RUSH:
+            rush_heal()
         for ev in get("events", since=since):
             if ev["kind"] in ("api", "crash", "scene"):
                 print(f"  event {ev['kind']}: {ev.get('action', ev.get('error', ev.get('name')))}")
@@ -273,6 +286,17 @@ def main():
             continue
         # attackable: label well inside the view (the body is ~45 px below the label; one at the bottom edge
         # is reached by walking toward it instead)
+        tap_screen = next((w for w in widgets if w["touch"] and w["name"] == "Tap_Screen_Area"), None)
+        if tap_screen and __import__("os").environ.get("KHUX_STOP_AT_RESULT"):
+            print("raid result up (KHUX_STOP_AT_RESULT): Tap_Screen_Area", tap_screen["rect"])
+            return
+        if tap_screen:
+            # the raid result ("The Raid Boss is defeated!", RaidBossLwfDialog): no boss markers are left, so tap
+            # the "Tap Screen" area (its CenterButton) to leave
+            r = tap_screen["rect"]
+            get("tap", x=(r[0] + r[2]) / 2, y=(r[1] + r[3]) / 2)
+            time.sleep(2.0)
+            continue
         if "SceneRaidBattle" in screen:
             # raid: the boss parts carry RaidBossHPIndicator markers (under BattleMarker); tap just below them
             # in turn (arms first, then the head, as the raid tutorial asks)

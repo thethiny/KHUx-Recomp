@@ -17,7 +17,8 @@ from pathlib import Path
 RECOMP = Path(__file__).resolve().parent
 _RELATIVE_INPUT = RECOMP.parent / "Input" / "1.0.1"
 
-FS_ROOT = RECOMP / "fs"
+# KHUX_FS picks another device folder (e.g. fs2, a second account), like the native exe's --fs
+FS_ROOT = Path(os.environ["KHUX_FS"]).resolve() if os.environ.get("KHUX_FS") else RECOMP / "fs"
 OUT = RECOMP / "out"
 EVENTS_FILE = RECOMP / "emu_events.jsonl"
 SERVER_LOG = RECOMP / "server_emu.log"

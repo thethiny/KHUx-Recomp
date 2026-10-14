@@ -142,6 +142,15 @@ static HRESULT STDMETHODCALLTYPE controller_created(void *This, HRESULT hr, ICor
     EventRegistrationToken tok;
     ICoreWebView2_add_NavigationStarting(v->web, handler_new(&nav_starting_vtbl, k), &tok);
     ICoreWebView2_add_NavigationCompleted(v->web, handler_new(&nav_completed_vtbl, k), &tok);
+    /* behave like an Android WebView: no link-preview status bar (bottom left on hover), no right-click menu,
+     * no Ctrl+wheel zoom */
+    ICoreWebView2Settings *set = NULL;
+    if (SUCCEEDED(ICoreWebView2_get_Settings(v->web, &set)) && set) {
+        ICoreWebView2Settings_put_IsStatusBarEnabled(set, FALSE);
+        ICoreWebView2Settings_put_AreDefaultContextMenusEnabled(set, FALSE);
+        ICoreWebView2Settings_put_IsZoomControlEnabled(set, FALSE);
+        ICoreWebView2Settings_Release(set);
+    }
     /* Android-style scroll bar: thin, translucent, no track or arrows (WebView2 shows the desktop one) */
     ICoreWebView2_AddScriptToExecuteOnDocumentCreated(v->web,
         L"(function(){var s=document.createElement('style');"

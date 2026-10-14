@@ -573,16 +573,36 @@ class Control:
                     else:
                         self._send(ctl.run_on_main(lambda: {"addr": hex(addr), "words": [
                             hex(w) for w in struct.unpack(f"<{n // 4}I", ctl.emu.read(addr, n // 4 * 4))]}))
+                elif p == "call":
+                    # DEV/TEST HARNESS ONLY: call?fn=0x..&args=0x..,5 calls a guest function on the main thread and
+                    # returns r0 (as host/ctl.c); e.g. rush mode's SceneBattleBase::addPlayerCP / addPlayerHP
+                    ida = int(q["fn"], 16) & ~1
+                    args = [int(a, 0) for a in q.get("args", "").split(",") if a]
+
+                    def call():
+                        e = ctl.emu
+                        fn = next((a for a in e.symbols.values() if a & ~1 == ida), None)
+                        if fn is None:
+                            return {"error": "no symbol at %#x" % ida}
+                        return {"r0": hex(e.call(fn, *args) & 0xFFFFFFFF)}
+                    self._send(ctl.run_on_main(call))
                 elif p == "warp":
                     # DEV/TEST HARNESS ONLY: warp?avatar=0x..&to=0x.. puts the player next to another map actor
                     # (e.g. an EnemyActor behind terrain the blind battle driver cannot route round) through the
                     # game's own AvatarActor::setSefeMoveMapPotision (walkability-checked; map position lives at
                     # +624/+628 in both actor classes). Never part of the server.
-                    avatar, to = int(q["avatar"], 16), int(q["to"], 16)
+                    # warp?avatar=0x..&x=..&y=.. targets a map position instead (an area gate), as in host/ctl.c
+                    avatar = int(q["avatar"], 16)
+                    to = int(q["to"], 16) if "to" in q else None
 
                     def warp():
                         e = ctl.emu
-                        x, y = struct.unpack("<2f", e.read(to + 624, 8))
+                        if to is not None:
+                            x, y = struct.unpack("<2f", e.read(to + 624, 8))
+                        elif "x" in q and "y" in q:
+                            x, y = float(q["x"]), float(q["y"])
+                        else:
+                            return {"error": "warp needs to, or x and y"}
                         fn = e.symbols["_ZN11AvatarActor22setSefeMoveMapPotisionERN7cocos2d4Vec2E"]
                         v = e.alloc(8)
                         try:
