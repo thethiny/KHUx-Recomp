@@ -552,13 +552,14 @@ RW_FUNCTION(0x90A844, "cocos2d::CustomCommand::~CustomCommand [deleting destruct
 
 // cocos2d::CustomCommand::execute
 // IDA: int __fastcall cocos2d::CustomCommand::execute(cocos2d::CustomCommand *this)
-static uint32_t cocos2d_CustomCommand_execute_90A850(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
+static void cocos2d_CustomCommand_execute_90A850(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
     const uint32_t v0 = rw::load<uint32_t>(self + 0x20u);
     if (v0 == 0u) {
-        return v0;
+        return;
     } else {
         const uint32_t v2 = rw::load<uint32_t>(rw::load<uint32_t>(v0) + 0x18u);
-        return rw::call(v2, {v0, v2, a2, a3});  // call through a function pointer
+        const uint32_t r3 = rw::call(v2, {v0, v2, a2, a3});  // call through a function pointer
+        return;
     }
 }
 RW_FUNCTION(0x90A850, "cocos2d::CustomCommand::execute", cocos2d_CustomCommand_execute_90A850);
@@ -3169,14 +3170,14 @@ RW_FUNCTION(0x926896, "cocos2d::PhysicsShape::setScaleY", cocos2d_PhysicsShape_s
 
 // cocos2d::PhysicsShape::update
 // IDA: int __fastcall cocos2d::PhysicsShape::update(int this, float a2)
-static uint32_t cocos2d_PhysicsShape_update_9268B4(uint32_t self, uint32_t a1) {
+static void cocos2d_PhysicsShape_update_9268B4(uint32_t self, uint32_t a1) {
     if (uint32_t(rw::load<uint8_t>(self + 0x3Cu)) == 0u) {
-        return self;
+        return;
     } else {
         rw::save<uint32_t>(self + 0x2Cu, rw::load<uint32_t>(self + 0x34u));
         rw::save<uint32_t>(self + 0x30u, rw::load<uint32_t>(self + 0x38u));
         rw::save<uint8_t>(self + 0x3Cu, uint8_t(0u));
-        return 0u;
+        return;
     }
 }
 RW_FUNCTION(0x9268B4, "cocos2d::PhysicsShape::update", cocos2d_PhysicsShape_update_9268B4);

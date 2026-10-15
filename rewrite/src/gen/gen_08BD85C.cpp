@@ -1239,8 +1239,8 @@ RW_FUNCTION(0x8C1CAE, "cocos2d::Animate3D::reverse", cocos2d_Animate3D_reverse_8
 
 // cocos2d::Animate3D::step
 // IDA: int __fastcall cocos2d::Animate3D::step(cocos2d::Animate3D *this, float a2)
-static uint32_t cocos2d_Animate3D_step_8C1E38(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
-    return rw::call(0x8677C3, {self, rw::call(0xCD6E14, {rw::load<uint32_t>(self + 0x34u), a1, a2, a3})});  // cocos2d::ActionInterval::step; _mulsf3
+static void cocos2d_Animate3D_step_8C1E38(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
+    const uint32_t r2 = rw::call(0x8677C3, {self, rw::call(0xCD6E14, {rw::load<uint32_t>(self + 0x34u), a1, a2, a3})});  // cocos2d::ActionInterval::step; _mulsf3
 }
 RW_FUNCTION(0x8C1E38, "cocos2d::Animate3D::step", cocos2d_Animate3D_step_8C1E38);
 
@@ -3345,12 +3345,13 @@ RW_FUNCTION(0x8E8736, "cocos2d::Configuration::setValue", cocos2d_Configuration_
 
 // cocos2d::Console::stop
 // IDA: int __fastcall cocos2d::Console::stop(int this)
-static uint32_t cocos2d_Console_stop_8EA700(uint32_t self) {
+static void cocos2d_Console_stop_8EA700(uint32_t self) {
     if (uint32_t(rw::load<uint8_t>(self + 0xACu)) == 0u) {
-        return self;
+        return;
     } else {
         rw::save<uint8_t>(self + 0xADu, uint8_t(1u));
-        return rw::call(0xC97A4D, {self + 0x28u, 0xADu, 1u});  // sub_C97A4C
+        const uint32_t r1 = rw::call(0xC97A4D, {self + 0x28u, 0xADu, 1u});  // sub_C97A4C
+        return;
     }
 }
 RW_FUNCTION(0x8EA700, "cocos2d::Console::stop", cocos2d_Console_stop_8EA700);
@@ -4331,65 +4332,65 @@ RW_FUNCTION(0x8ED912, "cocos2d::Data::fastSet", cocos2d_Data_fastSet_8ED912);
 
 // cocos2d::DataVisitor::visit
 // IDA: int __fastcall cocos2d::DataVisitor::visit(int a1)
-static uint32_t cocos2d_DataVisitor_visit_8ED916(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3) {
+static void cocos2d_DataVisitor_visit_8ED916(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3) {
     const uint32_t v1 = rw::load<uint32_t>(rw::load<uint32_t>(a0) + 8u);
-    return rw::call(v1, {a0, a1, v1, a3});  // call through a function pointer
+    const uint32_t r2 = rw::call(v1, {a0, a1, v1, a3});  // call through a function pointer
 }
 RW_FUNCTION(0x8ED916, "cocos2d::DataVisitor::visit", cocos2d_DataVisitor_visit_8ED916);
 
 // cocos2d::DataVisitor::visit
 // IDA: int __fastcall cocos2d::DataVisitor::visit(int a1)
-static uint32_t cocos2d_DataVisitor_visit_8ED920(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3) {
+static void cocos2d_DataVisitor_visit_8ED920(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3) {
     const uint32_t v1 = rw::load<uint32_t>(rw::load<uint32_t>(a0) + 8u);
-    return rw::call(v1, {a0, a1, v1, a3});  // call through a function pointer
+    const uint32_t r2 = rw::call(v1, {a0, a1, v1, a3});  // call through a function pointer
 }
 RW_FUNCTION(0x8ED920, "cocos2d::DataVisitor::visit", cocos2d_DataVisitor_visit_8ED920);
 
 // cocos2d::DataVisitor::visit
 // IDA: int __fastcall cocos2d::DataVisitor::visit(int a1)
-static uint32_t cocos2d_DataVisitor_visit_8ED92A(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3) {
+static void cocos2d_DataVisitor_visit_8ED92A(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3) {
     const uint32_t v1 = rw::load<uint32_t>(rw::load<uint32_t>(a0) + 8u);
-    return rw::call(v1, {a0, a1, v1, a3});  // call through a function pointer
+    const uint32_t r2 = rw::call(v1, {a0, a1, v1, a3});  // call through a function pointer
 }
 RW_FUNCTION(0x8ED92A, "cocos2d::DataVisitor::visit", cocos2d_DataVisitor_visit_8ED92A);
 
 // cocos2d::DataVisitor::visit
 // IDA: int __fastcall cocos2d::DataVisitor::visit(int a1)
-static uint32_t cocos2d_DataVisitor_visit_8ED934(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3) {
+static void cocos2d_DataVisitor_visit_8ED934(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3) {
     const uint32_t v1 = rw::load<uint32_t>(rw::load<uint32_t>(a0) + 8u);
-    return rw::call(v1, {a0, a1, v1, a3});  // call through a function pointer
+    const uint32_t r2 = rw::call(v1, {a0, a1, v1, a3});  // call through a function pointer
 }
 RW_FUNCTION(0x8ED934, "cocos2d::DataVisitor::visit", cocos2d_DataVisitor_visit_8ED934);
 
 // cocos2d::DataVisitor::visit
 // IDA: int __fastcall cocos2d::DataVisitor::visit(int a1)
-static uint32_t cocos2d_DataVisitor_visit_8ED93E(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3) {
+static void cocos2d_DataVisitor_visit_8ED93E(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3) {
     const uint32_t v1 = rw::load<uint32_t>(rw::load<uint32_t>(a0) + 8u);
-    return rw::call(v1, {a0, a1, v1, a3});  // call through a function pointer
+    const uint32_t r2 = rw::call(v1, {a0, a1, v1, a3});  // call through a function pointer
 }
 RW_FUNCTION(0x8ED93E, "cocos2d::DataVisitor::visit", cocos2d_DataVisitor_visit_8ED93E);
 
 // cocos2d::DataVisitor::visit
 // IDA: int __fastcall cocos2d::DataVisitor::visit(int a1)
-static uint32_t cocos2d_DataVisitor_visit_8ED948(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3) {
+static void cocos2d_DataVisitor_visit_8ED948(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3) {
     const uint32_t v1 = rw::load<uint32_t>(rw::load<uint32_t>(a0) + 8u);
-    return rw::call(v1, {a0, a1, v1, a3});  // call through a function pointer
+    const uint32_t r2 = rw::call(v1, {a0, a1, v1, a3});  // call through a function pointer
 }
 RW_FUNCTION(0x8ED948, "cocos2d::DataVisitor::visit", cocos2d_DataVisitor_visit_8ED948);
 
 // cocos2d::DataVisitor::visit
 // IDA: int __fastcall cocos2d::DataVisitor::visit(int a1)
-static uint32_t cocos2d_DataVisitor_visit_8ED952(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3) {
+static void cocos2d_DataVisitor_visit_8ED952(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3) {
     const uint32_t v1 = rw::load<uint32_t>(rw::load<uint32_t>(a0) + 8u);
-    return rw::call(v1, {a0, a1, v1, a3});  // call through a function pointer
+    const uint32_t r2 = rw::call(v1, {a0, a1, v1, a3});  // call through a function pointer
 }
 RW_FUNCTION(0x8ED952, "cocos2d::DataVisitor::visit", cocos2d_DataVisitor_visit_8ED952);
 
 // cocos2d::DataVisitor::visit
 // IDA: int __fastcall cocos2d::DataVisitor::visit(int a1)
-static uint32_t cocos2d_DataVisitor_visit_8ED95C(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3) {
+static void cocos2d_DataVisitor_visit_8ED95C(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3) {
     const uint32_t v1 = rw::load<uint32_t>(rw::load<uint32_t>(a0) + 8u);
-    return rw::call(v1, {a0, a1, v1, a3});  // call through a function pointer
+    const uint32_t r2 = rw::call(v1, {a0, a1, v1, a3});  // call through a function pointer
 }
 RW_FUNCTION(0x8ED95C, "cocos2d::DataVisitor::visit", cocos2d_DataVisitor_visit_8ED95C);
 

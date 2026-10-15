@@ -1121,6 +1121,10 @@ class Generator:
         # is not a result - callers never read it, and a rewritten callee leaves other leftovers (the verifier
         # would report them as mismatches)
         declared_void = rt == "void" or re.search(r",\s*void \(\)\([^)]*\)>::operator\(\)", name or "") is not None
+        # cocos2d's core virtuals are void in the engine source; IDA often types them int (CallFunc::update)
+        declared_void = declared_void or re.fullmatch(
+            r"cocos2d::(?:\w+::)*(?:update|step|startWithTarget|stop|execute|onEnter|onExit|onEnterTransitionDidFinish|"
+            r"onExitTransitionDidStart|cleanup|visit|draw)", name or "") is not None
         # every value r0 can have at a return is what a void callee left there (e.g. a wrapper around free)
         def void_callee(tid):
             target = fn.temps[tid][1]

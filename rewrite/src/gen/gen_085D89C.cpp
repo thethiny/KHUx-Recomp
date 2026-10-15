@@ -10,18 +10,16 @@ RW_FUNCTION(0x85D89C, "cocos2d::Action::description", cocos2d_Action_description
 
 // cocos2d::Action::startWithTarget
 // IDA: int __fastcall cocos2d::Action::startWithTarget(int this, cocos2d::Node *a2)
-static uint32_t cocos2d_Action_startWithTarget_85D8BC(uint32_t self, uint32_t a1) {
+static void cocos2d_Action_startWithTarget_85D8BC(uint32_t self, uint32_t a1) {
     rw::save<uint32_t>(self + 0x18u, a1);
     rw::save<uint32_t>(self + 0x1Cu, a1);
-    return self;
 }
 RW_FUNCTION(0x85D8BC, "cocos2d::Action::startWithTarget", cocos2d_Action_startWithTarget_85D8BC);
 
 // cocos2d::Action::stop
 // IDA: int __fastcall cocos2d::Action::stop(int this)
-static uint32_t cocos2d_Action_stop_85D8C2(uint32_t self) {
+static void cocos2d_Action_stop_85D8C2(uint32_t self) {
     rw::save<uint32_t>(self + 0x1Cu, 0u);
-    return self;
 }
 RW_FUNCTION(0x85D8C2, "cocos2d::Action::stop", cocos2d_Action_stop_85D8C2);
 
@@ -89,23 +87,22 @@ RW_FUNCTION(0x85DA68, "cocos2d::Speed::clone", cocos2d_Speed_clone_85DA68);
 
 // cocos2d::Speed::startWithTarget
 // IDA: int __fastcall cocos2d::Speed::startWithTarget(cocos2d::Speed *this, cocos2d::Node *a2)
-static uint32_t cocos2d_Speed_startWithTarget_85DA82(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
+static void cocos2d_Speed_startWithTarget_85DA82(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
     rw::save<uint32_t>(self + 0x18u, a1);
     rw::save<uint32_t>(self + 0x1Cu, a1);
     const uint32_t v0 = rw::load<uint32_t>(self + 0x28u);
     const uint32_t v2 = rw::load<uint32_t>(rw::load<uint32_t>(v0) + 0x18u);
-    return rw::call(v2, {v0, a1, v2, a3});  // call through a function pointer
+    const uint32_t r3 = rw::call(v2, {v0, a1, v2, a3});  // call through a function pointer
 }
 RW_FUNCTION(0x85DA82, "cocos2d::Speed::startWithTarget", cocos2d_Speed_startWithTarget_85DA82);
 
 // cocos2d::Speed::stop
 // IDA: int __fastcall cocos2d::Speed::stop(cocos2d::Speed *this)
-static uint32_t cocos2d_Speed_stop_85DA92(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
+static void cocos2d_Speed_stop_85DA92(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
     const uint32_t v0 = rw::load<uint32_t>(self + 0x28u);
     const uint32_t v2 = rw::load<uint32_t>(rw::load<uint32_t>(v0) + 0x1Cu);
     rw::call(v2, {v0, v2, a2, a3});  // call through a function pointer
     rw::save<uint32_t>(self + 0x1Cu, 0u);
-    return 0u;
 }
 RW_FUNCTION(0x85DA92, "cocos2d::Speed::stop", cocos2d_Speed_stop_85DA92);
 
@@ -172,16 +169,15 @@ RW_FUNCTION(0x85E068, "cocos2d::Follow::isDone", cocos2d_Follow_isDone_85E068);
 
 // cocos2d::Follow::stop
 // IDA: int __fastcall cocos2d::Follow::stop(int this)
-static uint32_t cocos2d_Follow_stop_85E07C(uint32_t self) {
+static void cocos2d_Follow_stop_85E07C(uint32_t self) {
     rw::save<uint32_t>(self + 0x1Cu, 0u);
-    return self;
 }
 RW_FUNCTION(0x85E07C, "cocos2d::Follow::stop", cocos2d_Follow_stop_85E07C);
 
 // cocos2d::ActionCamera::startWithTarget
 // IDA: int __fastcall cocos2d::ActionCamera::startWithTarget(cocos2d::ActionCamera *this, cocos2d::Node *a2)
-static uint32_t cocos2d_ActionCamera_startWithTarget_85E0F8(uint32_t self, uint32_t a1) {
-    return rw::call(0x8678A7, {self, a1});  // cocos2d::ActionInterval::startWithTarget
+static void cocos2d_ActionCamera_startWithTarget_85E0F8(uint32_t self, uint32_t a1) {
+    const uint32_t r0 = rw::call(0x8678A7, {self, a1});  // cocos2d::ActionInterval::startWithTarget
 }
 RW_FUNCTION(0x85E0F8, "cocos2d::ActionCamera::startWithTarget", cocos2d_ActionCamera_startWithTarget_85E0F8);
 
@@ -523,20 +519,20 @@ RW_FUNCTION(0x8604E2, "thunk to cocos2d::ActionEase::~ActionEase [deleting destr
 
 // cocos2d::ActionEase::stop
 // IDA: int __fastcall cocos2d::ActionEase::stop(cocos2d::ActionEase *this)
-static uint32_t cocos2d_ActionEase_stop_860506(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
+static void cocos2d_ActionEase_stop_860506(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
     const uint32_t v0 = rw::load<uint32_t>(self + 0x30u);
     const uint32_t v2 = rw::load<uint32_t>(rw::load<uint32_t>(v0) + 0x1Cu);
     rw::call(v2, {v0, v2, a2, a3});  // call through a function pointer
-    return rw::call(0x85D8C3, {self});  // cocos2d::Action::stop
+    const uint32_t r4 = rw::call(0x85D8C3, {self});  // cocos2d::Action::stop
 }
 RW_FUNCTION(0x860506, "cocos2d::ActionEase::stop", cocos2d_ActionEase_stop_860506);
 
 // cocos2d::ActionEase::update
 // IDA: int __fastcall cocos2d::ActionEase::update(cocos2d::ActionEase *this, float a2)
-static uint32_t cocos2d_ActionEase_update_86051E(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
+static void cocos2d_ActionEase_update_86051E(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
     const uint32_t v0 = rw::load<uint32_t>(self + 0x30u);
     const uint32_t v2 = rw::load<uint32_t>(rw::load<uint32_t>(v0) + 0x24u);
-    return rw::call(v2, {v0, a1, v2, a3});  // call through a function pointer
+    const uint32_t r3 = rw::call(v2, {v0, a1, v2, a3});  // call through a function pointer
 }
 RW_FUNCTION(0x86051E, "cocos2d::ActionEase::update", cocos2d_ActionEase_update_86051E);
 
@@ -2639,9 +2635,9 @@ RW_FUNCTION(0x86657C, "cocos2d::ActionInstant::isDone", cocos2d_ActionInstant_is
 
 // cocos2d::ActionInstant::step
 // IDA: int __fastcall cocos2d::ActionInstant::step(cocos2d::ActionInstant *this, float a2)
-static uint32_t cocos2d_ActionInstant_step_866580(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
+static void cocos2d_ActionInstant_step_866580(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
     const uint32_t v1 = rw::load<uint32_t>(rw::load<uint32_t>(self) + 0x24u);
-    return rw::call(v1, {self, 0x3F800000u, v1, a3});  // call through a function pointer
+    const uint32_t r2 = rw::call(v1, {self, 0x3F800000u, v1, a3});  // call through a function pointer
 }
 RW_FUNCTION(0x866580, "cocos2d::ActionInstant::step", cocos2d_ActionInstant_step_866580);
 
@@ -2653,10 +2649,10 @@ RW_FUNCTION(0x86658E, "cocos2d::ActionInstant::update", cocos2d_ActionInstant_up
 
 // cocos2d::Show::update
 // IDA: int __fastcall cocos2d::Show::update(cocos2d::Show *this, float a2)
-static uint32_t cocos2d_Show_update_8665D0(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
+static void cocos2d_Show_update_8665D0(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
     const uint32_t v0 = rw::load<uint32_t>(self + 0x1Cu);
     const uint32_t v2 = rw::load<uint32_t>(rw::load<uint32_t>(v0) + 0xB0u);
-    return rw::call(v2, {v0, 1u, v2, a3});  // call through a function pointer
+    const uint32_t r3 = rw::call(v2, {v0, 1u, v2, a3});  // call through a function pointer
 }
 RW_FUNCTION(0x8665D0, "cocos2d::Show::update", cocos2d_Show_update_8665D0);
 
@@ -2681,10 +2677,10 @@ RW_FUNCTION(0x866668, "cocos2d::Show::clone", cocos2d_Show_clone_866668);
 
 // cocos2d::Hide::update
 // IDA: int __fastcall cocos2d::Hide::update(cocos2d::Hide *this, float a2)
-static uint32_t cocos2d_Hide_update_866680(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
+static void cocos2d_Hide_update_866680(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
     const uint32_t v0 = rw::load<uint32_t>(self + 0x1Cu);
     const uint32_t v2 = rw::load<uint32_t>(rw::load<uint32_t>(v0) + 0xB0u);
-    return rw::call(v2, {v0, 0u, v2, a3});  // call through a function pointer
+    const uint32_t r3 = rw::call(v2, {v0, 0u, v2, a3});  // call through a function pointer
 }
 RW_FUNCTION(0x866680, "cocos2d::Hide::update", cocos2d_Hide_update_866680);
 
@@ -2736,11 +2732,11 @@ RW_FUNCTION(0x8667F8, "cocos2d::RemoveSelf::init", cocos2d_RemoveSelf_init_8667F
 
 // cocos2d::RemoveSelf::update
 // IDA: int __fastcall cocos2d::RemoveSelf::update(cocos2d::RemoveSelf *this, float a2)
-static uint32_t cocos2d_RemoveSelf_update_866800(uint32_t self, uint32_t a1) {
+static void cocos2d_RemoveSelf_update_866800(uint32_t self, uint32_t a1) {
     const uint32_t v1 = rw::load<uint32_t>(self + 0x1Cu);
     const uint32_t v2 = rw::load<uint32_t>(v1);
     const uint32_t v3 = rw::load<uint32_t>(v2 + 0x128u);
-    return rw::call(v3, {v1, uint32_t(rw::load<uint8_t>(self + 0x28u)), v3, v2});  // call through a function pointer
+    const uint32_t r4 = rw::call(v3, {v1, uint32_t(rw::load<uint8_t>(self + 0x28u)), v3, v2});  // call through a function pointer
 }
 RW_FUNCTION(0x866800, "cocos2d::RemoveSelf::update", cocos2d_RemoveSelf_update_866800);
 
@@ -2773,8 +2769,8 @@ RW_FUNCTION(0x8668D0, "cocos2d::FlipX::initWithFlipX", cocos2d_FlipX_initWithFli
 
 // cocos2d::FlipX::update
 // IDA: int __fastcall cocos2d::FlipX::update(cocos2d::FlipX *this, float a2)
-static uint32_t cocos2d_FlipX_update_8668D8(uint32_t self, uint32_t a1) {
-    return rw::call(0x8A81C5, {rw::load<uint32_t>(self + 0x1Cu), uint32_t(rw::load<uint8_t>(self + 0x28u))});  // cocos2d::Sprite::setFlippedX
+static void cocos2d_FlipX_update_8668D8(uint32_t self, uint32_t a1) {
+    const uint32_t r2 = rw::call(0x8A81C5, {rw::load<uint32_t>(self + 0x1Cu), uint32_t(rw::load<uint8_t>(self + 0x28u))});  // cocos2d::Sprite::setFlippedX
 }
 RW_FUNCTION(0x8668D8, "cocos2d::FlipX::update", cocos2d_FlipX_update_8668D8);
 
@@ -2812,8 +2808,8 @@ RW_FUNCTION(0x8669B0, "cocos2d::FlipY::initWithFlipY", cocos2d_FlipY_initWithFli
 
 // cocos2d::FlipY::update
 // IDA: int __fastcall cocos2d::FlipY::update(cocos2d::FlipY *this, float a2)
-static uint32_t cocos2d_FlipY_update_8669B8(uint32_t self, uint32_t a1) {
-    return rw::call(0x8A8201, {rw::load<uint32_t>(self + 0x1Cu), uint32_t(rw::load<uint8_t>(self + 0x28u))});  // cocos2d::Sprite::setFlippedY
+static void cocos2d_FlipY_update_8669B8(uint32_t self, uint32_t a1) {
+    const uint32_t r2 = rw::call(0x8A8201, {rw::load<uint32_t>(self + 0x1Cu), uint32_t(rw::load<uint8_t>(self + 0x28u))});  // cocos2d::Sprite::setFlippedY
 }
 RW_FUNCTION(0x8669B8, "cocos2d::FlipY::update", cocos2d_FlipY_update_8669B8);
 
@@ -2873,10 +2869,10 @@ RW_FUNCTION(0x866B1A, "cocos2d::Place::reverse", cocos2d_Place_reverse_866B1A);
 
 // cocos2d::Place::update
 // IDA: int __fastcall cocos2d::Place::update(cocos2d::Place *this, float a2)
-static uint32_t cocos2d_Place_update_866B24(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
+static void cocos2d_Place_update_866B24(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
     const uint32_t v0 = rw::load<uint32_t>(self + 0x1Cu);
     const uint32_t v2 = rw::load<uint32_t>(rw::load<uint32_t>(v0) + 0x4Cu);
-    return rw::call(v2, {v0, self + 0x28u, v2, a3});  // call through a function pointer
+    const uint32_t r3 = rw::call(v2, {v0, self + 0x28u, v2, a3});  // call through a function pointer
 }
 RW_FUNCTION(0x866B24, "cocos2d::Place::update", cocos2d_Place_update_866B24);
 
@@ -2931,9 +2927,9 @@ RW_FUNCTION(0x866CEE, "cocos2d::CallFunc::reverse", cocos2d_CallFunc_reverse_866
 
 // cocos2d::CallFunc::update
 // IDA: int __fastcall cocos2d::CallFunc::update(cocos2d::CallFunc *this, float a2)
-static uint32_t cocos2d_CallFunc_update_866CF8(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
+static void cocos2d_CallFunc_update_866CF8(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
     const uint32_t v1 = rw::load<uint32_t>(rw::load<uint32_t>(self) + 0x28u);
-    return rw::call(v1, {self, v1, a2, a3});  // call through a function pointer
+    const uint32_t r2 = rw::call(v1, {self, v1, a2, a3});  // call through a function pointer
 }
 RW_FUNCTION(0x866CF8, "cocos2d::CallFunc::update", cocos2d_CallFunc_update_866CF8);
 
@@ -3284,11 +3280,10 @@ RW_FUNCTION(0x8678A2, "cocos2d::ActionInterval::getAmplitudeRate", cocos2d_Actio
 
 // cocos2d::ActionInterval::startWithTarget
 // IDA: int __fastcall cocos2d::ActionInterval::startWithTarget(cocos2d::ActionInterval *this, cocos2d::Node *a2)
-static uint32_t cocos2d_ActionInterval_startWithTarget_8678A6(uint32_t self, uint32_t a1) {
+static void cocos2d_ActionInterval_startWithTarget_8678A6(uint32_t self, uint32_t a1) {
     rw::call(0x85D8BD, {self, a1});  // cocos2d::Action::startWithTarget
     rw::save<uint32_t>(self + 0x28u, 0u);
     rw::save<uint8_t>(self + 0x2Cu, uint8_t(1u));
-    return 0x2Cu;
 }
 RW_FUNCTION(0x8678A6, "cocos2d::ActionInterval::startWithTarget", cocos2d_ActionInterval_startWithTarget_8678A6);
 
@@ -3360,11 +3355,11 @@ RW_FUNCTION(0x867EFA, "thunk to cocos2d::Repeat::~Repeat [deleting destructor]",
 
 // cocos2d::Repeat::stop
 // IDA: int __fastcall cocos2d::Repeat::stop(cocos2d::Repeat *this)
-static uint32_t cocos2d_Repeat_stop_867F44(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
+static void cocos2d_Repeat_stop_867F44(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
     const uint32_t v0 = rw::load<uint32_t>(self + 0x40u);
     const uint32_t v2 = rw::load<uint32_t>(rw::load<uint32_t>(v0) + 0x1Cu);
     rw::call(v2, {v0, v2, a2, a3});  // call through a function pointer
-    return rw::call(0x85D8C3, {self});  // cocos2d::Action::stop
+    const uint32_t r4 = rw::call(0x85D8C3, {self});  // cocos2d::Action::stop
 }
 RW_FUNCTION(0x867F44, "cocos2d::Repeat::stop", cocos2d_Repeat_stop_867F44);
 
@@ -3669,11 +3664,11 @@ RW_FUNCTION(0x86AE54, "cocos2d::ScaleBy::clone", cocos2d_ScaleBy_clone_86AE54);
 
 // cocos2d::Blink::stop
 // IDA: int __fastcall cocos2d::Blink::stop(cocos2d::Blink *this)
-static uint32_t cocos2d_Blink_stop_86AFBE(uint32_t self) {
+static void cocos2d_Blink_stop_86AFBE(uint32_t self) {
     const uint32_t v1 = rw::load<uint32_t>(self + 0x1Cu);
     const uint32_t v3 = rw::load<uint32_t>(rw::load<uint32_t>(v1) + 0xB0u);
     rw::call(v3, {v1, uint32_t(rw::load<uint8_t>(self + 0x34u)), v3, 0xB0u});  // call through a function pointer
-    return rw::call(0x85D8C3, {self});  // cocos2d::Action::stop
+    const uint32_t r5 = rw::call(0x85D8C3, {self});  // cocos2d::Action::stop
 }
 RW_FUNCTION(0x86AFBE, "cocos2d::Blink::stop", cocos2d_Blink_stop_86AFBE);
 
@@ -3864,11 +3859,11 @@ RW_FUNCTION(0x86BDDE, "thunk to cocos2d::ReverseTime::~ReverseTime [deleting des
 
 // cocos2d::ReverseTime::stop
 // IDA: int __fastcall cocos2d::ReverseTime::stop(cocos2d::ReverseTime *this)
-static uint32_t cocos2d_ReverseTime_stop_86BE12(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
+static void cocos2d_ReverseTime_stop_86BE12(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
     const uint32_t v0 = rw::load<uint32_t>(self + 0x30u);
     const uint32_t v2 = rw::load<uint32_t>(rw::load<uint32_t>(v0) + 0x1Cu);
     rw::call(v2, {v0, v2, a2, a3});  // call through a function pointer
-    return rw::call(0x85D8C3, {self});  // cocos2d::Action::stop
+    const uint32_t r4 = rw::call(0x85D8C3, {self});  // cocos2d::Action::stop
 }
 RW_FUNCTION(0x86BE12, "cocos2d::ReverseTime::stop", cocos2d_ReverseTime_stop_86BE12);
 
@@ -3949,19 +3944,19 @@ RW_FUNCTION(0x86C7A0, "cocos2d::TargetedAction::clone", cocos2d_TargetedAction_c
 
 // cocos2d::TargetedAction::stop
 // IDA: int __fastcall cocos2d::TargetedAction::stop(cocos2d::TargetedAction *this)
-static uint32_t cocos2d_TargetedAction_stop_86C840(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
+static void cocos2d_TargetedAction_stop_86C840(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
     const uint32_t v0 = rw::load<uint32_t>(self + 0x30u);
     const uint32_t v2 = rw::load<uint32_t>(rw::load<uint32_t>(v0) + 0x1Cu);
-    return rw::call(v2, {v0, v2, a2, a3});  // call through a function pointer
+    const uint32_t r3 = rw::call(v2, {v0, v2, a2, a3});  // call through a function pointer
 }
 RW_FUNCTION(0x86C840, "cocos2d::TargetedAction::stop", cocos2d_TargetedAction_stop_86C840);
 
 // cocos2d::TargetedAction::update
 // IDA: int __fastcall cocos2d::TargetedAction::update(cocos2d::TargetedAction *this, float a2)
-static uint32_t cocos2d_TargetedAction_update_86C84C(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
+static void cocos2d_TargetedAction_update_86C84C(uint32_t self, uint32_t a1, uint32_t a2, uint32_t a3) {
     const uint32_t v0 = rw::load<uint32_t>(self + 0x30u);
     const uint32_t v2 = rw::load<uint32_t>(rw::load<uint32_t>(v0) + 0x24u);
-    return rw::call(v2, {v0, a1, v2, a3});  // call through a function pointer
+    const uint32_t r3 = rw::call(v2, {v0, a1, v2, a3});  // call through a function pointer
 }
 RW_FUNCTION(0x86C84C, "cocos2d::TargetedAction::update", cocos2d_TargetedAction_update_86C84C);
 
@@ -4452,11 +4447,10 @@ RW_FUNCTION(0x86E642, "cocos2d::ProgressTo::reverse", cocos2d_ProgressTo_reverse
 
 // cocos2d::ProgressTo::startWithTarget
 // IDA: int __fastcall cocos2d::ProgressTo::startWithTarget(cocos2d::ProgressTo *this, cocos2d::Node *a2)
-static uint32_t cocos2d_ProgressTo_startWithTarget_86E646(uint32_t self, uint32_t a1) {
+static void cocos2d_ProgressTo_startWithTarget_86E646(uint32_t self, uint32_t a1) {
     rw::call(0x8678A7, {self, a1});  // cocos2d::ActionInterval::startWithTarget
     const uint32_t v1 = rw::load<uint32_t>(a1 + 0x284u);
     rw::save<uint32_t>(self + 0x34u, v1);
-    return v1;
 }
 RW_FUNCTION(0x86E646, "cocos2d::ProgressTo::startWithTarget", cocos2d_ProgressTo_startWithTarget_86E646);
 
@@ -4481,8 +4475,8 @@ RW_FUNCTION(0x86E796, "cocos2d::ProgressFromTo::reverse", cocos2d_ProgressFromTo
 
 // cocos2d::ProgressFromTo::startWithTarget
 // IDA: int __fastcall cocos2d::ProgressFromTo::startWithTarget(cocos2d::ProgressFromTo *this, cocos2d::Node *a2)
-static uint32_t cocos2d_ProgressFromTo_startWithTarget_86E7A4(uint32_t self, uint32_t a1) {
-    return rw::call(0x8678A7, {self, a1});  // cocos2d::ActionInterval::startWithTarget
+static void cocos2d_ProgressFromTo_startWithTarget_86E7A4(uint32_t self, uint32_t a1) {
+    const uint32_t r0 = rw::call(0x8678A7, {self, a1});  // cocos2d::ActionInterval::startWithTarget
 }
 RW_FUNCTION(0x86E7A4, "cocos2d::ProgressFromTo::startWithTarget", cocos2d_ProgressFromTo_startWithTarget_86E7A4);
 
@@ -4938,11 +4932,10 @@ RW_FUNCTION(0x871E94, "cocos2d::ActionTween::clone", cocos2d_ActionTween_clone_8
 
 // cocos2d::ActionTween::startWithTarget
 // IDA: float __fastcall cocos2d::ActionTween::startWithTarget(cocos2d::ActionTween *this, cocos2d::Node *a2)
-static uint32_t cocos2d_ActionTween_startWithTarget_871EAE(uint32_t self, uint32_t a1) {
+static void cocos2d_ActionTween_startWithTarget_871EAE(uint32_t self, uint32_t a1) {
     rw::call(0x8678A7, {self, a1});  // cocos2d::ActionInterval::startWithTarget
     const uint32_t r3 = rw::call(0xCD6BCC, {rw::load<uint32_t>(self + 0x40u), rw::load<uint32_t>(self + 0x3Cu)});  // _subsf3
     rw::save<uint32_t>(self + 0x44u, r3);
-    return r3;
 }
 RW_FUNCTION(0x871EAE, "cocos2d::ActionTween::startWithTarget", cocos2d_ActionTween_startWithTarget_871EAE);
 
@@ -5336,33 +5329,36 @@ RW_FUNCTION(0x87516C, "cocos2d::Component::init", cocos2d_Component_init_87516C)
 
 // cocos2d::Component::onEnter
 // IDA: int __fastcall cocos2d::Component::onEnter(int this)
-static uint32_t cocos2d_Component_onEnter_875170(uint32_t self) {
+static void cocos2d_Component_onEnter_875170(uint32_t self) {
     if (rw::load<uint32_t>(self + 0x28u) != 2u) {
-        return self;
+        return;
     } else {
-        return rw::call(0x875181, {self, 0u});  // sub_875180
+        const uint32_t r1 = rw::call(0x875181, {self, 0u});  // sub_875180
+        return;
     }
 }
 RW_FUNCTION(0x875170, "cocos2d::Component::onEnter", cocos2d_Component_onEnter_875170);
 
 // cocos2d::Component::onExit
 // IDA: int __fastcall cocos2d::Component::onExit(int this)
-static uint32_t cocos2d_Component_onExit_875204(uint32_t self) {
+static void cocos2d_Component_onExit_875204(uint32_t self) {
     if (rw::load<uint32_t>(self + 0x28u) != 2u) {
-        return self;
+        return;
     } else {
-        return rw::call(0x875181, {self, 1u});  // sub_875180
+        const uint32_t r1 = rw::call(0x875181, {self, 1u});  // sub_875180
+        return;
     }
 }
 RW_FUNCTION(0x875204, "cocos2d::Component::onExit", cocos2d_Component_onExit_875204);
 
 // cocos2d::Component::update
 // IDA: int __fastcall cocos2d::Component::update(int this, float a2)
-static uint32_t cocos2d_Component_update_875214(uint32_t self, uint32_t a1) {
+static void cocos2d_Component_update_875214(uint32_t self, uint32_t a1) {
     if (rw::load<uint32_t>(self + 0x28u) != 2u) {
-        return self;
+        return;
     } else {
-        return rw::call(0x875181, {self, 2u});  // sub_875180
+        const uint32_t r1 = rw::call(0x875181, {self, 2u});  // sub_875180
+        return;
     }
 }
 RW_FUNCTION(0x875214, "cocos2d::Component::update", cocos2d_Component_update_875214);

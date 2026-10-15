@@ -4989,9 +4989,9 @@ RW_FUNCTION(0x825860, "thunk to cocos2d::ui::Widget::~Widget [deleting destructo
 
 // cocos2d::ui::Widget::onExit
 // IDA: int __fastcall cocos2d::ui::Widget::onExit(cocos2d::ui::Widget *this)
-static uint32_t cocos2d_ui_Widget_onExit_825BCC(uint32_t self) {
+static void cocos2d_ui_Widget_onExit_825BCC(uint32_t self) {
     rw::call(0x894CB3, {self});  // cocos2d::Node::unscheduleUpdate
-    return rw::call(0x8426A7, {self});  // cocos2d::ProtectedNode::onExit
+    const uint32_t r1 = rw::call(0x8426A7, {self});  // cocos2d::ProtectedNode::onExit
 }
 RW_FUNCTION(0x825BCC, "cocos2d::ui::Widget::onExit", cocos2d_ui_Widget_onExit_825BCC);
 

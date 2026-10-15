@@ -1488,8 +1488,8 @@ RW_FUNCTION(0x88D8A0, "cocos2d::Menu::addChild", cocos2d_Menu_addChild_88D8A0);
 
 // cocos2d::Menu::onEnter
 // IDA: int __fastcall cocos2d::Menu::onEnter(cocos2d::Menu *this)
-static uint32_t cocos2d_Menu_onEnter_88D8A8(uint32_t self, uint32_t a1, uint32_t a2) {
-    return rw::call(0x894849, {self, a1, a2});  // cocos2d::Node::onEnter
+static void cocos2d_Menu_onEnter_88D8A8(uint32_t self, uint32_t a1, uint32_t a2) {
+    const uint32_t r0 = rw::call(0x894849, {self, a1, a2});  // cocos2d::Node::onEnter
 }
 RW_FUNCTION(0x88D8A8, "cocos2d::Menu::onEnter", cocos2d_Menu_onEnter_88D8A8);
 

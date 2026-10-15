@@ -45,6 +45,7 @@ struct RwHost {
                                  // rand, replay imports), 2: end, 3: did the imports of this run diverge?
                                  // 4: did the first run call OpenGL ES (opaque: kept, not compared)?
                                  // 5 / 6: pause / resume the import recording (an effect's own imports)
+                                 // 7 / 8: park the main thread for a shadow run on another thread (7: 0 = no)
     void (*debug)(char *out, int cap);   // a summary of the last shadow run's imports (mismatch reports)
     uint32_t ret_magic;                  // lr of a call made by the host itself (thread entries, callbacks)
 };
@@ -91,10 +92,15 @@ static void logf(const char *fmt, ...) {
     if (H && H->log) H->log(buf);
 }
 
+// set while a rewrite calls a guest function: the host's guest_call gives the callee RET_MAGIC as lr, like a call
+// the host itself makes (a thread entry, a callback), but a rewritten callee must still be verified (verify)
+static thread_local bool from_rewrite = false;
+
 uint32_t call(uint32_t fn, std::initializer_list<uint32_t> args) {
     std::vector<uint32_t> a(args);
     CPU *c = cpu;
-    uint32_t r = H->guest_call(c, fn, int(a.size()), a.data());
+    uint32_t r = (from_rewrite = true, H->guest_call(c, fn, int(a.size()), a.data()));
+    from_rewrite = false;
     cpu = c;                                               // a nested rewritten call set it to the same CPU
     return r;
 }
@@ -102,7 +108,8 @@ uint32_t call(uint32_t fn, std::initializer_list<uint32_t> args) {
 uint64_t call_exact(uint32_t fn, std::initializer_list<uint32_t> args) {
     std::vector<uint32_t> a(args);
     CPU *c = cpu;
-    uint64_t r = H->guest_call_exact(c, fn, int(a.size()), a.data());
+    uint64_t r = (from_rewrite = true, H->guest_call_exact(c, fn, int(a.size()), a.data()));
+    from_rewrite = false;
     cpu = c;
     return r;
 }
@@ -110,7 +117,8 @@ uint64_t call_exact(uint32_t fn, std::initializer_list<uint32_t> args) {
 uint64_t call64(uint32_t fn, std::initializer_list<uint32_t> args) {
     std::vector<uint32_t> a(args);
     CPU *c = cpu;
-    uint64_t r = H->guest_call64(c, fn, int(a.size()), a.data());
+    uint64_t r = (from_rewrite = true, H->guest_call64(c, fn, int(a.size()), a.data()));
+    from_rewrite = false;
     cpu = c;
     return r;
 }
@@ -166,7 +174,15 @@ static void run_rewrite(CPU *c, int i) {
     c->pc = c->r[14];                                      // returned to the caller, like a lifted function
 }
 
-static thread_local WLog *logbuf;
+// the store log of this thread's shadow runs (1 GB committed): released when the thread ends - the network code
+// starts a thread per request, and the logs of finished threads used up the commit limit ("cannot start a host
+// thread")
+struct LogBuf {
+    WLog *p = nullptr;
+    ~LogBuf() { if (p) VirtualFree(p, 0, MEM_RELEASE); }
+};
+static thread_local LogBuf logbuf_;
+#define logbuf (logbuf_.p)
 
 // ------------------------------------------------------------------------------------------------- effects
 // Functions whose effects reach outside guest memory (a request to the server, a file or UserDefault write,
@@ -292,6 +308,9 @@ static void effect_enter(CPU *c, int i) {
 }
 
 static thread_local bool lifted_run = false;   // the current shadow run is the lifted side
+// rewritten functions the lifted side of the current shadow run passed through: when the comparison matches, the
+// rewrite side ran their rewrites too (through rw::call or as direct C++ calls), so each gets a verified call
+static thread_local std::vector<int> nested;
 // crash reports: the function being verified on this thread and the side running ("lifted", "rewrite", "fallback")
 static thread_local const char *where_fn = nullptr, *where_side = "";
 
@@ -300,13 +319,23 @@ static void verify(CPU *c, int i) {
     Stats &st = (*stats)[i];
     // inside the lifted side of an outer shadow run (or its fallback rerun): the original all the way down, so
     // the comparison is lifted code against rewritten code at every level
-    if (lifted_run) { run_lifted(c, i); return; }
+    const bool by_rewrite = from_rewrite;      // called through rw::call (consumed here: deeper calls are not)
+    from_rewrite = false;
+    if (lifted_run) { if (nested.size() < 4096) nested.push_back(i); run_lifted(c, i); return; }
     if (st.too_big) { if (c->logging) run_rewrite(c, i); else run_lifted(c, i); return; }
     // called by the host itself (a thread's entry, a JNI or GL callback): a thread entry never returns, so it
     // cannot be shadow-run; the original runs, and every call it makes is verified on its own
-    if (!c->logging && (c->r[14] & ~1u) == H->ret_magic) { run_lifted(c, i); return; }
+    if (!c->logging && !by_rewrite && (c->r[14] & ~1u) == H->ret_magic) { run_lifted(c, i); return; }
     // inside the rewrite side of an outer shadow run: its comparison covers this call
     if (c->logging) { run_rewrite(c, i); return; }
+    // verified often enough with no mismatch (KHUX_RW_CAP calls, default 200; 0 = never stop): the rewrite runs
+    // without a shadow run, so long sessions stay playable and reach further into the game
+    static const uint64_t cap = getenv("KHUX_RW_CAP") ? strtoull(getenv("KHUX_RW_CAP"), nullptr, 10) : 200;
+    if (cap && st.verified.load() >= cap && st.mismatches.load() == 0) { run_rewrite(c, i); return; }
+    // on another thread than the main one, the main thread parks for the whole shadow run (it must not see the
+    // lifted run's stores before the undo); when it cannot park in time, the original runs without a comparison
+    if (!H->shadow(7)) { run_lifted(c, i); return; }
+    struct Exclusive { ~Exclusive() { H->shadow(8); } } exclusive;
     if (!logbuf) {
         logbuf = static_cast<WLog *>(VirtualAlloc(nullptr, size_t(LOG_CAP) * sizeof(WLog), MEM_RESERVE | MEM_COMMIT,
                                                   PAGE_READWRITE));
@@ -335,6 +364,7 @@ static void verify(CPU *c, int i) {
     c->logging = 1; c->wn = 0; c->wfull = 0;
     lifted_run = true;
     where_fn = e.name; where_side = "lifted";
+    nested.clear();
     run_lifted(c, i);
     lifted_run = false;
     phase = Phase::Off;
@@ -421,10 +451,26 @@ static void verify(CPU *c, int i) {
     if (same) {
         // every byte either one stored must end equal (a byte only one of them wrote keeps its old value in
         // the other run, which the undo restored - so compare against the current memory for those)
+        // a word both runs stored whole that points into this thread's stack in both is the address of a local
+        // (callee frames sit elsewhere in the rewrite): equal when both are stack addresses
+        auto word = [](const std::map<uint32_t, uint8_t> &m, uint32_t a, uint32_t &v) {
+            v = 0;
+            for (uint32_t b = 0; b < 4; b++) {
+                auto it = m.find(a + b);
+                if (it == m.end()) return false;
+                v |= uint32_t(it->second) << (8 * b);
+            }
+            return true;
+        };
+        auto on_stack = [&](uint32_t v) { return v >= sp - STACK_WINDOW && v < sp + STACK_WINDOW; };
         for (auto &kv : mem_l) {
             auto it = mem_r.find(kv.first);
             uint8_t r = it != mem_r.end() ? it->second : c->mem[kv.first];
-            if (r != kv.second) { same = false; break; }
+            if (r == kv.second) continue;
+            uint32_t wl, wr, a = kv.first & ~3u;
+            if (word(mem_l, a, wl) && word(mem_r, a, wr) && on_stack(wl) && on_stack(wr)) continue;
+            same = false;
+            break;
         }
         if (same) for (auto &kv : mem_r) {
             if (mem_l.count(kv.first)) continue;
@@ -451,6 +497,9 @@ static void verify(CPU *c, int i) {
             logf("RW LOG FULL %s @%08X (rewrite run): its result is kept; not shadowed from now on", e.name, e.addr);
     } else if (same) {
         st.verified++;
+        std::sort(nested.begin(), nested.end());
+        nested.erase(std::unique(nested.begin(), nested.end()), nested.end());
+        for (int k : nested) if (k != i) (*stats)[k].verified++;
     } else {
         uint64_t n = ++st.mismatches;
         if (n <= 3) {

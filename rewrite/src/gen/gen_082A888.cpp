@@ -622,12 +622,13 @@ RW_FUNCTION(0x82FA48, "cocos2d::ui::PageView::getPages", cocos2d_ui_PageView_get
 
 // cocos2d::ui::PageView::update
 // IDA: cocos2d::ui::PageView *__fastcall cocos2d::ui::PageView::update(cocos2d::ui::PageView *this, float a2)
-static uint32_t cocos2d_ui_PageView_update_82FD54(uint32_t self, uint32_t a1) {
+static void cocos2d_ui_PageView_update_82FD54(uint32_t self, uint32_t a1) {
     const uint32_t v0 = uint32_t(rw::load<uint8_t>(self + 0x4FBu));
     if (v0 == 0u) {
-        return self;
+        return;
     } else {
-        return rw::call(0x82FD69, {self, a1, v0});  // cocos2d::ui::PageView::autoScroll
+        const uint32_t r1 = rw::call(0x82FD69, {self, a1, v0});  // cocos2d::ui::PageView::autoScroll
+        return;
     }
 }
 RW_FUNCTION(0x82FD54, "cocos2d::ui::PageView::update", cocos2d_ui_PageView_update_82FD54);
@@ -2079,9 +2080,8 @@ RW_FUNCTION(0x83DC74, "thunk to cocos2d::ui::UICCTextField::~UICCTextField [dele
 
 // cocos2d::ui::UICCTextField::onEnter
 // IDA: int __fastcall cocos2d::ui::UICCTextField::onEnter(int this)
-static uint32_t cocos2d_ui_UICCTextField_onEnter_83DD94(uint32_t self) {
+static void cocos2d_ui_UICCTextField_onEnter_83DD94(uint32_t self) {
     rw::save<uint32_t>(self + 0x4D4u, self + 0x50Cu);
-    return self;
 }
 RW_FUNCTION(0x83DD94, "cocos2d::ui::UICCTextField::onEnter", cocos2d_ui_UICCTextField_onEnter_83DD94);
 
