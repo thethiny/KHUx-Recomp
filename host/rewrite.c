@@ -152,3 +152,47 @@ void rewrite_report(void) {
     QueryPerformanceCounter(&t1);
     hlog("rewrite: report took %.0f ms", 1000.0 * (double)(t1.QuadPart - t0.QuadPart) / (double)f.QuadPart);
 }
+
+/* KHUX_COVERAGE=1: which lifted functions the game calls. lift.dll sets a byte per function in rt_seen; every
+ * report merges the called ones into out/host/seen.txt (one hex address per line, kept across sessions): the
+ * "executed in game" list for planning rewrites (rewrite/tools/context.py). */
+static uint8_t *cov_seen;
+static char cov_path[1100];
+
+void coverage_init(const char *root) {
+    const char *v = getenv("KHUX_COVERAGE");
+    if (!v || !strcmp(v, "0")) return;
+    uint8_t **slot = (uint8_t **)GetProcAddress(L.dll, "rt_seen");
+    if (!slot) { hlog("coverage: lift.dll has no rt_seen (rebuild it)"); return; }
+    cov_seen = calloc((size_t)L.count, 1);
+    *slot = cov_seen;
+    snprintf(cov_path, sizeof(cov_path), "%s\\out\\host\\seen.txt", root);
+    hlog("coverage: recording called functions into %s", cov_path);
+}
+
+void coverage_report(void) {
+    if (!cov_seen) return;
+    uint8_t *known = calloc((size_t)L.count, 1);
+    FILE *f = fopen(cov_path, "r");
+    if (f) {
+        char line[32];
+        while (fgets(line, sizeof(line), f)) {
+            uint32_t a = (uint32_t)strtoul(line, NULL, 16);
+            for (int lo = 0, hi = L.count - 1; lo <= hi;) {
+                int mid = (lo + hi) / 2;
+                uint32_t at = L.table[mid].addr & ~1u;
+                if (at == a) { known[mid] = 1; break; }
+                if (at < a) lo = mid + 1; else hi = mid - 1;
+            }
+        }
+        fclose(f);
+    }
+    f = fopen(cov_path, "w");
+    if (!f) { free(known); return; }
+    int n = 0;
+    for (int k = 0; k < L.count; k++)
+        if (known[k] || cov_seen[k]) { fprintf(f, "%08X\n", L.table[k].addr & ~1u); n++; }
+    fclose(f);
+    free(known);
+    hlog("coverage: %d functions called so far (all sessions)", n);
+}

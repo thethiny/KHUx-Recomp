@@ -76,19 +76,31 @@ def native_share():
     return json.loads(prof.read_text()).get("native_share")
 
 
-def rewritten_count():
+def rewritten_set():
     pat = re.compile(r"^\s*RW_FUNCTION(?:_NOVERIFY)?\(\s*(0x[0-9A-Fa-f]+)", re.M)
     addrs = set()
     for f in (HERE / "rewrite" / "src").rglob("*.cpp"):
         addrs.update(int(a, 16) & ~1 for a in pat.findall(f.read_text(encoding="utf-8", errors="replace")))
-    return len(addrs)
+    return addrs
 
 
-def verifier_counts():
+def verifier_sets():
     status, verified = HERE / "rewrite" / "status.tsv", HERE / "rewrite" / "verified.txt"
-    ran = max(0, len(status.read_text(encoding="utf-8").splitlines()) - 1) if status.exists() else 0
-    ok = len([l for l in verified.read_text().splitlines() if l.strip()]) if verified.exists() else 0
+    ran = ({int(l.split("	")[0], 16) & ~1 for l in status.read_text(encoding="utf-8").splitlines()[1:] if l.strip()}
+           if status.exists() else set())
+    ok = ({int(l.split()[0], 16) & ~1 for l in verified.read_text().splitlines() if l.strip()}
+          if verified.exists() else set())
     return ran, ok
+
+
+def split():
+    """{address: True for open-source library code} (rewrite/tools/libsplit.py), or None without the index."""
+    try:
+        sys.path.insert(0, str(HERE / "rewrite" / "tools"))
+        import libsplit
+        return {a & ~1: lib is not None for a, lib in libsplit.groups().items()}
+    except Exception:
+        return None
 
 
 def bar(pct):
@@ -103,8 +115,10 @@ def main():
     share = native_share()
     manual = json.loads(MANUAL.read_text()) if MANUAL.exists() else {}
     matching, recompiled = (manual.get(k, 0) for k in ("matching", "recompiled"))
-    rewritten = rewritten_count()
-    ran, verified = verifier_counts()
+    rw_set = rewritten_set()
+    ran_set, ok_set = verifier_sets()
+    rewritten, ran, verified = len(rw_set), len(ran_set), len(ok_set)
+    is_lib = split()
     # the native host links the full lift: every function in it runs natively, with no emulator
     full = HERE / "out" / "lift_all" / "lifted.json"
     if not recompiled and (HERE / "out" / "host" / "khux.exe").exists() and full.exists():
@@ -139,11 +153,30 @@ def main():
              share_txt + " and memory/string functions, math, the heap, stdio streams and OpenGL ES are native, but APK "
              "assets, threads, JNI, sockets and audio still go through the Python runtime (milestone M2).")),
     ]
+    if is_lib:
+        n_lib = sum(1 for v in is_lib.values() if v)
+        n_game = len(is_lib) - n_lib
+        def part(addrs, lib):
+            return sum(1 for a in addrs if is_lib.get(a) is lib)
+        k = next(i for i, r in enumerate(rows) if r[0] == "Verified") + 1
+        rows[k:k] = [
+            ("  Game: rewritten", 100 * part(rw_set, False) / n_game,
+             f"The game's own code ({n_game:,} functions, including Square Enix's sound engine): "
+             f"{part(rw_set, False):,} rewritten."),
+            ("  Game: verified", 100 * part(ok_set, False) / n_game,
+             f"Game functions verified: {part(ok_set, False):,}."),
+            ("  Libraries: rewritten", 100 * part(rw_set, True) / n_lib,
+             f"Open-source libraries ({n_lib:,} functions: cocos2d-x, libc++, OpenSSL, freetype, libpng, ...; "
+             f"`rewrite/tools/libsplit.py`), which a native build can take from upstream source: "
+             f"{part(rw_set, True):,} rewritten."),
+            ("  Libraries: verified", 100 * part(ok_set, True) / n_lib,
+             f"Library functions verified: {part(ok_set, True):,}."),
+        ]
     w = max(len(r[0]) for r in rows)
     out = ["## Progress", "", "```"]
     out += [f"{name.ljust(w)}  {bar(pct)}  {pct:5.1f}%" for name, pct, _ in rows]
     out += ["```", "", "Updated by `python recomp/progress.py`.", ""]
-    out += [f"- **{name}**: {desc}" for name, _, desc in rows]
+    out += [f"- **{name.strip()}**: {desc}" for name, _, desc in rows]
     section = "\n".join(out) + "\n\n"
 
     text = README.read_text(encoding="utf-8")

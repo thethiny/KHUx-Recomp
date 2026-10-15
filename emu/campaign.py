@@ -6,6 +6,7 @@ Each round: get to the story quest detail screen (from MyPage via Quests / a gui
 then python -m recomp.emu.play_quest, which plays whatever the screen offers - the newest quest, or the raid
 boss when one is up. Stops when a round ends somewhere unexpected (error popup, crash) so it can be looked at.
 """
+import os
 import subprocess
 import sys
 import time
@@ -94,6 +95,9 @@ def main():
     for r in range(rounds):
         if screen() in ("SceneActionMap", "SceneRaidBattle") + STORY_SCENES:
             print(f"round {r}: finishing the battle in progress", flush=True)
+            if os.environ.get("KHUX_INSTAWIN") and screen() == "SceneActionMap":
+                from .cheat import kill            # a resumed quest: insta-win only covers fresh ones
+                print(f"  insta-win: enemies hit {kill()}", flush=True)
             subprocess.run([sys.executable, "-u", "-m", "recomp.emu.auto_battle", limit])
         if not to_quest_select():
             print(f"round {r}: could not reach the quest screen (at {screen()})")

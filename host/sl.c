@@ -138,7 +138,7 @@ static void fill(CPU *c, SLObj *o, uint8_t *out, uint32_t n) {
         }
         uint32_t cb = o->cb, ctx = o->ctx, bq = o->bq_cell;
         LeaveCriticalSection(&sl_lock);
-        if (used_up && cb) GCALL(c, cb, bq, ctx);
+        if (used_up && cb) { shadow_guest_enter(); GCALL(c, cb, bq, ctx); shadow_guest_leave(); }
     }
     if (got < n) memset(out + got, 0, n - got);
 }

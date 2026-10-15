@@ -164,9 +164,13 @@ EXPORT int rt_index(uint32_t target) {
     return -1;
 }
 
+/* Coverage (KHUX_COVERAGE): the host may point rt_seen at lift_count bytes; every called function sets its byte. */
+EXPORT uint8_t *rt_seen;
+
 static LiftFn lookup_hooked(CPU *c, uint32_t target) {
     int k = lookup_idx(target);
     if (k < 0) return 0;
+    if (rt_seen) rt_seen[k] = 1;
     if ((lift_enabled[k] & 2) && rt_hook) rt_hook(c, target);
     if (rt_override && rt_override[k]) return rt_override[k];
     return lift_table[k].fn;
@@ -236,7 +240,12 @@ EXPORT void rt_run(CPU *c, uint32_t target) {
         c->tail = 0;
         if (!f) {
             /* an import lift.dll implements natively (host calls into imports, e.g. from the M3 rewrite) */
-            if (external(target) && native_import(c, target)) { c->pc = c->r[14]; return; }
+            /* (a tail call into a host import, e.g. __android_log_print, runs on the host like in rt_call) */
+            if (external(target)) {
+                if (native_import(c, target)) c->pc = c->r[14];
+                else c->emu(c, target);
+                return;
+            }
             c->pc = target;
             return;
         }

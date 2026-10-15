@@ -382,8 +382,62 @@ static uint32_t replay_addr(const ImpRec *r, const CPU *c, uint32_t a) {
     return best < 0 ? a : a - r->args[best] + c->r[best];
 }
 
+/* M3 verifier, a shadow run on another thread than the main one (the sound thread): the main thread parks at its
+ * next frame boundary for the whole run, so it never sees the lifted run's stores before the undo (a half-undone
+ * sound bank gave the main thread garbage pointers). Phase 7 asks (1 = parked, or this is the main thread; 0 = the
+ * main thread did not park within 50 ms - it may wait on a lock this thread holds: run without a shadow), 8 ends. */
+static DWORD main_tid;
+static CRITICAL_SECTION excl_cs;
+static volatile LONG excl_req, main_parked, cb_busy;
+
+/* the audio callback thread runs guest code too (it decodes the voices a shadow run starts): it waits while a
+ * shadow run on another thread is in progress, and that run waits until no callback is running */
+void shadow_guest_enter(void) {
+    for (;;) {
+        while (excl_req) SwitchToThread();
+        InterlockedIncrement(&cb_busy);
+        if (!excl_req) return;
+        InterlockedDecrement(&cb_busy);
+    }
+}
+void shadow_guest_leave(void) { InterlockedDecrement(&cb_busy); }
+
+void shadow_main_thread(void) { main_tid = GetCurrentThreadId(); InitializeCriticalSection(&excl_cs); }
+
+void shadow_park_point(void) {
+    if (!excl_req) return;
+    InterlockedExchange(&main_parked, 1);
+    while (excl_req) SwitchToThread();
+    InterlockedExchange(&main_parked, 0);
+}
+
+static int shadow_exclusive(int begin) {
+    if (!main_tid || GetCurrentThreadId() == main_tid) return 1;
+    /* by default other threads do not shadow-run at all (the original runs, not compared): the sound thread's voice
+     * start-up raced with the undo even with the main and audio threads parked. KHUX_RW_THREADS=1 tries parking. */
+    static int threads = -1;
+    if (threads < 0) threads = getenv("KHUX_RW_THREADS") && strcmp(getenv("KHUX_RW_THREADS"), "0") != 0;
+    if (!threads) return 0;
+    if (!begin) {
+        InterlockedExchange(&excl_req, 0);
+        while (main_parked) SwitchToThread();
+        LeaveCriticalSection(&excl_cs);
+        return 0;
+    }
+    EnterCriticalSection(&excl_cs);
+    InterlockedExchange(&excl_req, 1);
+    for (int k = 0; k < 50 && (!main_parked || cb_busy); k++) Sleep(1);
+    if (main_parked && !cb_busy) return 1;
+    InterlockedExchange(&excl_req, 0);
+    while (main_parked) SwitchToThread();
+    LeaveCriticalSection(&excl_cs);
+    return 0;
+}
+
 /* phase 0: start recording; 1: replay from the first record; 2: end; 3: query (1 = the replay diverged) */
 int import_shadow(int phase) {
+    if (phase == 7) return shadow_exclusive(1);
+    if (phase == 8) return shadow_exclusive(0);
     if (phase == 4) return imp_opaque;
     if (phase == 5) {                                     /* an effect runs: its imports are part of it (not recorded) */
         if (imp_paused++ == 0) { imp_saved_mode = imp_mode; imp_mode = 0; }

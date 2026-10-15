@@ -137,6 +137,10 @@ uint64_t guest_call64(CPU *c, uint32_t fn, int n, const uint32_t *args);
 uint64_t guest_call_exact(CPU *c, uint32_t fn, int n, const uint32_t *args);
 int libc_shadow(int phase);    /* M3 verifier: 0 begin, 1 another run, 2 end, 3 diverged? (core.c / libc.c) */
 int import_shadow(int phase);
+void shadow_main_thread(void);
+void shadow_park_point(void);
+void shadow_guest_enter(void);
+void shadow_guest_leave(void);
 void import_shadow_opaque(void);
 void shadow_wait_begin(void);   /* around a blocking wait (libc.c) */
 void shadow_wait_end(void);
