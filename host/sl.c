@@ -53,7 +53,7 @@ static const char *M_VOLUME[] = {"SetVolumeLevel", "GetVolumeLevel", "GetMaxVolu
 
 uint32_t sl_iid(const char *itf) {
     uint32_t g = gzalloc(16);
-    memcpy(GP(g), itf, strlen(itf) < 16 ? strlen(itf) : 16);
+    { glog(g, (uint32_t)(strlen(itf) < 16 ? strlen(itf) : 16)); memcpy(GP(g), itf, strlen(itf) < 16 ? strlen(itf) : 16); }
     if (n_iids < 64) {
         iids[n_iids].guid = g;
         strncpy(iids[n_iids++].name, itf, 39);

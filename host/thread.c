@@ -25,6 +25,15 @@ CPU *cpu_new(uint32_t sp) {
     return c;
 }
 
+void dump_threads(void) {
+    for (int k = 0; k < 4096; k++) {
+        HThread *t = threads[k];
+        if (!t || !t->cpu || t->done) continue;
+        hlog("-- thread %d (%s)", t->tid, t->name);
+        dump_cpu(t->cpu);
+    }
+}
+
 HThread *thread_main(void) {
     HThread *t = calloc(1, sizeof(HThread));
     t->tid = 1;
@@ -137,7 +146,12 @@ static Sync *sync_get(uint32_t addr) {
 }
 
 static void i_mutex_lock(CPU *c) {
-    EnterCriticalSection(&sync_get(c->r[0])->cs);
+    Sync *s = sync_get(c->r[0]);
+    if (!TryEnterCriticalSection(&s->cs)) {
+        shadow_wait_begin();                              /* M3 verifier: do not wait holding the heap */
+        EnterCriticalSection(&s->cs);
+        shadow_wait_end();
+    }
     RET(c, 0);
 }
 
@@ -160,7 +174,9 @@ static int cond_wait(uint32_t cond, uint32_t mutex, DWORD ms) {
         depth = 1;
     }
     for (LONG k = 1; k < depth; k++) LeaveCriticalSection(&m->cs);
+    shadow_wait_begin();
     BOOL ok = SleepConditionVariableCS(&cv->cv, &m->cs, ms);
+    shadow_wait_end();
     for (LONG k = 1; k < depth; k++) EnterCriticalSection(&m->cs);
     return ok ? 0 : G_ETIMEDOUT;
 }
@@ -185,8 +201,10 @@ static void i_cond_broadcast(CPU *c) { WakeAllConditionVariable(&sync_get(c->r[0
 static void i_pthread_once(CPU *c) {
     uint32_t ctl = c->r[0], fn = c->r[1];
     volatile long *w = (volatile long *)GP(ctl);
+    glog(ctl, 4);                                         /* both stores below, undone together */
     if (_InterlockedCompareExchange(w, 1, 0) == 0) {
         GCALL0(c, fn);
+        glog(ctl, 4);
         _InterlockedExchange(w, 2);
     } else {
         while (*w != 2) SwitchToThread();
@@ -209,7 +227,7 @@ static void i_setspecific(CPU *c) {
 
 /* ---------------------------------------------------------------- sleeping */
 static void sleep_us(uint64_t us) {
-    if (us >= 1000) Sleep((DWORD)(us / 1000));
+    if (us >= 1000) { shadow_wait_begin(); Sleep((DWORD)(us / 1000)); shadow_wait_end(); }
     else SwitchToThread();
 }
 static void i_usleep(CPU *c) { sleep_us(c->r[0]); RET(c, 0); }

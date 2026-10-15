@@ -782,7 +782,7 @@ static void jn_register_natives(CPU *c) {
 }
 static void jn_new_string_utf(CPU *c) { RET(c, c->r[1] ? jstring_new(gstr(c->r[1])) : 0); }
 static void jn_get_string_utf_chars(CPU *c) {
-    if (c->r[2]) *(uint8_t *)GP(c->r[2]) = 1;
+    if (c->r[2]) gw8(c->r[2], (uint8_t)(1));
     RET(c, galloc_str(jget(c->r[1])->str));
 }
 static void jn_release_free2(CPU *c) { gfree(c->r[2]); RET(c, 0); }
@@ -794,8 +794,9 @@ static void jn_get_string_chars(CPU *c) {
     const char *s = jget(c->r[1])->str;
     int n = MultiByteToWideChar(CP_UTF8, 0, s, -1, NULL, 0);
     uint32_t p = gzalloc(2u * (uint32_t)n + 2);
+    glog(p, (uint32_t)n * 2);
     MultiByteToWideChar(CP_UTF8, 0, s, -1, GP(p), n);
-    if (c->r[2]) *(uint8_t *)GP(c->r[2]) = 1;
+    if (c->r[2]) gw8(c->r[2], (uint8_t)(1));
     RET(c, p);
 }
 static void jn_new_string(CPU *c) {
@@ -812,8 +813,8 @@ static void jn_get_string_utf_region(CPU *c) {
     uint32_t start = c->r[2], n = c->r[3], buf = ARG(c, 4), slen = (uint32_t)strlen(s);
     if (start > slen) start = slen;
     if (start + n > slen) n = slen - start;
-    memcpy(GP(buf), s + start, n);
-    *(char *)GP(buf + n) = 0;
+    { glog(buf, (uint32_t)(n)); memcpy(GP(buf), s + start, n); }
+    gw8(buf + n, (uint8_t)(0));
     RET(c, 0);
 }
 static void jn_array_length(CPU *c) { RET(c, jget(c->r[1])->n); }
@@ -837,7 +838,7 @@ static void jn_new_prim_array(CPU *c) { RET(c, jarray_new(array_type_of_import()
 static void jn_get_array_elements(CPU *c) {
     JObj *o = jget(c->r[1]);
     uint32_t bytes = o->n * (uint32_t)elem_size(o->et);
-    if (c->r[2]) *(uint8_t *)GP(c->r[2]) = 1;
+    if (c->r[2]) gw8(c->r[2], (uint8_t)(1));
     RET(c, galloc_bytes(o->data, bytes < 4 ? 4 : bytes));
 }
 static void jn_release_array_elements(CPU *c) {
@@ -850,7 +851,7 @@ static void jn_release_array_elements(CPU *c) {
 static void jn_get_array_region(CPU *c) {
     JObj *o = jget(c->r[1]);
     int es = elem_size(o->et);
-    memcpy(GP(ARG(c, 4)), o->data + (size_t)c->r[2] * es, (size_t)c->r[3] * es);
+    { glog(ARG(c, 4), (uint32_t)((size_t)c->r[3] * es)); memcpy(GP(ARG(c, 4)), o->data + (size_t)c->r[2] * es, (size_t)c->r[3] * es); }
     RET(c, 0);
 }
 static void jn_set_array_region(CPU *c) {
@@ -1014,7 +1015,7 @@ static void a_read(CPU *c) {
     Asset *a = asset_get(c->r[0]);
     uint32_t n = c->r[2];
     if (n > a->len - a->pos) n = a->len - a->pos;
-    memcpy(GP(c->r[1]), a->data + a->pos, n);
+    { glog(c->r[1], (uint32_t)(n)); memcpy(GP(c->r[1]), a->data + a->pos, n); }
     a->pos += n;
     RET(c, n);
 }

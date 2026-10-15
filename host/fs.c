@@ -125,6 +125,7 @@ static void i_read(CPU *c) {
     Fd *f = fd_get(c->r[0]);
     if (!f) { set_errno(EBADF); RET(c, 0xFFFFFFFFu); return; }
     if (f->kind == 2) { RET(c, (uint32_t)net_recv(c, c->r[0], c->r[1], c->r[2])); return; }
+    glog(c->r[1], c->r[2]);
     RET(c, (uint32_t)_read(f->crt, GP(c->r[1]), c->r[2]));
 }
 
@@ -168,7 +169,7 @@ static void stat_put(uint32_t buf, const struct _stat64 *st) {
     uint32_t t[3] = {(uint32_t)st->st_atime, (uint32_t)st->st_mtime, (uint32_t)st->st_ctime};
     for (int k = 0; k < 3; k++) memcpy(b + 72 + 8 * k, &t[k], 4);
     memcpy(b + 96, &ino, 8);
-    memcpy(GP(buf), b, sizeof(b));
+    { glog(buf, (uint32_t)(sizeof(b))); memcpy(GP(buf), b, sizeof(b)); }
 }
 
 static void i_stat(CPU *c) {
@@ -325,6 +326,7 @@ static void i_mmap(CPU *c) {
     if (f && f->kind == 1) {
         long pos = _lseek(f->crt, 0, SEEK_CUR);
         _lseek(f->crt, (long)off, SEEK_SET);
+        glog(p, (uint32_t)len);
         _read(f->crt, GP(p), len);
         _lseek(f->crt, pos, SEEK_SET);
     }
@@ -405,11 +407,14 @@ static void i_fprintf(CPU *c) {
 }
 static void i_fread(CPU *c) {
     FILE *f = stream_or_die(c->r[3], "fread");
-    size_t want = (size_t)c->r[1] * c->r[2], got = fread(GP(c->r[0]), 1, want, f);
+    size_t want = (size_t)c->r[1] * c->r[2];
+    glog(c->r[0], (uint32_t)want);
+    size_t got = fread(GP(c->r[0]), 1, want, f);
     RET(c, c->r[1] ? (uint32_t)(got / c->r[1]) : 0);
 }
 static void i_fgets(CPU *c) {
     FILE *f = stream_or_die(c->r[2], "fgets");
+    glog(c->r[0], c->r[1]);
     RET(c, fgets(GP(c->r[0]), (int)c->r[1], f) ? c->r[0] : 0);
 }
 static void i_fclose(CPU *c) {

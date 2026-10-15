@@ -112,8 +112,8 @@ char *host_format(const char *fmt, VA *a, size_t *len) { return format_c(fmt, a,
 static void put_bounded(uint32_t buf, uint32_t n, const char *s, size_t len) {
     if (!n) return;
     size_t k = len < n - 1 ? len : n - 1;
-    memcpy(GP(buf), s, k);
-    *(char *)GP(buf + (uint32_t)k) = 0;
+    { glog(buf, (uint32_t)(k)); memcpy(GP(buf), s, k); }
+    gw8(buf + (uint32_t)k, (uint8_t)(0));
 }
 
 static void i_snprintf(CPU *c) {
@@ -136,7 +136,7 @@ static void i_sprintf(CPU *c) {
     VA a = va_regs(c, 2);
     size_t len;
     char *s = format_c(gstr(c->r[1]), &a, &len);
-    memcpy(GP(c->r[0]), s, len + 1);
+    { glog(c->r[0], (uint32_t)(len + 1)); memcpy(GP(c->r[0]), s, len + 1); }
     free(s);
     RET(c, (uint32_t)len);
 }
@@ -144,7 +144,7 @@ static void i_vsprintf(CPU *c) {
     VA a = va_list_at(c, c->r[2]);
     size_t len;
     char *s = format_c(gstr(c->r[1]), &a, &len);
-    memcpy(GP(c->r[0]), s, len + 1);
+    { glog(c->r[0], (uint32_t)(len + 1)); memcpy(GP(c->r[0]), s, len + 1); }
     free(s);
     RET(c, (uint32_t)len);
 }
@@ -232,8 +232,8 @@ static void i_strlcpy(CPU *c) {
     size_t len = strlen(s), n = c->r[2];
     if (n) {
         size_t k = len < n - 1 ? len : n - 1;
-        memcpy(GP(c->r[0]), s, k);
-        *(char *)GP(c->r[0] + (uint32_t)k) = 0;
+        { glog(c->r[0], (uint32_t)(k)); memcpy(GP(c->r[0]), s, k); }
+        gw8(c->r[0] + (uint32_t)k, (uint8_t)(0));
     }
     RET(c, (uint32_t)len);
 }
@@ -383,12 +383,54 @@ static void i_div(CPU *c) {
 static void i_cxa_atexit(CPU *c) { RET(c, 0); }
 
 /* ---------------------------------------------------------------- time */
-static double now_real(void) {
+/* M3 verifier (rewrite_shadow): while a rewritten function and its lifted original are shadow-run on this thread,
+ * the clocks stand still and both runs draw the same random numbers, so time- or rand-dependent results match. */
+static __declspec(thread) int shadow_on;
+static __declspec(thread) double shadow_real, shadow_mono;
+static uint64_t shadow_rand;
+static double now_real_raw(void);
+static double now_mono_raw(void);
+int libc_shadow(int phase) {
+    if (phase >= 3) return import_shadow(phase);
+    import_shadow(phase);
+    if (phase == 0) {                       /* begin: freeze the clocks, remember the random state */
+        L.heap_hold(1);                     /* no other guest thread allocates during the shadow run */
+        shadow_real = now_real_raw();
+        shadow_mono = now_mono_raw();
+        shadow_rand = rand_state;
+        shadow_on = 1;
+    } else if (phase == 1) {                /* before another run: the same random numbers again */
+        rand_state = shadow_rand;
+    } else {
+        shadow_on = 0;
+        L.heap_hold(0);
+    }
+    return 0;
+}
+/* A blocking wait inside a shadow run (a mutex another thread holds, a condition, a sleep): the run holds the guest
+ * heap, and the thread it waits for may need the heap first, so the hold is let go for the wait. Other threads may
+ * then change the heap, which an undo would clobber: the run becomes opaque (kept as the real call, not compared). */
+static __declspec(thread) int shadow_waits;
+void shadow_wait_begin(void) {
+    if (!shadow_on) return;
+    shadow_waits++;
+    import_shadow_opaque();
+    L.heap_hold(0);
+}
+void shadow_wait_end(void) {
+    if (!shadow_on || !shadow_waits) return;
+    shadow_waits--;
+    L.heap_hold(1);
+}
+
+static double now_real(void) { return shadow_on ? shadow_real : now_real_raw(); }
+static double now_mono(void) { return shadow_on ? shadow_mono : now_mono_raw(); }
+static double now_real_raw(void) {
     FILETIME ft;
     GetSystemTimePreciseAsFileTime(&ft);
     return ((((uint64_t)ft.dwHighDateTime << 32) | ft.dwLowDateTime) - 116444736000000000ULL) / 1e7;
 }
-static double now_mono(void) {
+static double now_mono_raw(void) {
     static LARGE_INTEGER f;
     LARGE_INTEGER t;
     if (!f.QuadPart) QueryPerformanceFrequency(&f);
@@ -419,7 +461,7 @@ static void i_clock_gettime(CPU *c) {
 static void tm_put(uint32_t out, const struct tm *t) {
     int32_t v[11] = {t->tm_sec, t->tm_min, t->tm_hour, t->tm_mday, t->tm_mon, t->tm_year, t->tm_wday, t->tm_yday,
                      t->tm_isdst, 0, 0};
-    memcpy(GP(out), v, sizeof(v));
+    { glog(out, (uint32_t)(sizeof(v))); memcpy(GP(out), v, sizeof(v)); }
 }
 static void tm_get(uint32_t in, struct tm *t) {
     int32_t v[9];
@@ -464,7 +506,7 @@ static void i_strftime(CPU *c) {
     char buf[512];
     size_t n = strftime(buf, sizeof(buf), gstr(c->r[2]), &tm);
     if (!n || n >= c->r[1]) { RET(c, 0); return; }
-    memcpy(GP(c->r[0]), buf, n + 1);
+    { glog(c->r[0], (uint32_t)(n + 1)); memcpy(GP(c->r[0]), buf, n + 1); }
     RET(c, (uint32_t)n);
 }
 
@@ -490,7 +532,7 @@ static void i_getpwuid(CPU *c) {
         pw = gzalloc(24);
         uint32_t v[6] = {galloc_str("u0_a217"), galloc_str(""), c->r[0], c->r[0], galloc_str("/data"),
                          galloc_str("/system/bin/sh")};
-        memcpy(GP(pw), v, sizeof(v));
+        { glog(pw, (uint32_t)(sizeof(v))); memcpy(GP(pw), v, sizeof(v)); }
     }
     RET(c, pw);
 }

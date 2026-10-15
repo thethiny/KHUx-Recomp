@@ -42,7 +42,7 @@ static void sockaddr_put(uint32_t p, uint32_t ip_be, uint16_t port) {
     b[2] = (uint8_t)(port >> 8);
     b[3] = (uint8_t)port;
     memcpy(b + 4, &ip_be, 4);
-    memcpy(GP(p), b, 16);
+    { glog(p, (uint32_t)(16)); memcpy(GP(p), b, 16); }
 }
 
 static uint32_t server_addr(void) {
@@ -71,7 +71,7 @@ static void i_getaddrinfo(CPU *c) {
     sockaddr_put(addr, server_addr(), port);
     /* bionic 32-bit struct addrinfo: flags, family, socktype, protocol, addrlen, canonname, addr, next */
     uint32_t v[8] = {0, AF_INET_G, (uint32_t)socktype, (uint32_t)proto, 16, canon, addr, 0};
-    memcpy(GP(ai), v, sizeof(v));
+    { glog(ai, (uint32_t)(sizeof(v))); memcpy(GP(ai), v, sizeof(v)); }
     gw32(res, ai);
     RET(c, 0);
 }
@@ -88,13 +88,13 @@ static void i_gethostbyname(CPU *c) {
     uint32_t ipp = galloc_bytes(&ip, 4), list = gzalloc(8), aliases = gzalloc(4), he = gzalloc(20);
     gw32(list, ipp);
     uint32_t v[5] = {galloc_str(gstr(c->r[0])), aliases, AF_INET_G, 4, list};
-    memcpy(GP(he), v, sizeof(v));
+    { glog(he, (uint32_t)(sizeof(v))); memcpy(GP(he), v, sizeof(v)); }
     RET(c, he);
 }
 static void i_gethostname(CPU *c) {
     const char h[] = "localhost";
     uint32_t n = c->r[1] < sizeof(h) ? c->r[1] : (uint32_t)sizeof(h);
-    memcpy(GP(c->r[0]), h, n);
+    { glog(c->r[0], (uint32_t)(n)); memcpy(GP(c->r[0]), h, n); }
     RET(c, 0);
 }
 static void i_getnameinfo(CPU *c) { RET(c, (uint32_t)-2); }
@@ -107,8 +107,8 @@ static void i_inet_ntop(CPU *c) {
     if (!inet_ntop(c->r[0] == AF_INET_G ? AF_INET : AF_INET6, GP(c->r[1]), b, sizeof(b))) { RET(c, 0); return; }
     size_t n = strlen(b), cap = c->r[3];
     if (n + 1 > cap) n = cap ? cap - 1 : 0;
-    memcpy(GP(c->r[2]), b, n);
-    *(char *)GP(c->r[2] + (uint32_t)n) = 0;
+    { glog(c->r[2], (uint32_t)(n)); memcpy(GP(c->r[2]), b, n); }
+    gw8(c->r[2] + (uint32_t)n, (uint8_t)(0));
     RET(c, c->r[2]);
 }
 
@@ -157,6 +157,7 @@ int net_send(CPU *c, uint32_t fd, uint32_t buf, uint32_t n) {
 int net_recv(CPU *c, uint32_t fd, uint32_t buf, uint32_t n) {
     SOCKET s = fd_socket(fd, NULL);
     if (s == INVALID_SOCKET) { set_errno(EBADF_G); return -1; }
+    glog(buf, (uint32_t)n);
     int r = recv(s, GP(buf), (int)n, 0);
     if (r == SOCKET_ERROR) { set_errno(map_wsa(WSAGetLastError())); return -1; }
     return r;
@@ -264,9 +265,9 @@ static void i_select(CPU *c) {
     } else if (!n && ptv) {
         Sleep(g32(ptv) * 1000 + g32(ptv + 4) / 1000);
     }
-    if (pr) memcpy(GP(pr), out_r, 128);
-    if (pw) memcpy(GP(pw), out_w, 128);
-    if (px) memset(GP(px), 0, 128);
+    if (pr) { glog(pr, (uint32_t)(128)); memcpy(GP(pr), out_r, 128); }
+    if (pw) { glog(pw, (uint32_t)(128)); memcpy(GP(pw), out_w, 128); }
+    if (px) { glog(px, (uint32_t)(128)); memset(GP(px), 0, 128); }
     RET(c, (uint32_t)n);
 }
 

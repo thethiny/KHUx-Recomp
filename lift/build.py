@@ -147,10 +147,28 @@ EXPORT LiftFn rt_lookup(uint32_t target) { return lookup(target); }
  * event reporting; registers hold the arguments). */
 EXPORT void (*rt_hook)(CPU *c, uint32_t target);
 
+/* Rewritten functions (M3, recomp/rewrite): the host may point rt_override at an array of lift_count slots; a
+ * non-null slot runs instead of the lifted function. rt_lookup still returns the lifted one (verification). */
+EXPORT LiftFn *rt_override;
+
+/* index of a lifted function (any mode/enable state) for the host's override table, or -1 */
+EXPORT int rt_index(uint32_t target) {
+    uint32_t a = target & ~1u;
+    int lo = 0, hi = lift_count - 1;
+    while (lo <= hi) {
+        int mid = (lo + hi) >> 1;
+        uint32_t m = lift_table[mid].addr & ~1u;
+        if (m == a) return mid;
+        if (m < a) lo = mid + 1; else hi = mid - 1;
+    }
+    return -1;
+}
+
 static LiftFn lookup_hooked(CPU *c, uint32_t target) {
     int k = lookup_idx(target);
     if (k < 0) return 0;
     if ((lift_enabled[k] & 2) && rt_hook) rt_hook(c, target);
+    if (rt_override && rt_override[k]) return rt_override[k];
     return lift_table[k].fn;
 }
 
@@ -216,7 +234,12 @@ EXPORT void rt_run(CPU *c, uint32_t target) {
     for (;;) {
         LiftFn f = lookup_hooked(c, target);
         c->tail = 0;
-        if (!f) { c->pc = target; return; }
+        if (!f) {
+            /* an import lift.dll implements natively (host calls into imports, e.g. from the M3 rewrite) */
+            if (external(target) && native_import(c, target)) { c->pc = c->r[14]; return; }
+            c->pc = target;
+            return;
+        }
         f(c);
         if (!c->tail) return;
         target = c->pc;
@@ -400,7 +423,7 @@ def main():
         if old not in files and old.name != "lift_table.c":
             old.unlink()
             old.with_suffix(".obj").unlink(missing_ok=True)
-    table = ['#include "rt.h"']
+    table = ['#include "rt.h"', "EXPORT int rt_log_full_continue;   /* see rt.h wlog; the native host sets it */"]
     table += [f"void F_{a:X}(CPU *c);" for a, _, _, _ in lifted]
     table.append("EXPORT const LiftEntry lift_table[] = {")
     table += [f"  {{0x{a | (1 if m == AN.THUMB else 0):X}u, {1 if leaf else 0}u, F_{a:X}}},"

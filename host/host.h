@@ -41,9 +41,13 @@
 extern uint8_t *G;                     /* host address of guest address 0 */
 #define GP(a) ((void *)(G + (uint32_t)(a)))
 static __inline uint32_t g32(uint32_t a) { return *(uint32_t *)GP(a); }
-static __inline void gw32(uint32_t a, uint32_t v) { *(uint32_t *)GP(a) = v; }
+/* Host writes into guest memory go through these (or call glog(addr, n) right before a block write): while the
+ * calling guest thread is in an M3 verifier shadow run, the old bytes are logged so the run can be undone. */
+void glog(uint32_t a, uint32_t n);
+static __inline void gw32(uint32_t a, uint32_t v) { glog(a, 4); *(uint32_t *)GP(a) = v; }
+static __inline void gw8(uint32_t a, uint8_t v) { glog(a, 1); *(uint8_t *)GP(a) = v; }
 static __inline uint16_t g16(uint32_t a) { return *(uint16_t *)GP(a); }
-static __inline void gw16(uint32_t a, uint16_t v) { *(uint16_t *)GP(a) = v; }
+static __inline void gw16(uint32_t a, uint16_t v) { glog(a, 2); *(uint16_t *)GP(a) = v; }
 static __inline char *gstr(uint32_t a) { return a ? (char *)GP(a) : NULL; }
 
 /* ---------------------------------------------------------------- lift.dll */
@@ -63,6 +67,8 @@ typedef struct Lift {
     uint32_t (*heap_realloc)(CPU *c, uint32_t p, uint32_t n);
     uint32_t (*heap_usable)(CPU *c, uint32_t p);
     uint32_t (*heap_ctl_size)(void);
+    void (*heap_hold)(int on);                 /* M3 verifier: hold the guest heap lock */
+    void (*files_allow)(int on);               /* M3 verifier: lift.dll streams may run in a logged run */
     uint32_t *heap_ctl;
     uint32_t (**errno_fn)(void);
     void (**hook)(CPU *c, uint32_t target);
@@ -91,6 +97,8 @@ typedef struct HThread {
 } HThread;
 extern __declspec(thread) HThread *cur;     /* this host thread's guest thread */
 HThread *thread_main(void);
+void dump_cpu(CPU *c);
+void dump_threads(void);   /* every guest thread's registers and call chain, to the log (ctl /threads) */
 HThread *thread_host(const char *name);   /* adopt the calling host thread as a guest thread */
 CPU *cpu_new(uint32_t sp);
 void threads_init(void);
@@ -126,6 +134,12 @@ double va_f64(VA *a);
 /* calls into the guest; registers of the calling context are preserved */
 uint32_t guest_call(CPU *c, uint32_t fn, int n, const uint32_t *args);
 uint64_t guest_call64(CPU *c, uint32_t fn, int n, const uint32_t *args);
+uint64_t guest_call_exact(CPU *c, uint32_t fn, int n, const uint32_t *args);
+int libc_shadow(int phase);    /* M3 verifier: 0 begin, 1 another run, 2 end, 3 diverged? (core.c / libc.c) */
+int import_shadow(int phase);
+void import_shadow_opaque(void);
+void shadow_wait_begin(void);   /* around a blocking wait (libc.c) */
+void shadow_wait_end(void);
 void guest_run(CPU *c, uint32_t target, uint32_t stop);
 #define GCALL(c, fn, ...) guest_call((c), (fn), sizeof((uint32_t[]){__VA_ARGS__}) / 4, (uint32_t[]){__VA_ARGS__})
 #define GCALL0(c, fn) guest_call((c), (fn), 0, NULL)

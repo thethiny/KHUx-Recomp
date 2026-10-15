@@ -900,6 +900,7 @@ static DWORD WINAPI client(LPVOID p) {
     char v[64], v2[64];
     char *body;
     if (!strcmp(path, "state")) body = state_json();
+    else if (!strcmp(path, "threads")) { dump_threads(); body = _strdup("{\"ok\": true}"); }
     else if (!strcmp(path, "events")) body = events_json(qget(q, "since", v, sizeof(v)) ? atoi(v) : 0);
     else if (!strcmp(path, "wait")) {
         char cond[128] = "idle";

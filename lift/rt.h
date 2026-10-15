@@ -83,9 +83,15 @@ void rt_vfp_load(CPU *c);
 #define RS8(a)  ((uint32_t)(int32_t)*(int8_t *)HA(a))
 #define RS16(a) ((uint32_t)(int32_t)*(int16_t *)HA(a))
 
-/* Record a store about to happen. When the log is full the store is skipped (returns 0) and wfull is set: the
- * run is then void and gets undone, so every store that did happen must be in the log. wn always counts only
- * the entries written by this run (older entries past it are stale). */
+/* Record a store about to happen. When the log is full, wfull is set and logging stops: the store and the rest of
+ * the run happen for real, unlogged, so the run cannot be undone any more and whoever logs keeps it as the real
+ * execution (the M3 verifier does), if rt_log_full_continue; otherwise the store is skipped (returns 0) and the run
+ * is void and gets undone. wn always counts
+ * only the entries written by this run (older entries past it are stale). */
+/* 1: a full log stops logging and the run goes on for real (the native host's M3 verifier); 0: the store is
+ * skipped and the run is void (the emulator's speculative runs undo it). Defined in lift_table.c / rewrite.dll. */
+EXPORT extern int rt_log_full_continue;
+
 INLINE int wlog(CPU *c, uint32_t a, uint32_t size) {
     if (c->wn < c->wcap) {
         WLog *w = &c->wlog[c->wn++];
@@ -96,7 +102,9 @@ INLINE int wlog(CPU *c, uint32_t a, uint32_t size) {
         return 1;
     }
     c->wfull = 1;
-    return 0;
+    if (!rt_log_full_continue) return 0;
+    c->logging = 0;
+    return 1;
 }
 
 INLINE void W8(CPU *c, uint32_t a, uint32_t v)  { if (c->logging && !wlog(c, a, 1)) return; R8(a) = (uint8_t)v; }
@@ -104,10 +112,15 @@ INLINE void W16(CPU *c, uint32_t a, uint32_t v) { if (c->logging && !wlog(c, a, 
 INLINE void W32(CPU *c, uint32_t a, uint32_t v) { if (c->logging && !wlog(c, a, 4)) return; R32(a) = v; }
 
 /* Make room in the store log for a block write of n bytes at a (4-byte entries, bytes for the tail).
- * Returns 0 when it does not fit: the run is then void (wn past wcap) and the write must be skipped. */
+ * When it does not fit: as in wlog (returns 0 when the write must be skipped). */
 INLINE int LOGRANGE(CPU *c, uint32_t a, uint32_t n) {
     if (!c->logging || !n) return 1;
-    if ((uint64_t)c->wn + n / 4 + 3 > c->wcap) { c->wfull = 1; return 0; }
+    if ((uint64_t)c->wn + n / 4 + 3 > c->wcap) {
+        c->wfull = 1;
+        if (!rt_log_full_continue) return 0;
+        c->logging = 0;
+        return 1;
+    }
     uint32_t k = 0;
     for (; k + 4 <= n; k += 4) wlog(c, a + k, 4);
     for (; k < n; k++) wlog(c, a + k, 1);

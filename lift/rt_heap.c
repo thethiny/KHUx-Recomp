@@ -134,6 +134,10 @@ static uint32_t heap_calloc(CPU *c, uint32_t count, uint32_t size) {
     return p;
 }
 
+/* M3 verifier: hold the heap for the whole shadow run of a rewritten function (on = 1) and let go (on = 0), so
+ * other guest threads cannot allocate while its stores are logged and undone (the lock is recursive per thread). */
+EXPORT void rt_heap_hold(int on) { if (on) heap_lock(); else heap_unlock(); }
+
 EXPORT uint32_t rt_heap_usable(CPU *c, uint32_t p) LOCKED(uint32_t, heap_usable(c, p))
 EXPORT uint32_t rt_heap_malloc(CPU *c, uint32_t n) LOCKED(uint32_t, heap_malloc(c, n))
 /* Returns 0, or 1 when p was not a live block (the host reports it). */

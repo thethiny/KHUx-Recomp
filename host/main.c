@@ -10,6 +10,8 @@
 
 void core_init(void);
 void lift_load(const char *path);
+void rewrite_load(const char *root);
+void rewrite_report(void);
 void heap_init(void);
 extern char so_host_path[1024];
 
@@ -66,6 +68,7 @@ int main(int argc, char **argv) {
 
     mem_init();
     lift_load(lift_path);
+    rewrite_load(root);
     heap_init();
     HThread *mt = thread_main();
     CPU *c = mt->cpu;
@@ -155,7 +158,9 @@ int main(int argc, char **argv) {
             hlog("-- frame %d: %.1f fps, %u draws", frame, 600 / dt, *L.gl_draws);
             t0 = t1;
         }
+        if (frame % 1200 == 0) rewrite_report();
     }
     hlog("window closed");
+    rewrite_report();
     ExitProcess(0);
 }

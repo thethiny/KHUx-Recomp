@@ -12,7 +12,7 @@ RECOMP = HERE.parent
 OUT = RECOMP / "out" / "host"
 VCVARS = Path(r"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat")
 CRLF = chr(13) + chr(10)
-SOURCES = ["main.c", "core.c", "mem.c", "thread.c", "libc.c", "fs.c", "net.c", "jni.c", "gl.c", "sl.c", "ctl.c", "ui.c", "webview.c"]
+SOURCES = ["main.c", "core.c", "mem.c", "thread.c", "libc.c", "fs.c", "net.c", "jni.c", "gl.c", "sl.c", "ctl.c", "ui.c", "webview.c", "rewrite.c"]
 LIBS = ["ws2_32.lib", "winmm.lib", "user32.lib", "gdi32.lib", "kernel32.lib", "ole32.lib", "advapi32.lib",
         "shell32.lib", "version.lib", r"third_party\webview2\WebView2LoaderStatic.lib"]
 WV2_DIR = HERE / "third_party" / "webview2"

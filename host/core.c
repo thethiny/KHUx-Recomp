@@ -32,7 +32,10 @@ const char *thread_label(void) {
     return buf;
 }
 
-static void dump_cpu(CPU *c) {
+const char *rewrite_where(void);
+void dump_cpu(CPU *c) {
+    const char *w = rewrite_where();
+    hlog("   logging=%u wn=%u%s%s", c->logging, c->wn, *w ? "; " : "", w);
     hlog("   r0=%08X r1=%08X r2=%08X r3=%08X r4=%08X r5=%08X r6=%08X r7=%08X", c->r[0], c->r[1], c->r[2],
          c->r[3], c->r[4], c->r[5], c->r[6], c->r[7]);
     hlog("   r8=%08X r9=%08X r10=%08X r11=%08X r12=%08X sp=%08X lr=%08X lpc=%08X", c->r[8], c->r[9], c->r[10],
@@ -40,7 +43,7 @@ static void dump_cpu(CPU *c) {
     /* Thumb return addresses on the stack: the call chain */
     uint32_t sp = c->r[13];
     int shown = 0;
-    for (int k = 0; k < 256 && shown < 16; k++) {
+    for (int k = 0; k < 1024 && shown < 24; k++) {
         uint32_t a = sp + 4u * (uint32_t)k;
         int mapped = (a >= HEAP_BASE && a < HEAP_BASE + HEAP_SIZE) || (a >= STACK_BASE && a < STACK_BASE + STACK_SIZE);
         if (!mapped) break;
@@ -112,6 +115,9 @@ void lift_load(const char *path) {
     GETP(heap_realloc, "rt_heap_realloc");
     GETP(heap_usable, "rt_heap_usable");
     GETP(heap_ctl_size, "rt_heap_ctl_size");
+    GETP(heap_hold, "rt_heap_hold");
+    GETP(files_allow, "rt_files_allow");
+    { int *full = (int *)GetProcAddress(L.dll, "rt_log_full_continue"); if (full) *full = 1; }
     GETP(heap_ctl, "rt_heap_ctl");
     GETP(errno_fn, "rt_errno_fn");
     GETP(hook, "rt_hook");
@@ -133,7 +139,7 @@ void lift_load(const char *path) {
 
 void heap_init(void) {
     uint32_t ctl = HEAP_BASE, size = L.heap_ctl_size();
-    memset(GP(ctl), 0, size);
+    { glog(ctl, (uint32_t)(size)); memset(GP(ctl), 0, size); }
     gw32(ctl, (HEAP_BASE + size + 15u) & ~15u);           /* bump pointer */
     gw32(ctl + 4, HEAP_BASE + HEAP_SIZE - 0x1000u);      /* end (the last page stays clear of the 4 GB edge) */
     *L.heap_ctl = ctl;
@@ -147,24 +153,27 @@ void core_init(void) {
 }
 
 /* ---------------------------------------------------------------- heap */
+/* The CPU the heap stores are logged on: the calling guest thread's while it is in an M3 verifier shadow run (so
+ * the run's undo also takes back what host code allocated or freed for it), the host's own otherwise. */
+static CPU *heap_cpu(void) { return cur && cur->cpu && cur->cpu->logging ? cur->cpu : &hcpu; }
 uint32_t galloc(uint32_t n) {
-    uint32_t p = L.heap_malloc(&hcpu, n);
+    uint32_t p = L.heap_malloc(heap_cpu(), n);
     if (!p) fatal("guest heap exhausted (%u bytes)", n);
     return p;
 }
 uint32_t gzalloc(uint32_t n) {
     uint32_t p = galloc(n ? n : 1);
-    memset(GP(p), 0, n);
+    { glog(p, (uint32_t)(n)); memset(GP(p), 0, n); }
     return p;
 }
 uint32_t galloc_bytes(const void *src, uint32_t n) {
     uint32_t p = galloc(n ? n : 1);
-    memcpy(GP(p), src, n);
+    { glog(p, (uint32_t)(n)); memcpy(GP(p), src, n); }
     return p;
 }
 uint32_t galloc_str(const char *s) { return galloc_bytes(s, (uint32_t)strlen(s) + 1); }
 void gfree(uint32_t p) {
-    if (p && L.heap_free(&hcpu, p)) hlog("free of unknown pointer 0x%08X", p);
+    if (p && L.heap_free(heap_cpu(), p)) hlog("free of unknown pointer 0x%08X", p);
 }
 
 void set_errno(int e) {
@@ -270,16 +279,22 @@ static ImportFn import_fn(uint32_t a) {
 /* Linux ARM kuser helpers (ARMv5 has no atomic instructions) */
 static void kuser(CPU *c, uint32_t a) {
     switch (a - KUSER_PAGE) {
+    /* In a logged run (the M3 verifier's shadow runs) the store is logged first, like the lifted STREX, so it is
+     * undone with the rest of the run; with the log full the run is void and the store is skipped, as W32 does
+     * (reported as done: failing would make the guest's retry loop spin forever). Every shared_ptr add_ref /
+     * release goes through here. */
     case 0xFC0: {     /* int __kuser_cmpxchg(old, new, ptr): 0 and C set on success */
         uint32_t old = c->r[0];
-        int ok = (uint32_t)_InterlockedCompareExchange((volatile long *)GP(c->r[2]), (long)c->r[1], (long)old) == old;
+        int ok = (c->logging && !wlog(c, c->r[2], 4)) ? 1
+               : (uint32_t)_InterlockedCompareExchange((volatile long *)GP(c->r[2]), (long)c->r[1], (long)old) == old;
         c->r[0] = ok ? 0 : 1;
         c->c = (uint32_t)ok;
         break;
     }
     case 0xF60: {     /* int __kuser_cmpxchg64(const u64 *old, const u64 *new, u64 *ptr) */
         int64_t old = *(int64_t *)GP(c->r[0]);
-        int ok = _InterlockedCompareExchange64((volatile int64_t *)GP(c->r[2]), *(int64_t *)GP(c->r[1]), old) == old;
+        int ok = (c->logging && !(wlog(c, c->r[2], 4) && wlog(c, c->r[2] + 4, 4))) ? 1
+               : _InterlockedCompareExchange64((volatile int64_t *)GP(c->r[2]), *(int64_t *)GP(c->r[1]), old) == old;
         c->r[0] = ok ? 0 : 1;
         c->c = (uint32_t)ok;
         break;
@@ -300,6 +315,94 @@ __declspec(thread) uint32_t imp_target;       /* the import being run (generic h
 
 /* lift.dll calls this for a call target outside the game's code that it does not run natively. On return
  * c->pc is the caller's return address (LR). */
+EXPORT int rt_log_full_continue = 1;   /* rt.h wlog in host code: a full log stops logging, the run goes on */
+
+/* ---------------------------------------------------------------- M3 verifier: logged host writes */
+void glog(uint32_t a, uint32_t n) {
+    CPU *c = cur ? cur->cpu : NULL;
+    if (!c || !c->logging || !n) return;
+    if ((uint64_t)c->wn + n / 4 + 4 > c->wcap) { c->wfull = 1; c->logging = 0; return; }   /* as rt.h wlog */
+    uint32_t k = 0;
+    for (; k + 4 <= n; k += 4) {
+        WLog *w = &c->wlog[c->wn++];
+        w->addr = a + k; w->size = 4; w->old_lo = g32(a + k); w->old_hi = c->lpc;
+    }
+    for (; k < n; k++) {
+        WLog *w = &c->wlog[c->wn++];
+        w->addr = a + k; w->size = 1; w->old_lo = *(uint8_t *)GP(a + k); w->old_hi = c->lpc;
+    }
+}
+
+/* ---------------------------------------------------------------- M3 verifier: import record / replay
+ * A shadow run executes a function twice (the lifted original, then its rewrite) and undoes guest memory between
+ * the runs. State the host keeps outside guest memory (mutexes, threads, files, GL, JNI, sockets, audio) cannot be
+ * undone, so on the shadowed thread every such import runs for real only in the first run and is recorded (return
+ * registers); the later runs get the recorded results without running it. Pure imports (string, formatting, math,
+ * sorting: they only read and write guest memory) run every time. A replay that asks for a different import, or
+ * more imports than were recorded, marks the shadow run as diverged (the verifier then reports a mismatch). */
+typedef struct ImpRec { uint32_t addr, r0, r1, nbytes, args[4]; uint64_t *bytes; } ImpRec;   /* bytes: (addr << 8) | value */
+static __declspec(thread) int imp_mode;                 /* 0 off, 1 record, 2 replay */
+static __declspec(thread) ImpRec *imp_recs;
+static __declspec(thread) uint32_t imp_div_got;
+static __declspec(thread) int imp_div_pos, imp_opaque, imp_paused, imp_saved_mode;
+static __declspec(thread) int imp_n, imp_cap, imp_pos, imp_diverged;
+
+static int import_pure(const char *n) {
+    static const char *const prefixes[] = {"str", "mem", "wcs", "wmem", "ato", "sprintf", "snprintf", "vsnprintf",
+        "vsprintf", "sscanf", "vsscanf", "is", "to", "abs", "labs", "llabs", "div", "ldiv", "sin", "cos", "tan",
+        "asin", "acos", "atan", "sqrt", "pow", "exp", "log", "floor", "ceil", "fmod", "round", "lround", "trunc",
+        "modf", "frexp", "ldexp", "fabs", "fmin", "fmax", "hypot", "cbrt", "qsort", "bsearch", "__aeabi_", "__ctype",
+        "__errno", "__stack_chk", "bzero", "index", "rindex", "mblen", "mbtowc", "wctomb", "btowc", "wctob",
+        /* call back into guest code: replaying would skip the callback's own (undone) stores, so they run again */
+        "pthread_once",
+        /* clocks: frozen during shadow runs (libc_shadow), so every run reads the same time */
+        "gettimeofday", "time", "clock_gettime", "clock", 0};
+    for (int k = 0; prefixes[k]; k++)
+        if (!strncmp(n, prefixes[k], strlen(prefixes[k]))) return 1;
+    return 0;
+}
+
+/* debugging: how many imports the first run recorded / the last replay consumed, and the names */
+int import_shadow_stats(int *recorded, int *replayed) { *recorded = imp_n; *replayed = imp_pos; return imp_diverged; }
+void import_shadow_opaque(void) { if (imp_mode != 2) imp_opaque = 1; }
+
+/* where the replay diverged: the record index, and the import that came instead of the recorded one */
+int import_shadow_divergence(const char **got) { *got = imp_div_got ? import_name(imp_div_got) : NULL; return imp_div_pos; }
+const char *import_shadow_name(int k) { return k < imp_n ? import_name(imp_recs[k].addr) : NULL; }
+
+/* Where a recorded store goes in a replay: a store into the buffer of a pointer argument (at most 64 KB past it)
+ * moves with that argument, which differs when the caller's stack frame does (a rewrite's frame is not the original's
+ * layout); any other store (heap blocks, globals) keeps its address. */
+static uint32_t replay_addr(const ImpRec *r, const CPU *c, uint32_t a) {
+    int best = -1;
+    for (int k = 0; k < 4; k++) {
+        uint32_t p = r->args[k];
+        if (p >= 0x1000u && a >= p && a - p < 0x10000u && (best < 0 || p > r->args[best])) best = k;
+    }
+    return best < 0 ? a : a - r->args[best] + c->r[best];
+}
+
+/* phase 0: start recording; 1: replay from the first record; 2: end; 3: query (1 = the replay diverged) */
+int import_shadow(int phase) {
+    if (phase == 4) return imp_opaque;
+    if (phase == 5) {                                     /* an effect runs: its imports are part of it (not recorded) */
+        if (imp_paused++ == 0) { imp_saved_mode = imp_mode; imp_mode = 0; }
+        return 0;
+    }
+    if (phase == 6) {
+        if (imp_paused && --imp_paused == 0) imp_mode = imp_saved_mode;
+        return 0;
+    }
+    if (phase == 0) {
+        imp_opaque = 0;
+        for (int k = 0; k < imp_n; k++) free(imp_recs[k].bytes);
+        imp_mode = 1; imp_n = 0; imp_diverged = 0;
+    }
+    else if (phase == 1) { imp_mode = 2; imp_pos = 0; imp_diverged = 0; }
+    else if (phase == 2) { imp_mode = 0; }
+    return phase == 3 ? (imp_diverged || (imp_mode == 2 && imp_pos != imp_n)) : 0;
+}
+
 void host_emu(CPU *c, uint32_t target) {
     uint32_t a = target & ~1u, lr = c->r[14];
     if (a >= KUSER_PAGE) {
@@ -316,6 +419,69 @@ void host_emu(CPU *c, uint32_t target) {
         const char *name = import_name(a);
         if (name) fatal("unimplemented import %s called from 0x%08X (r0=%08X r1=%08X)", name, lr, c->r[0], c->r[1]);
         fatal("call to 0x%08X from 0x%08X: neither lifted code nor an import", target, lr);
+    }
+    if (imp_mode) {
+        const char *name = import_name(a);
+        if (imp_mode == 1 && name && (!strncmp(name, "gl", 2) || !strncmp(name, "egl", 3))) {
+            /* OpenGL ES: runs for real, once; its outputs are not logged, so this shadow run cannot be compared or
+             * replayed: the verifier keeps it as the real call (imp_opaque) */
+            imp_opaque = 1;
+            int id = native_id(name), done = 0;
+            if (id >= 0) { L.files_allow(1); done = L.native_call(c, id); L.files_allow(0); }
+            if (!done) fn(c);
+            c->pc = lr;
+            return;
+        }
+        if (!name || !import_pure(name)) {
+            if (imp_mode == 2) {                          /* replay: the recorded result, nothing runs */
+                if (imp_pos < imp_n && imp_recs[imp_pos].addr == a) {
+                    ImpRec *r = &imp_recs[imp_pos++];
+                    for (uint32_t k = 0; k < r->nbytes; k++)
+                        gw8(replay_addr(r, c, (uint32_t)(r->bytes[k] >> 8)), (uint8_t)r->bytes[k]);
+                    c->r[0] = r->r0;
+                    c->r[1] = r->r1;
+                } else {
+                    if (!imp_diverged) { imp_div_pos = imp_pos; imp_div_got = a; }
+                    imp_diverged = 1;
+                    c->r[0] = 0;
+                }
+                c->pc = lr;
+                return;
+            }
+            int mode = imp_mode;
+            imp_mode = 0;                                 /* what the import calls back into runs normally */
+            uint32_t outer = imp_target, w0 = c->wn, args_in[4] = {c->r[0], c->r[1], c->r[2], c->r[3]};
+            imp_target = a;
+            /* lift.dll's own stream functions decline inside logged runs: here they may run (once, recorded) */
+            int id = name ? native_id(name) : -1, done = 0;
+            if (id >= 0) { L.files_allow(1); done = L.native_call(c, id); L.files_allow(0); }
+            if (!done) fn(c);
+            imp_target = outer;
+            imp_mode = mode;
+            /* the guest bytes it stored (final values), replayed in the later runs */
+            uint32_t w1 = c->wn < c->wcap ? c->wn : c->wcap, nb = 0;
+            for (uint32_t k = w0; k < w1; k++) nb += c->wlog[k].size;
+            uint64_t *bytes = nb ? (uint64_t *)malloc(8u * nb) : NULL;
+            nb = 0;
+            for (uint32_t k = w0; k < w1; k++)
+                for (uint32_t b = 0; b < c->wlog[k].size; b++) {
+                    uint32_t ga = c->wlog[k].addr + b;
+                    bytes[nb++] = ((uint64_t)ga << 8) | *(uint8_t *)GP(ga);
+                }
+            if (imp_n == imp_cap) {
+                imp_cap = imp_cap ? imp_cap * 2 : 256;
+                imp_recs = (ImpRec *)realloc(imp_recs, sizeof(ImpRec) * (size_t)imp_cap);
+            }
+            imp_recs[imp_n].addr = a;
+            imp_recs[imp_n].r0 = c->r[0];
+            imp_recs[imp_n].r1 = c->r[1];
+            imp_recs[imp_n].nbytes = nb;
+            memcpy(imp_recs[imp_n].args, args_in, sizeof args_in);
+            imp_recs[imp_n].bytes = bytes;
+            imp_n++;
+            c->pc = lr;
+            return;
+        }
     }
     uint32_t outer = imp_target;
     imp_target = a;
@@ -364,6 +530,23 @@ static uint64_t call_impl(CPU *c, uint32_t fn, int n, const uint32_t *args) {
 }
 
 uint32_t guest_call(CPU *c, uint32_t fn, int n, const uint32_t *args) { return (uint32_t)call_impl(c, fn, n, args); }
+
+/* Like a compiled `bl`: sp is left exactly as it is (no 8-byte realignment) and arguments 5+ are stored at
+ * [sp, sp + 4 * (n - 4)) - the caller's outgoing-argument area, as the original code laid it out. Used by
+ * rewritten code that reproduces the original frame layout exactly (rw::call_exact). */
+uint64_t guest_call_exact(CPU *c, uint32_t fn, int n, const uint32_t *args) {
+    uint32_t saved[16], n_ = c->n, z_ = c->z, c_ = c->c, v_ = c->v, pc_ = c->pc;
+    memcpy(saved, c->r, sizeof(saved));
+    uint32_t sp = c->r[13];
+    for (int k = 4; k < n; k++) gw32(sp + 4u * (uint32_t)(k - 4), args[k]);
+    for (int k = 0; k < n && k < 4; k++) c->r[k] = args[k];
+    c->r[14] = RET_MAGIC;
+    guest_run(c, fn, RET_MAGIC);
+    uint64_t r = c->r[0] | ((uint64_t)c->r[1] << 32);
+    memcpy(c->r, saved, sizeof(saved));
+    c->n = n_; c->z = z_; c->c = c_; c->v = v_; c->pc = pc_;
+    return r;
+}
 uint64_t guest_call64(CPU *c, uint32_t fn, int n, const uint32_t *args) { return call_impl(c, fn, n, args); }
 
 /* ---------------------------------------------------------------- argument readers */

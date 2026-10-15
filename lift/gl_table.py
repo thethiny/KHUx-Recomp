@@ -132,7 +132,7 @@ static uint32_t gl_mapped[2][2];   /* [array, element] -> {guest block, size} fo
                 body += " rt_gl_draws++;"
         else:
             body = SPECIAL_C[n].format(n=n)
-        cases.append(f"    case {cid}: /* {n} */ if (!gl_ok || c->logging) return 0; {body} return 1;")
+        cases.append(f"    case {cid}: /* {n} */ if (!gl_ok || LOGGED(c)) return 0; {body} return 1;")
     return "\n".join(out), cases
 
 

@@ -15,6 +15,13 @@ EXPORT char rt_so_guest[256];              /* the library's device path ... */
 EXPORT char rt_so_host[1024];              /* ... and its host path */
 EXPORT uint32_t rt_file_opens;             /* streams opened here (diagnostics) */
 
+/* M3 verifier: the host's import recording runs a stream call once for real inside a shadow run (its guest stores
+ * logged, the later runs replay them), or an OpenGL ES call (the shadow run then stops being compared and is kept),
+ * so it lets these run while it does */
+static __declspec(thread) int files_allow;
+EXPORT void rt_files_allow(int on) { files_allow = on; }
+#define LOGGED(c) ((c)->logging && !files_allow)
+
 #define MAX_FILES 512
 static struct { uint32_t g; FILE *f; int eof; } files[MAX_FILES];
 
@@ -50,7 +57,7 @@ static int native_fopen(CPU *c) {
     const char *path = (const char *)HA(c->r[0]), *mode = (const char *)HA(c->r[1]);
     char host[2048], m[8];
     int k = 0, slot = -1;
-    if (!rt_fs_root[0] || !rt_heap_ctl || c->logging) return 0;
+    if (!rt_fs_root[0] || !rt_heap_ctl || LOGGED(c)) return 0;
     for (const char *p = mode; *p && k < 5; p++) if (*p != 't' && *p != 'b') m[k++] = *p;
     m[k++] = 'b';
     m[k] = 0;
@@ -59,7 +66,7 @@ static int native_fopen(CPU *c) {
     FILE *f = fopen(host, m);
     if (!f) {
         uint32_t ep = rt_errno_fn ? rt_errno_fn() : rt_errno_ptr;
-        if (ep) R32(ep) = 2;                                 /* ENOENT */
+        if (ep) W32(c, ep, 2);                               /* ENOENT */
         c->r[0] = 0;
         return 1;
     }
@@ -81,7 +88,7 @@ static int native_fopen(CPU *c) {
 
 static int native_fclose(CPU *c) {
     int k;
-    if (c->logging || (k = file_slot(c->r[0])) < 0) return 0;
+    if (LOGGED(c) || (k = file_slot(c->r[0])) < 0) return 0;
     AcquireSRWLockExclusive(&files_lock);
     FILE *f = files[k].f;
     uint32_t g = files[k].g;
@@ -96,9 +103,10 @@ static int native_fclose(CPU *c) {
 static int native_fread(CPU *c) {
     uint32_t buf = c->r[0], size = c->r[1], n = c->r[2];
     int k;
-    if (c->logging || (k = file_slot(c->r[3])) < 0) return 0;
+    if (LOGGED(c) || (k = file_slot(c->r[3])) < 0) return 0;
     uint64_t want = (uint64_t)size * n;
     if (want > 0x40000000u) return 0;
+    if (want && !LOGRANGE(c, buf, (uint32_t)want)) return 0;     /* logged: undone / replayed with the run */
     size_t got = want ? fread(HA(buf), 1, (size_t)want, files[k].f) : 0;
     if (got < want) files[k].eof = 1;
     c->r[0] = size ? (uint32_t)(got / size) : 0;
@@ -108,7 +116,7 @@ static int native_fread(CPU *c) {
 static int native_fwrite(CPU *c) {
     uint32_t buf = c->r[0], size = c->r[1], n = c->r[2];
     int k;
-    if (c->logging || (k = file_slot(c->r[3])) < 0) return 0;
+    if (LOGGED(c) || (k = file_slot(c->r[3])) < 0) return 0;
     fwrite(HA(buf), 1, (size_t)size * n, files[k].f);
     c->r[0] = n;
     return 1;
@@ -117,14 +125,15 @@ static int native_fwrite(CPU *c) {
 static int native_fgets(CPU *c) {
     uint32_t buf = c->r[0], n = c->r[1];
     int k;
-    if (c->logging || (k = file_slot(c->r[2])) < 0 || (int32_t)n <= 0) return 0;
+    if (LOGGED(c) || (k = file_slot(c->r[2])) < 0 || (int32_t)n <= 0) return 0;
+    if (n && !LOGRANGE(c, buf, n)) return 0;
     c->r[0] = fgets((char *)HA(buf), (int)n, files[k].f) ? buf : 0;
     return 1;
 }
 
 static int native_fseek(CPU *c) {
     int k;
-    if (c->logging || (k = file_slot(c->r[0])) < 0) return 0;
+    if (LOGGED(c) || (k = file_slot(c->r[0])) < 0) return 0;
     _fseeki64(files[k].f, (int64_t)(int32_t)c->r[1], (int)c->r[2]);
     files[k].eof = 0;
     c->r[0] = 0;
@@ -133,21 +142,21 @@ static int native_fseek(CPU *c) {
 
 static int native_ftell(CPU *c) {
     int k;
-    if (c->logging || (k = file_slot(c->r[0])) < 0) return 0;
+    if (LOGGED(c) || (k = file_slot(c->r[0])) < 0) return 0;
     c->r[0] = (uint32_t)_ftelli64(files[k].f);
     return 1;
 }
 
 static int native_feof(CPU *c) {
     int k;
-    if (c->logging || (k = file_slot(c->r[0])) < 0) return 0;
+    if (LOGGED(c) || (k = file_slot(c->r[0])) < 0) return 0;
     c->r[0] = files[k].eof || feof(files[k].f) ? 1u : 0u;
     return 1;
 }
 
 static int native_fputs(CPU *c) {
     int k;
-    if (c->logging || (k = file_slot(c->r[1])) < 0) return 0;
+    if (LOGGED(c) || (k = file_slot(c->r[1])) < 0) return 0;
     fputs((const char *)HA(c->r[0]), files[k].f);
     c->r[0] = 1;
     return 1;
@@ -155,7 +164,7 @@ static int native_fputs(CPU *c) {
 
 static int native_fputc(CPU *c) {
     int k;
-    if (c->logging || (k = file_slot(c->r[1])) < 0) return 0;
+    if (LOGGED(c) || (k = file_slot(c->r[1])) < 0) return 0;
     fputc((int)(c->r[0] & 0xFF), files[k].f);
     return 1;                                             /* returns its argument: r0 unchanged */
 }
