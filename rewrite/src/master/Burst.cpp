@@ -1,0 +1,106 @@
+#include "Burst.hpp"
+#include "ParseUtilA.hpp"
+
+namespace master {
+
+using BurstFunctions = TableFunctions<Burst>;
+RW_FUNCTION(0x77a474, "master::Burst::getBurstIds", BurstFunctions::getIds);
+RW_FUNCTION(0x77a490, "master::Burst::create", BurstFunctions::create);
+RW_FUNCTION(0x77bf14, "master::Burst::getHash", BurstFunctions::getHash);
+RW_FUNCTION(0x77c000, "master::Burst::getID", BurstFunctions::getID);
+RW_FUNCTION(0x77c04c, "master::Burst::~Burst (deleting)", BurstFunctions::destructDelete);
+
+void Burst::parse(guest::SharedPtr *out, uint32_t json) {
+    using parse_a::Kind;
+    static constexpr parse_a::Field FIELDS[] = {
+        // {JSON key literal, kind, data position, bytes, stack buffer (frame offset)}
+        {0xe07f40, Kind::Int, BURST_ID, 0x4, 0x298},                  // "burstId"
+        {0xe07f48, Kind::Int, MOTION_ID, 0x4, 0x294},                 // "motionId"
+        {0xe07f51, Kind::Int, EFFECT_ID, 0x4, 0x290},                 // "effectId"
+        {0xe07f5a, Kind::Int, DISTANCE, 0x4, 0x28c},                  // "distance"
+        {0xe07f63, Kind::Int, EFFECT_DIRECTION_FIX, 0x4, 0x288},      // "effectDirectionFix"
+        {0xdfade6, Kind::String, NAME, 0x41, 0x29c},                  // "name"
+        {0xdfae44, Kind::String, DESCRIPTION, 0x101, 0x29c},          // "description"
+        {0xe07f76, Kind::Int, MAX_ENHANCE_COUNT, 0x4, 0x284},         // "maxEnhanceCount"
+        {0xdfb52f, Kind::Int, ATTRIBUTE, 0x4, 0x280},                 // "attribute"
+        {0xe07e8f, Kind::Int, TARGET, 0x4, 0x27c},                    // "target"
+        {0xe07f86, Kind::Int, HIT_COUNT, 0x4, 0x278},                 // "hitCount"
+        {0xe07f8f, Kind::Int, GAUGE, 0x4, 0x274},                     // "gauge"
+        {0xe07f95, Kind::Int, CRITICAL, 0x4, 0x270},                  // "critical"
+        {0xe07f9e, Kind::Int, CRITICAL_POWER, 0x4, 0x26c},            // "criticalPower"
+        {0xe07fac, Kind::Int, DISPLAY_POWER, 0x4, 0x268},             // "displayPower"
+        {0xe07fb9, Kind::IntArray, DISPLAY_POWER_PER_ENFORCE, 0x14, 0x29c}, // "displayPowerPerEnforce"
+        {0xe07fd0, Kind::Int, DISPLAY_MAX_POWER, 0x4, 0x264},         // "displayMaxPower"
+        {0xe07fe0, Kind::IntArray, DISPLAY_MAX_POWER_PER_ENFORCE, 0x14, 0x29c}, // "displayMaxPowerPerEnforce"
+        {0xe07ffa, Kind::Int, BASE_POWER, 0x4, 0x260},                // "basePower"
+        {0xe08004, Kind::IntArray, BASE_POWER_PER_ENFORCE, 0x14, 0x29c}, // "basePowerPerEnforce"
+        {0xe08018, Kind::Int, DAMAGE_TYPE, 0x4, 0x25c},               // "damageType"
+        {0xe08023, Kind::Int, SPECIAL_POWER_TYPE, 0x4, 0x258},        // "specialPowerType"
+        {0xe08034, Kind::Int, SP1, 0x4, 0x254},                       // "sp1"
+        {0xe08038, Kind::Int, SP2, 0x4, 0x250},                       // "sp2"
+        {0xe0803c, Kind::IntArray, SP1_PER_ENFORCE, 0x14, 0x29c},     // "sp1PerEnforce"
+        {0xe0804a, Kind::IntArray, SP2_PER_ENFORCE, 0x14, 0x29c},     // "sp2PerEnforce"
+        {0xe08058, Kind::Int, ADD_TURN, 0x4, 0x24c},                  // "addTurn"
+        {0xe08060, Kind::Int, ADD_COUNT, 0x4, 0x248},                 // "addCount"
+        {0xe08069, Kind::Int, BUF_ATTACK, 0x4, 0x244},                // "bufAttack"
+        {0xe08073, Kind::Int, DEBUF_ATTACK, 0x4, 0x240},              // "debufAttack"
+        {0xe0807f, Kind::Int, DEBUF_ATTACK_ALL, 0x4, 0x23c},          // "debufAttackAll"
+        {0xe0808e, Kind::Int, BUF_DEFENSE, 0x4, 0x238},               // "bufDefense"
+        {0xe08099, Kind::Int, DEBUF_DEFENSE, 0x4, 0x234},             // "debufDefense"
+        {0xe080a6, Kind::Int, DEBUF_DEFENSE_ALL, 0x4, 0x230},         // "debufDefenseAll"
+        {0xe080b6, Kind::Int, BUF_ATTACK_POWER, 0x4, 0x22c},          // "bufAttackPower"
+        {0xe080c5, Kind::Int, DEBUF_ATTACK_POWER, 0x4, 0x228},        // "debufAttackPower"
+        {0xe080d6, Kind::Int, DEBUF_ATTACK_POWER_ALL, 0x4, 0x224},    // "debufAttackPowerAll"
+        {0xe080ea, Kind::Int, BUF_DEFENSE_POWER, 0x4, 0x220},         // "bufDefensePower"
+        {0xe080fa, Kind::Int, DEBUF_DEFENSE_POWER, 0x4, 0x21c},       // "debufDefensePower"
+        {0xe0810c, Kind::Int, DEBUF_DEFENSE_POWER_ALL, 0x4, 0x218},   // "debufDefensePowerAll"
+        {0xe08121, Kind::Int, BUF_ATTACK_SPEED, 0x4, 0x214},          // "bufAttackSpeed"
+        {0xe08130, Kind::Int, DEBUF_ATTACK_SPEED, 0x4, 0x210},        // "debufAttackSpeed"
+        {0xe08141, Kind::Int, DEBUF_ATTACK_SPEED_ALL, 0x4, 0x20c},    // "debufAttackSpeedAll"
+        {0xe08155, Kind::Int, BUF_DEFENSE_SPEED, 0x4, 0x208},         // "bufDefenseSpeed"
+        {0xe08165, Kind::Int, DEBUF_DEFENSE_SPEED, 0x4, 0x204},       // "debufDefenseSpeed"
+        {0xe08177, Kind::Int, DEBUF_DEFENSE_SPEED_ALL, 0x4, 0x200},   // "debufDefenseSpeedAll"
+        {0xe0818c, Kind::Int, BUF_ATTACK_MAGIC, 0x4, 0x1fc},          // "bufAttackMagic"
+        {0xe0819b, Kind::Int, DEBUF_ATTACK_MAGIC, 0x4, 0x1f8},        // "debufAttackMagic"
+        {0xe081ac, Kind::Int, DEBUF_ATTACK_MAGIC_ALL, 0x4, 0x1f4},    // "debufAttackMagicAll"
+        {0xe081c0, Kind::Int, BUF_DEFENSE_MAGIC, 0x4, 0x1f0},         // "bufDefenseMagic"
+        {0xe081d0, Kind::Int, DEBUF_DEFENSE_MAGIC, 0x4, 0x1ec},       // "debufDefenseMagic"
+        {0xe081e2, Kind::Int, DEBUF_DEFENSE_MAGIC_ALL, 0x4, 0x1e8},   // "debufDefenseMagicAll"
+        {0xe081f7, Kind::Int, RESET_BUF_ATTTACK, 0x4, 0x1e4},         // "resetBufAtttack"
+        {0xe08207, Kind::Int, RESET_DEBUF_ATTACK, 0x4, 0x1e0},        // "resetDebufAttack"
+        {0xe08218, Kind::Int, RESET_DEBUF_ATTACK_ALL, 0x4, 0x1dc},    // "resetDebufAttackAll"
+        {0xe0822c, Kind::Int, RESET_BUF_DEFENSE, 0x4, 0x1d8},         // "resetBufDefense"
+        {0xe0823c, Kind::Int, RESET_DEBUF_DEFENSE, 0x4, 0x1d4},       // "resetDebufDefense"
+        {0xe0824e, Kind::Int, RESET_DEBUF_DEFENSE_ALL, 0x4, 0x1d0},   // "resetDebufDefenseAll"
+        {0xe08263, Kind::Int, RESET_BUF_ATTTACK_POWER, 0x4, 0x1cc},   // "resetBufAtttackPower"
+        {0xe08278, Kind::Int, RESET_DEBUF_ATTACK_POWER, 0x4, 0x1c8},  // "resetDebufAttackPower"
+        {0xe0828e, Kind::Int, RESET_DEBUF_ATTACK_POWER_ALL, 0x4, 0x1c4}, // "resetDebufAttackPowerAll"
+        {0xe082a7, Kind::Int, RESET_BUF_DEFENSE_POWER, 0x4, 0x1c0},   // "resetBufDefensePower"
+        {0xe082bc, Kind::Int, RESET_DEBUF_DEFENSE_POWER, 0x4, 0x1bc}, // "resetDebufDefensePower"
+        {0xe082d3, Kind::Int, RESET_DEBUF_DEFENSE_POWER_ALL, 0x4, 0x1b8}, // "resetDebufDefensePowerAll"
+        {0xe082ed, Kind::Int, RESET_BUF_ATTTACK_SPEED, 0x4, 0x1b4},   // "resetBufAtttackSpeed"
+        {0xe08302, Kind::Int, RESET_DEBUF_ATTACK_SPEED, 0x4, 0x1b0},  // "resetDebufAttackSpeed"
+        {0xe08318, Kind::Int, RESET_DEBUF_ATTACK_SPEED_ALL, 0x4, 0x1ac}, // "resetDebufAttackSpeedAll"
+        {0xe08331, Kind::Int, RESET_BUF_DEFENSE_SPEED, 0x4, 0x1a8},   // "resetBufDefenseSpeed"
+        {0xe08346, Kind::Int, RESET_DEBUF_DEFENSE_SPEED, 0x4, 0x1a4}, // "resetDebufDefenseSpeed"
+        {0xe0835d, Kind::Int, RESET_DEBUF_DEFENSE_SPEED_ALL, 0x4, 0x1a0}, // "resetDebufDefenseSpeedAll"
+        {0xe08377, Kind::Int, RESET_BUF_ATTTACK_MAGIC, 0x4, 0x19c},   // "resetBufAtttackMagic"
+        {0xe0838c, Kind::Int, RESET_DEBUF_ATTACK_MAGIC, 0x4, 0x198},  // "resetDebufAttackMagic"
+        {0xe083a2, Kind::Int, RESET_DEBUF_ATTACK_MAGIC_ALL, 0x4, 0x194}, // "resetDebufAttackMagicAll"
+        {0xe083bb, Kind::Int, RESET_BUF_DEFENSE_MAGIC, 0x4, 0x190},   // "resetBufDefenseMagic"
+        {0xe083d0, Kind::Int, RESET_DEBUF_DEFENSE_MAGIC, 0x4, 0x18c}, // "resetDebufDefenseMagic"
+        {0xe083e7, Kind::Int, RESET_DEBUF_DEFENSE_MAGIC_ALL, 0x4, 0x188}, // "resetDebufDefenseMagicAll"
+        {0xe08401, Kind::Int, COPY_BUF_BASE, 0x4, 0x184},             // "copyBufBase"
+        {0xe0840d, Kind::Int, COPY_BUF_ATTRIBUTE, 0x4, 0x180},        // "copyBufAttribute"
+        {0xe0841e, Kind::Int, HEAL, 0x4, 0x17c},                      // "heal"
+        {0xe08423, Kind::Int, HEAL_SHAKE, 0x4, 0x178},                // "healShake"
+        {0xe0842d, Kind::Int, CURE_POISON, 0x4, 0x174},               // "curePoison"
+        {0xe08438, Kind::Int, CURE_SLEEP, 0x4, 0x170},                // "cureSleep"
+        {0xe08442, Kind::Int, CURE_DEEP_POISON, 0x4, 0x16c},          // "cureDeepPoison"
+        {0xe08451, Kind::Int, CURE_PARALYSIS, 0x4, 0x168},            // "cureParalysis"
+    };
+    parse_a::parseRow(out, json, {0x3b8, 0x2dc, PARSE_VTABLE, 0x77bec1}, FIELDS);
+}
+RW_FUNCTION(0x77a624, "master::Burst::parse", Burst::parse);   // SafeBuffer(size, true): clock-seeded key
+
+}  // namespace master

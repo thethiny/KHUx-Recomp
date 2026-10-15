@@ -1,0 +1,1854 @@
+addr	name	calls	verified	mismatches	unverifiable
+00459E60	SafeBuffer::initialize	983	0	0	0
+00459EFA	SafeBuffer::deinitialize	394	0	0	0
+00459F20	SafeBuffer::SafeBuffer(unsigned int, bool)	1201	152	0	0
+00459FA0	SafeBuffer::write	145823	60173	0	0
+00459FFC	SafeBuffer update list static init (sub_459FFC)	799	0	0	0
+0045A13C	SafeBuffer::~SafeBuffer	380	137	0	0
+0045A1D4	SafeBuffer::copy	169	0	0	0
+0045A268	SafeBuffer::read	116610	13555	0	0
+0045A29C	SafeBuffer::SafeBuffer(const SafeBuffer&)	133	60	0	0
+0045A318	SafeBuffer::SafeBuffer(SafeBuffer&&)	4	0	0	0
+0045A354	SafeBuffer::operator=(SafeBuffer&&)	4	0	0	0
+0045A394	SafeBuffer::update	200797	200797	0	0
+0045A420	SafeBuffer::SafeBuffer(const shared_ptr<bg::Data>&)	584	59	0	0
+0045A604	SafeBuffer::zerofill	77	2	0	0
+0045A924	sub_45A924	26	0	0	0
+0045A944	nullsub_6	28	0	0	0
+0045A9F4	SceneUtil::searchNodeByName	810	28	0	0
+0045AA48	SceneUtil::createNodeWithSceneFile	49	0	0	6
+0045ABFC	SceneUtil::leftAdsorptionNode	22	0	0	0
+0045AC84	SceneUtil::rightAdsorptionNode	22	0	0	0
+0045AD0C	SceneUtil::getSideMargin	5	2	0	0
+0045AD68	SceneUtil::createShadowSprite	6	0	0	3
+0045B03C	SceneUtil::createTopInAnimation	36	3	0	0
+0045B16C	SceneUtil::setCascadeOpacityEnabled	52	0	0	0
+0045B2F8	SceneUtil::createBottomInAnimation	62	6	0	0
+0045B8BC	SceneUtil::createRightInAnimation	2	0	0	0
+0045BC04	SceneUtil::createOpenPopupAnimation	6	3	0	0
+0045BC60	SceneUtil::createClosePopupAnimation	2	0	0	0
+0045BD14	SceneUtil::setShadow	173	6	0	0
+0045D8D0	SceneUtil::settingTitleLabel	22	0	0	2
+004684C8	SceneUtil::openTutorialPopup	5	0	0	0
+0046F100	SceneUtil::getStageResumptionStatus	1	0	0	0
+0046F160	SceneUtil::moveToMyPageOrResumeStage	1	1	0	0
+0047250C	SceneUtil::freeTutorialConvertData	21	21	0	0
+00472B30	SceneUtil::getNexTutorialphase	185	18	0	0
+00472D74	SceneUtil::dispTutorialCheck	6	0	0	0
+00473DF4	SceneUtil::callUpdateLockMedalAPI	55	9	0	0
+00478BA8	SceneUtil::addBackKeyCallback	26	3	0	0
+0047AABE	cocos2d::Node::getLocalZOrder	72494	72446	0	0
+0047AAD0	cocos2d::Node::getGlobalZOrder	96	96	0	0
+0047AB1E	cocos2d::Node::getChildren	14451	1362	0	0
+0047AB2E	cocos2d::Node::getParent	1197	308	0	0
+0047ABD6	cocos2d::Node::updateColor	10434	24	0	0
+0047ABF4	cocos2d::ui::Widget::updateFlippedX	43	0	0	0
+0047ABF6	cocos2d::ui::Widget::updateFlippedY	43	0	0	0
+0047ABF8	cocos2d::ui::Widget::adaptRenderers	38771	38771	0	0
+0048A714	std::__function::__func<cocos2d::Layer * (*)(void),std::allocator<cocos2d::Layer * (*)(void)>,cocos2d::Layer * ()(void)>::__clone	92	0	0	0
+0048A734	std::__function::__func<cocos2d::Layer * (*)(void),std::allocator<cocos2d::Layer * (*)(void)>,cocos2d::Layer * ()(void)>::destroy	136	10	0	0
+0048A73E	std::__function::__func<cocos2d::Layer * (*)(void),std::allocator<cocos2d::Layer * (*)(void)>,cocos2d::Layer * ()(void)>::operator()	53	0	0	1
+0048D688	SceneUtil::createShadowSprite $_0 __func::__clone(__base*)	2	0	0	0
+0048D6A8	SceneUtil::createShadowSprite $_0 __func::destroy	3	1	0	0
+0049140C	StringBuffer::StringBuffer(const char*, ...)	8614	1525	0	0
+004914C4	StringBuffer::concat	168	8	0	0
+00491500	StringBuffer::fset	735	10	0	0
+00491570	StringBuffer::fconcat	2864	160	0	0
+00491C70	std::__shared_ptr_emplace<bg::Data>::__on_zero_shared	127568	95	0	0
+00491C7C	std::__shared_ptr_emplace<bg::Data>::__on_zero_shared_weak	127568	95	0	0
+00491D44	std::__function::__func<void (*)(void *),std::allocator<void (*)(void *)>,void ()(void *)>::__clone	128149	27	0	0
+00491D64	std::__function::__func<void (*)(void *),std::allocator<void (*)(void *)>,void ()(void *)>::destroy	128174	0	0	0
+00491D6E	std::__function::__func<void (*)(void *),std::allocator<void (*)(void *)>,void ()(void *)>::operator()	135550	54	0	0
+00491DEC	std::__function::__func<void * (*)(unsigned int),std::allocator<void * (*)(unsigned int)>,void * ()(unsigned int)>::__clone	13	0	0	0
+00491E16	std::__function::__func<void * (*)(unsigned int),std::allocator<void * (*)(unsigned int)>,void * ()(unsigned int)>::operator()	131097	27	0	0
+00492054	Random::getInstance	3398	122	0	0
+004920EC	Random::Random	23	0	0	0
+00492184	Random::getMaxInt	123	122	0	0
+0049218C	Random::generate	1845	0	0	0
+00492224	Random::generateUniformInt	3227	122	0	0
+00492260	Random::generateUniformFloat	171	0	0	0
+004922AC	hole::time::setReferenceDate	584	584	0	0
+004922D4	Date::calculateIntervalSinceNow	1341	607	0	0
+004924F0	Date::init	9487	490	0	0
+00492664	Date::setIntervalFrom1970	24	0	0	0
+004926D0	Date::setIntervalFromNow	26	0	0	0
+00492738	Date::setNow	27	1	0	0
+00492744	Date::calculateIntervalSince1970	9577	420	0	0
+0049283C	Date::makeUTCDate	22	22	0	0
+004928AC	TextData::get	240	16	0	0
+004966BC	BattleUtil::calcMedalStatus	4	0	0	0
+00497010	BattleUtil::getSupportMedal	1	0	0	0
+00497B80	hole::network::RESTClient::Connection::init	722	701	0	0
+00497E10	hole::network::RESTClient::Connection::~Connection	939	489	0	0
+00498E8C	hole::network::RESTClient::cancelAll	101	25	0	0
+0049977C	hole::network::FindSubstringInsensitive	717	360	0	0
+00499920	sub_499920	451	338	0	0
+00499940	nullsub_269	676	563	0	0
+0049A418	sub_49A418	28089	13935	0	0
+0049A5EC	std::__shared_ptr_emplace<hole::network::RESTClient::Result>::__on_zero_shared	225	225	0	0
+0049A5F6	std::__shared_ptr_emplace<hole::network::RESTClient::Result>::__on_zero_shared_weak	225	225	0	0
+0049A5FE	rapidjson::internal::Stack<rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>>::~Stack [base destructor]	1130	181	0	0
+0049A618	rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>::~MemoryPoolAllocator [base destructor]	1311	0	0	0
+0049B418	sub_49B418	906	438	0	0
+0049B580	std::__function::__func<std::__bind<void (hole::network::RESTClient::*)(cocos2d::network::HttpClient *,cocos2d::network::HttpResponse *),hole::network::RESTClient*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>,std::allocator<std::__bind<void (hole::network::RESTClient::*)(cocos2d::network::HttpClient *,cocos2d::network::HttpResponse *),hole::network::RESTClient*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>>,void ()(cocos2d::network::HttpClient *,cocos2d::network::HttpResponse *)>::destroy	906	438	0	0
+0049B6A4	std::__shared_ptr_emplace<hole::network::RESTClient::Connection>::__on_zero_shared	225	225	0	0
+0049B6AE	std::__shared_ptr_emplace<hole::network::RESTClient::Connection>::__on_zero_shared_weak	225	225	0	0
+0049D84A	rapidjson::internal::Stack<rapidjson::CrtAllocator>::~Stack [base destructor]	616	219	0	0
+0049D9A0	cocos2d::network::HttpRequest::~HttpRequest [deleting destructor]	450	0	0	0
+0049D9AC	hole::network::api::Ret::parse	603	603	0	0
+0049DFD8	hole::network::api::Login::parse	28	28	0	0
+0049E448	hole::network::api::User::parse	27	27	0	0
+0049E8A8	hole::network::api::UserPoint::parse	28	28	0	0
+0049EE1C	hole::network::api::UserDetail::parse	27	27	0	0
+0049F4B0	hole::network::api::StageResumption::parse	27	27	0	0
+0049F6C4	hole::network::api::UserAvatar::Coordinate::init	90	0	0	0
+0049F95C	hole::network::api::UserAvatarAll::parse	24	24	0	0
+0049FAEC	hole::network::api::UserAvatarParts::Part::init	1564	0	0	0
+0049FC0C	hole::network::api::UserAvatarParts::parse	23	23	0	0
+0049FE70	hole::network::api::UserStone::parse	26	26	0	0
+0049FFF8	hole::network::api::UserMedal::Medal::init	2119	0	0	0
+004A029C	hole::network::api::UserMedal::parse	25	25	0	0
+004A0438	hole::network::api::UserMedal::parseSimplex	66	0	0	0
+004A0780	hole::network::api::UserSkill::parse	90	24	0	0
+004A09E4	hole::network::api::UserMaterial::Material::init	600	0	0	0
+004A0A70	hole::network::api::UserMaterial::parse	24	24	0	0
+004A0CBC	hole::network::api::UserKeyblade::Keyblade::init	138	0	0	0
+004A0F3C	hole::network::api::UserKeyblade::parse	24	24	0	0
+004A10D8	hole::network::api::UserKeyblade::create	2	0	0	0
+004A1620	hole::network::api::UserTitle::Title::init	525	0	0	0
+004A1688	hole::network::api::UserTitle::parse	21	21	0	0
+004A18D4	hole::network::api::UserSupport::parse	21	21	0	0
+004A41CC	hole::network::api::StageSupportList::SupportUser::init	44	0	0	0
+004A457C	hole::network::api::StageSupportList::parse	1	0	1	0
+004A4830	hole::network::api::StageStart::Treasure::init	2	0	0	0
+004A48E4	hole::network::api::StageStart::RequestData::init	1	0	0	0
+004A4A60	hole::network::api::StageStart::parse	1	1	0	0
+004A5AEC	hole::network::api::UserSphere::Sphere::init	1325	0	0	0
+004A5CB8	hole::network::api::UserSphere::parse	25	25	0	0
+004A6658	hole::network::api::SystemNeedUrl::parse	54	54	0	0
+004A6910	hole::network::api::SystemNeedUrl::~SystemNeedUrl	27	0	0	0
+004A69FC	hole::network::api::SystemCoppa::parse	27	27	0	0
+004A6DBC	hole::network::api::SystemInformationList151203::parse	21	21	0	0
+004A723C	hole::network::api::Party::init	48	1	0	0
+004A7584	hole::network::api::UserParty::parse	47	47	0	0
+004A7EC8	hole::network::api::PartyMemberList::Detail::init	42	0	0	0
+004A7FD8	hole::network::api::Ranking::init	42	0	0	0
+004A8040	hole::network::api::PartyMemberList::parse	21	0	21	0
+004A97E0	hole::network::api::UserShop::Benefit::init	26	0	0	0
+004A9844	hole::network::api::UserShop::parse	26	26	0	0
+004AAD00	hole::network::api::TutorialStatus::parse	25	25	0	0
+004ACD30	hole::network::api::UnionRanking::parse	20	20	0	0
+004AD26C	hole::network::api::UserStamp::parse	26	0	0	0
+004AD3DC	hole::network::api::UserChat::parse	26	26	0	0
+004ADC6C	hole::network::api::UserOption::parse	25	25	0	0
+004ADE18	hole::network::api::UserLink::parse	21	21	0	0
+004AF1C4	std::__shared_ptr_pointer<hole::network::api::UserParty  *>::__on_zero_shared	7	7	0	0
+004AF1FC	std::__shared_ptr_pointer<hole::network::api::UserParty  *>::__on_zero_shared_weak	7	7	0	0
+004AF3B4	std::__shared_ptr_pointer<hole::network::api::SystemNeedUrl  *>::__on_zero_shared	9	9	0	0
+004AF3F0	std::__shared_ptr_pointer<hole::network::api::SystemNeedUrl  *>::__on_zero_shared_weak	9	9	0	0
+004B0954	hole::network::api::UserKeyblade::~UserKeyblade	3	0	0	0
+004B0988	hole::network::api::UserKeyblade::~UserKeyblade (deleting)	9	6	0	0
+004B09FA	std::__shared_ptr_pointer<hole::network::api::UserKeyblade  *>::__on_zero_shared	1	0	0	0
+004B0A34	std::__shared_ptr_pointer<hole::network::api::UserKeyblade  *>::__on_zero_shared_weak	1	0	0	0
+004B0B7C	hole::network::api::UserMaterial::~UserMaterial	1	0	0	0
+004B0BB0	hole::network::api::UserMaterial::~UserMaterial (deleting)	9	6	0	0
+004B0BF4	std::__shared_ptr_pointer<hole::network::api::UserMaterial  *>::__on_zero_shared	1	0	0	0
+004B0C2C	std::__shared_ptr_pointer<hole::network::api::UserMaterial  *>::__on_zero_shared_weak	1	0	0	0
+004B0D74	hole::network::api::UserSkill::~UserSkill	1	0	0	0
+004B0DA8	hole::network::api::UserSkill::~UserSkill (deleting)	75	6	0	0
+004B0DEC	std::__shared_ptr_pointer<hole::network::api::UserSkill  *>::__on_zero_shared	22	0	0	0
+004B0E24	std::__shared_ptr_pointer<hole::network::api::UserSkill  *>::__on_zero_shared_weak	22	0	0	0
+004B0F6C	hole::network::api::UserMedal::~UserMedal	1	0	0	0
+004B0FA0	hole::network::api::UserMedal::~UserMedal (deleting)	75	6	0	0
+004B0FE4	std::__shared_ptr_pointer<hole::network::api::UserMedal  *>::__on_zero_shared	22	0	0	0
+004B101C	std::__shared_ptr_pointer<hole::network::api::UserMedal  *>::__on_zero_shared_weak	22	0	0	0
+004B1030	std::__shared_ptr_pointer<hole::network::api::UserStone  *>::__on_zero_shared	1	0	0	0
+004B1068	std::__shared_ptr_pointer<hole::network::api::UserStone  *>::__on_zero_shared_weak	1	0	0	0
+004B16B4	hole::network::api::UserAvatarParts::~UserAvatarParts	1	0	0	0
+004B16E8	hole::network::api::UserAvatarParts::~UserAvatarParts (deleting)	9	6	0	0
+004B172C	std::__shared_ptr_pointer<hole::network::api::UserAvatarParts  *>::__on_zero_shared	1	0	0	0
+004B1764	std::__shared_ptr_pointer<hole::network::api::UserAvatarParts  *>::__on_zero_shared_weak	1	0	0	0
+004B1890	std::__shared_ptr_pointer<hole::network::api::UserAvatarAll  *>::__on_zero_shared	1	0	0	0
+004B18C8	std::__shared_ptr_pointer<hole::network::api::UserAvatarAll  *>::__on_zero_shared_weak	1	0	0	0
+004B1990	std::__shared_ptr_pointer<hole::network::api::StageResumption  *>::__on_zero_shared	1	0	0	0
+004B19C8	std::__shared_ptr_pointer<hole::network::api::StageResumption  *>::__on_zero_shared_weak	1	0	0	0
+004B19DC	std::__shared_ptr_pointer<hole::network::api::UserDetail  *>::__on_zero_shared	1	0	0	0
+004B1A14	std::__shared_ptr_pointer<hole::network::api::UserDetail  *>::__on_zero_shared_weak	1	0	0	0
+004B1A28	std::__shared_ptr_pointer<hole::network::api::UserPoint  *>::__on_zero_shared	1	0	0	0
+004B1A60	std::__shared_ptr_pointer<hole::network::api::UserPoint  *>::__on_zero_shared_weak	1	0	0	0
+004B1A74	std::__shared_ptr_pointer<hole::network::api::User  *>::__on_zero_shared	1	0	0	0
+004B1AAC	std::__shared_ptr_pointer<hole::network::api::User  *>::__on_zero_shared_weak	1	0	0	0
+004B1B18	std::__shared_ptr_pointer<hole::network::api::Login  *>::__on_zero_shared	1	0	0	0
+004B1B50	std::__shared_ptr_pointer<hole::network::api::Login  *>::__on_zero_shared_weak	1	0	0	0
+004B1DB6	std::__shared_ptr_emplace<hole::network::api::Ret>::__on_zero_shared_weak	189	189	0	0
+004B4E54	hole::network::api::UserParty::~UserParty (deleting)	28	14	0	0
+004B585C	hole::network::api::StageStart::~StageStart (deleting)	1	0	0	0
+004B6D0C	hole::network::api::UserStone::~UserStone (deleting)	9	6	0	0
+004B6D18	hole::network::api::UserAvatarAll::~UserAvatarAll	1	0	0	0
+004B6D4C	hole::network::api::UserAvatarAll::~UserAvatarAll (deleting)	9	6	0	0
+004B6D90	hole::network::api::StageResumption::~StageResumption (deleting)	9	6	0	0
+004B6D9C	hole::network::api::UserDetail::~UserDetail (deleting)	9	6	0	0
+004B6DA8	hole::network::api::UserPoint::~UserPoint (deleting)	10	6	0	0
+004B6DB4	hole::network::api::User::~User (deleting)	9	6	0	0
+004B6DC0	hole::network::api::Login::~Login (deleting)	9	6	0	0
+004B6FF4	hole::network::api::Client::Client	30	10	0	0
+004B710C	hole::network::api::LoadJSON	72	0	0	0
+004B7900	hole::network::api::Client::isLoginAction	603	603	0	0
+004B7C58	hole::network::api::createHeaders	645	624	0	0
+004B9420	std::__shared_ptr_emplace<rapidjson::GenericDocument<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>>>::__on_zero_shared	68	59	0	0
+004B942A	std::__shared_ptr_emplace<rapidjson::GenericDocument<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>>>::__on_zero_shared_weak	68	59	0	0
+004B943E	std::__shared_ptr_pointer<rapidjson::GenericDocument<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>> *>::__on_zero_shared	9	9	0	0
+004B9484	std::__shared_ptr_pointer<rapidjson::GenericDocument<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>> *>::__on_zero_shared_weak	9	9	0	0
+004B98AA	std::__function::__func<std::__bind<void (hole::network::api::Client::*)(hole::network::api::Action,std::shared_ptr<hole::network::RESTClient::Result> const&),hole::network::api::Client*,hole::network::api::Action const&,std::placeholders::__ph<1> &>,std::allocator<std::__bind<void (hole::network::api::Client::*)(hole::network::api::Action,std::shared_ptr<hole::network::RESTClient::Result> const&),hole::network::api::Client*,hole::network::api::Action const&,std::placeholders::__ph<1> &>>,void ()(std::shared_ptr<hole::network::RESTClient::Result> const&)>::destroy_deallocate	597	201	0	0
+004BA10C	APIManager::APIManager	29	2	0	0
+004C399C	APIManager::reallocate	111	8	0	0
+004C4BAC	APIManager::updateFavoriteKeyblade	1	1	0	0
+004C678C	APIManager.cpp encryptToBase64(std::string*, Cipher&, const void*, size_t)	30	30	0	0
+004D5C82	std::__function::__func<std::__bind<hole::network::api::Client::StatusCode (APIManager::*)(hole::network::api::Action,hole::network::api::Client::StatusCode,std::shared_ptr<hole::network::api::Ret> const&,rapidjson::GenericDocument<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>> const&),APIManager*,hole::network::api::Action&,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &,std::placeholders::__ph<3> &>,std::allocator<std::__bind<hole::network::api::Client::StatusCode (APIManager::*)(hole::network::api::Action,hole::network::api::Client::StatusCode,std::shared_ptr<hole::network::api::Ret> const&,rapidjson::GenericDocument<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>> const&),APIManager*,hole::network::api::Action&,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &,std::placeholders::__ph<3> &>>,hole::network::api::Client::StatusCode ()(hole::network::api::Client::StatusCode,std::shared_ptr<hole::network::api::Ret> const&,rapidjson::GenericDocument<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>> const&)>::destroy_deallocate	695	572	0	0
+004D6DD0	std::__hash_table<std::string,std::hash<std::string>,std::equal_to<std::string>,std::allocator<std::string>>::~__hash_table [base destructor]	9	9	0	0
+004D7A70	PurchaseManager::getInstance	26	0	0	0
+004D8BD0	PurchaseManager::deserialize	13	0	0	0
+004D8DDC	SaveBin::get<int>	210	28	0	0
+004D8E8C	SaveBin::get<unsigned int>	60	8	0	0
+004DAB70	std::__hash_table<std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>>>::~__hash_table [base destructor]	26	0	0	0
+004E0334	SaveBin::get<unsigned char>	340	0	0	0
+004E04E4	TrackingSDKUtil::sendEventOnlyOnce	39	39	0	0
+004E0520	Cipher::crypt	244	0	0	0
+004E0670	Cipher::Cipher(const std::array<unsigned char, 32>&)	66	66	0	0
+004E06D8	Cipher::encrypt	241	180	0	0
+004E06F2	Cipher::decrypt	22	22	0	0
+004E0938	_JNIEnv::CallStaticObjectMethod	1257	139	0	0
+004E0A88	md5::calculate(const void*, unsigned)	33	22	0	0
+004E0B28	md5::calculate(const char*, std::string&, unsigned*)	32	7	0	0
+004E0D08	_JNIEnv::CallStaticVoidMethod	231	91	0	0
+004E0D5C	LocalNotification::cancel	27	1	0	0
+004E2610	RemoteNotification::needsGetToken	6	2	0	0
+004E262C	RemoteNotification::getToken	5	2	0	0
+004E49AC	_JNIEnv::CallObjectMethod	1654	257	0	0
+004E7828	SaveBin::get<std::vector<int>>	150	20	0	0
+004E78CC	SaveBin::get<std::unordered_map<unsigned, unsigned>>	30	4	0	0
+004E7970	AppState::MedalSortFilterState::load	155	25	0	0
+004E7ECC	AppState::AvatarBoardFilterState::load	31	5	0	0
+004E8210	AppState::AdventureSelectFilterState::load	31	5	0	0
+004E8418	AppState::OptionState::load	31	5	0	0
+004E8650	SaveBin::get<std::vector<unsigned long long>>	90	12	0	0
+004E86F4	SaveBin::get<bool>	60	8	0	0
+004EA8E0	AppState::getUUIDString	26	26	0	0
+004EA9A0	AppState::LoginInfo::LoginInfo	31	5	0	0
+004EA9E8	AppState::BRIDGEInfo::BRIDGEInfo	31	5	0	0
+004EAA30	AppState::getNativeSessionIDString	1025	144	0	0
+004EAAC4	AppState::setNativeSessionID	25	25	0	0
+004EAB48	AppState::getMasterRevision	26	6	0	0
+004EAB4E	AppState::getMasterFileRevisions	31	1	0	0
+004EAB9A	AppState::getResourceRevision	31	1	0	0
+004EABA0	AppState::getResourceSize	31	1	0	0
+004EACF4	AppState::getEventResources	75	19	0	0
+004EAE5C	AppState::needsUpdateData	661	638	0	0
+004EAE90	AppState::needsUpdateApp	579	579	0	0
+004EAEDC	AppState::Version::operator>	1134	24	0	0
+004EB346	AppState::getWillLockUserMedalIDs	109	18	0	0
+004EB506	AppState::getWillUnLockUserMedalIDs	109	18	0	0
+004EB814	AppState::isClearTutorialPopupIDs	6	0	0	0
+004EB8B4	AppState::resetClearTutorialPopupIDs	8	5	0	0
+004EBFE4	AppState::checkTrackingEvent	82	12	0	0
+004EC09C	AppState::Version::Version(const char*)	1165	29	0	0
+004EC120	AppState::MedalSortFilterState::MedalSortFilterState(const char*)	155	25	0	0
+004EC1D8	SaveBin::get<signed char>	4420	0	0	0
+004EC3A8	AppState::AvatarBoardFilterState::AvatarBoardFilterState(const char*)	31	5	0	0
+004EC414	AppState::AdventureSelectFilterState::AdventureSelectFilterState(const char*)	31	5	0	0
+004EC478	SaveBin::get<unsigned short>	68	0	0	0
+004EE580	std::__shared_ptr_emplace<AppState::PersonalInfo>::__on_zero_shared	13	0	0	0
+004EE58C	std::__shared_ptr_emplace<AppState::PersonalInfo>::__on_zero_shared_weak	13	0	0	0
+004EE5D4	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<AppState>(AppState *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<AppState>(AppState *,int,bool)::{lambda(float)#1}>,void ()(float)>::__clone	26	0	0	0
+004EE5F4	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<AppState>(AppState *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<AppState>(AppState *,int,bool)::{lambda(float)#1}>,void ()(float)>::destroy	26	0	0	0
+004EE5FE	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<AppState>(AppState *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<AppState>(AppState *,int,bool)::{lambda(float)#1}>,void ()(float)>::operator()	18513	18513	0	0
+004EE968	StageState::create	1	0	0	0
+004EEB88	StageState::addDamage	265	263	0	0
+004EEC28	StageState::addCP	4	1	0	0
+004EECD8	StageState::addLUX	1	0	0	0
+004EF0C8	StageState::checkMaxAttack	1	0	0	0
+004EF52C	StageState::hasMaterial	9	0	0	0
+004EF648	StageState::hasTreasure	2	0	0	0
+004EF858	StageState::setCpMax	1	0	0	0
+004EF994	StageState::hasExterminationTeamID	6	0	0	0
+004EFBD4	StageState::cmpSubMission12	2	0	0	0
+004F0930	StageState::getMaxHP	3	0	0	0
+004F0DEC	SaveBin::get	4298	24	0	0
+004F0FE8	SaveBin::deserialize	90	12	0	0
+004F12C8	std::__shared_ptr_emplace<bg::MemoryInputStream>::__on_zero_shared	208	0	0	0
+004F12D4	std::__shared_ptr_emplace<bg::MemoryInputStream>::__on_zero_shared_weak	208	0	0	0
+004F1D14	StatusChange::clear	2	0	0	0
+004F1F48	IStatusProtocol::elapseCountStatus	2	0	0	0
+004F221C	IBuffProtocol::elapseCountAttackBuff	2	0	0	0
+004F229C	IBuffProtocol::elapseCountDefenseBuff	2	0	0	0
+004F231C	IBuffProtocol::buff_level_main	52	0	0	0
+004F23CC	IBuffProtocol::buff_level	80	0	0	0
+004F2404	IBuffProtocol::buff_add_make_tempbuff	8	0	0	0
+004F256E	IBuffProtocol::buff_add	8	0	0	0
+004F25CC	IBuffProtocol::buff_add_main	8	0	0	0
+00509A3C	LoadingIndicator::init	25	0	0	0
+00509CE0	LoadingIndicator::show	2229	8	0	0
+00509D68	LoadingIndicator::hide	97	6	0	0
+00509EA4	LoadingIndicator::hide::$_1::__clone(dst)	206	0	0	0
+00509EC4	LoadingIndicator::hide::$_1::destroy	269	31	0	0
+00509ECE	LoadingIndicator::hide::$_1::operator()	62	31	0	0
+00509F40	LoadingIndicator::init::$_0::__clone(dst)	27	0	0	0
+00509F5C	LoadingIndicator::init::$_0::destroy	27	0	0	0
+00509F66	LoadingIndicator::init::$_0::operator()	1	1	0	0
+00527130	DeckMedalViewManager::getInstance	268289	50255	0	0
+00527208	DeckMedalViewManager::update	268289	50255	0	0
+005BECFC	audio::Manager::getInstance	19732	19616	0	0
+005BEDE8	audio::Manager::create	13	0	0	0
+005BEEF4	audio::Manager::load	52	0	0	0
+005BF138	audio::Manager::unloadAll	43	0	0	0
+005BF18C	audio::Manager::lock	49	0	0	0
+005BF24C	audio::Manager::addLayer	39	0	0	0
+005BF33C	audio::Manager::getLayer	51	1	0	0
+005BF4FC	audio::Manager::update	31620	9289	0	0
+005BF5BC	audio::Layer::removeFinishedSound	4	0	0	0
+005BF66C	audio::Manager::updateQueue	31434	31416	18	0
+005BF784	audio::Layer::playSE	20	0	6	0
+005BF810	audio::Layer::playBGM	10	0	0	0
+005BF824	audio::Layer::setVolume	39	0	0	0
+005C09E4	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<audio::Manager>(audio::Manager *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<audio::Manager>(audio::Manager *,int,bool)::{lambda(float)#1}>,void ()(float)>::__clone	14	0	0	0
+005C0A04	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<audio::Manager>(audio::Manager *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<audio::Manager>(audio::Manager *,int,bool)::{lambda(float)#1}>,void ()(float)>::destroy	14	0	0	0
+005C0BA0	AudioSystemInit()	13	0	0	0
+005C0E90	AudioPlayGameMainBGM(audio::ResourceID, int)	10	0	0	0
+005C0F58	AudioStopGameMainBGM(int)	10	0	0	0
+005C0FA0	AudioReplaceGameMainBGM(audio::ResourceID, int)	10	0	0	0
+005C200C	sub_5C200C	26	0	0	0
+005C2028	nullsub_828	28	0	0	0
+005C227C	audio::initResourceIDMap	25	0	0	0
+005C2BF4	FlashNode::set_node_color_add	6	0	0	0
+005C2D60	FlashNode::set_bad_status	11	0	0	0
+005C2E84	FlashNode::set_loops	10	0	0	0
+005C2F48	FlashNode::change_sub	197	2	0	0
+005C3170	FlashNode::reflection_status	11	0	0	0
+005C32F4	FlashNode::FlashNode(bool)	13	0	0	0
+005C3AF6	FlashNode::update	362655	362653	0	2
+005C3B04	FlashNode::updateSound	725308	0	0	0
+005C3BCC	FlashNode::UpdateStatusDeepPoison	9	0	0	0
+005C3C54	FlashNode::UpdateStatusPoison	9	0	0	0
+005C3CD8	FlashNode::UpdateStatusSleep	9	0	0	0
+005C3D60	FlashNode::UpdateStatusParalysis	9	0	0	0
+005C3EE4	FlashNode::FlashNode $_9 __func::__clone(__base*)	26	0	0	0
+005C3F04	FlashNode::FlashNode $_9 __func::destroy	29	1	0	0
+005C3F0E	FlashNode::FlashNode $_9 (on exit: unscheduleUpdate)	1	0	0	0
+005C3F80	FlashNode::FlashNode $_8 __func::__clone(__base*)	26	0	0	0
+005C3FA0	FlashNode::FlashNode $_8 __func::destroy	29	1	0	0
+005C3FAA	FlashNode::FlashNode $_8 (on enter: scheduleUpdate)	11	0	0	0
+005C401C	FlashNode::FlashNode $_7 __func::__clone(__base*)	13	0	0	0
+005C403C	FlashNode::FlashNode $_7 __func::destroy	16	1	0	0
+005C4048	FlashNode::FlashNode $_7 (ActFlag 6)	1	1	0	0
+005C4934	FlashNode::FlashNode $_6 __func::__clone(__base*)	13	0	0	0
+005C4954	FlashNode::FlashNode $_6 __func::destroy	16	1	0	0
+005C4960	FlashNode::FlashNode $_6 (ActFlag 4)	2	2	0	0
+005C4A14	FlashNode::FlashNode $_5 __func::__clone(__base*)	13	0	0	0
+005C4A34	FlashNode::FlashNode $_5 __func::destroy	16	1	0	0
+005C4A40	FlashNode::FlashNode $_5 (ActFlag 1)	1	1	0	0
+005C4AF4	FlashNode::FlashNode $_4 __func::__clone(__base*)	13	0	0	0
+005C4B14	FlashNode::FlashNode $_4 __func::destroy	16	1	0	0
+005C4B20	FlashNode::FlashNode $_4 (knockback command)	1	1	0	0
+005C5428	FlashNode::FlashNode $_3 __func::__clone(__base*)	13	0	0	0
+005C5448	FlashNode::FlashNode $_3 __func::destroy	16	1	0	0
+005C54E8	FlashNode::FlashNode $_2 __func::__clone(__base*)	13	0	0	0
+005C5508	FlashNode::FlashNode $_2 __func::destroy	16	1	0	0
+005C5512	FlashNode::FlashNode $_2 (SE command)	7	1	0	0
+005C55A0	FlashNode::FlashNode $_1 __func::__clone(__base*)	13	0	0	0
+005C55C0	FlashNode::FlashNode $_1 __func::destroy	16	1	0	0
+005C55CA	FlashNode::FlashNode $_1 (sound command)	4	1	0	0
+005CBE24	Enemy::create	10	0	0	0
+005CBE60	Enemy::Enemy	10	0	0	0
+005CC06C	Enemy::alterMotion	305	0	0	0
+005CC688	Enemy::preloadResources	9	0	0	0
+005CC7C4	Enemy::getBattleShift	4	0	0	0
+005CC7EC	Enemy::~Enemy	1	0	0	0
+005CC878	Enemy::~Enemy (deleting)	1	1	0	0
+005CC8B8	Enemy::Enemy $_0 __func::__clone(__base*)	10	0	0	0
+005CC8D8	Enemy::Enemy $_0 __func::destroy	12	0	0	0
+005CC8E4	Enemy::Enemy $_0 (motion end: ActFlag 5)	1	1	0	0
+005CDD74	CarouselDeck::init	1	0	0	0
+005CED78	CarouselDeck::createArmature	12	0	0	0
+005CEF10	CarouselDeck::replaceBone	5	0	0	0
+005CF024	CarouselDeck::initGuiltBonusEffect	1	0	0	0
+005CF268	CarouselDeck::trackingNodePosition	2	0	0	0
+005CF2D8	CarouselDeck::setTutorialAction	1	0	0	0
+005CF520	CarouselDeck::changeDeckStyle	1	0	0	0
+005CF80C	CarouselDeck::addMedalOntoDeck	1	0	0	0
+005CF9A0	CarouselDeck::createMadalButton	4	0	0	0
+005CFB8C	CarouselDeck::setAbilityInfo	4	0	0	0
+005D017C	CarouselDeck::setDeckMedalInfoPanel(Widget*, int, bool, int)	4	0	0	0
+005D07D0	CarouselDeck::setDeckInfoWindow	1	0	0	0
+005D0874	CarouselDeck::admission	2	0	0	0
+005D0954	CarouselDeck::setDeckInfoWindowLayout	1	0	0	0
+005D0B18	CarouselDeck::setActiveMedalBurstCost	9	0	0	0
+005D0BC4	CarouselDeck::reflashDeck	3	0	0	0
+005D0C10	CarouselDeck::setPossibleBurst	11	1	0	0
+005D0E32	CarouselDeck::onCenterButton	3	0	0	0
+005D120C	CarouselDeck::removeArmature	21	1	0	0
+005D1406	CarouselDeck::setBattleState	3	0	0	0
+005D1468	CarouselDeck::addArmature	3	0	0	0
+005D14C4	CarouselDeck::isVisibleDeckInfoWindow	60966	0	0	0
+005D14E8	CarouselDeck::setVisibleDeckInfoWindow	2	0	0	0
+005D1B60	CarouselDeck::controlTargetIcon	12	0	0	0
+005D1C3C	CarouselDeck::controlSkillIcon	4	0	0	0
+005D1F4C	CarouselDeck::setDeckMedalInfoSkill	4	0	0	0
+005D212C	CarouselDeck::setDeckMedalInfoPanel(Widget*, const MedalDeck::MedalInfo&)	4	0	0	0
+005D23FC	CarouselDeck::setBurstPower	4	0	0	0
+005D2964	CarouselDeck::initGuiltBonusEffect $_9 __func::__clone(__base*)	2	0	0	0
+005D2980	CarouselDeck::initGuiltBonusEffect $_9 __func::destroy	2	0	0	0
+005D2A2C	CarouselDeck::setAbilityInfo $_8 __func::__clone(__base*)	8	0	0	0
+005D2A4C	CarouselDeck::setAbilityInfo $_8 __func::destroy	8	0	0	0
+005D2AC8	CarouselDeck::createMadalButton $_7 __func::__clone(__base*)	8	0	0	0
+005D2AE8	CarouselDeck::createMadalButton $_7 __func::destroy	8	0	0	0
+005D470C	LuxNumber::~LuxNumber	1	0	0	0
+005D4754	LuxNumber::~LuxNumber (deleting)	2	0	0	0
+005D4760	LuxNumber::init	1	0	0	0
+005D4AC4	LuxNumber::create	1	0	0	0
+005D4B48	LuxNumber::play	1	0	0	0
+005D4B98	LuxNumber::isFinish	254	0	0	0
+005D4BD0	LuxNumber::firstCall	1	0	0	0
+005D4CCC	LuxNumber::init::$_1::__clone(dst)	2	0	0	0
+005D4CE8	LuxNumber::init::$_1::destroy	4	0	0	0
+005D4D5C	LuxNumber::init::$_0::__clone(dst)	2	0	0	0
+005D4D7C	LuxNumber::init::$_0::destroy	4	0	0	0
+005D4D86	LuxNumber::init::$_0::operator()	1	1	0	0
+005DA2D4	MapNode::MapNode	85	0	0	0
+005DA38C	MapNode::~MapNode	8	0	0	0
+005DA3CC	MapNode::~MapNode (deleting)	1	1	0	0
+005DA410	MapNode::init	73	0	0	0
+005DA414	MapNode::move	2	0	0	0
+005DA460	MapNode::updateMapPosition	21120	0	0	0
+005DA54C	MapNode::getMapPosZ	63051600	0	0	0
+005DA574	MapNode::lockMapPosZ	17	0	0	0
+005DB24C	MapGateMarker::init	1	0	0	0
+005DB3C0	MapGateMarker::show()	1	0	0	0
+005DB564	MapGateMarker::show(Vec2&, float)	1	0	0	0
+005DB680	MapMaterial::init	9	0	0	0
+005DB934	MapPrizes::Info::Info	27	0	0	0
+005DB9EC	MapMaterial::create	9	0	0	0
+005DBA50	MapMaterial::MapMaterial	9	0	0	0
+005DBABC	MapMaterial::firstCall	1	0	0	0
+005DC870	MapPrize::~MapPrize	6	0	0	0
+005DC914	MapPrize::~MapPrize (deleting)	12	0	0	0
+005DC920	MapPrize::init(Vec2, ID, float)	11	0	0	0
+005DCA84	MapPrize::create(Vec2, ID, float)	11	0	0	0
+005DCB48	MapPrize::MapPrize	26	0	0	0
+005DCBC8	MapPrize::init(Vec2, int)	15	0	0	0
+005DCD1C	MapPrize::create(Vec2, int)	15	0	0	0
+005DCDDC	MapPrize::setItem	26	0	0	0
+005DCE94	MapPrize::getItem	14	0	0	0
+005DCF44	MapPrize::setAbsorptionVortex	10	0	0	0
+005DD1DC	MapPrize::setAbsorptionAttract	2	0	0	0
+005DD378	MapPrize::setBone	26	0	0	0
+005DD398	MapPrize::breakAwayArmature	1452	0	0	0
+005DD454	MapPrize::onAbsorptFinish	6	0	0	0
+005DD568	MapPrize::setAbsorptionAttract $_1 __func::__clone(__base*)	4	0	0	0
+005DD588	MapPrize::setAbsorptionAttract $_1 __func::destroy	5	1	0	0
+005DD592	MapPrize::setAbsorptionAttract $_1 (finished: onAbsorptFinish)	1	1	0	0
+005DD618	MapPrize::setAbsorptionVortex $_0 __func::__clone(__base*)	20	0	0	0
+005DD638	MapPrize::setAbsorptionVortex $_0 __func::destroy	25	5	0	0
+005DD642	MapPrize::setAbsorptionVortex $_0 (finished: onAbsorptFinish)	5	5	0	0
+005DD7D0	MapPrizes::~MapPrizes	1	0	0	0
+005DD918	MapPrizes::~MapPrizes(deleting)	2	0	0	0
+005DD924	MapPrizes::init	18	0	0	0
+005DD988	MapPrizes::initMaterialPrizes	15	0	0	0
+005DDB80	MapPrizes::initNormalPrizes	3	0	0	0
+005DE24C	MapPrizes::shuffleArray	4	0	0	0
+005DE2A8	MapPrizes::initLuxPrizes	1	0	0	0
+005DE5F0	MapPrizes::createArmature	19	0	0	0
+005DE7B0	MapPrizes::playArmature	3	0	0	0
+005DE85C	MapPrizes::eruptionStartArmature(Vec2)	3	0	0	0
+005DE8AC	MapPrizes::create	18	0	0	0
+005DE938	MapPrizes::firstCall	1	0	0	0
+005DEAE0	MapPrizes::eruption(Vec2, Vec2)	1	0	0	0
+005DEB58	MapPrizes::isEruption	1	0	0	0
+005DEBA4	MapPrizes::isFinishEruption	254	0	0	0
+005DECA4	MapPrizes::createArmature $_1 __func::__clone(__base*)	38	0	0	0
+005DECC0	MapPrizes::createArmature $_1 __func::destroy	42	0	0	0
+005DEE04	MapPrizes::createArmature $_0 __func::__clone(__base*)	38	0	0	0
+005DEE20	MapPrizes::createArmature $_0 __func::destroy	42	0	0	0
+005DEE2A	MapPrizes::createArmature $_0 (movement event, empty)	2	2	0	0
+005DF098	MapTreasure::init	2	0	0	0
+005DF440	MapTreasure::create	2	0	0	0
+005DF4AC	MapTreasure::MapTreasure	2	0	0	0
+005DF520	MapTreasure::firstCall	1	0	0	0
+005DF970	MapTreasure::init $_1 __func::__clone(__base*)	4	0	0	0
+005DF990	MapTreasure::init $_1 __func::destroy	4	0	0	0
+005DFA28	MapTreasure::init $_0 __func::__clone(__base*)	4	0	0	0
+005DFA44	MapTreasure::init $_0 __func::destroy	4	0	0	0
+005E4BEC	(anonymous)::Arc::setRate (sub_5E4BEC)	3	0	0	0
+005E4F80	RaidBossHPIndicator::firstCall	1	0	0	0
+005E4FB4	RaidBossHPIndicator loadWidget (sub_5E4FB4)	34	0	0	0
+005E5164	RaidBossHPIndicator::create	11	0	0	0
+005E51D4	RaidBossHPIndicator::RaidBossHPIndicator	11	0	0	0
+005E527C	RaidBossHPIndicator::init	11	0	0	0
+005E5AD4	RaidBossHPIndicator::NumSync	10	0	0	0
+005E5B20	RaidBossHPIndicator::setStatusIconArmature	11	0	0	0
+005E5E68	RaidBossHPIndicator::setVisibleAttribute	18	0	0	0
+005E5F60	RaidBossHPIndicator::setSuitableAsTargetArmature	9	0	0	0
+005E61E0	RaidBossHPIndicator::removeNodeWithName	27	0	0	0
+005E6294	AnimationNode::create	27	0	0	0
+005E6304	RaidBossHPIndicator::setHP	10	0	0	0
+005E69B4	RaidBossHPIndicator::setVisibleNodeWithName	2	0	0	0
+005E6A68	RaidBossHPIndicator::setGaugeLength	9	0	0	0
+005E6B40	RaidBossHPIndicator::setBoxHpGauge	9	0	0	0
+005E6D24	RaidBossHPIndicator::iniBoxCountText	9	0	0	0
+005E6DDC	RaidBossHPIndicator::setBoxCountText	9	0	0	0
+005E6F90	RaidBossHPIndicator::setFieldExtendInfo	9	0	0	0
+005E762C	RaidBossHPIndicator::setTextWithName	54	0	0	0
+005E7728	RaidBossHPIndicator::switchModeFieldToBattle	1	0	0	0
+005E7880	RaidBossHPIndicator::setSuitableAsTargetEffect	4	0	0	0
+005E7D30	RaidBossHPIndicator::setHPUpDirEnd	9	0	0	0
+005E7DB8	RaidBossHPIndicator::Next_Disp	9	0	0	0
+005E7F40	RaidBossHPIndicator::clr_buf_debuf	36	0	0	0
+005E7F88	RaidBossHPIndicator::set_attack_buff_status	9	0	0	0
+005E8188	RaidBossHPIndicator::set_defence_buff_status	9	0	0	0
+005EA9A4	__func<setHP()::$_4>::__clone(dst)	18	0	0	0
+005EA9C4	__func<setHP()::$_4>::destroy	27	9	0	0
+005EA9D0	RaidBossHPIndicator::setHP()::$_4::operator()	9	9	0	0
+005EABCC	__func<setHP()::$_3>::__clone(dst)	2	0	0	0
+005EABEC	__func<setHP()::$_3>::destroy	3	1	0	0
+005EABF8	RaidBossHPIndicator::setHP()::$_3::operator()	1	1	0	0
+005EAE64	__func<init()::$_1>::__clone(dst)	9	0	0	0
+005EAE84	__func<init()::$_1>::destroy	9	0	0	0
+005EAE90	RaidBossHPIndicator::init()::$_1::operator()	900	0	0	0
+005EAF1C	__func<init()::$_0>::__clone(dst)	9	0	0	0
+005EAF3C	__func<init()::$_0>::destroy	9	0	0	0
+005EAF48	RaidBossHPIndicator::init()::$_0::operator()	94	0	0	0
+005EB03C	AnimationNode::setScaleX	497	497	0	0
+005EB064	DamageNumber::create	1	0	0	0
+005EB0E4	DamageNumber::init	1	0	0	0
+005EB45C	DisplayDamageNumber::disp_dmgNum	1	0	0	0
+005EB638	DamageNumber::init::$_0::__clone(dst)	2	0	0	0
+005EB658	DamageNumber::init::$_0::destroy	3	1	0	0
+005EB662	DamageNumber::init::$_0::operator()	1	1	0	0
+005EB6A8	DamageNumber::~DamageNumber (deleting)	1	1	0	0
+005EBC8A	cocos2d::Sprite::isDirty	572	117	0	0
+005EBC92	cocos2d::Sprite::setDirty	13811	459	0	0
+005EBC9A	cocos2d::Sprite::setBlendFunc	161678	161678	0	0
+005EFB18	FlashNode::knockbackShift	1	0	0	0
+005EFD38	FlashNode::flagShift	14	0	0	0
+005F9FF8	SceneBattleBase::SceneBattleBase	1	0	0	0
+005FA134	SceneBattleBase::init	1	0	0	0
+005FA1C2	StageActorManager::create	1	0	0	0
+005FA212	StageUI::create	1	0	0	0
+005FA260	StageFieldManager::create	1	0	0	0
+005FA2B0	SceneBattleBase::init_UI	2	0	0	0
+005FA630	SceneBattleBase::onTouchBeganBattle	2	0	0	0
+005FA674	SceneBattleBase::onTouchMovedBattle	4	0	0	0
+005FA678	SceneBattleBase::onTouchEndedBattle	2	0	0	0
+005FA858	SceneBattleBase::invokeAttackSkill	2	0	0	0
+005FA974	SceneBattleBase::invokeSkill	5	0	0	0
+005FAC9C	SceneBattleBase::addPlayerHP	2	0	0	0
+005FAD2C	SceneBattleBase::addPlayerCP	3	0	0	0
+005FAE74	SceneBattleBase::isBurstEnoughCP	16	0	0	0
+005FAF04	SceneBattleBase::firstSetPlayerCP	1	0	0	0
+005FAF84	SceneBattleBase::invokeSkill::$_4::destroy	5	0	0	0
+005FAF90	SceneBattleBase::invokeSkill::$_4::operator()	20	0	0	0
+005FB18C	SceneBattleBase::init_UI::$_2::__clone(dst)	4	0	0	0
+005FB1AC	SceneBattleBase::init_UI::$_2::destroy	4	0	0	0
+005FB2E8	SceneBattleBase::init_UI::$_1::__clone(dst)	4	0	0	0
+005FB308	SceneBattleBase::init_UI::$_1::destroy	4	0	0	0
+005FB3B4	SceneBattleBase::init_UI::$_0::__clone(dst)	4	0	0	0
+005FB3D4	SceneBattleBase::init_UI::$_0::destroy	4	0	0	0
+005FB3DE	SceneBattleBase::init_UI::$_0::operator()	2	0	0	0
+005FB430	StageFieldManager::StageFieldManager	1	0	0	0
+005FB824	StageUI::StageUI	1	0	0	0
+005FB8AC	SceneActionMap::createLayer	1	0	0	0
+005FB92E	SceneActionMap::create	1	0	0	0
+005FC7E0	StageManager::create	1	0	0	0
+005FC830	StageBattleManager::create	1	0	0	0
+005FC920	CommonDirection::create	1	0	0	0
+005FC974	AimTarget::create	1	0	0	0
+005FEEA4	SceneActionMap::updateIntrludeMode	1281	0	0	0
+005FF204	SceneActionMap::updateStageTitle	1854	0	0	0
+005FF51C	SceneActionMap::onTouchBegan	2	2	0	0
+005FF550	SceneActionMap::onTouchBeganField	1	0	0	0
+005FF674	SceneActionMap::onTouchMoved	4	4	0	0
+005FF6AC	SceneActionMap::onTouchEnded	2	2	0	0
+005FFBCC	MapGateMarker::create	1	0	0	0
+005FFD38	SceneActionMap::updateCameraPosition	134741	0	0	6
+00601074	SceneActionMap::updateAimTarget	5274	0	0	0
+006029C4	SceneActionMap::battleStartTutorial::$_45 destroy_deallocate()	2	0	0	0
+006037F0	SceneActionMap::toFieldModeSetup::$_41 destroy()	2	0	0	0
+006054AC	SceneActionMap::updateIntrludeMode::$_32 __clone(__base*)	3	1	0	0
+006054C8	SceneActionMap::updateIntrludeMode::$_32 destroy()	4	2	0	0
+006054D4	SceneActionMap::updateIntrludeMode::$_32 operator()	1	1	0	0
+006058E0	SceneActionMap::updateBattleMode::$_28 __clone(__base*)	136	48	0	0
+00605908	SceneActionMap::updateBattleMode::$_28 destroy()	144	64	0	0
+00605914	SceneActionMap::updateBattleMode::$_28 operator()	8	8	0	0
+00605A60	SceneActionMap::updateBattleMode::$_27 __clone(__base*)	150	0	0	0
+00605A80	SceneActionMap::updateBattleMode::$_27 destroy()	193	43	0	0
+00605A8C	SceneActionMap::updateBattleMode::$_27 operator()	43	43	0	0
+00605B78	SceneActionMap::updateBattleMode::$_26 destroy()	64	0	0	0
+00605B84	SceneActionMap::updateBattleMode::$_26 operator()	64	0	0	0
+00605CB0	SceneActionMap::updateBattleMode::$_26::lambda() __clone(__base*)	128	0	0	0
+00605CD0	SceneActionMap::updateBattleMode::$_26::lambda() destroy()	161	33	0	0
+00605CDA	SceneActionMap::updateBattleMode::$_26::lambda() operator()	33	33	0	0
+00605D5C	SceneActionMap::updateBattleMode::$_25 __clone(__base*)	12	0	0	0
+00605D7C	SceneActionMap::updateBattleMode::$_25 destroy()	15	3	0	0
+00605D88	SceneActionMap::updateBattleMode::$_25 operator()	3	0	3	0
+00605E04	SceneActionMap::updateBattleMode::$_24 __clone(__base*)	6	0	0	0
+00605E24	SceneActionMap::updateBattleMode::$_24 destroy()	9	0	0	0
+00605E2E	SceneActionMap::updateBattleMode::$_24 operator()	3	0	0	0
+00605EA0	SceneActionMap::updateBattleMode::$_23 __clone(__base*)	182	0	0	0
+00605EC0	SceneActionMap::updateBattleMode::$_23 destroy()	206	0	0	0
+00605ECC	SceneActionMap::updateBattleMode::$_23 operator()	22	0	0	0
+00605F7C	SceneActionMap::update::$_22 destroy()	5	0	0	0
+00605F88	SceneActionMap::update::$_22 operator()	5	0	0	0
+00606000	SceneActionMap::init::$_21 __clone(__base*)	2	0	0	0
+00606020	SceneActionMap::init::$_21 destroy()	2	0	0	0
+006060C0	SceneActionMap::init::$_20 __clone(__base*)	2	0	0	0
+006060E0	SceneActionMap::init::$_20 destroy()	2	0	0	0
+00606190	SceneActionMap::init::$_19 destroy()	1	0	0	0
+006062AC	SceneActionMap::init::$_18 destroy()	1	0	0	0
+006063AC	SceneActionMap::init::$_17 __clone(__base*)	2	0	0	0
+006063CC	SceneActionMap::init::$_17 destroy()	2	0	0	0
+00606450	SceneActionMap::init::$_16 __clone(__base*)	2	0	0	0
+00606470	SceneActionMap::init::$_16 destroy()	2	0	0	0
+006064EC	SceneActionMap::init::$_15 __clone(__base*)	2	0	0	0
+0060650C	SceneActionMap::init::$_15 destroy()	2	0	0	0
+00606594	SceneActionMap::init::$_14 __clone(__base*)	2	0	0	0
+006065B4	SceneActionMap::init::$_14 destroy()	2	0	0	0
+00606654	SceneActionMap::init::$_13 __clone(__base*)	2	0	0	0
+00606674	SceneActionMap::init::$_13 destroy()	2	0	0	0
+006066F0	SceneActionMap::init::$_12 __clone(__base*)	2	0	0	0
+00606710	SceneActionMap::init::$_12 destroy()	2	0	0	0
+00606888	SceneActionMap::init::$_11 __clone(__base*)	1	0	0	0
+006068A8	SceneActionMap::init::$_11 destroy()	1	0	0	0
+00606CF4	SceneActionMap::init::$_8 __clone(__base*)	1	0	0	0
+00606D14	SceneActionMap::init::$_8 destroy()	1	0	0	0
+00606D90	SceneActionMap::init::$_7 __clone(__base*)	2	0	0	0
+00606DAC	SceneActionMap::init::$_7 destroy()	2	0	0	0
+00606EA8	SceneActionMap::init::$_6 __clone(__base*)	2	0	0	0
+00606EC8	SceneActionMap::init::$_6 destroy()	2	0	0	0
+00606F48	SceneActionMap::init::$_5 __clone(__base*)	2	0	0	0
+00606F68	SceneActionMap::init::$_5 destroy()	2	0	0	0
+00606FF0	SceneActionMap::init::$_4 __clone(__base*)	2	0	0	0
+00607010	SceneActionMap::init::$_4 destroy()	2	0	0	0
+00607094	SceneActionMap::init::$_3 __clone(__base*)	2	0	0	0
+006070B4	SceneActionMap::init::$_3 destroy()	2	0	0	0
+00607138	SceneActionMap::init::$_2 __clone(__base*)	2	0	0	0
+00607158	SceneActionMap::init::$_2 destroy()	2	0	0	0
+006071E0	SceneActionMap::init::$_1 __clone(__base*)	2	0	0	0
+00607200	SceneActionMap::init::$_1 destroy()	2	0	0	0
+00607288	SceneActionMap::init::$_0 __clone(__base*)	2	0	0	0
+006072A8	SceneActionMap::init::$_0 destroy()	2	0	0	0
+006073D0	cocos2d::Label::getTTFConfig	28	0	0	0
+00607C60	AimTarget::AimTarget	1	0	0	0
+00607D3C	StageManager::StageManager	1	0	0	0
+00607E60	StageManager::StageMapInfo::StageMapInfo	1	0	0	0
+006080B8	SceneActionMap::SceneActionMap	1	0	0	0
+0060C248	SceneManager::createScene	26	0	0	1
+0060C26C	SceneManager::getInstance	92356	48	0	0
+0060C2BC	SceneManager::create	24	0	0	0
+0060C310	SceneManager::SceneManager	24	0	0	0
+0060CB00	SceneManager::init	26	0	0	0
+0060CED8	createSceneLayer<SceneSplash>()	13	0	0	0
+0060CEE0	LoadingIndicator::create	27	0	0	1
+0060CF64	SceneManager::setEnabledTouchEffect	6	0	0	0
+0060D168	SceneManager::enableLoadingIndicator	2229	0	0	0
+0060D27C	SceneManager::update	175037	100722	0	28
+0060D9CC	SceneManager::updateHeaderAp	268292	36206	0	0
+0060E110	SceneManager::chatDataUpdate	268292	36206	0	0
+0060E78C	SceneManager::callPrevChangeNextSceneAPIs	97	0	0	0
+0060E894	SceneManager::createNextScene	108	0	0	0
+00611168	SceneManager::updateHeader	108	0	0	0
+0061154C	SceneManager::hideHeader	56	0	0	0
+00611690	SceneManager::removeBackground	55	0	0	0
+0061257C	SceneManager::generateTouchEffect	64	39	0	25
+00612764	SceneManager::generateTouchMoveEffect	94	78	0	16
+00612B98	SceneManager::changeSceneLayer	84	39	0	0
+00613E3E	SceneManager::setFinishSceneCallback	4	0	0	0
+00613E5A	SceneManager::setOnBackKeyCallback	22	0	0	0
+00613E70	SceneManager::getPopupLayer2	4	0	0	0
+0061524C	SceneManager::openPopup	4	0	0	0
+006216A0	SceneManager::closeCurrentPopup	1	1	0	0
+00634878	nullsub_1100	82	0	0	0
+00634CDC	sub_634CDC	12	0	0	0
+00634CFC	nullsub_1103	16	0	0	0
+00634D06	sub_634D06	4	0	0	0
+00634D80	sub_634D80	54	0	0	0
+00634DA0	nullsub_1104	82	0	0	0
+00634DAA	sub_634DAA	28	0	0	0
+00637B90	SceneManager::update::$_7 __clone(__base*)	2	0	0	0
+00637BB0	SceneManager::update::$_7 destroy()	2	0	0	0
+00637EB8	createSceneLayer<SceneTitle>()	10	0	0	0
+00637EC0	SceneTitle::create	21	0	0	1
+00637F8C	SceneManager::init::$_5 __clone(__base*)	39	0	0	0
+00637FAC	SceneManager::init::$_5 destroy()	39	0	0	0
+006380CC	SceneManager::init::$_4 __clone(__base*)	26	0	0	0
+006380EC	SceneManager::init::$_4 destroy()	26	0	0	0
+00638168	SceneManager::init::$_3 __clone(__base*)	26	0	0	0
+00638188	SceneManager::init::$_3 destroy()	26	0	0	0
+00638192	SceneManager::init::$_3 operator()()	13	13	0	0
+00638204	SceneManager::init $_2 __func::__clone(__base*)	14	0	0	0
+00638224	SceneManager::init $_2 __func::destroy	14	0	0	0
+00638310	SceneManager::init $_1 __func::__clone(__base*)	14	0	0	0
+00638330	SceneManager::init $_1 __func::destroy	14	0	0	0
+00638414	SceneManager::init $_0 __func::__clone(__base*)	14	0	0	0
+00638430	SceneManager::init $_0 __func::destroy	14	0	0	0
+0063843A	sub_63843A	2	2	0	0
+00638474	SceneSplash::create	28	0	0	1
+00639200	SceneMovie::update	14086	48	0	0
+006393C8	SceneMovie::init::$_3 __clone(__base*)	108	0	0	0
+006393EC	SceneMovie::init::$_3 destroy()	129	0	0	0
+00639588	SceneMovie::init::$_2 __clone(__base*)	108	0	0	0
+006395A8	SceneMovie::init::$_2 destroy()	129	0	0	0
+006396D4	SceneMovie::init::$_1 __clone(__base*)	108	0	0	0
+006396F4	SceneMovie::init::$_1 destroy()	129	0	0	0
+006396FE	sub_6396FE	18	0	0	0
+00639770	SceneMovie::init::$_0 __clone(__base*)	108	0	0	0
+00639790	SceneMovie::init::$_0 destroy()	129	0	0	0
+0063979A	sub_63979A	30	0	0	0
+0065253C	std::__hash_table<std::__hash_value_type<std::string,cocos2d::Value>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,cocos2d::Value>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,cocos2d::Value>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,cocos2d::Value>>>::~__hash_table [base destructor]	913	0	0	0
+0067D8AC	SceneTitle::~SceneTitle (deleting)	4	0	0	1
+0067D8D0	SceneTitle::init	21	0	0	0
+0067E8C0	SceneTitle::update	16756	6798	0	0
+0067EAA8	SceneTitle::init $_8 __func::__clone(__base*)	42	0	0	0
+0067EAC8	SceneTitle::init $_8 __func::destroy	49	1	0	0
+0067EB48	SceneTitle::init $_7 __func::__clone(__base*)	21	0	0	0
+0067EB68	SceneTitle::init $_7 __func::destroy	25	0	0	0
+0067EDF8	SceneTitle::init $_7 UlvE1_ __func::destroy	5	5	0	0
+0067EF00	SceneTitle::init $_7 UlvE1_ UlvE_ __func::__clone(__base*)	4	0	0	0
+0067EF1C	SceneTitle::init $_7 UlvE1_ UlvE_ __func::destroy	4	1	0	0
+0067F540	SceneNotice::create	1	0	0	0
+0067F9E8	SceneTitle::init $_7 UlvE0_ __func::__clone(__base*)	2	2	0	0
+0067FA08	SceneTitle::init $_7 UlvE0_ __func::destroy	4	2	0	0
+0067FA12	sub_67FA12	2	0	0	0
+0067FA98	SceneTitle::init $_7 UlvE_ __func::__clone(__base*)	2	2	0	0
+0067FAB8	SceneTitle::init $_7 UlvE_ __func::destroy	4	2	0	0
+0067FB64	SceneTitle::init $_6 __func::__clone(__base*)	10	0	0	0
+0067FB84	SceneTitle::init $_6 __func::destroy	11	0	0	0
+0067FB8E	sub_67FB8E	2	2	0	0
+0067FBF4	SceneTitle::init $_5 __func::__clone(__base*)	20	0	0	0
+0067FC10	SceneTitle::init $_5 __func::destroy	21	0	0	0
+006800F8	SceneTitle::init $_4 __func::__clone(__base*)	20	0	0	0
+00680118	SceneTitle::init $_4 __func::destroy	39	1	0	0
+00680122	sub_680122	18	0	0	0
+006801A0	SceneTitle::init $_3 __func::__clone(__base*)	20	0	0	0
+006801C0	SceneTitle::init $_3 __func::destroy	39	1	0	0
+00680328	SceneTitle::init $_3 UlvE_ __func::__clone(__base*)	38	2	0	0
+00680348	SceneTitle::init $_3 UlvE_ __func::destroy	57	3	0	0
+00680352	sub_680352	18	0	0	0
+006803D8	SceneTitle::init $_2 __func::__clone(__base*)	22	0	0	0
+006803F8	SceneTitle::init $_2 __func::destroy	24	0	0	0
+00680402	sub_680402	2	0	0	0
+00680474	SceneTitle::init $_1 __func::__clone(__base*)	22	0	0	0
+00680494	SceneTitle::init $_1 __func::destroy	24	0	0	0
+006804A0	sub_6804A0	9	0	0	0
+00680520	SceneTitle::init $_0 __func::__clone(__base*)	33	11	0	0
+00680540	SceneTitle::init $_0 __func::destroy	44	22	0	0
+0068065C	SceneTitle::init $_0 UlbE_ __func::__clone(__base*)	33	33	0	0
+0068067C	SceneTitle::init $_0 UlbE_ __func::destroy	44	44	0	0
+00680798	SceneTitle::init $_0 UlbE_ UlbE_ __func::__clone(__base*)	33	33	0	0
+006807B8	SceneTitle::init $_0 UlbE_ UlbE_ __func::destroy	44	44	0	0
+00680A70	SceneTitle::init $_9 UlbE0_ __func::__clone(__base*)	779	779	0	0
+00680A90	SceneTitle::init $_9 UlbE0_ __func::destroy	788	788	0	0
+00680BE0	SceneTitle::init $_9 UlbE0_ UlvE_ __func::destroy	9	9	0	0
+00680D7C	SceneSplash::~SceneSplash (deleting)	57	1	0	0
+00680DA0	SceneSplash::init	24	0	0	0
+00681070	SceneSplash::update	20184	7764	0	12
+00681260	createSceneLayer<SceneMovie>()	32	0	0	0
+0068129C	SceneSplash::init::$_2 __clone(__base*)	24	0	0	0
+006812BC	SceneSplash::init::$_2 destroy()	78	0	0	0
+006812C6	SceneSplash::init()::$_2::operator()	8	8	0	0
+0068133C	SceneSplash::init::$_1 __clone(__base*)	48	0	0	0
+0068135C	SceneSplash::init::$_1 destroy()	102	0	0	0
+00681366	SceneSplash::init()::$_1::operator()	44	1	0	0
+006813D8	SceneSplash::init::$_0 __clone(__base*)	48	0	0	0
+006813F8	SceneSplash::init::$_0 destroy()	102	0	0	0
+00681402	SceneSplash::init()::$_0::operator()	24	1	0	0
+00733AD8	SceneNotice::callPrepareAPI	16	0	0	0
+00733BB0	SceneNotice::init	1	0	0	0
+00733D84	SceneNotice::openNextPage	1	0	0	0
+00734044	SceneNotice::update	966	0	0	0
+00734048	SceneNotice::openWebViewInfoPopup	1	0	0	0
+007346B8	SceneNotice::openNextPage $_9 __func::__clone()	18	0	0	0
+00734770	SceneNotice::openNextPage $_9 __func::destroy_deallocate	20	0	0	0
+007348E8	SceneNotice::openWebViewInfoPopup $_8 __func::__clone()	1	0	0	0
+007349A8	SceneNotice::openWebViewInfoPopup  __func::destroy_deallocate	8	0	0	0
+00734CA4	SceneNotice::openWebViewInfoPopup  __func::destroy_deallocate	3	1	0	0
+00734D74	SceneNotice::openWebViewInfoPopup  __func::__clone(__base*)	4	0	0	0
+00734D94	SceneNotice::openWebViewInfoPopup  __func::destroy	6	0	0	0
+00734E40	SceneNotice::openWebViewInfoPopup $_6 __func::__clone()	1	0	0	0
+00734F12	SceneNotice::openWebViewInfoPopup  __func::destroy_deallocate	9	3	0	0
+00734F30	SceneNotice::openWebViewInfoPopup $_6 operator()	2	0	0	0
+00735110	SceneNotice::openWebViewInfoPopup  __func::__clone(__base*)	5	3	0	0
+0073512C	SceneNotice::openWebViewInfoPopup  __func::destroy	6	4	0	0
+00735136	SceneNotice::openWebViewInfoPopup $_6::{lambda(WebView*, string)#1} operator()	1	1	0	0
+007351E0	SceneNotice::openWebViewInfoPopup  __func::__clone(__base*)	8	0	0	0
+007351FC	SceneNotice::openWebViewInfoPopup  __func::destroy	9	1	0	0
+00735284	SceneNotice::init $_4 __func::__clone(__base*)	32	2	0	0
+007352A4	SceneNotice::init $_4 __func::destroy	34	2	0	0
+007353BC	SceneNotice::init $_4 UlvE_ __func::destroy	1	1	0	0
+007357C8	SceneNotice::init $_2 __func::__clone(__base*)	8	0	0	0
+007357E8	SceneNotice::init $_2 __func::destroy	9	0	0	0
+00735870	SceneNotice::init $_1 __func::__clone(__base*)	8	0	0	0
+00735890	SceneNotice::init $_1 __func::destroy	9	0	0	0
+0073589A	SceneNotice::init $_1 operator()	1	0	0	0
+00735910	SceneNotice::callPrepareAPI $_0 __func::__clone(__base*)	78	18	0	0
+0073592C	SceneNotice::callPrepareAPI $_0 __func::destroy	94	34	0	0
+00735938	SceneNotice::callPrepareAPI $_0 operator()	8	8	0	0
+0073F4C8	AimTarget::init	1	0	0	0
+0073F544	AimTarget::AimMarker::create	1	0	0	0
+0073F5B4	AimTarget::reset	6	0	0	0
+0073F5D0	AimTarget::onBegan	2	0	0	0
+0073F66C	AimTarget::onMoved	4	0	0	0
+0073F6FC	AimTarget::onEnded	2	0	0	0
+0073F794	AimTarget::AimMarker::hide	579	0	0	0
+0073F804	AimTarget::updateMarker	60965	0	0	0
+0073F8EC	AimTarget::AimMarker::init	1	0	0	0
+0073FBA0	AimTarget::AimMarker::show	47	0	0	0
+0073FBCA	AimTarget::AimMarker::update	36227	36227	0	0
+007420A8	BattleMisc::getInstance	6	0	0	0
+00742164	BattleMisc::BattleMisc	1	0	0	0
+007424F8	BattleMisc::getPlayerBuffCorrection	2	0	0	0
+007425C4	BattleMisc::getEnemyBuffCorrection	2	0	0	0
+00742764	BattleMisc::preparePlayerAttackEnemy	2	0	0	0
+0074718C	BattleMisc::calculatePlayerAttack	2	0	0	0
+00747448	BattleMisc::calculatePlayerAttack_sub	1	0	0	0
+00748898	BattleMisc::calcMatchingCoefficient	1	0	0	0
+007489F0	BattleMisc::get_criticalCoefficient	1	0	0	0
+00748AC4	BattleMisc::normalizeAttack	1	0	0	0
+0074A26C	FlashNode::pushBackHitEffectID	8	0	0	0
+0074E9A0	StageActorManager::StageActorManager	1	0	0	0
+0074ED5C	StageActorManager::init	1	0	0	0
+0074ED80	StageActorManager::setupEnemyActorPlatoon	1	0	0	0
+0074F15C	StageActorManager::showWanderingSymbolEnemy	2	0	0	0
+0074F1A4	StageActorManager::checkEncount	60965	0	0	0
+0074F474	StageActorManager::checkEncountOrder	4	0	0	0
+0074F5CC	StageActorManager::getCurrentEncountSymbolEnemyActor	3	0	0	0
+0074F5F4	StageActorManager::clearCurrentTarget	3	0	0	0
+0074F6F4	StageActorManager::entryCurrentTarget	1	0	0	0
+0074F870	StageActorManager::hasAliveEnemyInTeam	10067	0	0	0
+0074F8EC	StageActorManager::executeAttackCurrentTarget	20134	0	0	0
+0074FA3C	StageActorManager::choiceTargetAttributeWithLowerHp	2	0	0	0
+0074FB80	StageActorManager::autoChoiceTarget	2	0	0	0
+0074FCBC	StageActorManager::changeMode	3	0	0	0
+0074FCEC	StageActorManager::attackReadyAction	4	0	0	0
+0074FE50	StageActorManager::turnEndAction	4	0	0	0
+0074FED8	StageActorManager::enebleChoiceMarker	4	0	0	0
+0074FF24	StageActorManager::update	71525	0	0	0
+007500E8	StageActorManager::updateAvatar	35771	0	0	0
+007506E8	StageActorManager::updateEnemy(EnemyActor*, AvatarActor*)	5282	0	0	0
+00750CB0	StageActorManager::deployHitEffect	1	0	0	0
+00750E08	StageActorManager::getEncountTargets	2	0	0	0
+00750F74	StageActorManager::computeAttackPosition	3	0	0	0
+007510B8	StageActorManager::isSingle	3	0	0	0
+00751174	StageActorManager::EnemyDamage	1	0	0	0
+007514A0	StageActorManager::storeDamage	2	0	0	0
+00751624	StageActorManager::addCondition	1	0	0	0
+00751B28	StageActorManager::reflectionCondition	2	0	0	0
+00752538	StageActorManager::findNeedJumpAttackEnemy	1	0	0	0
+0075266C	StageActorManager::isJumpAttackAction	2	0	0	0
+00753354	StageActorManager::deployHitEffect $_3 __func::__clone(__base*)	6	0	0	0
+00753378	StageActorManager::deployHitEffect $_3 __func::destroy	7	2	0	0
+00753382	StageActorManager::deployHitEffect $_3	1	1	0	0
+00753408	StageActorManager::setupEnemyActorPlatoon $_2 __func::__clone(__base*)	18	0	0	0
+00753428	StageActorManager::setupEnemyActorPlatoon $_2 __func::destroy	18	0	0	0
+007534BC	StageActorManager::setupEnemyActorPlatoon $_1 __func::__clone(__base*)	18	0	0	0
+007534DC	StageActorManager::setupEnemyActorPlatoon $_1 __func::destroy	18	0	0	0
+0075355C	StageActorManager::setupEnemyActorPlatoon $_0 __func::__clone(__base*)	18	0	0	0
+0075357C	StageActorManager::setupEnemyActorPlatoon $_0 __func::destroy	18	0	0	0
+00753586	StageActorManager::setupEnemyActorPlatoon $_0	277975	0	0	0
+0075376C	StageBattleManager::StageBattleManager	1	0	0	0
+00753808	StageBattleManager::init	1	0	0	0
+0075380C	StageBattleManager::isEnemyTeamAnnihilation	4	0	0	0
+00753834	StageBattleManager::isEnemyTeamCalmDown	100	0	0	0
+00753BC4	StageBattleManager::initApproachEnemyTeam	4	0	0	0
+00753BF0	StageBattleManager::approachEnemyTeam	10067	0	0	0
+00753ED8	StageBattleManager::firstApproachIsMoveToFront	3	0	0	0
+00754350	StageBattleManager::checkSubMission12	2	0	0	0
+00754E18	StageFieldManager::removeField	1	0	0	0
+00754EB0	StageFieldManager::init	1	0	0	0
+007550D4	StageFieldManager::setStageMapInfo	1	0	0	0
+00755508	StageFieldManager::addMapNodeToField	32	0	0	0
+007555BC	StageFieldManager::getWeatherNode	1	0	0	0
+00755674	StageFieldManager::getCameraMapPosition	71527	0	0	0
+007556E8	StageFieldManager::update(Vec2&,float)	71527	0	0	0
+00755728	StageFieldManager::showMapNode	2	0	0	0
+007558E4	StageFieldManager::removeMapNodeToField	3	0	0	0
+00755D40	StageFieldManager::zoomUpdate	72438	0	0	0
+00755E1C	StageFieldManager::update_common	35773	0	0	0
+007560B4	StageFieldManager::update(float,AvatarActor*)	72438	0	0	0
+00756234	StageFieldManager::checkMaterial	36228	0	0	0
+0075637C	StageFieldManager::addPrize	1	0	0	0
+00756424	StageFieldManager::delPrize	2	0	0	0
+0075651C	StageFieldManager::getLocalPosToMapPos	1	0	0	0
+00756558	StageFieldManager::getScreenPosToMapPos	5	0	0	0
+00756632	StageFieldManager::fitRectToPoint	107344	0	0	0
+00756734	StageFieldManager::isCollisionRectSafe	2	0	0	0
+007568A8	StageFieldManager::isCollisionSafe(int,int)	169725	0	0	0
+00756980	StageFieldManager::isCollisionSafe(Vec2)	60965	0	0	0
+007569B4	StageFieldManager::isCollisionSafe(float,float)	277977	0	0	0
+007569EC	StageFieldManager::isCollisionDetection(Vec2,Vec2)	45	0	0	0
+00756A48	StageFieldManager::isCollisionDetection(int,int,int,int)	27	0	0	0
+00756E54	StageFieldManager::checkEventAreaTap	2	0	0	0
+00756FD4	StageFieldManager::checkEventOccurs	60965	0	0	0
+007572D0	StageFieldManager::setLuxTarget	1	0	0	0
+00757304	StageFieldManager::setTargetNode	3	0	0	0
+007573D8	StageFieldManager::setTreasureTarget	1	0	0	0
+007574C4	StageFieldManager::addPrizeAttract	1	0	0	0
+007576D2	StageFieldManager::changeMode	3	0	0	0
+00757720	StageFieldManager::reapStateBoard	72438	0	0	0
+00757E74	StageFieldManager::isHitTestTouchRectAndTouchUI	10067	0	0	0
+00758DCC	StageManager::clearMapInfo	1	0	0	0
+00758E68	StageManager::init	1	0	0	0
+00758F6C	StageManager::getMasterMiscValue	1	0	0	0
+00759068	StageManager::stageFirstSetup	1	0	0	0
+007592F8	StageManager::setupSubMission	1	0	0	0
+00759AB8	StageManager::setNextMapInfo	1	0	0	0
+00759E38	StageManager::createMapEnemyInfo	1	0	0	0
+0075A334	StageManager::createMapTransferInfo	1	0	0	0
+0075A5E0	StageManager::createMapTreasureInfo	1	0	0	0
+0075A808	StageManager::createMapMaterialInfo	1	0	0	0
+0075A9FC	StageManager::createMapNpcInfo	1	0	0	0
+0075ACA8	StageManager::createMapJumpInfo	1	0	0	0
+0075AF20	StageManager::createMapFieldLayer	1	0	0	0
+0075B7C8	StageManager::deleteMapEnemyInfo	2	0	0	0
+0075B860	StageManager::deleteMapTransferInfo	2	0	0	0
+0075B8CC	StageManager::deleteMapTreasureInfo	2	0	0	0
+0075B922	StageManager::deleteMapMaterialInfo	2	0	0	0
+0075B978	StageManager::deleteMapNpcInfo	2	0	0	0
+0075B9D2	StageManager::deleteMapJumpInfo	1	0	0	0
+0075BA46	StageManager::deleteMapFieldLayer	2	0	0	0
+0075BBD8	StageManager::getMapStartInfo	1	0	0	0
+0075BBE0	StageManager::getStageBossEnemyID	1	0	0	0
+0075BBE4	StageManager::getStageEnemyPlatoonCount	1	0	0	0
+0075BBE8	StageManager::getAvatarActorStylePlayable	1	0	0	0
+0075BBEE	StageManager::getAvatarActorStyleFriend	1	0	0	0
+0075BCD0	StageManager::setupEncountArea	6	0	0	0
+0075BDF4	StageManager::hasRandomEnemySymbol	6	0	0	0
+0075C228	StageManager::getEnemyPlatoonInfo	1	0	0	0
+0075C22C	StageManager::getEnemyTeamInfo	5	0	0	0
+0075C260	StageManager::isInsideTeamEncountArea	304821	0	0	0
+0075C3D0	StageManager::checkMapTransportGate	60965	0	0	0
+0075C464	StageManager::MarkingMapTransportGate	60966	0	0	0
+0075C4EC	StageManager::changeMode	3	0	0	0
+0075E62C	StageUI::init	1	0	0	0
+0075E65C	StageUI::getMedalField	10580	0	0	0
+0075E660	StageUI::getCarouselDeck	61016	0	0	0
+0075E668	StageUI::getStatusField	4	0	0	0
+0075E66C	StageUI::getAttributeField	2	0	0	0
+0075E670	StageUI::getPlayerStatusField	10565	0	0	0
+0075E674	StageUI::getLuxTargetField	1	0	0	0
+0075E678	StageUI::getLuxTarget	1	0	0	0
+0075E708	StageUI::getRareTreasureTarget	1	0	0	0
+0075E7A8	StageUI::getCommonTreasureTarget	1	0	0	0
+0075E848	StageUI::createMedalField	1	0	0	0
+0075E928	StageUI::createCarouselDeck	1	0	0	0
+0075E948	CarouselDeck::create	1	0	0	0
+0075EA44	StageUI::createStatusField	1	0	0	0
+0075EF24	StageUI::createAttributeField	1	0	0	0
+0075F000	StageUI::createPlayerStatusField	1	0	0	0
+0075F0B4	StageUI::createLuxTargetField	1	0	0	0
+0075F2E8	StageUI::shake_Lux	1	0	0	0
+0075F354	StageUI::createHeading	1	0	0	0
+0075F54C	StageUI::showHeading	4	0	0	0
+0075F708	StageUI::garbageCollectHeading	2	0	0	0
+0075F7F8	StageUI::getLastShowHeading	4	0	0	0
+0075F814	StageUI::isPlayingHeading	366	0	0	0
+0075F840	StageUI::updateDispUI	72438	0	0	0
+00760E24	StageUI::set_start_avatar_parameter	1	0	0	0
+00761726	StageUI::setBattleTurn	2	0	0	0
+00763A34	CarouselDeck::CarouselDeck	1	0	0	0
+00764918	StageUtil::getTreasurePrizes::$_0 __clone(__base*)	2	0	0	0
+00764934	StageUtil::getTreasurePrizes::$_0 destroy()	4	0	0	0
+007649A8	CommonDirection::CommonDirection	1	0	0	0
+00764AF4	CommonDirection::init	1	0	0	0
+00764C1C	CommonDirection::preloadResources	1	0	0	0
+00765010	CommonDirection::gene_boss_marker	2	0	0	0
+007661E8	CommonDirection::exec_que	36227	0	0	0
+00766320	CommonDirection::panel_update	36227	0	0	0
+007664F4	CommonDirection::hide_boss_marker	4	0	0	0
+00766694	CommonDirection::update	36227	36227	0	0
+0076669C	CommonDirection::to_start	2	0	0	0
+0076675C	CommonDirection::calc_warning	72438	0	0	0
+007670CE	cocostudio::Armature::getArmatureData	3950	0	0	0
+0076732C	CommonDirection::hide_boss_marker::$_9 __func::__clone(dst)	8	0	0	0
+0076734C	CommonDirection::hide_boss_marker::$_9 __func::destroy	12	4	0	0
+00767356	CommonDirection::hide_boss_marker::$_9::operator()	4	4	0	0
+0076790C	CommonDirection::init::$_1 __func::__clone(dst)	2	0	0	0
+0076792C	CommonDirection::init::$_1 __func::destroy	2	0	0	0
+007679A8	CommonDirection::init::$_0 __func::__clone(dst)	2	0	0	0
+007679C8	CommonDirection::init::$_0 __func::destroy	2	0	0	0
+007679D2	CommonDirection::init::$_0::operator()	1	0	0	0
+0076A91C	StageDirection::cocos_start $_5 __func::__clone(__base*)	2	0	0	0
+0076A93C	StageDirection::cocos_start $_5 __func::destroy	3	1	0	0
+0076A946	StageDirection::cocos_start $_5 __func::operator()	1	0	0	1
+0076AA04	StageDirection::cocos_start $_4 __func::__clone(__base*)	2	0	0	0
+0076AA24	StageDirection::cocos_start $_4 __func::destroy	3	1	0	0
+0076AA2E	StageDirection::cocos_start $_4 __func::operator()	1	1	0	0
+0076AA9C	StageDirection::cocos_start $_3 __func::__clone(__base*)	2	0	0	0
+0076AAB8	StageDirection::cocos_start $_3 __func::destroy	3	1	0	0
+0076AAC4	StageDirection::cocos_start $_3 __func::operator()	1	1	0	0
+0076ABB4	StageDirection::stage_start $_2 __func::__clone(__base*)	2	0	0	0
+0076ABD8	StageDirection::stage_start $_2 __func::destroy	3	1	0	0
+0076ABE2	StageDirection::stage_start $_2 __func::operator()	1	0	0	1
+0076AC64	StageDirection::init $_1 __func::__clone(__base*)	2	0	0	0
+0076AC84	StageDirection::init $_1 __func::destroy	2	0	0	0
+0076AD00	StageDirection::init $_0 __func::__clone(__base*)	2	0	0	0
+0076AD20	StageDirection::init $_0 __func::destroy	2	0	0	0
+0076AD2A	StageDirection::init $_0 __func::operator()	1	0	0	0
+0076C090	MasterDataManager::getInstance	23324	159	0	0
+0076C320	MasterDataManager::TableFile::init	1029	0	0	0
+0076C69C	MasterDataManager::TableFile::clear	1029	0	0	0
+0076C71C	MasterDataManager::TableFile::getIDs	93	0	0	0
+0076C798	MasterDataManager::TableFile::getData	395	0	0	0
+0076C8F4	MasterDataManager::MasterDataManager	30	0	0	0
+0076CBBC	MasterDataManager table file path (sub_76CBBC)	539	0	0	0
+0076CE04	MasterDataManager::find	21999	104	0	0
+0076CE54	LRUCache<unsigned long long, shared_ptr<const SafeBuffer>>::find	22103	0	0	0
+0076CEA8	MasterDataManager::insert	528	26	0	0
+0076CF34	LRUCache<unsigned long long, shared_ptr<const SafeBuffer>>::insert	554	0	0	0
+0076D090	MasterDataManager::getIDs	82	55	0	0
+0076D0A0	MasterDataManager::getData	528	26	0	0
+0076E704	LRUCache<unsigned long long, shared_ptr<const SafeBuffer>>::update	10666	0	0	0
+0076EFD4	MasterDataManager $_0 __func::__clone(__base*)	20	0	0	0
+0076EFF0	MasterDataManager $_0 __func::destroy	20	0	0	0
+0076EFFA	MasterDataManager::MasterDataManager $_0 operator()(const shared_ptr<const SafeBuffer>&)	130	0	0	0
+00772302	std::__function::__func<char const* (*)(void),std::allocator<char const* (*)(void)>,char const* ()(void)>::operator()	441	0	0	0
+007728AC	ResourceDataManager::getInstance()	502	0	0	0
+00772960	ResourceDataManager::ResourceDataManager()	10	0	0	0
+00772A38	ResourceDataManager::check(unsigned int, unsigned int) const	10	0	0	0
+00772CB8	ResourceDataManager profile path ("<id>.png" / "misc.png")	11	0	0	0
+00772E4C	ResourceDataManager archive path ("<id>.mp4" / "misc.mp4")	11	0	0	0
+00772FF0	ResourceDataManager::readProfile(unsigned int, unsigned int*) const	10	0	0	0
+00773354	ResourceDataManager::mount() const	1	0	0	0
+007736A4	ResourceDataManager::unmount() const	11	0	0	0
+00776488	std::set<shared_ptr<const master::EvResource>>::destroy (ResourceDataManager::mount)	1	0	0	0
+00777A54	master::World::getHash	33	7	0	0
+00777BB4	master::TutorialMisc::create	10	0	0	0
+00778034	master::TutorialMisc::getHash	33	7	0	0
+007787B4	master::AlbumChallenge::getHash	33	7	0	0
+00778C80	master::AvatarCombination::getHash	33	7	0	0
+007793C4	master::AvatarParts::getHash	33	7	0	0
+00779970	master::Badstatus::getHash	33	7	0	0
+00779AD0	master::BattleMisc::create	20152	0	0	0
+00779DBC	master::BattleMisc::getHash	33	7	0	0
+00779F00	master::Buff::getBuffIds	2	0	0	0
+00779F1C	master::Buff::create	120	0	0	0
+0077A330	master::Buff::getHash	33	7	0	0
+0077A490	master::Burst::create	32	0	0	0
+0077BF14	master::Burst::getHash	33	7	0	0
+0077C388	master::Chapter::getHash	33	7	0	0
+0077CE34	master::Colosseum::getHash	33	7	0	0
+0077D5A0	master::ColosseumStage::getHash	33	7	0	0
+0077DB80	master::DrawMedalList::getHash	33	7	0	0
+0077EB7C	master::DrawMedalType::getHash	33	7	0	0
+0077F09C	master::DrawSkillList::getHash	33	7	0	0
+0077F67C	master::DrawSkillType::getHash	33	7	0	0
+0077F7DC	master::Enemy::create	11	0	0	0
+00780DF0	master::Enemy::getHash	33	7	0	0
+00780F50	master::EnemyAttack::create	8	0	0	0
+00781C78	master::EnemyAttack::getHash	33	7	0	0
+007825DC	master::EvCampaign::getHash	33	7	0	0
+00782BCC	master::EvGroupPattern::getHash	33	7	0	0
+007838A0	master::EvStage::getHash	33	7	0	0
+00783E3C	master::InitItem::getHash	33	7	0	0
+00783F9C	master::Keyblade::create	4	0	0	0
+00784918	master::Keyblade::getHash	33	7	0	0
+00785184	master::LoginBonus::getHash	33	7	0	0
+00785710	master::Material::getHash	33	7	0	0
+00785870	master::Medal::create	16	0	0	0
+00786768	master::Medal::getHash	33	7	0	0
+007868C8	master::MedalMisc::create	4	0	0	0
+00786BFC	master::MedalMisc::getHash	33	7	0	0
+00786D5C	master::Misc::create	12	0	0	0
+00787048	master::Misc::getHash	33	7	0	0
+007875E4	master::Player::getHash	33	7	0	0
+00788ED8	master::RaidEnemy::getHash	33	7	0	0
+00789C98	master::RaidEnemyAttack::getHash	33	7	0	0
+0078A4CC	master::RaidReward::getHash	33	7	0	0
+0078AC58	master::RaidSetting::getHash	33	7	0	0
+0078B460	master::RankingReward::getHash	33	7	0	0
+0078B5C0	master::Reward::create	2	0	0	0
+0078BC88	master::Reward::getHash	33	7	0	0
+0078C92C	master::Skill::getHash	33	7	0	0
+0078CDC0	master::SkillExp::getHash	33	7	0	0
+0078D514	master::Sphere::getHash	33	7	0	0
+0078DBA8	master::SphereArray::getHash	33	7	0	0
+0078E388	master::SphereMasu::getHash	33	7	0	0
+0078E4E8	master::Stage::create	3	0	0	0
+0078F92C	master::Stage::getHash	33	7	0	0
+0078FF0C	master::Title::getHash	33	7	0	0
+007907F0	master::SerialcodeReward::getHash	33	7	0	0
+0079116C	master::Shop::getHash	33	7	0	0
+00791884	master::Ranking::getHash	33	7	0	0
+00791E64	master::Stamp::getHash	33	7	0	0
+00792380	master::GuiltProb::getHash	33	7	0	0
+00792C34	master::MypageBackground::getHash	33	7	0	0
+00792D94	master::EvResource::create	1248	949	0	0
+00793144	master::EvResource::getHash	33	7	0	0
+00799B30	AppGetGrameFrameWidth()	13	0	0	0
+00799D20	AppGetGrameFrameHeight()	66	0	0	0
+00799F04	AppSetTextureCacheLimit(unsigned)	15	0	0	0
+00799FD0	AppConfig::get	6	1	0	0
+0079A03C	AppConfig::get (read one config file, sub_79A03C)	6	0	0	0
+0079A19C	AppSetTextureCacheLimit::$_0 __func::__clone(__base*)	54	0	0	0
+0079A1B8	AppSetTextureCacheLimit::$_0 __func::destroy	54	0	0	0
+0079A1C2	AppSetTextureCacheLimit::$_0 (texture pixel count)	791	19	0	0
+0079A210	AppDelegate::AppDelegate	27	27	0	0
+0079A358	AppDelegate::applicationDidFinishLaunching	27	0	0	15
+0079F700	cocostudio::Armature::~Armature [deleting destructor]	3	0	0	0
+007A03F4	cocostudio::Armature::getBone	1211	0	0	0
+007A059A	cocostudio::Armature::getBoneDic	41	0	0	0
+007A05A2	cocostudio::Armature::getNodeToParentTransform	417	376	0	0
+007A07BC	cocostudio::Armature::getAnimation	10865	2	0	0
+007A07C4	cocostudio::Armature::getArmatureTransformDirty	618756	0	0	0
+007A0998	cocostudio::Armature::onExit	37	0	0	0
+007A0D56	cocostudio::Armature::getParentBone	851	0	0	0
+007A1956	std::__hash_table<std::__hash_value_type<std::string,cocostudio::Bone *>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,cocostudio::Bone *>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,cocostudio::Bone *>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,cocostudio::Bone *>>>::~__hash_table [base destructor]	3	0	0	0
+007A1BE4	cocostudio::Bone::~Bone [deleting destructor]	93	0	0	0
+007A1DE6	cocostudio::Bone::getBoneData	1279	0	0	0
+007A1E40	cocostudio::Bone::getArmature	6621	0	0	0
+007A221C	cocostudio::Bone::updateDisplayedOpacity	1591	0	0	0
+007A2576	cocostudio::Bone::getChildArmature	200566	0	0	0
+007A257E	cocostudio::Bone::getTween	851	0	0	0
+007A2586	cocostudio::Bone::setLocalZOrder	200138	0	0	0
+007A2598	cocostudio::Bone::getNodeToArmatureTransform	209706	0	0	0
+007A262C	cocostudio::Bone::getDisplayRenderNode	1378047	450024	0	0
+007A263A	cocostudio::Bone::getDisplayRenderNodeType	498877	161678	0	0
+007A2680	cocostudio::Bone::changeDisplayWithIndex	581	0	0	0
+007A26CA	cocostudio::Bone::setTransformDirty	308844	0	0	0
+007A26D2	cocostudio::Bone::isTransformDirty	266140	0	0	0
+007A26DA	cocostudio::Bone::getDisplayManager	409298	0	0	0
+007A26EA	cocostudio::Bone::isIgnoreMovementBoneData	423	0	0	0
+007A2700	cocostudio::Bone::getBlendFunc	323356	323356	0	0
+007A2722	cocostudio::Bone::getTweenData	1432	0	0	0
+007A2A70	cocostudio::ArmatureAnimation::~ArmatureAnimation [deleting destructor]	3	0	0	0
+007A2A7C	cocostudio::ArmatureAnimation::init	41	0	0	0
+007A3E34	cocostudio::ProcessBase::setProcessScale	428	0	0	0
+007A3E50	cocostudio::ProcessBase::isPlaying	9958	0	0	0
+007A3E88	cocostudio::ArmatureAnimation::getAnimationData	18	0	0	0
+007A5684	cocostudio::ProcessBase::~ProcessBase [base destructor]	96	0	0	0
+007A56AC	cocostudio::ProcessBase::stop	423	0	0	0
+007A56B6	cocostudio::ProcessBase::play	469	0	0	0
+007A58B8	cocostudio::Tween::~Tween [deleting destructor]	93	0	0	0
+007A64CC	cocostudio::Tween::setMovementBoneData	428	0	0	0
+007A6524	cocostudio::BaseData::~BaseData [base destructor]	289	0	0	0
+007A652C	cocostudio::BaseData::~BaseData [deleting destructor]	93	0	0	0
+007A6CAC	cocostudio::BoneData::~BoneData [deleting destructor]	898	0	0	0
+007A6CB8	cocostudio::BoneData::init	437	0	0	0
+007A6CBC	cocostudio::BoneData::addDisplayData	1375	0	0	0
+007A6DF0	cocostudio::ArmatureData::~ArmatureData [deleting destructor]	2	0	0	0
+007A6DFC	cocostudio::ArmatureData::init	32	0	0	0
+007A6E00	cocostudio::ArmatureData::addBoneData	437	0	0	0
+007A6ECC	cocostudio::ArmatureData::getBoneData	851	0	0	0
+007A7094	cocostudio::FrameData::~FrameData [deleting destructor]	734	0	0	0
+007A7238	cocostudio::MovementBoneData::~MovementBoneData [deleting destructor]	91	0	0	0
+007A7244	cocostudio::MovementBoneData::init	833	0	0	0
+007A7248	cocostudio::MovementBoneData::addFrameData	4347	0	0	0
+007A72BC	cocostudio::MovementBoneData::getFrameData	1009	0	0	0
+007A73B0	cocostudio::MovementData::~MovementData [deleting destructor]	4	0	0	0
+007A73BC	cocostudio::MovementData::addMovementBoneData	833	0	0	0
+007A7488	cocostudio::MovementData::getMovementBoneData	851	0	0	0
+007A755C	cocostudio::AnimationData::~AnimationData [deleting destructor]	2	0	0	0
+007A767C	cocostudio::AnimationData::getMovement	910	0	0	0
+007A7830	cocostudio::TextureData::~TextureData [deleting destructor]	168	0	0	0
+007A783C	cocostudio::TextureData::init	232	0	0	0
+007A830E	std::__hash_table<std::__hash_value_type<std::string,cocostudio::MovementData *>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,cocostudio::MovementData *>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,cocostudio::MovementData *>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,cocostudio::MovementData *>>>::~__hash_table [base destructor]	2	0	0	0
+007A8A82	std::__hash_table<std::__hash_value_type<std::string,cocostudio::MovementBoneData *>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,cocostudio::MovementBoneData *>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,cocostudio::MovementBoneData *>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,cocostudio::MovementBoneData *>>>::~__hash_table [base destructor]	4	0	0	0
+007A948E	std::__hash_table<std::__hash_value_type<std::string,cocostudio::BoneData *>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,cocostudio::BoneData *>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,cocostudio::BoneData *>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,cocostudio::BoneData *>>>::~__hash_table [base destructor]	2	0	0	0
+007A9BEC	cocostudio::DecorativeDisplay::~DecorativeDisplay [deleting destructor]	289	0	0	0
+007A9C26	cocostudio::DecorativeDisplay::getDisplay	654	0	0	0
+007A9C54	cocostudio::DecorativeDisplay::getDisplayData	5996	0	0	0
+007A9C82	cocostudio::DecorativeDisplay::getColliderDetector	207988	0	0	0
+007AA93C	cocostudio::DisplayManager::~DisplayManager [deleting destructor]	93	0	0	0
+007AB0DC	cocostudio::DisplayManager::getDisplayRenderNode	2036830	0	0	0
+007AB0E0	cocostudio::DisplayManager::getDisplayRenderNodeType	660555	0	0	0
+007AB0E8	cocostudio::DisplayManager::getCurrentDecorativeDisplay	207035	0	0	0
+007AB378	cocostudio::DisplayManager::isForceChangeDisplay	200138	0	0	0
+007AD4A4	cocostudio::ArmatureDataManager::getArmatureData	41	0	0	0
+007AD610	cocostudio::ArmatureDataManager::getAnimationData	41	0	0	0
+007AD77C	cocostudio::ArmatureDataManager::getTextureData	2671	0	0	0
+007ADBF0	cocostudio::ArmatureDataManager::isAutoLoadSpriteFile	32	0	0	0
+007B91CC	cocostudio::SpriteFrameCacheHelper::addSpriteFrameFromFile	41	0	0	0
+007BB40E	cocostudio::ComAudio::createInstance	23	0	0	0
+007BB52C	cocostudio::ComAudio::~ComAudio [deleting destructor]	48	0	0	0
+007BB538	cocostudio::ComAudio::init	23	0	0	0
+007BBDF8	cocostudio::ComRender::createInstance	77	0	0	0
+007BBF5C	cocostudio::ComRender::~ComRender [deleting destructor]	88	0	0	0
+007BBF68	cocostudio::ComRender::onEnter	50	0	0	0
+007BBF80	cocostudio::ComRender::onExit	34	0	0	0
+007BE118	cocostudio::DictionaryHelper::getSubDictionary_json	5450	0	0	0
+007BE128	cocostudio::DictionaryHelper::getSubDictionary_json	7538	0	0	0
+007BE142	cocostudio::DictionaryHelper::getSubDictionary_json	1375	0	0	0
+007BE454	cocostudio::DictionaryHelper::getDictionaryFromArray_json	82	0	0	0
+007BE46E	cocostudio::DictionaryHelper::checkObjectExist_json	300	0	0	0
+007C5A9C	cocostudio::WidgetPropertiesReader0300::setPropsForAllWidgetFromJsonDictionary	115	0	0	0
+007CF490	sub_7CF490	44	0	0	0
+007CF4AC	nullsub_178	46	0	0	0
+007CF638	sub_7CF638	44	0	0	0
+007CF658	nullsub_176	46	0	0	0
+007CF7DC	sub_7CF7DC	44	0	0	0
+007CF7F8	nullsub_174	46	0	0	0
+007CF84C	cocostudio::ButtonReader::createInstance	10	0	0	0
+007D0DEC	thunk to cocostudio::ButtonReader::setPropsFromJsonDictionary	10	0	0	0
+007D206A	cocostudio::ImageViewReader::createInstance	34	0	0	0
+007D2F8C	thunk to cocostudio::ImageViewReader::setPropsFromJsonDictionary	33	0	0	0
+007D2F96	cocostudio::LayoutReader::createInstance	43	0	0	0
+007D48B4	thunk to cocostudio::LayoutReader::setPropsFromJsonDictionary	42	0	0	0
+007DA106	cocostudio::TextReader::createInstance	28	0	0	0
+007DB154	thunk to cocostudio::TextReader::setPropsFromJsonDictionary	28	0	0	0
+007E4A28	std::__function::__func<std::__bind<void (cocos2d::network::HttpClient::*)(void),cocos2d::network::HttpClient*>,std::allocator<std::__bind<void (cocos2d::network::HttpClient::*)(void),cocos2d::network::HttpClient*>>,void ()(void)>::destroy	678	678	0	0
+007E4A32	std::__function::__func<std::__bind<void (cocos2d::network::HttpClient::*)(void),cocos2d::network::HttpClient*>,std::allocator<std::__bind<void (cocos2d::network::HttpClient::*)(void),cocos2d::network::HttpClient*>>,void ()(void)>::operator()	226	226	0	0
+007E510C	cocos2d::network::HttpResponse::~HttpResponse [deleting destructor]	339	0	0	0
+007F02C8	LRUCache<unsigned, shared_ptr<LWF::Data>>::find	1081	72	0	0
+007F031C	LRUCache<unsigned, shared_ptr<LWF::Data>>::insert	114	0	0	0
+00819220	cocos2d::plugin::WebView::loadUrl	2	0	0	0
+008192AC	cocos2d::plugin::WebView::setScalesPageToFit	2	0	0	0
+0081AB6C	_JNIEnv::CallStaticIntMethod	50	6	0	0
+0081B1F4	cocos2d::PluginJniHelper::setJavaVM	16	16	0	0
+00825BCC	cocos2d::ui::Widget::onExit	61	0	0	0
+00825C70	cocos2d::ui::Widget::initRenderer	75	0	0	0
+00826208	cocos2d::ui::Widget::setSizeType	115	0	0	0
+00826428	cocos2d::ui::Widget::getVirtualRendererSize	246	0	0	0
+008266FA	cocos2d::ui::Widget::onPressStateChangedToNormal	118	9	0	0
+008266FC	cocos2d::ui::Widget::onPressStateChangedToPressed	9	9	0	0
+00826CCE	cocos2d::ui::Widget::addTouchEventListener	40	0	0	0
+00826F94	cocos2d::ui::Widget::setPositionType	115	0	0	0
+00826F9C	cocos2d::ui::Widget::getPositionType	27	0	0	0
+008276EA	cocos2d::ui::Widget::setActionTag	115	0	0	0
+008276FA	cocos2d::ui::Widget::setFlippedX	115	0	0	0
+00827710	cocos2d::ui::Widget::setFlippedY	115	0	0	0
+008281D4	std::__function::__func<std::__bind<void (cocos2d::ui::Widget::*)(cocos2d::Touch *,cocos2d::Event *),cocos2d::ui::Widget*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>,std::allocator<std::__bind<void (cocos2d::ui::Widget::*)(cocos2d::Touch *,cocos2d::Event *),cocos2d::ui::Widget*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>>,void ()(cocos2d::Touch *,cocos2d::Event *)>::destroy	372	0	0	0
+00828298	std::__function::__func<std::__bind<bool (cocos2d::ui::Widget::*)(cocos2d::Touch *,cocos2d::Event *),cocos2d::ui::Widget*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>,std::allocator<std::__bind<bool (cocos2d::ui::Widget::*)(cocos2d::Touch *,cocos2d::Event *),cocos2d::ui::Widget*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>>,bool ()(cocos2d::Touch *,cocos2d::Event *)>::destroy	124	0	0	0
+0082845C	std::__function::__func<std::__bind<void (cocos2d::ui::Widget::*)(cocos2d::ui::Widget*,cocos2d::ui::Widget*),cocos2d::ui::Widget*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>,std::allocator<std::__bind<void (cocos2d::ui::Widget::*)(cocos2d::ui::Widget*,cocos2d::ui::Widget*),cocos2d::ui::Widget*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>>,void ()(cocos2d::ui::Widget*,cocos2d::ui::Widget*)>::destroy	225	0	0	0
+00828614	cocos2d::ui::Layout::createInstance	43	0	0	0
+00828B74	cocos2d::ui::Layout::~Layout [deleting destructor]	33	0	0	0
+0082A838	cocos2d::ui::Layout::setBackGroundImageOpacity	43	0	0	0
+0082C444	std::__function::__func<std::__bind<int (cocos2d::ui::Layout::*)(cocos2d::ui::Widget::FocusDirection,cocos2d::ui::Widget*),cocos2d::ui::Layout*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>,std::allocator<std::__bind<int (cocos2d::ui::Layout::*)(cocos2d::ui::Widget::FocusDirection,cocos2d::ui::Widget*),cocos2d::ui::Layout*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>>,int ()(cocos2d::ui::Widget::FocusDirection,cocos2d::ui::Widget*)>::destroy	76	0	0	0
+0082C4BE	cocos2d::ui::Margin::Margin [base constructor]	14	14	0	0
+0083627C	cocos2d::ui::Button::createInstance	10	0	0	0
+008365F4	cocos2d::ui::Button::~Button [deleting destructor]	1	0	0	0
+0083671C	cocos2d::ui::Button::init	10	0	0	0
+00837A48	cocos2d::ui::Button::getVirtualRendererSize	120	0	0	0
+00837A8C	cocos2d::ui::Button::setTitleText	10	0	0	0
+00837AB4	cocos2d::ui::Button::setTitleColor	10	0	0	0
+008394B8	cocos2d::ui::ImageView::createInstance	34	0	0	0
+0083965C	cocos2d::ui::ImageView::~ImageView [deleting destructor]	32	0	0	0
+008396E0	cocos2d::ui::ImageView::init	34	0	0	0
+00839BB4	cocos2d::ui::ImageView::onSizeChanged	516	2	0	0
+00839BC8	cocos2d::ui::ImageView::adaptRenderers	10659	10659	0	0
+00839D38	cocos2d::ui::ImageView::getVirtualRendererSize	426	1	0	0
+00839DE4	cocos2d::ui::Text::createInstance	28	0	0	0
+00839F3C	cocos2d::ui::Text::~Text [deleting destructor]	3	0	0	0
+00839F5C	cocos2d::ui::Text::init	28	0	0	0
+0083A6EA	cocos2d::ui::Text::setTouchScaleChangeEnabled	28	0	0	0
+0083A7C8	cocos2d::ui::Text::onSizeChanged	656	0	0	0
+0083A7DC	cocos2d::ui::Text::adaptRenderers	5485	5485	0	0
+0083A978	cocos2d::ui::Text::getVirtualRendererSize	398	0	0	0
+0083A9B0	cocos2d::ui::Text::enableShadow	28	0	0	0
+00843624	createVideoWidgetJNI()	32	0	0	0
+00843854	setVideoURLJNI(int, int, const std::string&)	32	0	0	0
+00843D3C	cocos2d::experimental::ui::VideoPlayer::~VideoPlayer [deleting destructor]	9	0	0	0
+008441F4	cocos2d::experimental::ui::VideoPlayer::addEventListener	30	0	0	0
+00844530	std::__hash_table<std::__hash_value_type<int,cocos2d::experimental::ui::VideoPlayer *>,std::__unordered_map_hasher<int,std::__hash_value_type<int,cocos2d::experimental::ui::VideoPlayer *>,std::hash<int>,true>,std::__unordered_map_equal<int,std::__hash_value_type<int,cocos2d::experimental::ui::VideoPlayer *>,std::equal_to<int>,true>,std::allocator<std::__hash_value_type<int,cocos2d::experimental::ui::VideoPlayer *>>>::__erase_unique<int>	9	0	0	0
+00853E04	cocos2d::extension::Scale9Sprite::setContentSize	18	0	0	0
+00854454	cocos2d::extension::Scale9Sprite::initWithFile	2	0	0	0
+00854568	cocos2d::extension::Scale9Sprite::initWithFile	2	0	0	0
+0085D7A8	cocos2d::cocos2dVersion	14	14	0	0
+0085D8BC	cocos2d::Action::startWithTarget	1737	531	0	0
+0085D8C2	cocos2d::Action::stop	3027	428	0	0
+00860506	cocos2d::ActionEase::stop	84	36	0	0
+00862A6E	cocos2d::EaseSineOut::~EaseSineOut [deleting destructor]	46	0	0	0
+00862A92	cocos2d::EaseSineInOut::~EaseSineInOut [deleting destructor]	2	0	0	0
+00866C38	cocos2d::CallFunc::~CallFunc [deleting destructor]	238	90	0	0
+00866CF8	cocos2d::CallFunc::update	237	90	0	0
+008678A6	cocos2d::ActionInterval::startWithTarget	265	103	0	0
+00867B96	cocos2d::Sequence::~Sequence [deleting destructor]	210	0	0	0
+00868666	cocos2d::Spawn::~Spawn [deleting destructor]	56	0	0	0
+0086BC32	cocos2d::DelayTime::update	14415	1342	0	0
+0086CA68	cocos2d::MoveTo::~MoveTo [deleting destructor]	24	0	0	0
+0086CCD8	cocos2d::ScaleTo::~ScaleTo [deleting destructor]	62	0	0	0
+0086CD44	cocos2d::FadeTo::~FadeTo [deleting destructor]	153	0	0	0
+0086CD68	cocos2d::FadeIn::~FadeIn [deleting destructor]	136	1	0	0
+0086CD8C	cocos2d::FadeOut::~FadeOut [deleting destructor]	252	2	0	0
+0086CDF8	cocos2d::DelayTime::~DelayTime [deleting destructor]	1579	1	0	0
+0087451C	cocos2d::AtlasNode::setIgnoreContentScaleFactor	192	96	0	0
+0087516C	cocos2d::Component::init	129	52	0	0
+00875262	cocos2d::Component::getName	174	74	0	0
+00875266	cocos2d::Component::setName	129	52	0	0
+00875274	cocos2d::Component::setOwner	146	62	0	0
+00875284	cocos2d::ComponentContainer::ComponentContainer [base constructor]	87	37	0	0
+008752E8	cocos2d::ComponentContainer::~ComponentContainer [deleting destructor]	59	25	0	0
+0087A4DE	cocos2d::FontAtlas::~FontAtlas [deleting destructor]	4	0	0	0
+0087AE80	cocos2d::FontAtlas::getCommonLineHeight	37	0	0	0
+0087AE88	cocos2d::FontAtlas::getFont	65	9	0	0
+0087B860	std::__function::__func<std::__bind<void (cocos2d::FontAtlas::*)(cocos2d::EventCustom *),cocos2d::FontAtlas*,std::placeholders::__ph<1> &>,std::allocator<std::__bind<void (cocos2d::FontAtlas::*)(cocos2d::EventCustom *),cocos2d::FontAtlas*,std::placeholders::__ph<1> &>>,void ()(cocos2d::EventCustom *)>::destroy	78	0	0	0
+0087C44C	std::__hash_table<std::__hash_value_type<std::string,cocos2d::FontAtlas *>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,cocos2d::FontAtlas *>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,cocos2d::FontAtlas *>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,cocos2d::FontAtlas *>>>::__erase_unique<std::string>	4	0	0	0
+00880D44	cocos2d::FontFreeType::~FontFreeType [deleting destructor]	4	0	0	0
+00880F5C	cocos2d::FontFreeType::getFontMaxHeight	37	0	0	0
+00880F66	cocos2d::FontFreeType::getFontAscender	37	0	0	0
+00881980	std::__hash_table<std::__hash_value_type<std::string,cocos2d::_DataRef>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,cocos2d::_DataRef>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,cocos2d::_DataRef>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,cocos2d::_DataRef>>>::__erase_unique<std::string>	1	0	0	0
+00884614	cocos2d::Label::~Label [deleting destructor]	5	0	0	0
+00884DF8	cocos2d::Label::getScaleX	9	0	0	0
+008869AC	cocos2d::Label::getStringLength	65	9	0	0
+0088707E	std::__function::__func<std::__bind<void (cocos2d::Label::*)(cocos2d::Mat4 const&,bool),cocos2d::Label*,cocos2d::Mat4 const&,unsigned int &>,std::allocator<std::__bind<void (cocos2d::Label::*)(cocos2d::Mat4 const&,bool),cocos2d::Label*,cocos2d::Mat4 const&,unsigned int &>>,void ()(void)>::destroy_deallocate	10350	10346	0	0
+008876DC	sub_8876DC	94	0	0	0
+008876FC	nullsub_2272	99	0	0	0
+008884D0	cocos2d::LabelAtlas::~LabelAtlas [deleting destructor]	51	0	0	3
+0088A88C	cocos2d::Layer::~Layer [base destructor]	40	0	0	0
+0088A894	cocos2d::Layer::~Layer [deleting destructor]	30	0	0	0
+0088B314	cocos2d::LayerColor::~LayerColor [deleting destructor]	62	0	0	0
+0088CEDE	std::__function::__func<std::__bind<void (cocos2d::LayerColor::*)(cocos2d::Mat4 const&,unsigned int),cocos2d::LayerColor*,cocos2d::Mat4 const&,unsigned int &>,std::allocator<std::__bind<void (cocos2d::LayerColor::*)(cocos2d::Mat4 const&,unsigned int),cocos2d::LayerColor*,cocos2d::Mat4 const&,unsigned int &>>,void ()(void)>::destroy_deallocate	16080	16018	0	0
+00892B5C	cocos2d::Node::~Node [deleting destructor]	41	0	0	0
+00892B68	cocos2d::Node::init	3146	8	0	0
+00892BDC	cocos2d::Node::_setLocalZOrder	1824	8	0	0
+00892DB0	cocos2d::Node::getScale	1	0	0	0
+00892E9A	cocos2d::Node::getScaleX	86	0	0	0
+00892FB4	cocos2d::Node::getScaleY	86	0	0	0
+00892FEC	cocos2d::Node::getScaleZ	86	0	0	0
+0089306C	cocos2d::Node::getPosition	2396	0	0	0
+008931C8	cocos2d::Node::getPositionX	45	0	0	0
+00893230	cocos2d::Node::getPositionY	90	0	0	0
+00893320	cocos2d::Node::getChildrenCount	120	0	0	0
+00893334	cocos2d::Node::isVisible	47	47	0	0
+0089336C	cocos2d::Node::getAnchorPointInPoints	54	0	0	0
+0089343C	cocos2d::Node::getContentSize	1321	34	0	0
+008934EC	cocos2d::Node::isRunning	203	4	0	0
+008934F4	cocos2d::Node::setParent	2017	9	0	0
+0089353C	cocos2d::Node::getTag	50	2	0	0
+00893544	cocos2d::Node::setTag	404	14	0	0
+008935DC	cocos2d::Node::setOrderOfArrival	131	4	0	0
+0089360E	cocos2d::Node::getGLProgramState	181618	181618	0	0
+00893674	cocos2d::Node::getGLProgram	51018	0	0	0
+00893814	cocos2d::Node::stopAllActions	114	0	0	0
+008941C8	cocos2d::Node::addChild	487	100	4	0
+008941DA	cocos2d::Node::addChild	4964	3812	0	0
+008941F2	cocos2d::Node::removeFromParent	63	0	0	0
+00894358	cocos2d::Node::removeAllChildren	43	0	0	0
+008944C4	cocos2d::Node::draw	271926	271926	0	0
+00894B4E	cocos2d::Node::getNumberOfRunningActions	16382	1197	0	0
+00894E9C	cocos2d::Node::getNodeToParentAffineTransform	511	0	0	0
+00895D90	cocos2d::Node::removeAllComponents	794	0	0	0
+008960C2	cocos2d::Node::getPhysicsBody	2	0	0	0
+008960CC	cocos2d::Node::getOpacity	359	9	0	0
+008960D8	cocos2d::Node::getDisplayedOpacity	2563	0	0	0
+008960E0	cocos2d::Node::setOpacity	210025	219	0	0
+00896168	cocos2d::Node::isCascadeOpacityEnabled	7938	0	0	0
+0089621C	cocos2d::Node::getColor	8	0	0	0
+00896228	cocos2d::Node::getDisplayedColor	11499	2	0	0
+00896344	cocos2d::Node::isCascadeColorEnabled	10844	3	0	0
+00896AB0	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<cocos2d::Node>(cocos2d::Node *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<cocos2d::Node>(cocos2d::Node *,int,bool)::{lambda(float)#1}>,void ()(float)>::__clone	292	2	0	0
+00896AD0	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<cocos2d::Node>(cocos2d::Node *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<cocos2d::Node>(cocos2d::Node *,int,bool)::{lambda(float)#1}>,void ()(float)>::destroy	359	22	0	0
+008A5FCC	cocos2d::Scene::getScene	6024	44	0	0
+008A609C	cocos2d::Scene::addChild	16	0	0	0
+008A6600	cocos2d::Sprite::initWithTexture	2818	0	0	2
+008A6B90	cocos2d::Sprite::~Sprite [deleting destructor]	183	0	0	0
+008A6DDC	cocos2d::Sprite::setTextureRect	87	7	0	0
+008A703C	cocos2d::Sprite::setVertexRect	6237	117	0	0
+008A83E0	cocos2d::Sprite::setOpacityModifyRGB	3013	7	0	0
+008A99E4	cocos2d::SpriteBatchNode::getTexture	72	0	0	0
+008AA606	cocos2d::SpriteFrame::~SpriteFrame [deleting destructor]	118	0	0	0
+008AA8F8	cocos2d::SpriteFrame::getOffset	2681	0	0	0
+008D38C8	cocos2d::GLViewProtocol::pollInputEvents	20045	20045	0	0
+008D3B44	cocos2d::GLViewProtocol::getDesignResolutionSize	80	63	0	0
+008D3B48	cocos2d::GLViewProtocol::getFrameSize	20	20	0	0
+008D4554	cocos2d::GLViewProtocol::getScaleX	40	40	0	0
+008D4558	cocos2d::GLViewProtocol::getScaleY	40	40	0	0
+008D4EC4	cocos2d::FileUtils::purgeCachedEntries	17	0	0	0
+008D6214	cocos2d::FileUtils::isFileExist	75	0	0	0
+008D93B0	cocos2d::SAXParser::SAXParser [base constructor]	76	0	0	0
+008D93B6	cocos2d::SAXParser::~SAXParser [base destructor]	76	0	0	0
+008D94EC	cocos2d::SAXParser::setDelegator	76	0	0	0
+008D94F8	tinyxml2::XMLVisitor::VisitEnter	63	0	0	0
+008D94FC	tinyxml2::XMLVisitor::VisitExit	63	0	0	0
+008D9500	tinyxml2::XMLVisitor::Visit	63	0	0	0
+008D9508	cocos2d::XmlSaxHander::Visit	64	0	0	0
+008D9714	cocos2d::Image::~Image [deleting destructor]	180	3	0	0
+008DC0B4	bg::AssetInputStream::validate	68	4	0	0
+008DC366	bg::FileInputStream::validate	762	310	0	0
+008DC4FA	bg::MemoryInputStream::tell	18258	1074	0	0
+008DC52E	bg::MemoryInputStream::validate	331	86	0	0
+008DC53C	bg::InputStreamFactory::setAssetManager	53	17	0	0
+008DC7CC	std::__shared_ptr_emplace<bg::FileInputStream>::__on_zero_shared	10	0	0	0
+008DC7D8	std::__shared_ptr_emplace<bg::FileInputStream>::__on_zero_shared_weak	10	0	0	0
+008DC8CC	std::__shared_ptr_emplace<bg::AssetInputStream>::__on_zero_shared	13	0	0	0
+008DC8D8	std::__shared_ptr_emplace<bg::AssetInputStream>::__on_zero_shared_weak	13	0	0	0
+008DC8E0	sub_8DC8E0	131124	0	0	0
+008DC8E8	sub_8DC8E8	135414	0	0	0
+008DF01E	cocos2d::Size::Size [base constructor]	2095	255	0	0
+008DF026	cocos2d::Size::Size [base constructor]	3592	2097	0	0
+008DF02C	cocos2d::Size::Size [base constructor]	11030	3534	0	0
+008DF040	cocos2d::Size::operator=	9938	509	0	0
+008DF04A	cocos2d::Size::setSize	16	0	0	0
+008DF170	cocos2d::Rect::Rect [base constructor]	3675	147	0	0
+008DF182	cocos2d::Rect::setRect	527	0	0	0
+008DF18A	cocos2d::Rect::Rect [base constructor]	8326	117	0	0
+008DF1A8	cocos2d::Rect::Rect [base constructor]	6542	146	0	0
+008DF1C0	cocos2d::Rect::operator=	13183	117	0	0
+008DF248	cocos2d::Rect::getMaxX	2073	0	0	0
+008DF274	cocos2d::Rect::getMinX	2073	0	0	0
+008DF278	cocos2d::Rect::getMaxY	2073	0	0	0
+008DF2A4	cocos2d::Rect::getMinY	2073	0	0	0
+008DFDEE	cocos2d::Mat4::Mat4 [base constructor]	1054608	619419	0	0
+008DFE08	cocos2d::Mat4::~Mat4 [base destructor]	1666134	419769	0	0
+008E1DC8	cocos2d::Mat4::multiply	235089	9588	0	0
+008E307A	cocos2d::Mat4::transformPoint	726644	726472	0	0
+008E3228	cocos2d::Mat4::transformVector	70464	70464	0	0
+008E499C	cocos2d::GLToCGAffine	512	0	0	0
+008E4B94	cocos2d::Vec2::Vec2 [base constructor]	41118	4911	0	0
+008E4B9C	cocos2d::Vec2::Vec2 [base constructor]	25128	1302	0	0
+008E4C02	cocos2d::Vec2::Vec2 [base constructor]	32347	1278	0	0
+008E4C16	cocos2d::Vec2::~Vec2 [base destructor]	74072	6484	0	0
+008E530E	cocos2d::Vec2::subtract	1914	0	0	0
+008E5E28	cocos2d::Vec3::Vec3 [base constructor]	711046	699134	0	0
+008E5E32	cocos2d::Vec3::Vec3 [base constructor]	177966	141658	0	0
+008E5EB4	cocos2d::Vec3::Vec3 [base constructor]	2288	468	0	0
+008E5F50	cocos2d::Vec3::~Vec3 [base destructor]	182428	142116	0	0
+008E6912	cocos2d::Vec4::Vec4 [base constructor]	76460	76460	0	0
+008E691E	cocos2d::Vec4::Vec4 [base constructor]	46	46	0	0
+008E6A68	cocos2d::Vec4::~Vec4 [base destructor]	76506	76506	0	0
+008E7478	cocos2d::Vec4::set	2975	2975	0	0
+008E7A00	cocos2d::PoolManager::getCurrentPool	164509	155267	0	0
+008E86E8	cocos2d::Configuration::getMaxTextureSize	380	150	0	0
+008E8716	cocos2d::Configuration::supportsShareableVAO	405069	170987	0	0
+008E871A	cocos2d::Configuration::getValue	155	155	0	0
+008E8736	cocos2d::Configuration::setValue	43	19	0	0
+008ECC68	sub_8ECC68	26	26	0	0
+008ECC84	nullsub_2288	28	28	0	0
+008ECD54	std::__function::__func<std::__bind<void (cocos2d::Console::*)(int),cocos2d::Console*,std::placeholders::__ph<1> &>,std::allocator<std::__bind<void (cocos2d::Console::*)(int),cocos2d::Console*,std::placeholders::__ph<1> &>>,void ()(int,std::string const&)>::destroy	28	28	0	0
+008ECDE0	sub_8ECDE0	26	26	0	0
+008ECDFC	nullsub_2289	28	28	0	0
+008ED0C0	sub_8ED0C0	26	26	0	0
+008ED0E0	nullsub_2290	28	28	0	0
+008ED230	std::__function::__func<std::__bind<void (cocos2d::Console::*)(int,std::string const&),cocos2d::Console*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>,std::allocator<std::__bind<void (cocos2d::Console::*)(int,std::string const&),cocos2d::Console*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>>,void ()(int,std::string const&)>::destroy	280	280	0	0
+008ED814	cocos2d::Data::Data [base constructor]	612	226	0	0
+008ED81C	cocos2d::Data::Data [base constructor]	561	216	0	0
+008ED89A	cocos2d::Data::~Data [base destructor]	654	22	0	0
+008ED8DE	cocos2d::Data::operator=	10	0	0	0
+008ED8EE	cocos2d::Data::isNull	347	16	0	0
+008ED90A	cocos2d::Data::getBytes	347	16	0	0
+008ED90E	cocos2d::Data::getSize	267	10	0	0
+008ED912	cocos2d::Data::fastSet	330	6	0	0
+008EF8C8	cocos2d::Director::popMatrix	341910	341910	0	0
+008EFE68	cocos2d::Director::getTextureCache	327	12	0	0
+008F0624	cocos2d::Director::getWinSize	3382	3018	0	0
+008F0E9C	cocos2d::DisplayLinkDirector::stopAnimation	17	0	0	0
+008F13CC	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<cocos2d::ActionManager>(cocos2d::ActionManager *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<cocos2d::ActionManager>(cocos2d::ActionManager *,int,bool)::{lambda(float)#1}>,void ()(float)>::__clone	52	26	0	0
+008F13EC	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<cocos2d::ActionManager>(cocos2d::ActionManager *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<cocos2d::ActionManager>(cocos2d::ActionManager *,int,bool)::{lambda(float)#1}>,void ()(float)>::destroy	52	26	0	0
+008F2240	cocos2d::Event::~Event [base destructor]	400	400	0	0
+008F459C	cocos2d::EventDispatcher::setEnabled	17	17	0	0
+008F65E2	sub_8F65E2	48	48	0	0
+008F689C	nullsub_181	18903	18903	0	0
+008F8D70	cocos2d::EventListener::checkAvailable	404	0	0	0
+008F9D0C	cocos2d::EventListenerCustom::checkAvailable	319	85	0	0
+008F9DF4	sub_8F9DF4	550	130	0	0
+008F9E14	nullsub_2294	669	140	0	0
+008FA312	cocos2d::EventListenerKeyboard::checkAvailable	17	0	0	0
+008FA60C	sub_8FA60C	26	0	0	0
+008FA62C	nullsub_2296	28	0	0	0
+008FAC18	cocos2d::EventListenerTouchOneByOne::~EventListenerTouchOneByOne [deleting destructor]	91	0	0	0
+008FAC98	cocos2d::EventListenerTouchOneByOne::setSwallowTouches	145	6	0	0
+008FAD14	cocos2d::EventListenerTouchOneByOne::checkAvailable	145	6	0	0
+008FD0B4	cocos2d::Ref::retain	45642	1482	0	0
+008FD0D4	cocos2d::Ref::autorelease	9032	210	0	0
+008FD0F0	cocos2d::Ref::getReferenceCount	44	0	0	0
+00901804	cocos2d::UserDefault::getDataForKey	16	0	0	0
+00901C04	cocos2d::Value::Value [base constructor]	4226	276	0	0
+00901C16	cocos2d::Value::Value [base constructor]	2406	48	0	0
+00901C1E	cocos2d::Value::Value [base constructor]	88	4	0	0
+00901C26	cocos2d::Value::Value [base constructor]	720	0	0	0
+00901C30	cocos2d::Value::Value [base constructor]	192	192	0	0
+00901E04	cocos2d::Value::Value [base constructor]	1226	0	0	0
+00901FBC	cocos2d::Value::~Value [base destructor]	6236	360	0	0
+00902B3C	cocos2d::Value::asValueMap	909	0	0	0
+00904484	cocos2d::ZipUtils::isGZipBuffer	162	15	0	0
+009062D4	cc_fps_images_len	68	36	0	0
+009062DC	cocos2d::Color3B::Color3B [base constructor]	358	172	0	0
+009062E6	cocos2d::Color3B::Color3B [base constructor]	247950	44555	0	0
+009064C6	cocos2d::Color4B::Color4B [base constructor]	1374072	1362126	0	0
+009064D2	cocos2d::Color4B::Color4B [base constructor]	582636	104432	0	0
+0090669A	cocos2d::Color4F::Color4F [base constructor]	19254	7151	0	0
+009066A6	cocos2d::Color4F::Color4F [base constructor]	62	62	0	0
+0090A7F8	cocos2d::CustomCommand::init	85669	85669	0	0
+0090A850	cocos2d::CustomCommand::execute	85669	0	0	85669
+0090B60E	cocos2d::GLProgram::getVertexAttrib	30	0	0	0
+0090B6A4	cocos2d::GLProgram::use	78227	0	0	0
+0090E2C0	cocos2d::GLProgramCache::getGLProgram	3448	63	0	0
+0091062C	sub_91062C	96	26	0	0
+0091064C	nullsub_2298	102	28	0	0
+009126A0	cocos2d::RenderCommand::RenderCommand [base constructor]	6115	66	0	0
+009126C0	cocos2d::RenderCommand::~RenderCommand [base destructor]	1079	0	0	0
+009135E2	cocos2d::Renderer::flush	47632	31958	0	15674
+00913A7C	sub_913A7C	26	26	0	0
+00913A9C	nullsub_2299	28	28	0	0
+00914A98	cocos2d::Texture2D::~Texture2D [deleting destructor]	76	0	0	0
+00914ABA	cocos2d::Texture2D::getPixelFormat	142	7	0	0
+00914ABE	cocos2d::Texture2D::getPixelsWide	6333	165	0	0
+00914AC2	cocos2d::Texture2D::getPixelsHigh	6333	165	0	0
+00914AC6	cocos2d::Texture2D::getName	197367	181618	0	0
+00914B06	cocos2d::Texture2D::getContentSizeInPixels	296	55	0	0
+00914B42	cocos2d::Texture2D::hasPremultipliedAlpha	3246	103	0	0
+0091501C	cocos2d::Texture2D::initWithImage	200	0	0	23
+00915CE4	cocos2d::Texture2D::PVRImagesHavePremultipliedAlpha	16	16	0	0
+00915F28	cocos2d::Texture2D::setDefaultAlphaPixelFormat	80	48	0	0
+00915F3C	cocos2d::Texture2D::getDefaultAlphaPixelFormat	32	16	0	0
+00916014	cocos2d::Texture2D::getPixelFormatInfoMap	200	0	0	0
+00916344	cocos2d::TextureAtlas::~TextureAtlas [deleting destructor]	52	0	0	0
+00916350	cocos2d::TextureAtlas::getTotalQuads	25599	1307	0	0
+00916354	cocos2d::TextureAtlas::getCapacity	1144	234	0	0
+00916358	cocos2d::TextureAtlas::getTexture	1165	357	0	0
+00916380	cocos2d::TextureAtlas::getQuads	13023	57	0	0
+00916B88	cocos2d::TextureAtlas::removeAllQuads	64	9	0	0
+00916CC2	cocos2d::TextureAtlas::increaseTotalQuadsWith	96	48	0	0
+00916E80	cocos2d::TextureAtlas::drawQuads	15749	0	0	0
+009170BC	std::__function::__func<std::__bind<void (cocos2d::TextureAtlas::*)(cocos2d::EventCustom *),cocos2d::TextureAtlas*,std::placeholders::__ph<1> &>,std::allocator<std::__bind<void (cocos2d::TextureAtlas::*)(cocos2d::EventCustom *),cocos2d::TextureAtlas*,std::placeholders::__ph<1> &>>,void ()(cocos2d::EventCustom *)>::destroy	334	84	0	0
+00917464	LRUCache<unsigned, shared_ptr<Texture2D>>::find	29679	21959	0	0
+009181FC	cocos2d::TextureCache::removeAllTextures	10	0	0	0
+00918218	cocos2d::TextureCache::getLimit	16	0	0	0
+0091821C	cocos2d::TextureCache::setLimit	16	0	0	0
+00918320	LRUCache<unsigned, shared_ptr<Texture2D>>::remove	60	34	0	0
+00918444	LRUCache<unsigned, shared_ptr<Texture2D>>::insert	790	181	0	0
+00918B54	LRUCache<unsigned, shared_ptr<Texture2D>>::update	26701	0	0	0
+00918BC0	LRUCache<unsigned, shared_ptr<Texture2D>>::removeData	31	0	0	0
+009191BC	shared_ptr<Texture2D> control block (TextureCache::insertTexture $_2) __on_zero_shared	109	0	0	0
+009191F0	shared_ptr<Texture2D> control block (TextureCache::insertTexture $_2) __on_zero_shared_weak	109	0	0	0
+009191F8	std::__hash_table<std::__hash_value_type<unsigned int,std::shared_ptr<cocos2d::Texture2D>>,std::__unordered_map_hasher<unsigned int,std::__hash_value_type<unsigned int,std::shared_ptr<cocos2d::Texture2D>>,std::hash<unsigned int>,true>,std::__unordered_map_equal<unsigned int,std::__hash_value_type<unsigned int,std::shared_ptr<cocos2d::Texture2D>>,std::equal_to<unsigned int>,true>,std::allocator<std::__hash_value_type<unsigned int,std::shared_ptr<cocos2d::Texture2D>>>>::__erase_unique<unsigned int>	25	1	0	0
+00919386	std::__hash_table<unsigned int,std::hash<unsigned int>,std::equal_to<unsigned int>,std::allocator<unsigned int>>::__erase_unique<unsigned int>	26	13	0	0
+0091B508	cocos2d::GL::bindTexture2D	65475	9	0	5
+0091B6D4	cocos2d::GL::setProjectionMatrixDirty	34	17	0	0
+0092DAF4	llvm::ConvertUTF8toWide	939	127	0	0
+0092FF3C	tinyxml2::XMLText::Accept	6873	0	0	0
+00930344	tinyxml2::XMLDeclaration::Accept	63	0	0	0
+00930538	tinyxml2::XMLUnknown::Accept	63	0	0	0
+0093277E	tinyxml2::XMLNode::ToElement	13998	0	0	0
+00932820	tinyxml2::XMLElement::ToElement	37350	0	0	0
+009328F8	tinyxml2::MemPoolT<44>::Free	126	0	0	0
+0093290A	tinyxml2::MemPoolT<44>::SetTracked	126	0	0	0
+00932922	tinyxml2::MemPoolT<48>::Free	6873	0	0	0
+00932934	tinyxml2::MemPoolT<48>::SetTracked	6873	0	0	0
+0093294C	tinyxml2::MemPoolT<36>::Free	63	0	0	0
+0093295E	tinyxml2::MemPoolT<36>::SetTracked	63	0	0	0
+00932976	tinyxml2::MemPoolT<52>::Free	14940	0	0	0
+00932988	tinyxml2::MemPoolT<52>::SetTracked	14940	0	0	0
+0093745C	btf_is_valid(unsigned char*, int)	164	13	0	0
+00937494	btf_read(unsigned char*, int, int*, int*, unsigned char**, int*, bool*)	138	0	0	0
+009390D8	sub_9390D8	813	813	0	0
+00939F48	sub_939F48	226	226	0	0
+0094C2E4	nullsub_186	226	226	0	0
+00954CD8	sub_954CD8	59	59	0	0
+0095DA48	sub_95DA48	226	226	0	0
+0096315C	sub_96315C	1136	1136	0	0
+00963A28	sub_963A28	906	906	0	0
+00963AF8	sub_963AF8	226	226	0	0
+00963B10	nullsub_187	226	226	0	0
+00963B14	sub_963B14	684	684	0	0
+00964B68	sub_964B68	947	947	0	0
+00966044	sub_966044	228	228	0	0
+00966050	sub_966050	228	228	0	0
+00966098	sub_966098	226	226	0	0
+009660A0	sub_9660A0	226	226	0	0
+0097A9D0	sub_97A9D0	226	226	0	0
+0097F9F4	sub_97F9F4	226	226	0	0
+0097FB84	sub_97FB84	226	226	0	0
+009880A0	sub_9880A0	678	678	0	0
+00988178	sub_988178	265	265	0	0
+009B3188	sub_9B3188	1751	126	0	0
+009B3190	sub_9B3190	656	0	0	0
+009B3198	sub_9B3198	249	54	0	0
+009B3F00	ft_validator_init	111	0	0	0
+009B62A0	FT_Stream_OpenMemory	42	5	0	0
+009B62B8	FT_Stream_Close	8	4	0	0
+009B6430	FT_Stream_Pos	1246	349	0	0
+009B64B8	FT_Stream_Read	84	10	0	0
+009C3C24	sub_9C3C24	37	0	0	0
+009C4BE4	sub_9C4BE4	419	90	0	0
+009C5700	sub_9C5700	37	0	0	0
+009CFCA4	sub_9CFCA4	9	0	0	0
+009D1EEC	sub_9D1EEC	37	0	0	0
+009E3970	sub_9E3970	9	0	0	0
+009E4478	sub_9E4478	37	0	0	0
+009E61E8	sub_9E61E8	37	0	0	0
+009E97DC	sub_9E97DC	37	0	0	0
+009EB0C8	sub_9EB0C8	37	0	0	0
+009EC540	sub_9EC540	37	0	0	0
+009EE5A4	sub_9EE5A4	37	0	0	0
+009F3D70	sub_9F3D70	37	0	0	0
+009F735C	sub_9F735C	111	0	0	0
+009F7E80	sub_9F7E80	37	0	0	0
+00A00884	sub_A00884	37	0	0	0
+00A192D4	sub_A192D4	37	0	0	0
+00A3E7C4	cocos2d::Application::run	32	0	0	32
+00A3E7D2	cocos2d::Application::setAnimationInterval	64	0	0	0
+00A3E7D4	cocos2d::Application::getInstance	96	32	0	0
+00A3F1C8	initExtensions()	13	0	0	13
+00A3F41E	cocos2d::GLView::swapBuffers	20045	20045	0	0
+00A3F42C	cocos2d::FileUtilsAndroid::setassetmanager	22	20	2	0
+00A3F968	cocos2d::FileUtilsAndroid::getDataFromFile	233	10	0	0
+00A403F4	JNI_OnLoad	16	15	0	0
+00A40DE4	getPackageNameJNI()	13	0	0	0
+00A41060	getNativeLibraryDirectoryJNI()	13	0	0	0
+00A4172C	getStringForKeyJNI(const char*, const char*)	13	0	0	0
+00A41E94	_getClassID(const char*)	708	35	0	0
+00A47F20	inflateInit_	3815	1	0	0
+00A4C448	sub_A4C448	3629	0	0	0
+00A4C454	sub_A4C454	3629	0	0	0
+00A4E634	png_reset_crc	196	98	0	0
+00A52AAC	png_set_error_fn	42	0	0	0
+00A539CC	png_free_default	442	140	0	0
+00A53A5C	png_set_mem_fn	42	0	0	0
+00A573E8	png_create_read_struct	28	14	0	0
+00A5EE58	png_crc_read	308	154	0	0
+00A62AB4	png_set_pHYs	28	14	0	0
+00B66210	SSL_load_error_strings	31	1	0	0
+00B79E48	CRYPTO_THREADID_cmp	527	17	0	0
+00B79E50	CRYPTO_THREADID_cpy	558	18	0	0
+00B79E58	CRYPTO_THREADID_hash	558	18	0	0
+00B79F28	OPENSSL_cpuid_setup	63	1	0	0
+00B7A5F4	sub_B7A5F4	105240	0	0	0
+00B7A608	sub_B7A608	570	0	0	0
+00B7C10C	sub_B7C10C	330	0	0	0
+00B7C114	sub_B7C114	270	0	0	0
+00B8DE18	AES_set_encrypt_key	182	10	0	0
+00B8DE1C	AES_set_decrypt_key	19	1	0	0
+00B9C724	DH_OpenSSL	217	7	0	0
+00B9CF5C	ENGINE_free	620	20	0	0
+00B9D178	ENGINE_set_destroy_function	279	9	0	0
+00B9D184	ENGINE_set_init_function	310	10	0	0
+00B9D190	ENGINE_set_finish_function	310	10	0	0
+00B9D19C	ENGINE_set_ctrl_function	310	10	0	0
+00B9D1A8	ENGINE_set_flags	31	1	0	0
+00B9D1B4	ENGINE_set_cmd_defns	279	9	0	0
+00B9E698	ENGINE_set_load_privkey_function	93	3	0	0
+00B9E6A4	ENGINE_set_load_pubkey_function	93	3	0	0
+00B9F0CC	ENGINE_set_RSA	248	8	0	0
+00B9F200	ENGINE_set_DSA	186	6	0	0
+00B9F468	ENGINE_set_DH	217	7	0	0
+00B9F6D0	ENGINE_set_RAND	124	4	0	0
+00B9F8B4	ENGINE_set_ciphers	31	1	0	0
+00B9FA98	ENGINE_set_digests	31	1	0	0
+00B9FC7C	ENGINE_set_pkey_meths	31	1	0	0
+00B9FF88	ENGINE_set_pkey_asn1_meths	31	1	0	0
+00BA0AE8	ENGINE_load_rsax	31	1	0	0
+00BA0AEC	ENGINE_load_rdrand	31	1	0	0
+00BA783C	sk_new_null	390	0	0	0
+00BA7A14	sk_push	1200	0	0	0
+00BA7BB8	sk_num	300	0	0	0
+00BA8FA0	sub_BA8FA0	513990	0	0	0
+00BA9288	sub_BA9288	510	0	0	0
+00BA928C	sub_BA928C	540	0	0	0
+00BAD044	EVP_des_cbc	63	1	0	0
+00BAD054	EVP_des_cfb64	32	0	0	0
+00BAD068	EVP_des_ofb	32	0	0	0
+00BAD07C	EVP_des_ecb	32	0	0	0
+00BAD090	EVP_des_cfb1	32	0	0	0
+00BAD0A4	EVP_des_cfb8	32	0	0	0
+00BAD3A0	EVP_idea_cbc	63	1	0	0
+00BAD3B0	EVP_idea_cfb64	32	0	0	0
+00BAD3C4	EVP_idea_ofb	32	0	0	0
+00BAD3D8	EVP_idea_ecb	32	0	0	0
+00BAD998	EVP_des_ede_cbc	32	0	0	0
+00BAD9A8	EVP_des_ede_cfb64	32	0	0	0
+00BAD9BC	EVP_des_ede_ofb	32	0	0	0
+00BAD9E4	EVP_des_ede3_cbc	63	1	0	0
+00BAD9F8	EVP_des_ede3_cfb64	32	0	0	0
+00BADA0C	EVP_des_ede3_ofb	32	0	0	0
+00BADA34	EVP_des_ede3_cfb1	32	0	0	0
+00BADA48	EVP_des_ede3_cfb8	32	0	0	0
+00BADA5C	EVP_des_ede	32	0	0	0
+00BADA70	EVP_des_ede3	32	0	0	0
+00BAE574	EVP_camellia_128_cbc	63	1	0	0
+00BAE584	EVP_camellia_128_cfb128	32	0	0	0
+00BAE598	EVP_camellia_128_ofb	32	0	0	0
+00BAE5AC	EVP_camellia_128_ecb	32	0	0	0
+00BAE5C0	EVP_camellia_192_cbc	32	0	0	0
+00BAE5D4	EVP_camellia_192_cfb128	32	0	0	0
+00BAE5E8	EVP_camellia_192_ofb	32	0	0	0
+00BAE5FC	EVP_camellia_192_ecb	32	0	0	0
+00BAE610	EVP_camellia_256_cbc	63	1	0	0
+00BAE624	EVP_camellia_256_cfb128	32	0	0	0
+00BAE638	EVP_camellia_256_ofb	32	0	0	0
+00BAE64C	EVP_camellia_256_ecb	32	0	0	0
+00BAE660	EVP_camellia_128_cfb1	32	0	0	0
+00BAE674	EVP_camellia_192_cfb1	32	0	0	0
+00BAE688	EVP_camellia_256_cfb1	32	0	0	0
+00BAE69C	EVP_camellia_128_cfb8	32	0	0	0
+00BAE6B0	EVP_camellia_192_cfb8	32	0	0	0
+00BAE6C4	EVP_camellia_256_cfb8	32	0	0	0
+00BAE720	EVP_rc4	63	1	0	0
+00BAE730	EVP_rc4_40	32	0	0	0
+00BAFAB0	EVP_aes_128_cbc	63	1	0	0
+00BAFAC0	EVP_aes_128_ecb	32	0	0	0
+00BAFAD4	EVP_aes_128_ofb	32	0	0	0
+00BAFAE8	EVP_aes_128_cfb128	32	0	0	0
+00BAFAFC	EVP_aes_128_cfb1	32	0	0	0
+00BAFB10	EVP_aes_128_cfb8	32	0	0	0
+00BAFB24	EVP_aes_128_ctr	32	0	0	0
+00BAFB38	EVP_aes_192_cbc	63	1	0	0
+00BAFB4C	EVP_aes_192_ecb	32	0	0	0
+00BAFB60	EVP_aes_192_ofb	32	0	0	0
+00BAFB74	EVP_aes_192_cfb128	32	0	0	0
+00BAFB88	EVP_aes_192_cfb1	32	0	0	0
+00BAFB9C	EVP_aes_192_cfb8	32	0	0	0
+00BAFBB0	EVP_aes_192_ctr	32	0	0	0
+00BAFBC4	EVP_aes_256_cbc	63	1	0	0
+00BAFBD8	EVP_aes_256_ecb	32	0	0	0
+00BAFBEC	EVP_aes_256_ofb	32	0	0	0
+00BAFC00	EVP_aes_256_cfb128	32	0	0	0
+00BAFC14	EVP_aes_256_cfb1	32	0	0	0
+00BAFC28	EVP_aes_256_cfb8	32	0	0	0
+00BAFC3C	EVP_aes_256_ctr	32	0	0	0
+00BAFC50	EVP_aes_128_gcm	63	1	0	0
+00BAFC68	EVP_aes_192_gcm	32	0	0	0
+00BAFC80	EVP_aes_256_gcm	63	1	0	0
+00BAFC98	EVP_aes_128_xts	32	0	0	0
+00BAFCAC	EVP_aes_256_xts	32	0	0	0
+00BAFEB0	EVP_get_cipherbyname	403	13	0	0
+00BAFEB8	EVP_get_digestbyname	186	6	0	0
+00BB0248	EVP_seed_cbc	63	1	0	0
+00BB0258	EVP_seed_cfb128	32	0	0	0
+00BB026C	EVP_seed_ofb	32	0	0	0
+00BB0280	EVP_seed_ecb	32	0	0	0
+00BB0784	EVP_rc2_cbc	63	1	0	0
+00BB0794	EVP_rc2_cfb64	32	0	0	0
+00BB07A8	EVP_rc2_ofb	32	0	0	0
+00BB07BC	EVP_rc2_ecb	32	0	0	0
+00BB07D0	EVP_rc2_64_cbc	32	0	0	0
+00BB07E4	EVP_rc2_40_cbc	63	1	0	0
+00BB0818	EVP_md5	63	1	0	0
+00BB0898	EVP_sha1	63	1	0	0
+00BB08A8	EVP_sha224	63	1	0	0
+00BB08BC	EVP_sha256	63	1	0	0
+00BB08D0	EVP_sha384	63	1	0	0
+00BB08E4	EVP_sha512	63	1	0	0
+00BB0918	EVP_dss1	63	1	0	0
+00BB0948	EVP_ecdsa	63	1	0	0
+00BB1824	OPENSSL_add_all_algorithms_noconf	31	1	0	0
+00BB4144	EVP_PKEY_meth_set_init	93	3	0	0
+00BB414C	EVP_PKEY_meth_set_copy	93	3	0	0
+00BB4154	EVP_PKEY_meth_set_cleanup	93	3	0	0
+00BB415C	EVP_PKEY_meth_set_paramgen	62	2	0	0
+00BB4168	EVP_PKEY_meth_set_keygen	93	3	0	0
+00BB4174	EVP_PKEY_meth_set_sign	62	2	0	0
+00BB4180	EVP_PKEY_meth_set_verify	62	2	0	0
+00BB4198	EVP_PKEY_meth_set_signctx	31	1	0	0
+00BB41B0	EVP_PKEY_meth_set_encrypt	62	2	0	0
+00BB41BC	EVP_PKEY_meth_set_decrypt	62	2	0	0
+00BB41C8	EVP_PKEY_meth_set_derive	62	2	0	0
+00BB41D4	EVP_PKEY_meth_set_ctrl	93	3	0	0
+00BB56C4	EVP_aes_128_cbc_hmac_sha1	63	1	0	0
+00BB56CC	EVP_aes_256_cbc_hmac_sha1	63	1	0	0
+00BB5C7C	EVP_rc4_hmac_md5	32	0	0	0
+00BC31F8	EVP_PKEY_asn1_set_private	62	2	0	0
+00BC3234	EVP_PKEY_asn1_set_free	93	3	0	0
+00BC323C	EVP_PKEY_asn1_set_ctrl	93	3	0	0
+00BE3C1C	COMP_zlib	31	1	0	0
+00BF6A7C	ENGINE_load_padlock	31	1	0	0
+00C18AD0	RSA_PKCS1_SSLeay	217	7	0	0
+00C1D240	DSA_OpenSSL	155	5	0	0
+00C2299C	sub_C2299C	1500	0	0	0
+00C229A4	sub_C229A4	840	0	0	0
+00C25C60	EVP_bf_cbc	32	0	0	0
+00C25C70	EVP_bf_cfb64	32	0	0	0
+00C25C84	EVP_bf_ofb	32	0	0	0
+00C25C98	EVP_bf_ecb	32	0	0	0
+00C25DC8	EVP_desx_cbc	32	0	0	0
+00C26058	EVP_cast5_cbc	32	0	0	0
+00C26068	EVP_cast5_cfb64	32	0	0	0
+00C2607C	EVP_cast5_ofb	32	0	0	0
+00C26090	EVP_cast5_ecb	32	0	0	0
+00C260C4	EVP_md4	32	0	0	0
+00C260F4	EVP_sha	32	0	0	0
+00C26124	EVP_whirlpool	32	0	0	0
+00C26154	EVP_dss	32	0	0	0
+00C26184	EVP_mdc2	32	0	0	0
+00C261B4	EVP_ripemd160	32	0	0	0
+00C31AB8	X509_get_default_cert_area	62	2	0	0
+00C3424C	NCONF_free	31	1	0	0
+00C35FAC	NCONF_default	31	1	0	0
+00C6067C	sub_C6067C	955	0	0	0
+00C6193E	sub_C6193E	222	0	0	0
+00C84450	sub_C84450	222	0	0	0
+00C84466	sub_C84466	296	0	0	0
+00C856D0	sub_C856D0	74	0	0	0
+00C88F38	sub_C88F38	74	0	0	0
+00C8D8C2	sub_C8D8C2	252	0	0	0
+00C8DB74	sub_C8DB74	631	0	0	0
+00C8DBB4	sub_C8DBB4	138569	1829	0	0
+00C8DBC2	sub_C8DBC2	912	876	0	0
+00C8F01E	sub_C8F01E	74	0	0	0
+00C98F6E	new[]	2434	14	0	0
+00C98F9A	delete	400346	118461	0	0
+00C98FB2	delete[]	774	2	0	0
+00CD2EB2	sub_CD2EB2	5398	0	0	0
+00CD69A8	_aeabi_cdrcmple	19475	19424	0	0
+00CD7180	_aeabi_cfrcmple	870643	827259	0	0
+00CDA948	SdSoundSystem_GetSoundsCount	42965	6716	0	0
+00CDC604	akbSoundGetType	16	1	0	0
+00CDC7E8	akbSoundGetMaterialData	16	1	0	0
+00CDC838	akbSoundGetCategory	16	1	0	0
+00CDC84C	akbSoundGetInnerRange	16	1	0	0
+00CDC860	akbSoundGetOuterRange	16	1	0	0
+00CDC874	akbSoundGetInteriorFactor	16	1	0	0
+00CDC8A4	akbMaterialGetAudioFormat	16	1	0	0
+00CDC9CC	akbMaterialGetChannel	16056	11943	0	0
+00CDC9E8	akbMaterialGetSampleRate	16	1	0	0
+00CDCB70	akbMaterialGetLoopStart	1	1	0	0
+00CDCB8C	akbMaterialGetLoopEnd	32046	23880	0	0
+00CDD828	SQEX::SoundImpl::Initialize	15	0	0	0
+00CDD9B8	SQEX::SoundImpl::GetLocalState	5	2	0	0
+00CDEDE4	SQEX::SoundManager::GetCount	41643	0	0	0
+00CDF088	SQEX::SoundManager::Begin	14	3	0	0
+00CDF0A0	SQEX::SoundManager::End	35	8	0	0
+00CE0444	sub_CE0444	4054	0	0	0
+00CE04E8	SoundSystem ogg_realloc hook (sub_CE04E8)	550	41	0	0
+00CE052C	SoundSystem ogg_calloc hook (sub_CE052C)	22284	0	0	0
+00CE0570	SoundSystem ogg_malloc hook (sub_CE0570)	60532	162	0	0
+00CE05B4	SoundSystem::Initialize	27	2	0	0
+00CE08F4	SoundSystem::IsSuspended	134	0	0	0
+00CE0A20	SoundSystem::CreateSound	63	15	0	0
+00CE0B38	SoundSystem::Update	99967	73954	30	0
+00CE1314	SoundSystem::GetSoundLimit	134	0	0	0
+00CE1324	SoundSystem::GetSoundCount	183695	142786	0	0
+00CE1328	Sound::Sound()	126	30	0	0
+00CE1334	Sound::Sound(int)	199	77	0	0
+00CE133C	Sound::Play	76	40	0	0
+00CE1368	Sound::Stop	2	1	0	0
+00CE1390	Sound::PauseOn	3	0	0	0
+00CE13E0	Sound::SetVolume	152	80	0	0
+00CE14FC	Sound::GetStatus	46548	44659	0	0
+00CE234C	SQEX::Thread::_Run	22	0	0	0
+00CE2370	SQEX::Thread::Thread [base constructor]	39	39	0	0
+00CE2420	SQEX::Timer::Initialize	13	1	0	0
+00CE2524	SQEX::Voice::IsFinished	6219	2348	0	0
+00CE25D0	SQEX::Voice::SetVolume	1265	28	0	0
+00CE25E8	SQEX::Voice::SetPitch	11	3	0	0
+00CE2600	SQEX::Voice::SetPan	11	3	0	0
+00CE2648	SQEX::Voice::Update	6215	2346	0	0
+00CE2678	SQEX::Voice::~Voice [deleting destructor]	4	2	0	0
+00CE2A38	thunk to SQEX::Voice::OnBufferEnd	2070	2067	0	0
+00CE2A58	SQEX::Transfer::IsFinished	6226	2087	0	0
+00CE2DEC	SQEX::TransferOggVorbis::ov_tell_callback	12	3	0	0
+00CE2E40	SQEX::TransferOggVorbis::~TransferOggVorbis [deleting destructor]	6	0	0	0
+00CE4378	SQEX::Memory::Initialize	24	2	0	0
+00CE43B4	SQEX::Memory::Malloc	6142	1394	0	0
+00CE43B8	SQEX::Memory::Calloc	2172	498	0	0
+00CE43BC	SQEX::Memory::Realloc	65	13	0	0
+00CE43C0	SQEX::Memory::Free	4999	525	0	0
+00CE5E30	SQEX::DriverConfig::~DriverConfig [base destructor]	12	1	0	0
+00CE6C60	SQEX::CoreSystem::GetOutputSampleRate	5823	5803	0	0
+00CE6C74	SQEX::CoreSystem::GetOutputChannels	5826	5800	0	0
+00CE6CF8	SQEX::CoreSystem::GetMasterVolume	23072	23072	0	0
+00CE763C	SQEX::CoreSource::GetQueueBufferCount	8	4	0	0
+00CE76C8	SQEX::CoreSource::~CoreSource [deleting destructor]	4	4	0	0
+00CE8A2C	CoreAudioOutUpdate	64832	2712	0	0
+00CE9404	SQEX::BankImpl::Initialize	46	0	0	0
+00CE9D30	SQEX::OnMemoryBank::Initialize	42	4	0	0
+00CEAB3C	vorbis_comment_init	18	0	0	0
+00CED6E4	vorbis_synthesis	6102	1911	0	0
+00CF2254	ogg_page_version	6110	1913	0	0
+00CF2260	ogg_page_continued	6110	1913	0	0
+00CF2270	ogg_page_bos	6146	1913	0	0
+00CF2280	ogg_page_eos	6128	1913	0	0
+00CF43FC	SQEX::DynamicValue::DynamicValue [base constructor]	120	37	0	0
+00CF4490	SQEX::DynamicValue::NeedUpdate	117939	21505	0	0
+00CF4500	SQEX::OnMemorySound::GetType	17	5	0	0
+00CF4508	SQEX::OnMemorySound::GetData	1439	57	0	0
+00CF4550	SQEX::OnMemorySound::IsReadyForPlay	13	3	0	0
+00CF4564	SQEX::OnMemorySound::Initialize	12	3	0	0
+00CF67D4	sub_CF67D4	5124	0	0	0

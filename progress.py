@@ -7,8 +7,11 @@ python recomp/progress.py [--dry-run]
 - Lifted: analysed functions (out/analysis.json) the lifter translates to C. Runs the lifter over every
   function without compiling (about a minute). Also reports how many run in game (out/coverage.json) and the
   native instruction share of the last profiled hybrid run (out/lift/profile.json), when present.
-- Rewritten, 1:1 binary match, Recompiled: no tool measures these yet. They are read from progress.json
-  ({"rewritten": n, "matching": n, "recompiled": n}, counts of functions) when it exists, else 0.
+- Rewritten: functions registered in rewrite/src (RW_FUNCTION). Run in game / Verified: the M3 verifier's results
+  (rewrite/status.tsv: rewritten functions called while verifying; rewrite/verified.txt: those that matched the
+  lifted original, after `rewrite/tools/merge_stats.py`).
+- 1:1 binary match, Recompiled: read from progress.json ({"matching": n, "recompiled": n}) when it exists, else 0
+  (Recompiled defaults to the full lift once the native host exists).
 """
 import glob
 import json
@@ -73,6 +76,21 @@ def native_share():
     return json.loads(prof.read_text()).get("native_share")
 
 
+def rewritten_count():
+    pat = re.compile(r"^\s*RW_FUNCTION(?:_NOVERIFY)?\(\s*(0x[0-9A-Fa-f]+)", re.M)
+    addrs = set()
+    for f in (HERE / "rewrite" / "src").rglob("*.cpp"):
+        addrs.update(int(a, 16) & ~1 for a in pat.findall(f.read_text(encoding="utf-8", errors="replace")))
+    return len(addrs)
+
+
+def verifier_counts():
+    status, verified = HERE / "rewrite" / "status.tsv", HERE / "rewrite" / "verified.txt"
+    ran = max(0, len(status.read_text(encoding="utf-8").splitlines()) - 1) if status.exists() else 0
+    ok = len([l for l in verified.read_text().splitlines() if l.strip()]) if verified.exists() else 0
+    return ran, ok
+
+
 def bar(pct):
     n = round(pct / 5)
     return "█" * n + "░" * (20 - n)
@@ -84,7 +102,9 @@ def main():
     game = in_game()
     share = native_share()
     manual = json.loads(MANUAL.read_text()) if MANUAL.exists() else {}
-    rewritten, matching, recompiled = (manual.get(k, 0) for k in ("rewritten", "matching", "recompiled"))
+    matching, recompiled = (manual.get(k, 0) for k in ("matching", "recompiled"))
+    rewritten = rewritten_count()
+    ran, verified = verifier_counts()
     # the native host links the full lift: every function in it runs natively, with no emulator
     full = HERE / "out" / "lift_all" / "lifted.json"
     if not recompiled and (HERE / "out" / "host" / "khux.exe").exists() and full.exists():
@@ -102,6 +122,12 @@ def main():
         ("Rewritten", 100 * rewritten / lift_total,
          "Readable, maintainable source (named types and variables, no register-level code)."
          + (f" {rewritten:,} functions." if rewritten else " Not started.")),
+        ("Run in game", 100 * ran / lift_total,
+         f"Rewritten functions the game has called while the M3 verifier compared them with the lifted original "
+         f"({ran:,})."),
+        ("Verified", 100 * verified / lift_total,
+         f"Rewritten functions whose every checked call matched the lifted original ({verified:,}); normal play "
+         "installs only these."),
         ("1:1 binary match", 100 * matching / lift_total,
          "Source that rebuilds the original ARM binary byte for byte (a matching decompilation)."
          + (f" {matching:,} functions." if matching else " Not started.")),

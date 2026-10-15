@@ -1,0 +1,9 @@
+# Functions whose verifier mismatches are known and harmless (reviewed by hand). One per line: ADDR reason.
+# merge_stats.py counts them as verified when they have verified calls.
+004A41CC StageSupportList::SupportUser::init: copies never-initialised stack bytes (UserMedal::Medal pad_44, unused userSkillIds) into the record; never read
+004A457C StageSupportList::parse: the stale bytes of SupportUser::init
+004A8040 PartyMemberList::parse: the stale bytes of SupportUser::init (members are support users)
+00CE0B38 SoundSystem::Update: runs on the sound thread; the main thread changes sound state during the shadow run (~0.2% of calls differ)
+005BF784 audio::Layer::playSE: the queued StartParameter's 3 padding bytes after the paused flag are stale stack contents (differ with the frame); never read
+008941C8 cocos2d::Node::addChild: reaches playSE through the virtual addChild (the same padding bytes)
+005BF66C audio::Manager::updateQueue: the audio thread's guest stack (0x202C47xx, heap) changes during the shadow run (stack canary C0FFEE00 there); ~0.05% of calls
