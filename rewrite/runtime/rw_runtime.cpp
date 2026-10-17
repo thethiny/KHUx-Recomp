@@ -48,12 +48,15 @@ struct RwHost {
                                  // 7 / 8: park the main thread for a shadow run on another thread (7: 0 = no)
     void (*debug)(char *out, int cap);   // a summary of the last shadow run's imports (mismatch reports)
     uint32_t ret_magic;                  // lr of a call made by the host itself (thread entries, callbacks)
+    GTrack *gtrack;                      // rt.h: stale stack loads during shadow runs (shared with lift.dll)
 };
 }
-#define RW_HOST_VERSION 7
+#define RW_HOST_VERSION 8
 
 // rt.h wlog: a full store log stops logging and the run goes on for real (the verifier keeps it)
 extern "C" EXPORT int rt_log_full_continue = 1;
+// rt.h GTrack: the host's tracker (the rewrite's own stores feed it too)
+extern "C" EXPORT GTrack *rt_gtrack = nullptr;
 
 namespace rw {
 
@@ -79,6 +82,7 @@ static std::vector<Bound> bound;
 
 struct Stats {
     std::atomic<uint64_t> calls{0}, verified{0}, mismatches{0}, unverifiable{0};
+    std::atomic<uint64_t> stale_words{0};   // differing words accepted as stale stack bytes (rt.h GTrack)
     std::atomic<bool> too_big{false};   // a shadow run filled the store log: later calls run lifted, unshadowed
 };
 static std::vector<Stats> *stats;
@@ -157,6 +161,45 @@ static std::map<uint32_t, uint8_t> stored(const CPU *c, uint32_t sp) {
         }
     }
     return out;
+}
+
+static uint32_t cur32(const CPU *c, uint32_t a) { uint32_t v; std::memcpy(&v, c->mem + a, 4); return v; }
+
+// ---- stale stack bytes (rt.h GTrack): the values each run loaded from stack words no live frame had stored
+static void gt_begin(uint32_t sp) {
+    GTrack *g = rt_gtrack;
+    if (!g) return;
+    g->hi = sp;
+    g->lo = sp - GT_WINDOW;
+    g->clock = 0;
+    g->nret = 0;
+    g->overflow = 0;
+    g->has_zero = 0;
+    std::memset(g->wtime, 0, GT_WINDOW);
+    std::memset(g->vals, 0, GT_VALS * 4);
+    g->on = 1;
+}
+static void gt_end() { if (rt_gtrack) rt_gtrack->on = 0; }
+static thread_local std::vector<uint32_t> gt_vals_l;       // the lifted run's set (GTrack.vals layout)
+static thread_local bool gt_zero_l = false, gt_valid_l = false;
+static void gt_snapshot() {
+    GTrack *g = rt_gtrack;
+    gt_valid_l = g && !g->overflow;
+    if (!gt_valid_l) return;
+    gt_vals_l.assign(g->vals, g->vals + GT_VALS);
+    gt_zero_l = g->has_zero != 0;
+}
+// a differing word is garbage on both sides: the lifted value and the rewrite's were both loaded from stale words
+// (off unless KHUX_RW_STALE=1: experimental - the rewrite side cannot see stale loads made by rewritten C++)
+static bool stale_pair(uint32_t lifted, uint32_t rewrite) {
+    static const bool enabled = getenv("KHUX_RW_STALE") && strcmp(getenv("KHUX_RW_STALE"), "0") != 0;
+    if (!enabled) return false;
+    GTrack *g = rt_gtrack;
+    if (!g || !gt_valid_l || g->overflow) return false;
+    GTrack l = *g;
+    l.vals = gt_vals_l.data();
+    l.has_zero = gt_zero_l;
+    return gt_has(&l, lifted) && gt_has(g, rewrite);
 }
 
 static void run_lifted(CPU *c, int i) {
@@ -362,6 +405,7 @@ static void verify(CPU *c, int i) {
     effect_handoff = false;
     phase = Phase::Record;
     c->logging = 1; c->wn = 0; c->wfull = 0;
+    gt_begin(sp);
     lifted_run = true;
     where_fn = e.name; where_side = "lifted";
     nested.clear();
@@ -377,6 +421,7 @@ static void verify(CPU *c, int i) {
         if (full_l && !st.too_big.exchange(true))
             logf("RW LOG FULL %s @%08X: kept as the real call; not shadowed from now on", e.name, e.addr);
         c->logging = 0;
+        gt_end();
         st.unverifiable++;
         where_fn = nullptr;
         H->shadow(2);
@@ -413,6 +458,12 @@ static void verify(CPU *c, int i) {
     };
     static thread_local std::string trace_l, trace_r;
     heap_trace(trace_l);
+    // KHUX_RW_STOREPC=1: keep the lifted run's store log, so a mismatch report can name the storing instructions
+    static const bool keep_pcs = getenv("KHUX_RW_STOREPC") != nullptr;
+    static thread_local std::vector<WLog> log_l;
+    if (keep_pcs) log_l.assign(c->wlog, c->wlog + (c->wn < c->wcap ? c->wn : c->wcap));
+    gt_snapshot();                                        // the lifted run's stale values; the rewrite run's next
+    gt_begin(sp);
     peek(1);
     H->undo(c);
     peek(2);
@@ -428,6 +479,7 @@ static void verify(CPU *c, int i) {
     if (selftest) { lifted_run = true; run_lifted(c, i); lifted_run = false; }
     else run_rewrite(c, i);
     phase = Phase::Off;
+    if (rt_gtrack) rt_gtrack->on = 0;
     const bool effects_ok = !effect_diverged && effect_pos == effect_calls.size() && !H->shadow(3);
     const uint32_t heap_r = *reinterpret_cast<const uint32_t *>(c->mem + 0x20000010);
     heap_trace(trace_r);
@@ -469,6 +521,14 @@ static void verify(CPU *c, int i) {
             if (r == kv.second) continue;
             uint32_t wl, wr, a = kv.first & ~3u;
             if (word(mem_l, a, wl) && word(mem_r, a, wr) && on_stack(wl) && on_stack(wr)) continue;
+            // both runs stored a value read from stale stack bytes (rt.h GTrack): garbage either way
+            if (word(mem_l, a, wl) && stale_pair(wl, cur32(c, a))) {
+                st.stale_words++;
+                if (st.stale_words <= 2)
+                    logf("RW STALE %s @%08X: word %08X lifted %08X, rewrite %08X (both from stale stack bytes)",
+                         e.name, e.addr, a, wl, cur32(c, a));
+                continue;
+            }
             same = false;
             break;
         }
@@ -512,6 +572,44 @@ static void verify(CPU *c, int i) {
             H->debug(dbg, sizeof dbg);
             logf("    heap %08X -> lifted %08X, rewrite %08X; effects %zu/%zu; %s", heap0, heap_l, heap_r, effect_pos,
                  effect_calls.size(), dbg);
+            {   // stale stack tracking (rt.h GTrack): the sets, and the first differing word against them
+                size_t nl = 0, nr = 0;
+                for (uint32_t v : gt_vals_l) nl += v != 0;
+                if (rt_gtrack) for (uint32_t k = 0; k < GT_VALS; k++) nr += rt_gtrack->vals[k] != 0;
+                std::string probe;
+                for (auto &kv : mem_l) {
+                    auto it = mem_r.find(kv.first);
+                    if (it != mem_r.end() && it->second == kv.second) continue;
+                    uint32_t a = kv.first & ~3u, wl = 0;
+                    for (uint32_t b = 0; b < 4; b++) { auto j = mem_l.find(a + b); wl |= uint32_t(j != mem_l.end() ? j->second : 0) << (8 * b); }
+                    uint32_t wr = cur32(c, a);
+                    GTrack l = rt_gtrack ? *rt_gtrack : GTrack{};
+                    l.vals = gt_vals_l.data(); l.has_zero = gt_zero_l;
+                    char b[160];
+                    snprintf(b, sizeof b, "; word %08X lifted %08X (stale: %d) rewrite %08X (stale: %d)", a, wl,
+                             gt_valid_l && gt_has(&l, wl), wr, rt_gtrack && gt_has(rt_gtrack, wr));
+                    probe = b;
+                    break;
+                }
+                logf("    stale values: lifted %zu%s%s, rewrite %zu%s, returns %u%s", nl, gt_zero_l ? " +0" : "",
+                     gt_valid_l ? "" : " (overflow)", nr, rt_gtrack && rt_gtrack->has_zero ? " +0" : "",
+                     rt_gtrack ? rt_gtrack->nret : 0, probe.c_str());
+            }
+            if (keep_pcs) {   // the last store to each of the first differing words, in each run: guest pc
+                auto last_pc = [](const WLog *w, size_t n, uint32_t a) -> uint32_t {
+                    for (size_t k = n; k-- > 0;) if (a >= w[k].addr && a < w[k].addr + w[k].size) return w[k].old_hi;
+                    return 0;
+                };
+                int shown_pc = 0;
+                for (auto &kv : mem_l) {
+                    auto it = mem_r.find(kv.first);
+                    if (it != mem_r.end() && it->second == kv.second) continue;
+                    logf("    store pc %08X: lifted %08X, rewrite %08X", kv.first,
+                         last_pc(log_l.data(), log_l.size(), kv.first),
+                         last_pc(c->wlog, c->wn < c->wcap ? c->wn : c->wcap, kv.first));
+                    if (++shown_pc >= 4) break;
+                }
+            }
             logf("    heap stores lifted:%s", trace_l.c_str());
             logf("    heap stores rewrite:%s", trace_r.c_str());
             int shown = 0;
@@ -587,6 +685,7 @@ extern "C" {
 __declspec(dllexport) int rw_init(const RwHost *host) {
     if (!host || host->version != RW_HOST_VERSION) return -1;
     rw::H = host;
+    rt_gtrack = host->gtrack;
     if (host->verify) rw::add_effects();             // effect boundaries matter only in shadow runs
     int n = int(rw::entries().size());
     rw::bound.assign(n, rw::Bound{});

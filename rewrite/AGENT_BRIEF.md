@@ -88,6 +88,14 @@ Walk the lifted C top to bottom against your C++ and tick off: (a) every store -
 value, order; (b) every call - target, r0-r3 at that instruction and the stack words for arguments 5+ (register
 leftovers included); (c) every branch - signed vs unsigned (bge/blt vs bhs/blo), flags from ADDS/SUBS, byte vs word
 loads, lsr vs asr; (d) the return registers - void when r0 is only a leftover, r0:r1 for 64-bit, tail calls
-(`b <fn>`) return the callee's result. Frames: locals whose address escapes or stale stack bytes that get copied
-need the original frame (`guest::Frame` + `rw::call_exact`). Virtual calls stay virtual; direct `bl` stays direct.
+(`b <fn>`) return the callee's result. Frames: a local whose address goes to a guest function lives in a
+`guest::Frame` big enough for everything you put in it. Virtual calls stay virtual; direct `bl` stays direct.
+Constants: multi-byte magic values are little-endian words (`movw r1, #0x4b41; movt r1, #0x2042` = "AKB " =
+0x20424B41) - copy the value from the instructions, never re-derive it from the text.
+
+**Never reproduce garbage.** The original sometimes copies stack bytes it never set (a struct with unset fields, a
+short std::string's bytes past its terminator) into memory that outlives the call. Do not mimic frame sizes, pushes
+or call depths to make those bytes match: write the plain C++ and say in your report that the original copies
+uninitialised bytes there. Such differences are reviewed and listed in `accepted.txt` (bytes nobody reads), never
+"fixed" in the code - the rewrite is the readable version of the game, not a copy of its stack.
 Soft-float results must be bit-identical. Report anything you were unsure of, per address.

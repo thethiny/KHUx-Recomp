@@ -274,13 +274,13 @@ uint32_t SupportCharacterScrollView::createRow(SupportCharacterScrollView *self,
 }
 
 // ---------------------------------------------------------------------------------------------------------------
-// Refill a row widget with the support user at `index`. The original keeps a 0x330 byte frame with a 0x128 byte
+// Refill a row widget with the support user at `index`. The original keeps a 0x530 byte frame with a 0x128 byte
 // SupportUser copy in it (read from the support list SafeBuffer) and a std::function lambda that captures a copy
 // of that struct; the frame is reproduced exactly (the lambda also copies one stale stack word).
 uint32_t SupportCharacterScrollView::changeRow(SupportCharacterScrollView *self, uint32_t widget, uint32_t index,
                                                uint32_t /*unused*/) {
     const Addr me = rw::guest_addr(self);
-    guest::Frame F(0x330);
+    guest::Frame F(0x530);                  // push {r4-r7, lr} + sub sp, #0x51C
     auto fa = [&](uint32_t off) { return F.addr(off); };
     auto fw = [&](uint32_t off) -> uint32_t & { return *F.at<uint32_t>(off); };
     const Addr S = fa(0x2C0);               // SupportUser copy

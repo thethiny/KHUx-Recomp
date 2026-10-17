@@ -7,3 +7,8 @@
 005BF784 audio::Layer::playSE: the queued StartParameter's 3 padding bytes after the paused flag are stale stack contents (differ with the frame); never read
 008941C8 cocos2d::Node::addChild: reaches playSE through the virtual addChild (the same padding bytes)
 005BF66C audio::Manager::updateQueue: the audio thread's guest stack (0x202C47xx, heap) changes during the shadow run (stack canary C0FFEE00 there); ~0.05% of calls
+00CDACAC SdSoundSystem_SoundCtrl_StartFadeIn: Sound::SetVolume / Play build a 40-byte SQEX::ACTION on their stack and set only type, handle and 2 parameters; AddAction copies all of it into the action queue, so the last 6 words are stale stack bytes (differ with the frames); ActionManager::Update reads at most a1/a2 for these types
+00CDAD4C SdSoundSystem_SoundCtrl_Stop: the stale words of the queued Sound::Stop ACTION (see StartFadeIn); Stop reads only a1
+00CDA880 SdSoundSystem_BankCtrl_StopSounds: the stale words of the queued Sound::Stop ACTIONs (see StartFadeIn)
+00491360 LWFUtil::preloadResources: std::map<std::string,int>::__construct_node_with_key (0x804C08) copies a short key string's whole 12-byte buffer; the bytes after its terminator are stale stack bytes (e.g. a BGAD header bg::Archive::getData read into its frame); never read
+005D521C LWFNodeGroup::preloadResources: calls LWFUtil::preloadResources (the same stale short-string bytes)

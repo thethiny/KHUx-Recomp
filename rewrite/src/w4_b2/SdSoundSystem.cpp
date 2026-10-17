@@ -198,7 +198,7 @@ RW_FUNCTION(0xCDADB0, "SdSoundSystem_SoundCtrl_IsExist", SdSoundSystem::soundIsE
 struct Akb {
     static uint32_t isAkb2(uint32_t p) { return rw::call(0xCDC360, {p}); }
     static uint32_t isAkb1(uint32_t p) {
-        if (ld32(p) != 0x2042414B) return 0;  // "AKB "
+        if (ld32(p) != 0x20424B41) return 0;  // "AKB " (little endian)
         uint32_t ver = ld16(p + 4);
         if (ver > 3) return 0;
         return ld16(p + 6) == ld16(0xF46A90 + ver * 2) ? 1 : 0;  // the header size of that version
