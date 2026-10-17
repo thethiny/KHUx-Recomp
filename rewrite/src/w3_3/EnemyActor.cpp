@@ -1085,7 +1085,7 @@ RW_FUNCTION(0x74C41C, "EnemyActor::preloadResources", EnemyActor::preloadResourc
 
 void EnemyActor::deploy(EnemyActor *self, uint32_t show) {
     if (self->showEffect) {
-        if ((show & 0xFF) == 1) {
+        if (show == 1) {
             self->showState = 1;
             rw::call(g::ShowEffect_show, {self->showEffect});
         } else {
@@ -1093,7 +1093,11 @@ void EnemyActor::deploy(EnemyActor *self, uint32_t show) {
             rw::call(g::ShowEffect_hide, {self->showEffect});
         }
     }
-    if (self->hpBoard && !self->boardHidden) vc(self->hpBoard, SLOT_SET_VISIBLE, {self->hpBoard, show});
+    // the board shows only for a set symbol that is not kind 5 (Hex-Rays drops this condition)
+    if (self->hpBoard && !self->boardHidden) {
+        const bool visible = show == 1 && self->symbolSet != 0 && self->symbolKind != 5;
+        vc(self->hpBoard, SLOT_SET_VISIBLE, {self->hpBoard, visible ? 1u : 0u});
+    }
 }
 RW_FUNCTION(0x74C470, "EnemyActor::deploy", EnemyActor::deploy);
 

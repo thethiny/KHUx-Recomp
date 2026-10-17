@@ -444,6 +444,11 @@ static void i_time(CPU *c) {
 }
 static void i_gettimeofday(CPU *c) {
     double t = now_real();
+    static int time_log = -1;               /* KHUX_TIME_LOG=1: every call, with the shadow state (debugging) */
+    if (time_log < 0) time_log = getenv("KHUX_TIME_LOG") != NULL;
+    if (time_log)
+        hlog("gettimeofday thread %lu shadow %d -> %.6f (lr %08X lpc %08X)", (unsigned long)GetCurrentThreadId(),
+             shadow_on, t, c->r[14], c->lpc);
     if (c->r[0]) {
         gw32(c->r[0], (uint32_t)(int64_t)t);
         gw32(c->r[0] + 4, (uint32_t)((t - floor(t)) * 1e6));

@@ -24,3 +24,21 @@
 005BF138 audio::Manager::unloadAll: the only differing words are on the audio thread's guest stack (0x202C49C8), as LWFNodeGroup::update
 00531D3E ImageButton::init::$_2 operator() (onTouchEnded): plays a SE through audio::Layer::playSE (the StartParameter padding bytes at 0x5BF978)
 00492928 TextData::format: TextFormat::execute keeps pointers to its own stack buffers in a temporary heap vector (pc 0x493190); the rewrite's frame differs, so those stack addresses differ; the vector is freed before the call returns and nobody reads them
+00866CF8 cocos2d::CallFunc::update: a hub (runs every scheduled callback); its differing words are all known stale bytes of callees: playSE's StartParameter padding (0x5BF978), the audio thread's guest stack (0x202C4xxx), and SupportCharacterScrollView::changeRow's medal-touch lambda, whose capture copies the uninitialised stack word between `this` and the SupportUser copy (memcpy at 0x50405C, clone at 0x50547E); nobody reads that word
+005FCDEC SceneActionMap::update: plays SEs through audio::Layer::playSE (the StartParameter padding bytes at 0x5BF978)
+005D8FE0 ShowEffect enterFrame lambda: plays a SE through audio::Layer::playSE (the StartParameter padding bytes at 0x5BF978)
+00571D40 AdvStageScrollView::registItemTouchEvent::$_20 operator(): plays a SE through audio::Layer::playSE (the StartParameter padding bytes)
+005C0E08 AudioPlaySystemSEPopUp: audio::Layer::playSE's StartParameter padding bytes (0x5BF978)
+005C0FA0 AudioReplaceGameMainBGM(audio::ResourceID, int): the audio thread's guest stack (0x202C47xx) and SQEX::ActionManager's queue words (0x100E5DC, AddAction): the audio thread consumes the queue between the two runs, so the slot the action lands in moves by one
+00584B76 BattleResultDialog::openGettingItem $_14 operator(): the audio thread's guest stack (0x202C48xx, SQEX::ActionManager::AddAction)
+00584C22 BattleResultDialog::openGettingItem $_13 operator(): the audio thread's guest stack (0x202C48xx/49xx), as $_14
+00568864 FlashMovieView::~FlashMovieView [deleting destructor]: the audio thread's guest stack (0x202C4xxx), as LWFNodeGroup::update
+005BF0A0 audio::Manager::unload: the audio thread's guest stack (0x202C4xxx), as audio::Manager::unloadAll
+00597FC0 RaidBossLwfDialog::settingRaidLwf $_2 operator(): LWF::Data::Load's stale stack bytes (0x8023A4) and std::map<std::string,...> node construction copying a short key's whole buffer (0x804C36), as Avatar::changeMotion
+0060BD4A SceneRaidBattle::setRaidStage::$_5::operator(): std::vector<std::string> construction copies short strings' whole 12-byte buffers (the byte past the terminator is stale stack, 0x47B658 / 0x5E40A8), and a temporary std::map<std::string, std::function>'s freed nodes keep a pointer to its stack end node (0x530CCC; the frame sits elsewhere in the rewrite)
+004A4ED4 hole::network::api::StageClear::parse: UserKeyblade::parse copies each Keyblade record from the stack into its SafeBuffer whole, padding included (+0x14, the 3 bytes after isFavorite) and the deckMedals entries past deckCount, which Keyblade::init never sets: stale stack bytes either way (lifted a return address, rewrite the shadow sentinel)
+004A58A8 hole::network::api::RaidClear::parse: UserKeyblade::parse's unset Keyblade bytes (padding, deckMedals past deckCount), as StageClear::parse
+004A325C hole::network::api::RaidReward151101::parse: UserKeyblade::parse's unset Keyblade bytes, as StageClear::parse
+0058362C BattleResultDialog::playLevelUpAnimation: plays a SE through audio::Layer::playSE (the StartParameter padding bytes at 0x5BF978)
+006F29B8 FlashDrama::update: SQEX::ActionManager's queue words (0x100E5DC, AddAction): the audio thread consumes the queue between the two runs, as AudioReplaceGameMainBGM
+00CD8FF0 SdSoundSystem_Initialize: its only differing word is LAST_TIME (0x100E618): the sound update thread the lifted run starts (pthread_create, replayed in the rewrite run) runs SoundSystem::Update unfrozen during the shadow run and stores the real Timer::GetTime() there, 1 ms after the frozen value both runs store (found with KHUX_TIME_LOG=1)
