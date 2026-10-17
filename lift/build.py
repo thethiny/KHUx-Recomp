@@ -8,6 +8,7 @@ Instructions the lifter cannot translate become escapes to the emulator (see lif
 rejects outright are listed in out/lift/unsupported.txt and stay emulated.
 """
 import argparse
+import os
 import hashlib
 import json
 import subprocess
@@ -166,6 +167,7 @@ EXPORT int rt_index(uint32_t target) {
 
 /* Coverage (KHUX_COVERAGE): the host may point rt_seen at lift_count bytes; every called function sets its byte. */
 EXPORT uint8_t *rt_seen;
+EXPORT GTrack *rt_gtrack;   /* rt.h: stale stack loads while the M3 verifier logs (set by the host) */
 
 static LiftFn lookup_hooked(CPU *c, uint32_t target) {
     int k = lookup_idx(target);
@@ -200,6 +202,7 @@ void rt_call(CPU *c, uint32_t target) {
             return;
         }
         f(c);
+        if (gt_active(c)) gt_return(c);
         if (!c->tail) return;
         target = c->pc;
     }
@@ -215,9 +218,9 @@ EXPORT void rt_undo(CPU *c) {
     uint32_t n = c->wn < c->wcap ? c->wn : c->wcap;
     while (n--) {
         WLog *w = &c->wlog[n];
-        if (w->size == 1) R8(w->addr) = (uint8_t)w->old_lo;
-        else if (w->size == 2) R16(w->addr) = (uint16_t)w->old_lo;
-        else R32(w->addr) = w->old_lo;
+        if (w->size == 1) M8(w->addr) = (uint8_t)w->old_lo;
+        else if (w->size == 2) M16(w->addr) = (uint16_t)w->old_lo;
+        else M32(w->addr) = w->old_lo;
     }
     c->wn = 0;
 }
@@ -250,6 +253,7 @@ EXPORT void rt_run(CPU *c, uint32_t target) {
             return;
         }
         f(c);
+        if (gt_active(c)) gt_return(c);
         if (!c->tail) return;
         target = c->pc;
     }
@@ -469,7 +473,7 @@ def main():
         return
 
     # everything recompiles when the shared header or the compiler flags change
-    flags = f'/nologo /O1 /MP /W2 /wd4102 /wd4101 /wd4146 /I "{HERE}"'
+    flags = f'/nologo /O1 /MP{max(2, (os.cpu_count() or 4) // 2)} /W2 /wd4102 /wd4101 /wd4146 /I "{HERE}"'
     stamp = OUT / "build_stamp.txt"
     want = hashlib.sha1(((HERE / "rt.h").read_text() + flags).encode()).hexdigest()
     if not stamp.exists() or stamp.read_text() != want:

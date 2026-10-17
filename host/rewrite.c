@@ -24,9 +24,12 @@ typedef struct RwHost {
     int (*shadow)(int phase);
     void (*debug)(char *out, int cap);
     uint32_t ret_magic;                                   /* lr of host -> guest calls */
+    GTrack *gtrack;                                       /* rt.h stale stack tracking, shared with lift.dll */
 } RwHost;
 
 static RwHost host;
+/* rt.h GTrack: the host's own guest stores (imports writing guest memory) feed the shared tracker too */
+EXPORT GTrack *rt_gtrack;
 static const char *(*rw_where_fn)(void);   /* crash reports: what the verifier is running */
 
 /* a prefix list from the environment: inline, or "@file" (one prefix per line, for long lists) */
@@ -109,7 +112,18 @@ void rewrite_load(const char *root) {
     snprintf(stats_path, sizeof(stats_path), "%s/%04d%02d%02d_%02d%02d%02d.tsv", stats_dir, t.wYear, t.wMonth,
              t.wDay, t.wHour, t.wMinute, t.wSecond);
     snprintf(verified_path, sizeof(verified_path), "%s/rewrite/verified.txt", root);
-    host.version = 7;
+    host.version = 8;
+    /* the stale stack tracker (rt.h GTrack): lift.dll's loads and stores feed it during shadow runs */
+    GTrack **gt_slot = (GTrack **)GetProcAddress(L.dll, "rt_gtrack");
+    if (!gt_slot) fatal("lift.dll has no rt_gtrack: rebuild it (lift/build.py --all)");
+    static GTrack gt;
+    gt.wtime = (uint32_t *)calloc(GT_WINDOW / 4, 4);
+    gt.ret_t = (uint32_t *)calloc(GT_RETS, 4);
+    gt.ret_sp = (uint32_t *)calloc(GT_RETS, 4);
+    gt.vals = (uint32_t *)calloc(GT_VALS, 4);
+    *gt_slot = &gt;
+    rt_gtrack = &gt;
+    host.gtrack = &gt;
     host.ret_magic = RET_MAGIC;
     host.debug = rw_debug;
     host.shadow = libc_shadow;

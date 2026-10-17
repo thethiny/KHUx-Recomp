@@ -77,11 +77,102 @@ void rt_vfp_load(CPU *c);
 
 /* ---------------------------------------------------------------- memory */
 #define HA(a) (c->mem + (uint32_t)(a))
-#define R8(a)  (*(uint8_t *)HA(a))
-#define R16(a) (*(uint16_t *)HA(a))
-#define R32(a) (*(uint32_t *)HA(a))
-#define RS8(a)  ((uint32_t)(int32_t)*(int8_t *)HA(a))
-#define RS16(a) ((uint32_t)(int32_t)*(int16_t *)HA(a))
+/* raw access (stores, the log, the runtime's own reads) */
+#define M8(a)  (*(uint8_t *)HA(a))
+#define M16(a) (*(uint16_t *)HA(a))
+#define M32(a) (*(uint32_t *)HA(a))
+
+/* ---------------------------------------------------------------- stale stack (M3 verifier)
+ * The verifier compares every byte a function stores outside its stack with what its rewrite stores. Compiled code
+ * sometimes copies stack bytes it never initialised into memory that outlives the call (a struct built on the stack
+ * with unset fields): those bytes are whatever an earlier, returned call left there (its pushes, its locals), so they
+ * differ with any other code that ran before - including a rewrite, whose frames and pushes differ. While a shadow
+ * run logs, GTrack follows the stack window below the run's entry sp: each word's last store (clock), and each
+ * return (the sp after it). A load from a word that was never stored in this run, or whose storing frame has since
+ * returned (a later return left sp above it), reads stale bytes: its value goes into `vals`. The verifier then
+ * accepts a differing word when both runs' values came from stale loads. */
+typedef struct GTrack {
+    uint32_t on;                      /* tracking this run */
+    uint32_t lo, hi;                  /* window [lo, hi): hi = the run's entry sp */
+    uint32_t clock;
+    uint32_t nret, overflow;          /* returns: a stack of (time, sp) with sp decreasing (dominated ones dropped) */
+    uint32_t *wtime;                  /* (hi - lo) / 4 words: time of the last store, 0 = not stored in this run */
+    uint32_t *ret_t, *ret_sp;         /* GT_RETS entries */
+    uint32_t *vals;                   /* GT_VALS-slot open hash of stale values (0 stored as GT_ZERO_KEY flag) */
+    uint32_t has_zero;
+} GTrack;
+#define GT_WINDOW 0x20000u
+#define GT_RETS 65536u
+#define GT_VALS 16384u
+/* the active tracker (lift.dll: the host sets it; rewrite.dll: its copy, from the host) */
+EXPORT extern GTrack *rt_gtrack;
+
+#ifdef _MSC_VER
+#define GT_COLD static __declspec(noinline)
+#else
+#define GT_COLD static __attribute__((noinline, unused))
+#endif
+/* (the tracking bodies are out of line: they only run while the verifier logs, and every load site stays small) */
+INLINE int gt_active(CPU *c) { return c->logging && rt_gtrack && rt_gtrack->on; }
+GT_COLD void gt_store(CPU *c, uint32_t a, uint32_t size) {
+    GTrack *g = rt_gtrack;
+    if (a - g->lo < g->hi - g->lo) {
+        g->wtime[(a - g->lo) >> 2] = ++g->clock;
+        uint32_t e = a + size - 1;
+        if (e - g->lo < g->hi - g->lo) g->wtime[(e - g->lo) >> 2] = g->clock;
+    }
+}
+/* a lifted call returned with sp: every word below sp is free again */
+GT_COLD void gt_return(CPU *c) {
+    GTrack *g = rt_gtrack;
+    uint32_t sp = c->r[13];
+    while (g->nret && g->ret_sp[g->nret - 1] <= sp) g->nret--;
+    if (g->nret >= GT_RETS) { g->overflow = 1; return; }
+    g->ret_t[g->nret] = ++g->clock;
+    g->ret_sp[g->nret] = sp;
+    g->nret++;
+}
+INLINE void gt_add(GTrack *g, uint32_t v) {
+    if (!v) { g->has_zero = 1; return; }
+    uint32_t h = (v * 2654435761u) & (GT_VALS - 1);
+    for (uint32_t k = 0; k < 64; k++, h = (h + 1) & (GT_VALS - 1)) {
+        if (g->vals[h] == v) return;
+        if (!g->vals[h]) { g->vals[h] = v; return; }
+    }
+}
+INLINE int gt_has(const GTrack *g, uint32_t v) {
+    if (!v) return (int)g->has_zero;
+    uint32_t h = (v * 2654435761u) & (GT_VALS - 1);
+    for (uint32_t k = 0; k < 64; k++, h = (h + 1) & (GT_VALS - 1)) {
+        if (g->vals[h] == v) return 1;
+        if (!g->vals[h]) return 0;
+    }
+    return 0;
+}
+/* a load of the word at a (aligned): stale when never stored in this run, or a return since its store left sp
+ * above it */
+GT_COLD void gt_load(CPU *c, uint32_t a) {
+    GTrack *g = rt_gtrack;
+    a &= ~3u;
+    if (a - g->lo >= g->hi - g->lo || g->overflow) return;
+    uint32_t t = g->wtime[(a - g->lo) >> 2];
+    int stale = t == 0;
+    if (!stale) {                       /* the first return after t has the highest sp of those after t */
+        uint32_t lo = 0, hi = g->nret;
+        while (lo < hi) { uint32_t m = (lo + hi) / 2; if (g->ret_t[m] > t) hi = m; else lo = m + 1; }
+        stale = lo < g->nret && g->ret_sp[lo] > a;
+    }
+    if (stale) gt_add(g, M32(a));
+}
+GT_COLD uint32_t LD32(CPU *c, uint32_t a) { if (rt_gtrack && rt_gtrack->on) gt_load(c, a); return M32(a); }
+GT_COLD uint32_t LD16(CPU *c, uint32_t a) { if (rt_gtrack && rt_gtrack->on) gt_load(c, a); return M16(a); }
+GT_COLD uint32_t LD8(CPU *c, uint32_t a)  { if (rt_gtrack && rt_gtrack->on) gt_load(c, a); return M8(a); }
+/* loads (lifted code) */
+#define R8(a)  (c->logging ? LD8(c, (uint32_t)(a)) : (uint32_t)M8(a))
+#define R16(a) (c->logging ? LD16(c, (uint32_t)(a)) : (uint32_t)M16(a))
+#define R32(a) (c->logging ? LD32(c, (uint32_t)(a)) : M32(a))
+#define RS8(a)  ((uint32_t)(int32_t)(int8_t)R8(a))
+#define RS16(a) ((uint32_t)(int32_t)(int16_t)R16(a))
 
 /* Record a store about to happen. When the log is full, wfull is set and logging stops: the store and the rest of
  * the run happen for real, unlogged, so the run cannot be undone any more and whoever logs keeps it as the real
@@ -97,8 +188,9 @@ INLINE int wlog(CPU *c, uint32_t a, uint32_t size) {
         WLog *w = &c->wlog[c->wn++];
         w->addr = a;
         w->size = size;
-        w->old_lo = size == 1 ? R8(a) : size == 2 ? R16(a) : R32(a);
+        w->old_lo = size == 1 ? M8(a) : size == 2 ? M16(a) : M32(a);
         w->old_hi = c->lpc;    /* guest pc of the store (diagnostics) */
+        if (rt_gtrack && rt_gtrack->on) gt_store(c, a, size);
         return 1;
     }
     c->wfull = 1;
@@ -107,9 +199,9 @@ INLINE int wlog(CPU *c, uint32_t a, uint32_t size) {
     return 1;
 }
 
-INLINE void W8(CPU *c, uint32_t a, uint32_t v)  { if (c->logging && !wlog(c, a, 1)) return; R8(a) = (uint8_t)v; }
-INLINE void W16(CPU *c, uint32_t a, uint32_t v) { if (c->logging && !wlog(c, a, 2)) return; R16(a) = (uint16_t)v; }
-INLINE void W32(CPU *c, uint32_t a, uint32_t v) { if (c->logging && !wlog(c, a, 4)) return; R32(a) = v; }
+INLINE void W8(CPU *c, uint32_t a, uint32_t v)  { if (c->logging && !wlog(c, a, 1)) return; M8(a) = (uint8_t)v; }
+INLINE void W16(CPU *c, uint32_t a, uint32_t v) { if (c->logging && !wlog(c, a, 2)) return; M16(a) = (uint16_t)v; }
+INLINE void W32(CPU *c, uint32_t a, uint32_t v) { if (c->logging && !wlog(c, a, 4)) return; M32(a) = v; }
 
 /* Make room in the store log for a block write of n bytes at a (4-byte entries, bytes for the tail).
  * When it does not fit: as in wlog (returns 0 when the write must be skipped). */
@@ -127,6 +219,7 @@ INLINE int LOGRANGE(CPU *c, uint32_t a, uint32_t n) {
     return 1;
 }
 INLINE void MEMMOVE(CPU *c, uint32_t d, uint32_t s, uint32_t n) {
+    if (n && gt_active(c)) for (uint32_t k = s & ~3u; k < s + n; k += 4) gt_load(c, k);
     if (n && LOGRANGE(c, d, n)) memmove(HA(d), HA(s), n);
 }
 INLINE void MEMSET(CPU *c, uint32_t d, uint32_t v, uint32_t n) {
