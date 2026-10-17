@@ -1602,8 +1602,8 @@ RW_FUNCTION(0x55694C, "thunk to ChatScrollView::~ChatScrollView [deleting destru
 
 // ChatScrollView::update
 // IDA: int __fastcall ChatScrollView::update(ChatScrollView *this, float a2)
-static uint32_t ChatScrollView_update_556C34(uint32_t self, uint32_t a1) {
-    return rw::call(0x4F5CFD, {self, a1});  // IScrollProtocol::update
+static void ChatScrollView_update_556C34(uint32_t self, uint32_t a1) {
+    const uint32_t r0 = rw::call(0x4F5CFD, {self, a1});  // IScrollProtocol::update
 }
 RW_FUNCTION(0x556C34, "ChatScrollView::update", ChatScrollView_update_556C34);
 
@@ -1671,8 +1671,8 @@ RW_FUNCTION(0x558BCC, "thunk to ChatScrollDelView::~ChatScrollDelView [deleting 
 
 // ChatScrollDelView::update
 // IDA: int __fastcall ChatScrollDelView::update(ChatScrollDelView *this, float a2)
-static uint32_t ChatScrollDelView_update_558EB4(uint32_t self, uint32_t a1) {
-    return rw::call(0x4F5CFD, {self, a1});  // IScrollProtocol::update
+static void ChatScrollDelView_update_558EB4(uint32_t self, uint32_t a1) {
+    const uint32_t r0 = rw::call(0x4F5CFD, {self, a1});  // IScrollProtocol::update
 }
 RW_FUNCTION(0x558EB4, "ChatScrollDelView::update", ChatScrollDelView_update_558EB4);
 
@@ -1754,8 +1754,8 @@ RW_FUNCTION(0x55AA14, "thunk to ChatBlockListScrollView::~ChatBlockListScrollVie
 
 // ChatBlockListScrollView::update
 // IDA: int __fastcall ChatBlockListScrollView::update(ChatBlockListScrollView *this, float a2)
-static uint32_t ChatBlockListScrollView_update_55AD04(uint32_t self, uint32_t a1) {
-    return rw::call(0x4F5CFD, {self, a1});  // IScrollProtocol::update
+static void ChatBlockListScrollView_update_55AD04(uint32_t self, uint32_t a1) {
+    const uint32_t r0 = rw::call(0x4F5CFD, {self, a1});  // IScrollProtocol::update
 }
 RW_FUNCTION(0x55AD04, "ChatBlockListScrollView::update", ChatBlockListScrollView_update_55AD04);
 
@@ -2680,9 +2680,9 @@ RW_FUNCTION(0x570A90, "AdvStageScrollView::resetScrollPosition", AdvStageScrollV
 
 // AdvStageScrollView::update
 // IDA: int __fastcall AdvStageScrollView::update(ImageDownloader **this, float a2)
-static uint32_t AdvStageScrollView_update_5710C0(uint32_t self, uint32_t a1) {
+static void AdvStageScrollView_update_5710C0(uint32_t self, uint32_t a1) {
     rw::call(0x59BFA1, {self, a1});  // BaseStageScrollView::update
-    return rw::call(0x5BD4D9, {rw::load<uint32_t>(self + 0x6B4u)});  // ImageDownloader::update
+    const uint32_t r2 = rw::call(0x5BD4D9, {rw::load<uint32_t>(self + 0x6B4u)});  // ImageDownloader::update
 }
 RW_FUNCTION(0x5710C0, "AdvStageScrollView::update", AdvStageScrollView_update_5710C0);
 

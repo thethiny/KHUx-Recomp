@@ -96,8 +96,8 @@ def main():
         if screen() in ("SceneActionMap", "SceneRaidBattle") + STORY_SCENES:
             print(f"round {r}: finishing the battle in progress", flush=True)
             if os.environ.get("KHUX_INSTAWIN") and screen() == "SceneActionMap":
-                from .cheat import kill            # a resumed quest: insta-win only covers fresh ones
-                print(f"  insta-win: enemies hit {kill()}", flush=True)
+                from .play_quest import instawin   # a resumed quest: the game's own stage finish
+                print(f"  insta-win: {instawin(120)}", flush=True)
             subprocess.run([sys.executable, "-u", "-m", "recomp.emu.auto_battle", limit])
         if not to_quest_select():
             print(f"round {r}: could not reach the quest screen (at {screen()})")

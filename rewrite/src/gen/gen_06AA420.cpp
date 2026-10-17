@@ -1448,13 +1448,14 @@ RW_FUNCTION(0x6BE258, "thunk to SceneSphereBoard::~SceneSphereBoard [deleting de
 
 // SceneSphereBoard::update
 // IDA: SphereUI *__fastcall SceneSphereBoard::update(SceneSphereBoard *this, float a2)
-static uint32_t SceneSphereBoard_update_6BF830(uint32_t self, uint32_t a1) {
+static void SceneSphereBoard_update_6BF830(uint32_t self, uint32_t a1) {
     const uint32_t v0 = rw::load<uint32_t>(self + 0x28Cu);
     const uint32_t v1 = uint32_t(rw::load<uint8_t>(v0 + 0x594u));
     if (v1 == 0u) {
-        return v0;
+        return;
     } else {
-        return rw::call(0x7941CD, {v0, a1, v1});  // SphereUI::update_status
+        const uint32_t r2 = rw::call(0x7941CD, {v0, a1, v1});  // SphereUI::update_status
+        return;
     }
 }
 RW_FUNCTION(0x6BF830, "SceneSphereBoard::update", SceneSphereBoard_update_6BF830);

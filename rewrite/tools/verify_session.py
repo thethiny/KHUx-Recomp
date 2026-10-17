@@ -2,8 +2,8 @@
 
 python recomp/rewrite/tools/verify_session.py [quests] [--fs fs2]
 
-Boots (KHUX_RW_VERIFY=1), clears the startup notices to MyPage, plays `quests` story quests in rush mode (battle
-code, results, quest select; default 2), closes the game and runs merge_stats.py. Needs the private server
+Boots (KHUX_RW_VERIFY=1), clears the startup notices to MyPage, plays `quests` story quests with rush +
+insta-win (battle load, win, results, quest select; default 2; the account is too far ahead to win real fights), closes the game and runs merge_stats.py. Needs the private server
 running. Prints the rewrite lines of the run log (mismatches, the per-function report).
 """
 import os
@@ -42,6 +42,10 @@ def main():
             s = screen()
             if s == "SceneMyPage" and not button():
                 break
+            if s == "SceneActionMap":                # a quest resumed after a killed session: win it
+                from recomp.emu.play_quest import instawin
+                os.environ["KHUX_INSTAWIN"] = "1"
+                instawin(120)
             b = button() or button(name="Button_Close")
             if b:
                 tap_w(b)
@@ -53,7 +57,7 @@ def main():
         if quests:
             try:
                 subprocess.run([sys.executable, "-u", "-m", "recomp.emu.campaign", str(quests), "300"],
-                               cwd=str(ROOT), env=dict(os.environ, KHUX_RUSH="1"), timeout=600 * quests)
+                               cwd=str(ROOT), env=dict(os.environ, KHUX_RUSH="1", KHUX_INSTAWIN="1"), timeout=600 * quests)
             except subprocess.TimeoutExpired:
                 print("campaign took too long; keeping the results so far")
         time.sleep(15)                               # one more report (every 1200 frames)

@@ -92,6 +92,17 @@ loads, lsr vs asr; (d) the return registers - void when r0 is only a leftover, r
 `guest::Frame` big enough for everything you put in it. Virtual calls stay virtual; direct `bl` stays direct.
 Constants: multi-byte magic values are little-endian words (`movw r1, #0x4b41; movt r1, #0x2042` = "AKB " =
 0x20424B41) - copy the value from the instructions, never re-derive it from the text.
+Three traps that crashed raids (2026-10-17):
+- **64-bit results IDA calls `int`:** if the callee leaves a result in r1 too (a double from `frexp` / libm, a
+  `long long`), the function that passes it on returns `uint64_t` via `rw::call64`. The verifier compares one
+  return word for a 32-bit rewrite, so only a nested caller breaks (printf's `%f` ran off the stack). Check the
+  callee's lifted C: a write to r1 just before its return means two words.
+- **Call the function, never its PLT stub,** when the PLT stub jumps into the game's own code (`__udivsi3` is
+  0xCD5DF9, not its stub 0x40E518): the host runs no stubs. Real imports (strcmp, roundf, ...) go through their
+  stub as usual. `tools/check_imports.py` lists PLT targets the host does not implement.
+- **Name shadowing in member functions:** a file-level constant (`V_setTouchEnabled = 0x29C`, the Widget slot) loses
+  to a base-class member of the same name (`IScrollProtocol::V_setTouchEnabled = 0x31C`) inside your class's member
+  functions. Give file-level constants names no base class uses.
 
 **Never reproduce garbage.** The original sometimes copies stack bytes it never set (a struct with unset fields, a
 short std::string's bytes past its terminator) into memory that outlives the call. Do not mimic frame sizes, pushes

@@ -4,7 +4,7 @@
 using namespace rba;
 
 namespace {
-constexpr uint32_t UDIVSI3 = 0x40E518;     // __udivsi3 (PLT), called like the original (division by zero included)
+constexpr uint32_t UDIVSI3 = 0xCD5DF9;     // __udivsi3 itself (not its PLT stub: the host runs no stubs), called like the original (division by zero included)
 // RaidStart (a SafeBuffer of 0xA8 bytes): part count at 40, then 20-byte part records from 44 (HP at +8)
 constexpr uint32_t RAIDSTART_PART_COUNT = 40;
 constexpr uint32_t RAIDSTART_PART_HP = 52;

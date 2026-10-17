@@ -3845,8 +3845,8 @@ RW_FUNCTION(0x503674, "thunk to SupportCharacterScrollView::~SupportCharacterScr
 
 // SupportCharacterScrollView::update
 // IDA: int __fastcall SupportCharacterScrollView::update(SupportCharacterScrollView *this, float a2)
-static uint32_t SupportCharacterScrollView_update_503B4C(uint32_t self, uint32_t a1) {
-    return rw::call(0x4F5CFD, {self, a1});  // IScrollProtocol::update
+static void SupportCharacterScrollView_update_503B4C(uint32_t self, uint32_t a1) {
+    const uint32_t r0 = rw::call(0x4F5CFD, {self, a1});  // IScrollProtocol::update
 }
 RW_FUNCTION(0x503B4C, "SupportCharacterScrollView::update", SupportCharacterScrollView_update_503B4C);
 

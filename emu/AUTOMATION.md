@@ -41,10 +41,10 @@ python -u -m recomp.emu.campaign 5 600
 
 - **`KHUX_INSTAWIN=1`** (exe only): when a *fresh* quest's map is in field mode, `play_quest.instawin()` calls the
   game's own `SceneActionMap::stageFinishNotification` (0x600EF0): finish animation, `/stage/clear` (106), results.
-  ~30–40 s per quest. The clear carries no loot; story progress and missions count. It does **not** fire in a fight
-  (stage mode 1) or on a quest resumed at boot — for those, `campaign` (with INSTAWIN set) and `cheat kill` call
-  `EnemyActor::addDamage(enemy, 10,000,000, &empty Burst)` on every `EnemyActor`: the current fight ends at once,
-  the other groups die as they are reached.
+  ~30–40 s per quest. The clear carries no loot; story progress and missions count. It waits for field mode, so it
+  also wins a quest resumed at boot (`campaign` and `rewrite/tools/verify_session.py` call it for those; verified
+  2026-10-17). In a fight it first defeats the map's enemies with `EnemyActor::addDamage(enemy, 10,000,000, &empty
+  Burst)` once field mode returns. `cheat kill` only ends the current fight - do not use it to win a quest.
 - **`KHUX_RUSH=1`**: `auto_battle` skips the regular enemies — warps next to the boss (the `EnemyActor` under
   `BossName_Panel`) or to the area gate — and keeps the special gauge and HP full
   (`SceneBattleBase::addPlayerCP` 0x5FAD2C with 1,000,000 = full; `addPlayerHP` 0x5FAC9C), using specials on every
@@ -52,8 +52,9 @@ python -u -m recomp.emu.campaign 5 600
 - Stage modes (`auto_battle.scene_mode(widgets)`): 1 battle, 2 field (walking the map), 3 interlude, 4 stage title,
   5 talk.
 
-If the user is playing by hand and asks for gauge / health / a win: `python -m recomp.emu.cheat gauge`,
-`... heal`, `... kill`.
+If the user is playing by hand and asks for gauge / health: `python -m recomp.emu.cheat gauge`, `... heal`. For
+a **win** call the game's own stage finish, not `cheat kill` (that only ends the current fight):
+`KHUX_INSTAWIN=1 PYTHONPATH=. python -c "from recomp.emu.play_quest import instawin; instawin(120)"`.
 
 ## 4. The control channel (`curl 127.0.0.1:8765/<endpoint>`)
 
@@ -77,5 +78,11 @@ The exe also prints `>>> screen` / `>>> api` lines into its log (`recomp/out/hos
   prefix per line) limit which rewrites are installed (the verifier's effect hooks always stay).
 - Results: `python recomp/rewrite/tools/merge_stats.py` → `rewrite/status.tsv`, `rewrite/verified.txt`
   (`--reset ADDR` after fixing a function). Mismatch reports are the `RW MISMATCH` blocks in the exe log.
-- A full verifying session: start the exe with `KHUX_RW_VERIFY=1`, `boot_to_title`, close the notice, then the
-  campaign with rush + insta-win as in section 3.
+- A full verifying session: `python recomp/rewrite/tools/verify_session.py [quests]` (boot, notices, campaign
+  rounds with rush + insta-win, merge). The account is far ahead (stage ~162) and too weak for real fights.
+- **A raid on demand** (raids are the server's call): from `server/`,
+  `python -c "from sqlalchemy.orm import sessionmaker; from src.models import get_engine; from src import raid as r;
+  db = sessionmaker(bind=get_engine('khux.db'))(); r.create(db, 7, 2300, 1000, 1); db.commit()"` spawns a Darkside
+  raid for user 7 (args: user, stage, raidSetting, level; Queen Bee 61710 / 15000 has no art in 1.0.1). Lower its
+  `hp` list (`r.load` / `r.save` on `r.own(db, 7)`) to reach the kill and the rewards list in one round. The quest
+  screen shows a new raid after its list refreshes (the campaign may play one story round first).

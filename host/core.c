@@ -8,7 +8,7 @@ static FILE *log_file;
 
 /* ---------------------------------------------------------------- logging */
 void hlog(const char *fmt, ...) {
-    char buf[4096];
+    char buf[16384];
     va_list ap;
     va_start(ap, fmt);
     vsnprintf(buf, sizeof(buf), fmt, ap);
@@ -33,9 +33,19 @@ const char *thread_label(void) {
 }
 
 const char *rewrite_where(void);
+int import_shadow_stats(int *recorded, int *replayed);
+int import_shadow_divergence(const char **got);
 void dump_cpu(CPU *c) {
     const char *w = rewrite_where();
     hlog("   logging=%u wn=%u%s%s", c->logging, c->wn, *w ? "; " : "", w);
+    if (*w) {                                   /* inside the verifier: where the import replay stands */
+        int rec, rep, div = import_shadow_stats(&rec, &rep);
+        const char *got = NULL;
+        int at = div ? import_shadow_divergence(&got) : 0;
+        hlog("   imports recorded %d replayed %d%s%s%s", rec, rep, div ? "; diverged at " : "",
+             div ? (got ? got : "?") : "", "");
+        if (div) hlog("   (divergence at record #%d)", at);
+    }
     hlog("   r0=%08X r1=%08X r2=%08X r3=%08X r4=%08X r5=%08X r6=%08X r7=%08X", c->r[0], c->r[1], c->r[2],
          c->r[3], c->r[4], c->r[5], c->r[6], c->r[7]);
     hlog("   r8=%08X r9=%08X r10=%08X r11=%08X r12=%08X sp=%08X lr=%08X lpc=%08X", c->r[8], c->r[9], c->r[10],

@@ -86,7 +86,7 @@ constexpr uint32_t V_getPositionY = 0x70;
 constexpr uint32_t V_addChildZName = 0xFC;
 constexpr uint32_t V_removeFromParent = 0x124;
 constexpr uint32_t V_removeAllChildren = 0x138;
-constexpr uint32_t V_setTouchEnabled = 0x29C;
+constexpr uint32_t V_widgetSetTouchEnabled = 0x29C;   // ui::Widget::setTouchEnabled (IScrollProtocol has its own V_setTouchEnabled, 0x31C, which would shadow a plain name in member functions)
 constexpr uint32_t V_getVirtualRenderer = 0x2D8;
 constexpr uint32_t V_getTexture = 0x280;
 constexpr uint32_t V_changeRow = 0x340;          // IScrollProtocol's isReplaceItem slot
@@ -206,7 +206,7 @@ uint32_t Self::init(Self *self) {
     uint32_t panel = call(g::GUIReader_widgetFromJsonFile, {reader, S_EntrantJson});
     self->layoutPanel = panel;
     call(g::Ref_retain, {panel});
-    vcall(self->layoutPanel, V_setTouchEnabled, {self->layoutPanel, 0});
+    vcall(self->layoutPanel, V_widgetSetTouchEnabled, {self->layoutPanel, 0});
     self->itemWidth = ldf(vcall(self->layoutPanel, V_getContentSize, {self->layoutPanel}));
     float h = ldf(vcall(self->layoutPanel, V_getContentSize, {self->layoutPanel}) + 4);
     self->itemHeight = h;
@@ -345,7 +345,7 @@ void Self::setDrawFrame(Self *self, Addr widget, int32_t index) {
     uint32_t key = f.alloc(4);
     st32(key, uint32_t(index));
     uint32_t d = subdueData(self, key);
-    vcall(widget, V_setTouchEnabled, {widget, 0});
+    vcall(widget, V_widgetSetTouchEnabled, {widget, 0});
     uint32_t bossIcon = findNode(widget, S_BossIcon, 14);
     uint32_t rarePop = findNode(widget, S_RarePop, 13);
     uint32_t discovery = findNode(widget, S_DummyDiscovery, 15);

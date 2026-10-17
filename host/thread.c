@@ -38,7 +38,10 @@ HThread *thread_main(void) {
     HThread *t = calloc(1, sizeof(HThread));
     t->tid = 1;
     strcpy(t->name, "main");
-    t->cpu = cpu_new(STACK_BASE + STACK_SIZE - 0x100);
+    /* 64 KB above the first frame (Android has argv/env/auxv there): guest code reading a little past its
+       caller's frame (varargs, unterminated stack strings) must not run off the mapping when rewritten C++
+       callers leave the guest stack almost empty */
+    t->cpu = cpu_new(STACK_BASE + STACK_SIZE - 0x10000);
     t->errno_ptr = gzalloc(4);
     threads[1] = t;
     cur = t;

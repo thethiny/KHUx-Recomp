@@ -241,8 +241,8 @@ static uint64_t forward_to_lgamma_CD5720(uint32_t a0, uint32_t a1, uint32_t a2, 
 RW_FUNCTION_NOVERIFY(0xCD5720, "sub_CD5720", forward_to_lgamma_CD5720);
 
 // sub_CD572A
-static uint32_t forward_to_llrint_CD572A(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3) {
-    return rw::call(0x44D548, {a0, a1, a2, a3});  // llrint (import)
+static uint64_t forward_to_llrint_CD572A(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3) {
+    return rw::call64(0x44D548, {a0, a1, a2, a3});  // llrint (import)
 }
 // not verified: calls llrint (effects outside guest memory)
 RW_FUNCTION_NOVERIFY(0xCD572A, "sub_CD572A", forward_to_llrint_CD572A);
@@ -263,8 +263,8 @@ static uint64_t forward_to_log1p_CD573E(uint32_t a0, uint32_t a1, uint32_t a2, u
 RW_FUNCTION_NOVERIFY(0xCD573E, "sub_CD573E", forward_to_log1p_CD573E);
 
 // sub_CD5748
-static uint32_t forward_to_sub_CD57CC_CD5748(uint32_t a0, uint32_t a1) {
-    return rw::call(0xCD57CD, {a0, a1});  // sub_CD57CC
+static uint64_t forward_to_sub_CD57CC_CD5748(uint32_t a0, uint32_t a1) {
+    return rw::call64(0xCD57CD, {a0, a1});  // sub_CD57CC
 }
 RW_FUNCTION(0xCD5748, "sub_CD5748", forward_to_sub_CD57CC_CD5748);
 
@@ -290,8 +290,8 @@ static uint32_t forward_to_sub_CD5C3C_CD5766(uint32_t a0) {
 RW_FUNCTION(0xCD5766, "sub_CD5766", forward_to_sub_CD5C3C_CD5766);
 
 // sub_CD5770
-static uint32_t forward_to_nearbyint_CD5770(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3) {
-    return rw::call(0x44D56C, {a0, a1, a2, a3});  // nearbyint (import)
+static uint64_t forward_to_nearbyint_CD5770(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3) {
+    return rw::call64(0x44D56C, {a0, a1, a2, a3});  // nearbyint (import)
 }
 // not verified: calls nearbyint (effects outside guest memory)
 RW_FUNCTION_NOVERIFY(0xCD5770, "sub_CD5770", forward_to_nearbyint_CD5770);
@@ -320,8 +320,8 @@ static uint32_t forward_to_lrint_CD57A2(uint32_t a0, uint32_t a1, uint32_t a2, u
 RW_FUNCTION_NOVERIFY(0xCD57A2, "sub_CD57A2", forward_to_lrint_CD57A2);
 
 // sub_CD57AC
-static uint32_t forward_to_tgamma_CD57AC(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3) {
-    return rw::call(0x44D5A8, {a0, a1, a2, a3});  // tgamma (import)
+static uint64_t forward_to_tgamma_CD57AC(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3) {
+    return rw::call64(0x44D5A8, {a0, a1, a2, a3});  // tgamma (import)
 }
 // not verified: calls tgamma (effects outside guest memory)
 RW_FUNCTION_NOVERIFY(0xCD57AC, "sub_CD57AC", forward_to_tgamma_CD57AC);
@@ -335,8 +335,8 @@ static uint64_t forward_to_modf_CD57B6(uint32_t a0, uint32_t a1, uint32_t a2, ui
 RW_FUNCTION_NOVERIFY(0xCD57B6, "sub_CD57B6", forward_to_modf_CD57B6);
 
 // sub_CD57C0
-static uint32_t forward_to_exp2_CD57C0(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3) {
-    return rw::call(0x44D5B4, {a0, a1, a2, a3});  // exp2 (import)
+static uint64_t forward_to_exp2_CD57C0(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3) {
+    return rw::call64(0x44D5B4, {a0, a1, a2, a3});  // exp2 (import)
 }
 // not verified: calls exp2 (effects outside guest memory)
 RW_FUNCTION_NOVERIFY(0xCD57C0, "sub_CD57C0", forward_to_exp2_CD57C0);

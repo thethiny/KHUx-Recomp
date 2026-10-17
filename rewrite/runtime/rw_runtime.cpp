@@ -100,7 +100,27 @@ static void logf(const char *fmt, ...) {
 // the host itself makes (a thread entry, a callback), but a rewritten callee must still be verified (verify)
 static thread_local bool from_rewrite = false;
 
+// crash reports: on this thread, the rewritten functions entered through their trampolines and the guest functions
+// rewrites called, innermost last. Rewritten C++ frames are not on the guest stack, so this is the only call chain
+// a crash inside them has. Direct C++ calls between rewrites are not listed.
+struct Link { uint32_t v; uint8_t kind; };   // kind: 0 entered entry v, 1 called guest address v, 2/3 left them
+static thread_local Link chain[256];
+static thread_local int chain_n = 0;
+// and the last 32 enter / leave events (a crash right after a call returned shows what ran just before)
+static thread_local Link hist[32];
+static thread_local uint32_t hist_n = 0;
+struct Chain {
+    Link l;
+    Chain(uint32_t v, uint8_t kind) : l{v, kind} {
+        if (chain_n < 256) chain[chain_n] = l;
+        chain_n++;
+        hist[hist_n++ & 31] = l;
+    }
+    ~Chain() { chain_n--; hist[hist_n++ & 31] = Link{l.v, uint8_t(l.kind + 2)}; }
+};
+
 uint32_t call(uint32_t fn, std::initializer_list<uint32_t> args) {
+    Chain in_chain(fn, 1);
     std::vector<uint32_t> a(args);
     CPU *c = cpu;
     uint32_t r = (from_rewrite = true, H->guest_call(c, fn, int(a.size()), a.data()));
@@ -110,6 +130,7 @@ uint32_t call(uint32_t fn, std::initializer_list<uint32_t> args) {
 }
 
 uint64_t call_exact(uint32_t fn, std::initializer_list<uint32_t> args) {
+    Chain in_chain(fn, 1);
     std::vector<uint32_t> a(args);
     CPU *c = cpu;
     uint64_t r = (from_rewrite = true, H->guest_call_exact(c, fn, int(a.size()), a.data()));
@@ -119,6 +140,7 @@ uint64_t call_exact(uint32_t fn, std::initializer_list<uint32_t> args) {
 }
 
 uint64_t call64(uint32_t fn, std::initializer_list<uint32_t> args) {
+    Chain in_chain(fn, 1);
     std::vector<uint32_t> a(args);
     CPU *c = cpu;
     uint64_t r = (from_rewrite = true, H->guest_call64(c, fn, int(a.size()), a.data()));
@@ -209,9 +231,11 @@ static void run_lifted(CPU *c, int i) {
     H->override_slots[bound[i].slot] = keep;
 }
 
+
 static void run_rewrite(CPU *c, int i) {
     CPU *outer = cpu;
     cpu = c;
+    Chain in_chain(uint32_t(i), 0);
     entries()[i].run(c);
     cpu = outer;
     c->pc = c->r[14];                                      // returned to the caller, like a lifted function
@@ -231,7 +255,7 @@ static thread_local LogBuf logbuf_;
 // Functions whose effects reach outside guest memory (a request to the server, a file or UserDefault write,
 // analytics, a sound). In a shadow run they would happen twice, so the verifier treats them as boundaries:
 // in the lifted run each one runs for real (once) and is recorded - its arguments, its return registers and the
-// final value of every guest byte it stored; in the rewrite run (and in a fallback rerun of the lifted code) the
+// final value of every guest byte it stored; in the rewrite run the
 // same call is matched against the record and replayed - the recorded stores are applied, nothing runs.
 // A call that does not match the record (other function, other arguments, or one too many / too few) fails the
 // comparison. Outside shadow runs they are plain calls.
@@ -354,13 +378,13 @@ static thread_local bool lifted_run = false;   // the current shadow run is the 
 // rewritten functions the lifted side of the current shadow run passed through: when the comparison matches, the
 // rewrite side ran their rewrites too (through rw::call or as direct C++ calls), so each gets a verified call
 static thread_local std::vector<int> nested;
-// crash reports: the function being verified on this thread and the side running ("lifted", "rewrite", "fallback")
+// crash reports: the function being verified on this thread and the side running ("lifted", "rewrite")
 static thread_local const char *where_fn = nullptr, *where_side = "";
 
 static void verify(CPU *c, int i) {
     const Entry &e = entries()[i];
     Stats &st = (*stats)[i];
-    // inside the lifted side of an outer shadow run (or its fallback rerun): the original all the way down, so
+    // inside the lifted side of an outer shadow run: the original all the way down, so
     // the comparison is lifted code against rewritten code at every level
     const bool by_rewrite = from_rewrite;      // called through rw::call (consumed here: deeper calls are not)
     from_rewrite = false;
@@ -431,6 +455,17 @@ static void verify(CPU *c, int i) {
         return;
     }
     auto mem_l = stored(c, sp);
+    // the lifted run's final bytes, its dead frames included: a mismatch puts these back instead of running the
+    // original a second time (a rerun after two undone runs replayed its imports against a different path)
+    std::vector<std::pair<uint32_t, uint8_t>> post_l;
+    {
+        uint32_t n = c->wn < c->wcap ? c->wn : c->wcap;
+        for (uint32_t k = 0; k < n; k++)
+            for (uint32_t b = 0; b < c->wlog[k].size; b++) {
+                uint32_t a = c->wlog[k].addr + b;
+                post_l.emplace_back(a, c->mem[a]);
+            }
+    }
     const uint32_t heap_l = *reinterpret_cast<const uint32_t *>(c->mem + 0x20000010);
     auto dump_log = [&](const char *tag) {               // KHUX_RW_DUMPLOG: every store of both runs, appended
         static const char *path = getenv("KHUX_RW_DUMPLOG");
@@ -632,18 +667,14 @@ static void verify(CPU *c, int i) {
         restore(c, out_r);
         c->pc = pc_r;
     } else {
-        // keep the game on the original: undo the rewrite, run the lifted code for real
+        // keep the game on the original: undo the rewrite, then put back what the lifted run left - its stores,
+        // registers and return address. Its imports and effects already happened for real, once, in that run.
         c->logging = 1;
         H->undo(c);
         c->logging = 0;
-        restore(c, in);
-        H->shadow(1);
-        phase = Phase::Replay; effect_pos = 0; effect_diverged = false;   // the effects already happened once
-        lifted_run = true;
-        where_side = "fallback";
-        run_lifted(c, i);
-        lifted_run = false;
-        phase = Phase::Off;
+        for (auto &ab : post_l) c->mem[ab.first] = ab.second;
+        restore(c, out_l);
+        c->pc = pc_l;
     }
     H->shadow(2);
     c->wlog = old_log;
@@ -713,9 +744,30 @@ __declspec(dllexport) int rw_entry_effect(int i) { return rw::entries()[i].effec
 // verifying (a mismatch falls back to the lifted code) or when the function passed verification before.
 // Returns 1 when installed.
 __declspec(dllexport) const char *rw_where(void) {
-    static thread_local char buf[512];
-    if (!rw::where_fn) return "";
-    snprintf(buf, sizeof buf, "verifying %s (%s side)", rw::where_fn, rw::where_side);
+    static thread_local char buf[8192];
+    size_t n = 0;
+    buf[0] = 0;
+    if (rw::where_fn) n = snprintf(buf, sizeof buf, "verifying %s (%s side)", rw::where_fn, rw::where_side);
+    // the innermost 16 links of the chain
+    auto link = [&](const rw::Link &l) -> std::string {
+        if (l.kind == 0) return rw::entries()[l.v].name;
+        if (l.kind == 1) { char t[24]; snprintf(t, sizeof t, "call 0x%X", l.v); return t; }
+        return "";
+    };
+    int top = rw::chain_n < 256 ? rw::chain_n : 256;
+    const int first = top > 16 ? top - 16 : 0;
+    for (int k = first; k < top && n < sizeof buf - 300; k++)
+        n += snprintf(buf + n, sizeof buf - n, "%s%s", k == first ? "\n   rewrite chain: " : " > ",
+                      link(rw::chain[k]).c_str());
+    // recent history, oldest first: "+name" / "+call 0x.." entered, "-name" / "-" left
+    uint32_t hn = rw::hist_n, from = hn > 24 ? hn - 24 : 0;
+    for (uint32_t k = from; k < hn && n < sizeof buf - 300; k++) {
+        const rw::Link &l = rw::hist[k & 31];
+        const char *sep = k == from ? "\n   recent: " : " ";
+        if (l.kind == 3) n += snprintf(buf + n, sizeof buf - n, "%s-", sep);
+        else n += snprintf(buf + n, sizeof buf - n, "%s%c%s", sep, l.kind < 2 ? '+' : '-',
+                           link(rw::Link{l.v, uint8_t(l.kind & 1)}).c_str());
+    }
     return buf;
 }
 

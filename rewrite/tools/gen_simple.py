@@ -172,6 +172,10 @@ WORD1 = {"int", "unsigned int", "_DWORD", "char", "_BYTE", "bool", "__int16", "_
          "wchar_t", "char16_t", "char32_t", "signed __int16", "signed __int8", "unsigned int8_t", "int32_t",
          "uint32_t", "uint8_t", "int8_t", "uint16_t", "int16_t", "_UNKNOWN"}
 WORD2 = {"__int64", "unsigned __int64", "double", "_QWORD", "long long", "unsigned long long", "signed __int64"}
+# functions that return in r0:r1 although IDA types them 32-bit (a forwarder typed uint32_t loses r1: 2026-10-17,
+# frexp's forwarder broke printf's %f in a shadow run): frexp, sub_CD57CC (double -> double), and the libm imports
+# llrint (long long), nearbyint, tgamma, exp2 (double)
+WIDE_RETURN = {0xCA4984, 0xCD57CC, 0x44D548, 0x44D56C, 0x44D5A8, 0x44D5B4}
 
 
 def param_type(p):
@@ -236,6 +240,8 @@ class Names:
             raw = re.sub(r"\(\s+", "(", raw.strip())
             name, params, ret = parse_proto(raw)
             res = (name, params, ret, raw)
+        if a in WIDE_RETURN:
+            res = (res[0], res[1], "double", res[3])
         self.cache[a] = res
         return res
 
@@ -1125,6 +1131,10 @@ class Generator:
         declared_void = declared_void or re.fullmatch(
             r"cocos2d::(?:\w+::)*(?:update|step|startWithTarget|stop|execute|onEnter|onExit|onEnterTransitionDidFinish|"
             r"onExitTransitionDidStart|cleanup|visit|draw)", name or "") is not None
+        # a game class's update(float) overrides cocos2d::Node::update (void); IDA types many of them int
+        # (SupportCharacterScrollView::update returned IScrollProtocol::update's leftover r0)
+        declared_void = declared_void or (re.fullmatch(r"(?:\w+::)+update", name or "") is not None
+                                          and re.search(r"\(\w+ \*\*?this, float \w+\)", raw or "") is not None)
         # every value r0 can have at a return is what a void callee left there (e.g. a wrapper around free)
         def void_callee(tid):
             target = fn.temps[tid][1]

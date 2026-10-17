@@ -65,11 +65,20 @@ Helpers: `rw::callf` (a guest call returning a float), `rw::fbits` / `rw::bitsf`
 
 `KHUX_RW_VERIFY=1 recomp/out/host/khux.exe` installs every rewritten function and shadow-runs each call: the
 lifted original first (its stores logged, then undone), then the rewrite, comparing the return registers and every
-guest byte either one stored outside the callee stack frames. A mismatch is logged (`RW MISMATCH ...`) and the
-lifted result is kept, so the game is never affected. During a shadow run the clocks stand still and both runs
+guest byte either one stored outside the callee stack frames. A mismatch is logged (`RW MISMATCH ...`), the
+rewrite run is undone and the lifted run's result is put back (its final bytes, registers and return address; the
+original is not run a second time), so the game is never affected. During a shadow run the clocks stand still and both runs
 draw the same random numbers, and calls to the effect functions (sending a request, saving, analytics, sounds;
 the list is `EFFECTS` in runtime/rw_runtime.cpp) run once for real in the lifted run and are replayed in the
 rewrite run, so functions that reach them are verified without doing anything twice. NOVERIFY functions are not
 installed while verifying. `python recomp/rewrite/tools/merge_stats.py` then updates
 `status.tsv` and `verified.txt`. Without `KHUX_RW_VERIFY`, only the verified functions run; `KHUX_REWRITE=0` runs
 the lifted code only.
+
+`python recomp/rewrite/tools/verify_session.py [quests]` does a whole session: boot, notices, `quests` rounds of
+the campaign with rush + insta-win (a resumed quest is won too; raids get a rush fight), then merge_stats. A crash
+report under the verifier names the function being verified, the **rewrite chain** (rewritten functions entered and
+guest functions they called, innermost last: rewritten C++ frames are not on the guest stack), the last 24
+enter / leave events and the import replay state. `KHUX_RW_STOREPC=1` adds the storing pc of the first differing
+words to mismatch reports; `KHUX_RW_SKIP=prefix` (or `KHUX_RW_ONLY`) bisects without rebuilding (direct C++ calls
+between rewrites are not affected by it).

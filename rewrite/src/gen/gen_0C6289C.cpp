@@ -4892,8 +4892,8 @@ static uint32_t forward_to_wcscmp_CA48C6(uint32_t a0, uint32_t a1, uint32_t a2, 
 RW_FUNCTION_NOVERIFY(0xCA48C6, "sub_CA48C6", forward_to_wcscmp_CA48C6);
 
 // sub_CA4978
-static uint32_t forward_to_sub_CA4984_CA4978(uint32_t a0, uint32_t a1, uint32_t a2) {
-    return rw::call(0xCA4985, {a0, a1, a2});  // sub_CA4984
+static uint64_t forward_to_sub_CA4984_CA4978(uint32_t a0, uint32_t a1, uint32_t a2) {
+    return rw::call64(0xCA4985, {a0, a1, a2});  // sub_CA4984
 }
 RW_FUNCTION(0xCA4978, "sub_CA4978", forward_to_sub_CA4984_CA4978);
 

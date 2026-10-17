@@ -12,3 +12,15 @@
 00CDA880 SdSoundSystem_BankCtrl_StopSounds: the stale words of the queued Sound::Stop ACTIONs (see StartFadeIn)
 00491360 LWFUtil::preloadResources: std::map<std::string,int>::__construct_node_with_key (0x804C08) copies a short key string's whole 12-byte buffer; the bytes after its terminator are stale stack bytes (e.g. a BGAD header bg::Archive::getData read into its frame); never read
 005D521C LWFNodeGroup::preloadResources: calls LWFUtil::preloadResources (the same stale short-string bytes)
+00A4E324 png_zfree: void (zlib free_func); only r0 differs - the original returns whatever the host's free left in r0 (the freed pointer), the rewrite png_ptr; never read
+009B81E0 ft_mem_free: void (FT_Free tail-calls memory->free); only r0 differs, as png_zfree; never read
+005C0CF8 AudioPlaySystemSEDecide: reaches audio::Layer::playSE - the queued StartParameter's padding bytes (map node copy at 0x5BF978) are stale stack contents; never read
+00735206 SceneNotice::openWebViewInfoPopup $_5 operator(): plays a SE through audio::Layer::playSE (the same StartParameter padding bytes)
+005D5000 LWFNodeGroup::update: the only differing words are on the audio thread's guest stack (0x202C47xx; stored by SQEX::ActionManager::AddAction / the audio map's find there), which changes during the shadow run - see audio::Manager::updateQueue
+005EBB38 AudioLWFNode::~AudioLWFNode (deleting): the audio thread's guest stack (0x202C4AE8), as LWFNodeGroup::update
+00609CA8 SceneRaidBattle::update: the differing words are stored by LWF::Data::Load (0x8023A4) in both runs from stack words no live frame stored (stale on both sides); LWF data load copies uninitialised stack bytes into the loaded data's padding; never read
+005D9224 HitEffect::deploy: LWF::Data::Load's stale stack bytes (as SceneRaidBattle::update)
+005C63C4 Avatar::changeMotion: LWF::Data::Load's stale stack bytes, and std::map<std::string,...> node construction (0x804C36) copying a short key's whole 12-byte buffer (as LWFUtil::preloadResources)
+005BF138 audio::Manager::unloadAll: the only differing words are on the audio thread's guest stack (0x202C49C8), as LWFNodeGroup::update
+00531D3E ImageButton::init::$_2 operator() (onTouchEnded): plays a SE through audio::Layer::playSE (the StartParameter padding bytes at 0x5BF978)
+00492928 TextData::format: TextFormat::execute keeps pointers to its own stack buffers in a temporary heap vector (pc 0x493190); the rewrite's frame differs, so those stack addresses differ; the vector is freed before the call returns and nobody reads them
