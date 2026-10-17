@@ -450,11 +450,13 @@ int import_shadow(int phase) {
     if (phase == 8) return shadow_exclusive(0);
     if (phase == 4) return imp_opaque;
     if (phase == 5) {                                     /* an effect runs: its imports are part of it (not recorded) */
-        if (imp_paused++ == 0) { imp_saved_mode = imp_mode; imp_mode = 0; }
+        /* it runs for real, once (replayed after), so lift.dll's streams may run although the run logs: a save
+         * reads UserDefault.xml (fopen declined in logged runs otherwise) */
+        if (imp_paused++ == 0) { imp_saved_mode = imp_mode; imp_mode = 0; L.files_allow(1); }
         return 0;
     }
     if (phase == 6) {
-        if (imp_paused && --imp_paused == 0) imp_mode = imp_saved_mode;
+        if (imp_paused && --imp_paused == 0) { imp_mode = imp_saved_mode; L.files_allow(0); }
         return 0;
     }
     if (phase == 0) {

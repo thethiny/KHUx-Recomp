@@ -614,6 +614,149 @@ struct CoreSource {
         setVolumeMatrix(self, bitsf(0x3F3504F3), bitsf(0x3F3504F3));
         return 0;
     }
+
+    // RenderMix(out, bytes): resamples the queued 16-bit buffers (two buffers, +0x34/+0x38 data and size, +0x24 the
+    // current one, +0x28 its frames left) by linear interpolation between the last two input frames (history at
+    // +0x44.., +0x2C how many are loaded, +0x30 the position between them; step = source rate / output rate *
+    // pitch) and adds them into the float output with the channel gains (+0x54, times volume and master volume).
+    // A used-up buffer is released (+0x20 queued count) and the source's callback (+0x10) is told.
+    static int32_t renderMix(uint32_t self, uint32_t out, uint32_t bytes) {
+        constexpr uint32_t UDIVSI3 = 0xCD5DF9;
+        auto bufData = [&](uint32_t i) { return ld32(self + 0x34 + i * 8); };
+        auto bufSize = [&](uint32_t i) { return ld32(self + 0x38 + i * 8); };
+        float gains[32] = {};
+        int32_t inCh, outCh, frames, left, hc, ch;
+        uint32_t rate, idx, src, n;
+        float step, frac;
+
+        mutexLock(self + 8);
+        mutexLock(self + 4);
+        if (ld32(self + 0xC) != 3) {
+            mutexUnlock(self + 4);
+            goto end;
+        }
+        mutexUnlock(self + 4);
+        rate = rw::call(0xCE6C60, {});                    // CoreSystem::GetOutputSampleRate
+        outCh = int32_t(rw::call(0xCE6C74, {}));          // CoreSystem::GetOutputChannels
+        inCh = lds32(self + 0x1C);
+        n = 0;
+        if (int32_t(uint32_t(outCh) * uint32_t(inCh)) > 0) {
+            do {
+                const float gain = ldf(self + 0x54 + 4 * n);
+                const float volume = ldf(self + 0x4C);
+                const float master = bitsf(rw::call(0xCE6CF8, {}));   // CoreSystem::GetMasterVolume
+                inCh = lds32(self + 0x1C);
+                if (n < 32) gains[n] = gain * (volume * master) / 32767.0f;
+                n++;
+            } while (int32_t(uint32_t(outCh) * uint32_t(inCh)) > int32_t(n));
+        }
+        {
+            const int32_t sourceRate = lds32(self + 0x18);
+            const float ratio = uint32_t(sourceRate) == rate ? 1.0f : float(sourceRate) / float(int32_t(rate));
+            step = ratio * ldf(self + 0x50);
+        }
+        if (step <= 0.0f) goto end;                       // (a NaN step goes on)
+        frames = int32_t(rw::call(UDIVSI3, {bytes, uint32_t(outCh) * 4}));
+        idx = ld32(self + 0x24);
+        left = lds32(self + 0x28);
+        src = bufData(idx) + 2 * ((bufSize(idx) >> 1) - uint32_t(left) * uint32_t(inCh));
+        if (frames <= 0 || lds32(self + 0x20) <= 0) goto end;
+
+    next:
+        if (left > 0) goto mix;
+    empty:
+        if (lds32(self + 0x20) <= 0) goto mix;
+        // take the next queued buffer (the first one after a start)
+        if (ld8(self + 0x14)) {
+            mutexLock(self + 4);
+            const uint32_t q = rw::call(UDIVSI3, {bufSize(ld32(self + 0x24)), ld32(self + 0x1C) << 1});
+            st8(self + 0x14, 0);
+            st32(self + 0x28, q);
+            mutexUnlock(self + 4);
+        } else {
+            mutexLock(self + 4);
+            const int32_t i = int32_t(ld32(self + 0x24) + 1) % 2;
+            const uint32_t channels = ld32(self + 0x1C);
+            st32(self + 0x20, ld32(self + 0x20) - 1);
+            st32(self + 0x24, uint32_t(i));
+            st32(self + 0x28, rw::call(UDIVSI3, {bufSize(uint32_t(i)), channels << 1}));
+            mutexUnlock(self + 4);
+            if (const uint32_t callback = ld32(self + 0x10)) rw::call(ld32(ld32(callback)), {callback});
+        }
+        idx = ld32(self + 0x24);
+        hc = lds32(self + 0x2C);
+        left = lds32(self + 0x28);
+        src = bufData(idx);
+        if (hc > 1 || left <= 0) goto next;
+        // load the history's first two frames from the new buffer
+        ch = lds32(self + 0x1C);
+        for (;;) {
+            if (ch > 0) {
+                st16(self + 0x44 + uint32_t(hc) * 2, ld16(src));
+                if (ch != 1) st16(self + 0x48 + uint32_t(hc) * 2, ld16(src + 2));
+                src += uint32_t(ch) * 2;
+            }
+            hc++;
+            left--;
+            st32(self + 0x28, uint32_t(left));
+            st32(self + 0x2C, uint32_t(hc));
+            if (hc == 2) goto next;
+            if (left == 0) goto empty;
+        }
+
+    mix:
+        if (lds32(self + 0x2C) <= 1) goto end;
+        if (outCh > 0) {
+            ch = lds32(self + 0x1C);
+            for (int32_t o = 0; o != outCh; o++) {
+                if (ch <= 0) continue;
+                const uint32_t dst = out + uint32_t(o) * 4;
+                float acc = ldf(dst);
+                for (int32_t i = 0; i < ch; i++) {
+                    const int32_t a = lds16(self + 0x44 + uint32_t(i) * 4);
+                    const float t = ldf(self + 0x30);
+                    const int32_t b = lds16(self + 0x46 + uint32_t(i) * 4);
+                    float s = float(a);
+                    s = s + float(int32_t(uint32_t(b) - uint32_t(a))) * t;
+                    const uint32_t g = uint32_t(o) * uint32_t(ch) + uint32_t(i);
+                    acc = acc + s * (g < 32 ? gains[g] : 0.0f);
+                    stf(dst, acc);
+                }
+            }
+            out += uint32_t(outCh) * 4;
+        }
+        frac = step + ldf(self + 0x30);
+        frames--;
+        stf(self + 0x30, frac);
+        while (frac >= 1.0f) {                            // step to the next input frame
+            frac = frac - 1.0f;
+            ch = lds32(self + 0x1C);
+            const uint32_t loaded = ld32(self + 0x2C);
+            st32(self + 0x2C, loaded - 1);
+            stf(self + 0x30, frac);
+            if (ch > 0) {
+                st16(self + 0x44, ld16(self + 0x46));
+                if (ch != 1) st16(self + 0x48, ld16(self + 0x4A));
+            }
+            const int32_t remaining = lds32(self + 0x28);
+            if (remaining > 0) {
+                if (ch > 0) {
+                    st16(self + 0x46, ld16(src));
+                    if (ch != 1) st16(self + 0x4A, ld16(src + 2));
+                    src += uint32_t(ch) * 2;
+                }
+                st32(self + 0x2C, loaded);
+                st32(self + 0x28, uint32_t(remaining - 1));
+            }
+        }
+        if (frames == 0 || lds32(self + 0x20) <= 0) goto end;
+        left = lds32(self + 0x28);
+        goto next;
+
+    end:
+        mutexUnlock(self + 8);
+        return 0;
+    }
 };
 RW_FUNCTION(0xCE78AC, "SQEX::CoreSource::CoreSource", CoreSource::construct);
 RW_FUNCTION(0xCE7684, "SQEX::CoreSource::~CoreSource", CoreSource::destruct);
@@ -627,5 +770,6 @@ RW_FUNCTION(0xCE7990, "SQEX::CoreSource::SetVolumeMatrix", CoreSource::setVolume
 RW_FUNCTION(0xCE7A18, "SQEX::CoreSource::SetPan", CoreSource::setPan);
 RW_FUNCTION(0xCE7F60, "SQEX::CoreSource::SetIIRLPF", CoreSource::setIIRLPF);
 RW_FUNCTION(0xCE8024, "SQEX::CoreSource::Initialize", CoreSource::initialize);
+RW_FUNCTION(0xCE7B18, "SQEX::CoreSource::RenderMix", CoreSource::renderMix);
 
 }  // namespace sqex
