@@ -121,6 +121,8 @@ struct APIManager {
     static void handleError(APIManager *self, int32_t status, uint32_t retRef);
     static bool isBusy(const APIManager *self);
     static bool needsRetry(const APIManager *self);
+    // the reply's parts the action needs, parsed and kept (APIManager_verify*.cpp); 0 = server error
+    static uint32_t verifyResponse(APIManager *self, int32_t action, uint32_t response);
     static void clearAllResponses(APIManager *self);
     static void reallocate(APIManager *self);
     static uint32_t openErrorDialog(APIManager *self, uint32_t cb, uint32_t retry);   // APIManager_dialog.cpp

@@ -24,7 +24,7 @@ constexpr uint32_t SET_REFERENCE_DATE = 0x4922AD;      // hole::time::setReferen
 constexpr uint32_t APPSTATE_NEEDS_UPDATE_APP = 0x4EAE91;
 constexpr uint32_t APPSTATE_NEEDS_UPDATE_DATA = 0x4EAE5D;
 constexpr uint32_t CLIENT_IS_LOGIN_ACTION = 0x4B7901;  // Client::isLoginAction(Action)
-constexpr uint32_t VERIFY_RESPONSE = 0x4BB4C5;         // APIManager::verifyResponse (not rewritten: 13 KB)
+constexpr uint32_t VERIFY_RESPONSE = 0x4BB4C5;         // APIManager::verifyResponse (APIManager_verify.cpp)
 constexpr uint32_t TEXTDATA_GET = 0x4928AD;            // TextData::get(Type, int) -> shared_ptr<entry>
 constexpr uint32_t STRING_ASSIGN_CHARS = 0x48D811;     // std::string::assign(const char*, size_t)
 constexpr uint32_t STRING_ASSIGN = 0x498A1D;           // std::string::operator=(const std::string&)

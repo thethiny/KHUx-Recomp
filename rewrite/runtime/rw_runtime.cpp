@@ -263,13 +263,14 @@ static thread_local LogBuf logbuf_;
 // A handoff effect gives work to another thread (a request goes to the network thread's queue, which that thread
 // pops at once): its stores cannot be undone and replayed, so a shadow run that makes one is kept as the real
 // call, like a run that draws (not compared).
-struct EffectDef { uint32_t addr; const char *name; bool handoff = false; };
+// args: the argument registers the effect reads (the others are leftovers of the caller and not compared)
+struct EffectDef { uint32_t addr; const char *name; bool handoff = false; int args = 4; };
 static const EffectDef EFFECTS[] = {
     {0x4B7200, "hole::network::api::Client::call", true},
     {0x7E4408, "cocos2d::network::HttpClient::send", true},
-    {0x4E8DC8, "AppState::save"},
-    {0x4E8E8C, "AppState::saveMain"},
-    {0x4E2A5C, "TrackingSDKUtil::sendEventInternal"},
+    {0x4E8DC8, "AppState::save", false, 1},
+    {0x4E8E8C, "AppState::saveMain", false, 1},
+    {0x4E2A5C, "TrackingSDKUtil::sendEventInternal", false, 2},
     {0x8D4B4C, "cocos2d::FileUtils::writeToFile"},
     {0x901234, "cocos2d::UserDefault::setBoolForKey"},
     {0x90129C, "cocos2d::UserDefault::flush"},
@@ -350,7 +351,10 @@ static void effect_enter(CPU *c, int i) {
         bool ok = effect_pos < effect_calls.size() && effect_calls[effect_pos].fn == addr;
         if (ok) {
             const EffectCall &rec = effect_calls[effect_pos];
-            for (int k = 0; k < 4 && ok; k++)
+            int nargs = 4;
+            for (const EffectDef &d : EFFECTS)
+                if (d.addr == addr) nargs = d.args;
+            for (int k = 0; k < nargs && ok; k++)
                 ok = rec.args[k] == c->r[k] || (stackish(c, rec.args[k]) && stackish(c, c->r[k]));
         }
         if (!ok) {
