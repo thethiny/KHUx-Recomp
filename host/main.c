@@ -11,6 +11,7 @@
 void core_init(void);
 void lift_load(const char *path);
 void rewrite_load(const char *root);
+extern volatile int rewrite_host_call_returns;
 void rewrite_report(void);
 void coverage_init(const char *root);
 void coverage_report(void);
@@ -95,11 +96,13 @@ int main(int argc, char **argv) {
     ctl_hooks();
 
     int ran = 0;
+    rewrite_host_call_returns = 1;                 /* the constructors return: the verifier may shadow-run them */
     for (int k = 0; k < init_count; k++) {
         if (!init_array[k] || init_array[k] == 0xFFFFFFFFu) continue;
         guest_call(c, init_array[k], 0, NULL);
         ran++;
     }
+    rewrite_host_call_returns = 0;
     hlog("== %d constructors ran", ran);
 
     uint32_t helper = jclass_ref("org/cocos2dx/lib/Cocos2dxHelper");

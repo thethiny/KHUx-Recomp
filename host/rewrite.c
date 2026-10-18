@@ -25,9 +25,13 @@ typedef struct RwHost {
     void (*debug)(char *out, int cap);
     uint32_t ret_magic;                                   /* lr of host -> guest calls */
     GTrack *gtrack;                                       /* rt.h stale stack tracking, shared with lift.dll */
+    const volatile int *host_call_returns;                /* 1 while the host's calls return (constructors) */
 } RwHost;
 
 static RwHost host;
+/* the host's own calls into guest code normally are not shadow-run (a thread entry never returns); the
+ * constructors of .init_array return, so main.c sets this around them and they are verified like any call */
+volatile int rewrite_host_call_returns;
 /* rt.h GTrack: the host's own guest stores (imports writing guest memory) feed the shared tracker too */
 EXPORT GTrack *rt_gtrack;
 static const char *(*rw_where_fn)(void);   /* crash reports: what the verifier is running */
@@ -112,7 +116,8 @@ void rewrite_load(const char *root) {
     snprintf(stats_path, sizeof(stats_path), "%s/%04d%02d%02d_%02d%02d%02d.tsv", stats_dir, t.wYear, t.wMonth,
              t.wDay, t.wHour, t.wMinute, t.wSecond);
     snprintf(verified_path, sizeof(verified_path), "%s/rewrite/verified.txt", root);
-    host.version = 8;
+    host.version = 9;
+    host.host_call_returns = &rewrite_host_call_returns;
     /* the stale stack tracker (rt.h GTrack): lift.dll's loads and stores feed it during shadow runs */
     GTrack **gt_slot = (GTrack **)GetProcAddress(L.dll, "rt_gtrack");
     if (!gt_slot) fatal("lift.dll has no rt_gtrack: rebuild it (lift/build.py --all)");

@@ -49,6 +49,33 @@ RW_FUNCTION(0xCE942C, "SQEX::List<Sound>::Node::~Node", Nodes::deleteObject);
 RW_FUNCTION(0xCF4528, "SQEX::OnMemorySound::~OnMemorySound", Nodes::deleteObject);
 RW_FUNCTION(0xCF456C, "SQEX::OnMemorySound::OnMemorySound", Nodes::onMemorySoundConstruct);
 RW_FUNCTION(0xCF41FC, "SQEX::DelegateManager::Initialize", Nodes::delegateInitialize);
+
+// sub_CF412C: the delegate thread - until the stop flag (base + 0): pop the last queued delegate (count + 0xC,
+// entries + 0x10) as the current one (+8) and run it (vtable +8), else wait on the condition (+0x50)
+static void delegateThread(uint32_t /*argument*/) {
+    const uint32_t base = 0x100EB7C, mutex = base + 4, cond = base + 0x50;
+    while (!ld8(base)) {
+        mutexLock(mutex);
+        const int32_t n = lds32(base + 0xC);
+        st32(base + 8, 0);
+        if (n > 0) {
+            st32(base + 0xC, uint32_t(n - 1));
+            st32(base + 8, ld32(base + 0x10 + uint32_t(n - 1) * 4));
+        }
+        mutexUnlock(mutex);
+        if (const uint32_t delegate = ld32(base + 8)) {
+            vcallo(delegate, 8, {delegate});
+            mutexLock(mutex);
+            st32(base + 8, 0);
+            mutexUnlock(mutex);
+        } else {
+            mutexLock(mutex);
+            rw::call(0x4466CC, {cond, mutex});  // pthread_cond_wait
+            mutexUnlock(mutex);
+        }
+    }
+}
+RW_FUNCTION(0xCF412C, "SQEX::DelegateManager (sub_CF412C): the delegate thread", delegateThread);
 RW_FUNCTION(0xCE6908, "SQEX::Mutex::Mutex", Nodes::mutexConstruct);
 
 // ============================================================================================ TransferOggVorbis

@@ -53,6 +53,8 @@ fmodf ceil floor round sin cos tan sqrt pow exp log log10 atan2 atan acos asin f
 lrand48 rand random srand48 time gettimeofday clock_gettime
 __aeabi_memcpy __aeabi_memcpy4 __aeabi_memcpy8 __aeabi_memset __aeabi_memset4 __aeabi_memset8 __aeabi_memclr
 __aeabi_memclr4 __aeabi_memclr8 __aeabi_memmove __aeabi_memmove4 __aeabi_memmove8""".split())
+# the host's __cxa_atexit records nothing (the game never exits through libc): no effect outside guest memory
+PURE_IMPORTS |= {"__cxa_atexit", "__aeabi_atexit"}
 
 
 class Reject(Exception):

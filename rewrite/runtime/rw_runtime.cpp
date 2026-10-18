@@ -49,9 +49,10 @@ struct RwHost {
     void (*debug)(char *out, int cap);   // a summary of the last shadow run's imports (mismatch reports)
     uint32_t ret_magic;                  // lr of a call made by the host itself (thread entries, callbacks)
     GTrack *gtrack;                      // rt.h: stale stack loads during shadow runs (shared with lift.dll)
+    const volatile int *host_call_returns;   // 1 while the host's own calls return (the .init_array constructors)
 };
 }
-#define RW_HOST_VERSION 8
+#define RW_HOST_VERSION 9
 
 // rt.h wlog: a full store log stops logging and the run goes on for real (the verifier keeps it)
 extern "C" EXPORT int rt_log_full_continue = 1;
@@ -391,8 +392,12 @@ static void verify(CPU *c, int i) {
     if (lifted_run) { if (nested.size() < 4096) nested.push_back(i); run_lifted(c, i); return; }
     if (st.too_big) { if (c->logging) run_rewrite(c, i); else run_lifted(c, i); return; }
     // called by the host itself (a thread's entry, a JNI or GL callback): a thread entry never returns, so it
-    // cannot be shadow-run; the original runs, and every call it makes is verified on its own
-    if (!c->logging && !by_rewrite && (c->r[14] & ~1u) == H->ret_magic) { run_lifted(c, i); return; }
+    // cannot be shadow-run; the original runs, and every call it makes is verified on its own. The constructors
+    // (the host flags them) return and are shadow-run like any call.
+    if (!c->logging && !by_rewrite && (c->r[14] & ~1u) == H->ret_magic && !*H->host_call_returns) {
+        run_lifted(c, i);
+        return;
+    }
     // inside the rewrite side of an outer shadow run: its comparison covers this call
     if (c->logging) { run_rewrite(c, i); return; }
     // verified often enough with no mismatch (KHUX_RW_CAP calls, default 200; 0 = never stop): the rewrite runs

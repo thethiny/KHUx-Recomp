@@ -656,7 +656,7 @@ struct Vfs {
                 int32_t r = int32_t(ld32(arc + 0x4C) + uint32_t(idx));
                 *f.at<int32_t>(0x10) = r;
                 if (r >= 0) {
-                    rw::call(0x8DE235, {out, arc});  // sub_8DE234: the entry by index
+                    rw::call(0x8DE235, {out, arc, uint32_t(r)});  // sub_8DE234: the entry by index
                     rw::call(MUTEX_UNLOCK_, {VFS_MUTEX});
                     return 0;
                 }
@@ -749,5 +749,219 @@ RW_FUNCTION(0x8DD564, "bg::vfs::exists", Vfs::exists);
 RW_FUNCTION(0x8DD5F0, "bg::vfs::getID", Vfs::getID);
 RW_FUNCTION(0x8DD6AC, "bg::vfs::mount", Vfs::mount);
 RW_FUNCTION(0x8DD790, "bg::vfs::unmount", Vfs::unmount);
+
+// ============================================================================================ vfs archives
+// A mounted archive (0x80 bytes, after its shared_ptr control block): vtable +0, id +4, index file path
+// std::string +8, data file path +0x14, the data stream shared_ptr +0x20, opened byte +0x28, the index buffer's
+// deleter std::function<void(void*)> +0x30, the index buffer +0x48, entry count +0x4C, name count +0x50, the tables
+// +0x54 (offsets, 8 bytes each) / +0x58 (index per name) / +0x5C (name offsets) / +0x60 (names), the name -> entry
+// map +0x68 (max load factor +0x78).
+constexpr uint32_t VT_VFS_ARCHIVE = 0xF6F354;
+constexpr uint32_t VT_VFS_ARCHIVE_BLOCK = 0xFCCD44;     // its shared_ptr control block (make_shared)
+constexpr uint32_t GOT_DEFAULT_ARCHIVE = 0xFEF560;      // the default archive's index and data paths (2 words)
+constexpr uint32_t VFS_LIST_DTOR = 0x8DE401;            // ~list (registered with __cxa_atexit)
+constexpr uint32_t RECURSIVE_MUTEX_CTOR = 0xC8DE91;
+constexpr uint32_t STRING_INIT = 0x47CD93;              // std::string(const char*, size_t)
+constexpr uint32_t AEABI_MEMSET = 0x40E7A0;             // (dst, n, c)
+constexpr uint32_t MAP_CLEAR = 0x8DDF4B;                // unordered_map<const char*, int>::clear
+constexpr uint32_t MAP_INSERT = 0x8DDA91;               // __insert_unique(pair<const char*, int>) (sret)
+constexpr uint32_t MAP_AT = 0x8DE359;                   // the node of a name (non-const find)
+constexpr uint32_t FN_DELETE_MOVE_ASSIGN = 0x8DDEFF;    // function<void(void*)>::operator=(function&&)
+constexpr uint32_t STREAM_OPEN = 0x8DC555;              // bg::InputStreamFactory::open (sret, path, relative)
+constexpr uint32_t ARCHIVE_GET_DATA = 0x8DCBA9;         // bg::Archive::getData (sret, this, stream*, bool, key*)
+constexpr uint32_t ARCHIVE_INSTANCE = 0x8DC8F1;
+constexpr uint32_t INDEX_MAGIC = 0x49474289;
+constexpr uint32_t ARCHIVE_OPEN = 0x8DD831, ARCHIVE_CTOR = 0x8DE105, ENTRY_BY_INDEX = 0x8DE235;
+
+static uint32_t cstr(uint32_t s) { return (ld8(s) & 1) ? ld32(s + 8) : s + 1; }
+// InputStreamFactory::open's second argument: a path not starting with '/' is relative
+static uint32_t relative(uint32_t path) { return ld8(path) == 0x2F ? 0u : 1u; }
+
+struct VfsArchive {
+    // sub_8DD1A4: the vfs statics on first use - the list, its mutex and the default archive mounted as id 0
+    static void init() {
+        if (!guest::staticInitBegin(VFS)) return;
+        st32(VFS + 4, VFS + 4);
+        st32(VFS + 8, VFS + 4);
+        st32(VFS + 0xC, 0);
+        rw::call(RECURSIVE_MUTEX_CTOR, {VFS_MUTEX});
+        uint32_t block = guest::newObject(0x90);
+        uint32_t arc = 0x10;
+        if (block != 0) {
+            st32(block + 4, 0);
+            st32(block + 8, 0);
+            st32(block, VT_VFS_ARCHIVE_BLOCK);
+            arc = block + 0x10;
+            rw::call(ARCHIVE_CTOR, {arc, 0, ld32(GOT_DEFAULT_ARCHIVE), ld32(GOT_DEFAULT_ARCHIVE + 4)});
+        }
+        rw::call(ARCHIVE_OPEN, {arc});
+        uint32_t n = guest::newObject(0x10);
+        st32(n + 8, arc);
+        st32(n + 0xC, block);
+        if (block != 0) rw::call(SHARED_ADD, {block});
+        st32(ld32(VFS + 4) + 4, n);  // push_back
+        st32(n, ld32(VFS + 4));
+        st32(VFS + 4, n);
+        st32(n + 4, VFS + 4);
+        st32(VFS + 0xC, ld32(VFS + 0xC) + 1);
+        if (block != 0) rw::call(SHARED_RELEASE, {block});
+        rw::call(guest::CXA_ATEXIT, {VFS_LIST_DTOR, VFS + 4, got(0xFD604C)});
+        guest::staticInitDone(VFS);
+    }
+
+    // sub_8DD7A4(id): drop every mounted archive with this id
+    static uint32_t unmount(uint32_t id) {
+        rw::call(MUTEX_LOCK_, {VFS_MUTEX});
+        for (uint32_t node = ld32(VFS + 8); node != VFS_END;) {
+            const uint32_t next = ld32(node + 4);
+            if (ld32(ld32(node + 8) + 4) == id) {
+                st32(ld32(node) + 4, next);
+                st32(ld32(node + 4), ld32(node));
+                st32(VFS + 0xC, ld32(VFS + 0xC) - 1);
+                if (ld32(node + 0xC) != 0) rw::call(SHARED_RELEASE, {ld32(node + 0xC)});
+                guest::deleteObject(node);
+            }
+            node = next;
+        }
+        return rw::call(MUTEX_UNLOCK_, {VFS_MUTEX});
+    }
+
+    // sub_8DE104(self, id, index path, data path): the archive, closed
+    static uint32_t construct(uint32_t self, uint32_t id, uint32_t path, uint32_t dataPath) {
+        st32(self, VT_VFS_ARCHIVE);
+        st32(self + 4, id);
+        rw::call(STRING_INIT, {self + 8, path, rw::call(STRLEN, {path})});
+        rw::call(STRING_INIT, {self + 0x14, dataPath, rw::call(STRLEN, {dataPath})});
+        st32(self + 0x20, 0);
+        st32(self + 0x24, 0);
+        st8(self + 0x28, 0);
+        st32(self + 0x40, 0);
+        rw::call(AEABI_MEMSET, {self + 0x48, 0x1C, 0});
+        st32(self + 0x68, 0);
+        st32(self + 0x6C, 0);
+        st32(self + 0x70, 0);
+        st32(self + 0x74, 0);
+        st32(self + 0x78, 0x3F800000);  // 1.0f
+        return self;
+    }
+
+    // sub_8DD830(self): open both files, decode the index (a BGAD entry of the index file) and map the names
+    static uint32_t open(uint32_t self) {
+        guest::Frame f(0x74);
+        st32(self + 0x20, 0);
+        uint32_t old = ld32(self + 0x24);
+        st32(self + 0x24, 0);
+        if (old != 0) rw::call(SHARED_RELEASE, {old});
+        rw::call(MAP_CLEAR, {self + 0x68});
+        if (const uint32_t fn = ld32(self + 0x40)) {
+            *f.at<uint32_t>(0x50) = ld32(self + 0x48);
+            vcallo(fn, 0x18, {fn, f.addr(0x50)});  // free the old index
+        }
+        st32(self + 0x48, 0);
+        st8(self + 0x28, 0);
+        const uint32_t index = f.addr(0x30), data = f.addr(0x28), entry = f.addr(0x20), copy = f.addr(0x18);
+        rw::call(STREAM_OPEN, {index, cstr(self + 8), relative(cstr(self + 8))});
+        rw::call(STREAM_OPEN, {data, cstr(self + 0x14), relative(cstr(self + 0x14))});
+        uint32_t ok = 0;
+        if (ld32(index) != 0 && ld32(data) != 0) {
+            const uint32_t inst = rw::call(ARCHIVE_INSTANCE, {});
+            st32(copy, ld32(index));
+            st32(copy + 4, ld32(index + 4));
+            if (ld32(copy + 4) != 0) rw::call(SHARED_ADD, {ld32(copy + 4)});
+            rw::call(ARCHIVE_GET_DATA, {entry, inst, copy, 0, 0});
+            if (ld32(copy + 4) != 0) rw::call(SHARED_RELEASE, {ld32(copy + 4)});
+            if (const uint32_t d = ld32(entry)) {
+                st8(self + 0x28, 0);
+                const uint32_t p = ld32(d + 4);
+                if (p != 0 && ld32(d + 8) >= 0x14) {
+                    st32(self + 0x48, p);  // take the buffer and its deleter
+                    const uint32_t deleter = f.addr(0x50);
+                    rw::call(FN_DELETE_COPY, {deleter, d + 0x10});
+                    rw::call(FN_DELETE_MOVE_ASSIGN, {self + 0x30, deleter});
+                    destroyFunction(deleter);
+                    const uint32_t empty = f.addr(0x38);
+                    *f.at<uint32_t>(0x48) = 0;
+                    rw::call(FN_DELETE_ASSIGN, {ld32(entry) + 0x10, empty});
+                    destroyFunction(empty);
+                    const uint32_t h = ld32(self + 0x48);
+                    const uint32_t magic = ld8(h) | (ld8(h + 1) << 8) | (ld8(h + 2) << 16) | (ld8(h + 3) << 24);
+                    if (magic == INDEX_MAGIC && ld32(h + 4) == 3) {
+                        const uint32_t entries = ld32(h + 0xC), names = ld32(h + 0x10);
+                        st32(self + 0x4C, entries);
+                        st32(self + 0x50, names);
+                        if (ld32(ld32(entry) + 8) >= (names + entries) * 4 + 0x14) {
+                            const uint32_t base = h + 0x14, byName = base + entries * 8;
+                            st32(self + 0x54, base);
+                            st32(self + 0x58, byName);
+                            st32(self + 0x5C, byName + names * 4);
+                            st32(self + 0x60, base + (names + entries) * 8);
+                            st8(self + 0x28, 1);
+                        }
+                    }
+                }
+                if (ld8(self + 0x28)) {
+                    for (uint32_t i = 0, n = ld32(self + 0x50); i != n; i++) {
+                        const uint32_t name = ld32(self + 0x60) + ld32(ld32(self + 0x5C) + i * 4);
+                        if (ld8(name) == 0) continue;
+                        *f.at<uint32_t>(0x10) = name;
+                        *f.at<uint32_t>(0x14) = i;
+                        rw::call(MAP_INSERT, {f.addr(0x50), self + 0x68, f.addr(0x10)});
+                    }
+                    const uint32_t stream = ld32(data), ctrl = ld32(data + 4);
+                    if (ctrl != 0) rw::call(SHARED_ADD, {ctrl});
+                    st32(self + 0x20, stream);
+                    old = ld32(self + 0x24);
+                    st32(self + 0x24, ctrl);
+                    if (old != 0) rw::call(SHARED_RELEASE, {old});
+                    ok = 1;
+                }
+            }
+            if (ld32(entry + 4) != 0) rw::call(SHARED_RELEASE, {ld32(entry + 4)});
+        }
+        if (ld32(data + 4) != 0) rw::call(SHARED_RELEASE, {ld32(data + 4)});
+        if (ld32(index + 4) != 0) rw::call(SHARED_RELEASE, {ld32(index + 4)});
+        return ok;
+    }
+
+    // sub_8DE234(out, self, index): entry `index` of the data file (shared_ptr<Data>, sret; null when closed)
+    static void entryByIndex(uint32_t out, uint32_t self, uint32_t index) {
+        guest::Frame f(0x14);
+        const uint32_t stream = ld32(self + 0x20);
+        if (stream == 0) {
+            st32(out, 0);
+            st32(out + 4, 0);
+            return;
+        }
+        vcallo(stream, 0x10, {stream, ld32(ld32(self + 0x54) + index * 8) & 0x7FFFFFFF, 0});  // seek
+        const uint32_t inst = rw::call(ARCHIVE_INSTANCE, {});
+        const uint32_t copy = f.addr(8);
+        st32(copy, ld32(self + 0x20));
+        st32(copy + 4, ld32(self + 0x24));
+        if (ld32(copy + 4) != 0) rw::call(SHARED_ADD, {ld32(copy + 4)});
+        rw::call(ARCHIVE_GET_DATA, {out, inst, copy, 1, 0});
+        if (ld32(copy + 4) != 0) rw::call(SHARED_RELEASE, {ld32(copy + 4)});
+    }
+
+    // sub_8DE2DC(out, self, name, int* index): the entry of a name (its index out; null when it has none)
+    static void entryByName(uint32_t out, uint32_t self, uint32_t name, uint32_t indexOut) {
+        guest::Frame f(0xC);
+        *f.at<uint32_t>(4) = name;
+        const uint32_t node = rw::call(MAP_AT, {self + 0x68, f.addr(4)});
+        const int32_t index = int32_t(ld32(ld32(self + 0x58) + ld32(node + 0xC) * 4));
+        st32(indexOut, uint32_t(index));
+        if (index >= 0) {
+            rw::call(ENTRY_BY_INDEX, {out, self, uint32_t(index)});
+        } else {
+            st32(out, 0);
+            st32(out + 4, 0);
+        }
+    }
+};
+RW_FUNCTION(0x8DD1A4, "bg::vfs (sub_8DD1A4): the statics on first use", VfsArchive::init);
+RW_FUNCTION(0x8DD7A4, "bg::vfs (sub_8DD7A4): unmount an id", VfsArchive::unmount);
+RW_FUNCTION(0x8DD830, "bg::vfs archive (sub_8DD830): open", VfsArchive::open);
+RW_FUNCTION(0x8DE104, "bg::vfs archive (sub_8DE104): constructor", VfsArchive::construct);
+RW_FUNCTION(0x8DE234, "bg::vfs archive (sub_8DE234): the entry by index", VfsArchive::entryByIndex);
+RW_FUNCTION(0x8DE2DC, "bg::vfs archive (sub_8DE2DC): the entry by name", VfsArchive::entryByName);
 
 }  // namespace bg

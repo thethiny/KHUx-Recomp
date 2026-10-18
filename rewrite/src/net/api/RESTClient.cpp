@@ -552,4 +552,155 @@ uint32_t FindSubstringInsensitive(const StdString *haystack, const StdString *ne
 }
 RW_FUNCTION(0x49977C, "hole::network::FindSubstringInsensitive", FindSubstringInsensitive);
 
+// ---------------------------------------------------------------------------------------------- the decode worker
+namespace {
+constexpr uint32_t THREAD_LOCAL_DATA = 0xC97C4D;      // std::__thread_local_data()
+constexpr uint32_t THREAD_STRUCT_CTOR = 0xC97ED9;     // std::__thread_struct::__thread_struct
+constexpr uint32_t THREAD_SPECIFIC_RESET = 0x499749;  // __thread_specific_ptr<__thread_struct>::reset
+constexpr uint32_t STRING_INIT_RANGE = 0x49A4A7;      // std::string::__init(char* first, char* last)
+constexpr uint32_t MD5_CALCULATE = 0x4E0A89;          // md5::calculate (sret std::string, data, size)
+constexpr uint32_t MEMCMP = 0x40EF2C, MEMCPY = 0x40E164, ATOI = 0x410A14;   // imports
+constexpr uint32_t SEARCH_CASEFOLD = 0x49A42B;        // std::__search<bool(*&)(char, char)>
+constexpr uint32_t CASEFOLD_EQUAL = 0x49A419;         // sub_49A418: the case-insensitive char comparison
+constexpr uint32_t FIND_SUBSTRING_INSENSITIVE = 0x49977D;
+constexpr uint32_t ADD_MEMBER_INT = 0x499801;         // GenericValue::AddMember(name, int, allocator)
+constexpr uint32_t STD_MUTEX_LOCK = 0xC8DE15, STD_MUTEX_UNLOCK = 0xC8DE59;
+constexpr uint32_t RESULTS_PUSH_BACK = 0x499875;      // deque<pair<shared_ptr<Connection>, shared_ptr<Result>>>
+constexpr uint32_t Director_getInstance = 0x8EE519;
+constexpr uint32_t Scheduler_performFunctionInCocosThread = 0x8FF883;
+constexpr uint32_t VT_DELIVER_RESULTS = 0xF55600;     // the cocos-thread lambda [client]
+constexpr uint32_t S_APPLICATION_JSON = 0xDFA2D4, S_TEXT_JAVASCRIPT = 0xDFA2E5;
+constexpr uint32_t S_ENCODED_JSON = 0xDFA2F5, S_OCTET_STREAM = 0xDFA30E;
+constexpr uint32_t S_INTERVAL_HEADER = 0xDFA327;      // "Request-Interval-Order:" (23 chars)
+constexpr uint32_t S_INTERVAL_MEMBER = 0xDFA33F;      // "__request_interval_order__"
+constexpr uint32_t INTERVAL_HEADER_LENGTH = 23;
+// HttpResponse: the body vector<char> +0x1C, the headers vector<char> +0x28. Result: status +0, document +8 (its
+// type flags +0xC, allocator +0x10).
+constexpr uint32_t RESPONSE_BODY = 0x1C, RESPONSE_HEADERS = 0x28;
+constexpr uint32_t RESULT_DOCUMENT = 8;
+constexpr uint32_t JSON_OBJECT = 3;
+
+const StdString &str(uint32_t addr) { return *rw::host_ptr<StdString>(addr); }
+
+// the headers contain `needle` (n chars), case-insensitively (the predicate stored at `predicate` and passed by
+// reference)
+bool headersContain(uint32_t headers, uint32_t needle, uint32_t n, uint32_t predicate) {
+    const uint32_t size = str(headers).size(), first = str(headers).data();
+    if (size < n) return false;
+    W(predicate, CASEFOLD_EQUAL);
+    const uint32_t last = first + size;
+    const uint32_t hit = uint32_t(rw::call_exact(SEARCH_CASEFOLD, {first, last, needle, needle + n, predicate}));
+    return hit != last && hit - first != 0xFFFFFFFFu;
+}
+}  // namespace
+
+// sub_4991BC: the decode worker's std::thread entry. job (new, 0x18 bytes) = {result, its control block, the
+// HttpResponse, connection, its control block, the client}: check the body's MD5 against the connection's key
+// (when it has one), parse it (JSON) or decrypt it (encoded JSON, when the connection has a cipher) into the
+// result's document (else status 2), add the server's Request-Interval-Order, then queue {connection, result} for
+// the cocos thread.
+uint32_t ResponseThread(uint32_t job) {
+    GuestFrame frame(0x9C);
+    rw::call(THREAD_SPECIFIC_RESET, {rw::call(THREAD_LOCAL_DATA, {}),
+                                     [] {
+                                         const uint32_t t = rw::call(g::operator_new, {4});
+                                         rw::call(THREAD_STRUCT_CTOR, {t});
+                                         return t;
+                                     }()});
+    const uint32_t client = R(job + 20), result = R(job), document = result + RESULT_DOCUMENT;
+    const uint32_t response = R(job + 8), connection = R(job + 12);
+    const uint32_t headers = frame.addr(0x60), predicate = frame.addr(0x74);
+    rw::call(STRING_INIT_RANGE, {headers, R(response + RESPONSE_HEADERS), R(response + RESPONSE_HEADERS + 4)});
+    const uint32_t body = response + RESPONSE_BODY;
+    const uint32_t key = connection + 0x34;
+
+    bool intact = true;
+    if (str(key).size() != 0) {
+        const uint32_t md5 = frame.addr(0x54);
+        rw::call(MD5_CALCULATE, {md5, R(body), R(body + 4) - R(body)});
+        bool differs = true;
+        const uint32_t n = str(key).size();
+        if (n == str(md5).size()) {
+            if (str(key).isLong()) {
+                differs = rw::call(MEMCMP, {str(key).data(), str(md5).data(), n}) != 0;
+            } else {
+                differs = false;
+                for (uint32_t k = 0; k < n; k++)
+                    if (rd8(str(key).data() + k) != rd8(str(md5).data() + k)) {
+                        differs = true;
+                        break;
+                    }
+            }
+        }
+        if (str(md5).isLong()) rw::call(g::operator_delete, {str(md5).w2.get()});
+        intact = !differs;
+    }
+    if (intact) {
+        if (headersContain(headers, S_APPLICATION_JSON, 16, predicate) ||
+            headersContain(headers, S_TEXT_JAVASCRIPT, 15, predicate)) {
+            const uint32_t text = frame.addr(0x48), stream = frame.addr(0x6C);
+            rw::call(g::string_init, {text, R(body), R(body + 4) - R(body)});
+            W(stream, str(text).data());
+            W(stream + 4, str(text).data());
+            rw::call(PARSE_STREAM, {document, stream});
+            if (str(text).isLong()) rw::call(g::operator_delete, {str(text).w2.get()});
+        } else if (R(connection + 0x2C) != 0 && (headersContain(headers, S_ENCODED_JSON, 24, predicate) ||
+                                                 headersContain(headers, S_OCTET_STREAM, 24, predicate))) {
+            rw::call(0x499021, {client, body, document, connection + 0x2C});   // decodeEncodedJSONData
+        } else {
+            W(result, 2);
+        }
+    }
+
+    // "Request-Interval-Order: N" -> document["__request_interval_order__"] = N
+    const uint32_t needle = frame.addr(0x3C);
+    const uint32_t chars = rw::call(g::operator_new, {0x20});
+    W(needle, 0x21);
+    W(needle + 4, INTERVAL_HEADER_LENGTH);
+    W(needle + 8, chars);
+    rw::call(MEMCPY, {chars, S_INTERVAL_HEADER, INTERVAL_HEADER_LENGTH});
+    rw::store8(rw::host_ptr<uint8_t>(chars + INTERVAL_HEADER_LENGTH), 0);
+    const int32_t at = int32_t(rw::call(FIND_SUBSTRING_INSENSITIVE, {headers, needle}));
+    if (at >= 0) {
+        const uint32_t interval = rw::call(ATOI, {str(headers).data() + uint32_t(at) + INTERVAL_HEADER_LENGTH});
+        const uint32_t allocator = R(document + 0x10);
+        if (R(document + 0xC) != JSON_OBJECT) {
+            W(document + 0xC, JSON_OBJECT);
+            W(document, 0);
+            W(document + 4, 0);
+            W(document + 8, 0);
+        }
+        rw::call(ADD_MEMBER_INT, {document, S_INTERVAL_MEMBER, interval, allocator});
+    }
+
+    rw::call(Ref_release, {response});
+    rw::call(STD_MUTEX_LOCK, {client + 0x1C});
+    const uint32_t pair = frame.addr(0x2C);
+    W(pair, connection);
+    W(pair + 4, R(job + 16));
+    if (R(pair + 4)) rw::call(g::shared_add, {R(pair + 4)});
+    W(pair + 8, result);
+    W(pair + 0xC, R(job + 4));
+    if (R(pair + 0xC)) rw::call(g::shared_add, {R(pair + 0xC)});
+    rw::call(RESULTS_PUSH_BACK, {client + 0x20, pair});
+    if (R(pair + 0xC)) rw::call(g::shared_release, {R(pair + 0xC)});
+    if (R(pair + 4)) rw::call(g::shared_release, {R(pair + 4)});
+    const uint32_t scheduler = R(rw::call(Director_getInstance, {}) + 0x60);
+    const uint32_t deliver = frame.addr(0x78);
+    W(deliver + 16, deliver);
+    W(deliver, VT_DELIVER_RESULTS);
+    W(deliver + 4, client);
+    rw::call(Scheduler_performFunctionInCocosThread, {scheduler, deliver});
+    if (const uint32_t f = R(deliver + 16)) rw::vcall(rw::host_ptr<uint32_t>(f), f == deliver ? 4 : 5, {f});
+    rw::call(STD_MUTEX_UNLOCK, {client + 0x1C});
+    if (str(needle).isLong()) rw::call(g::operator_delete, {str(needle).w2.get()});
+    if (str(headers).isLong()) rw::call(g::operator_delete, {str(headers).w2.get()});
+    if (R(job + 16)) rw::call(g::shared_release, {R(job + 16)});
+    if (R(job + 4)) rw::call(g::shared_release, {R(job + 4)});
+    rw::call(g::operator_delete, {job});
+    return 0;
+}
+// a thread entry: the verifier never shadow-runs it (the host started it), its callees are verified on their own
+RW_FUNCTION(0x4991BC, "hole::network::RESTClient (sub_4991BC): the decode worker thread", ResponseThread);
+
 }  // namespace hole::network

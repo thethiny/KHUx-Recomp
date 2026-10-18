@@ -10,7 +10,8 @@ ignores that function's results from the runs so far (kept in rewrite/reset.tsv)
 
 rewrite/accepted.txt lists functions reviewed by hand whose mismatches are known and harmless ("ADDR reason" per
 line, # comments): the original stores bytes it never initialised (stale stack contents), or another thread races
-with the shadow run. They count as verified when they have verified calls, mismatches or not.
+with the shadow run. They count as verified when they have verified calls, mismatches or not. "ADDR!" (one-time
+exceptions, reviewed: every call differs only in such bytes, so none is ever clean) counts without a verified call.
 """
 import argparse
 from pathlib import Path
@@ -49,12 +50,17 @@ def main():
     lines = ["addr\tname\tcalls\tverified\tmismatches\tunverifiable"]
     lines += [f"{k}\t{v[0]}\t{v[1]}\t{v[2]}\t{v[3]}\t{v[4]}" for k, v in sorted(status.items())]
     STATUS.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    accepted = set()
+    accepted, always = set(), set()
     if ACCEPTED.exists():
         for line in ACCEPTED.read_text(encoding="utf-8").splitlines():
             if line.strip() and not line.startswith("#"):
-                accepted.add(f"{int(line.split()[0], 16):08X}")
-    ok = sorted(k for k, v in status.items() if v[2] > 0 and (v[3] == 0 or k in accepted))
+                tok = line.split()[0]
+                addr = f"{int(tok.rstrip('!'), 16):08X}"
+                accepted.add(addr)
+                if tok.endswith("!"):
+                    always.add(addr)
+    ok = sorted(k for k, v in status.items()
+                if (v[2] > 0 and (v[3] == 0 or k in accepted)) or (k in always and v[3] > 0))
     VERIFIED.write_text("".join(f"{k}\n" for k in ok))
     bad = sorted((k, v[0], v[3]) for k, v in status.items() if v[3] and k not in accepted)
     print(f"{len(status)} functions with results, {len(ok)} verified, {len(bad)} with mismatches")

@@ -184,6 +184,50 @@ struct SdSoundSystem {
     }
 };
 RW_FUNCTION(0xCD8FF0, "SdSoundSystem_Initialize", SdSoundSystem::initialize);
+
+// the sound thread (stop flag SD + 0x1C, last frame time SD + 0x20) and the bank lookup
+struct SdThread {
+    // sub_CD8E1C(id): the bank with this id (slot id & 0xFFFF of the pool, its id matching), or null
+    static uint32_t findBank(uint32_t id) {
+        mutexLock(SD);
+        uint32_t bank = 0;
+        const int32_t slot = int32_t(id & 0xFFFF);
+        const uint32_t slots = ld32(SD + 0xC);
+        if (slot < lds32(SD + 4) && slots != 0) {
+            const uint32_t entry = slots + uint32_t(slot) * 24;
+            if (entry != 0 && (ld8(entry + 0x10) & 1)) {
+                const uint32_t b = ld32(entry + 0x14);
+                if (id == ld32(b + 4)) bank = b;
+            }
+        }
+        mutexUnlock(SD);
+        return bank;
+    }
+
+    // sub_CD8EAC: every frame update each used bank (vtable +0x14) and the sound system, then sleep what is left of
+    // 16 ms
+    static void run(uint32_t /*argument*/) {
+        st8(SD + 0x1C, 0);
+        while (!ld8(SD + 0x1C)) {
+            const uint64_t start = rw::call64(0xCE247C, {});  // SQEX::Timer::GetUTime
+            mutexLock(SD);
+            for (uint32_t node = ld32(SD + 0x14); node != 0; node = ld32(node + 8)) {
+                const uint32_t bank = ld32(node + 0x14);
+                vcallo(bank, 0x14, {bank});
+                if (!(ld8(node + 0x10) & 1)) break;
+            }
+            mutexUnlock(SD);
+            rw::call(0xCE0B38, {});  // SoundSystem::Update
+            const uint64_t spent = rw::call64(0xCE247C, {}) - start;
+            st32(SD + 0x20, uint32_t(spent));
+            st32(SD + 0x24, uint32_t(spent >> 32));
+            const int32_t sleep = int32_t(int64_t(spent) / -1000) + 16;  // __aeabi_ldivmod (truncating)
+            if (sleep > 0) rw::call(0xCE2364, {uint32_t(sleep)});      // SQEX::Thread::Sleep
+        }
+    }
+};
+RW_FUNCTION(0xCD8E1C, "SdSoundSystem (sub_CD8E1C): the bank of an id", SdThread::findBank);
+RW_FUNCTION(0xCD8EAC, "SdSoundSystem (sub_CD8EAC): the sound thread", SdThread::run);
 RW_FUNCTION(0xCD92E0, "SdSoundSystem_AddData", SdSoundSystem::addData);
 RW_FUNCTION(0xCDA460, "SdSoundSystem_RemoveDataSync", SdSoundSystem::removeDataSync);
 RW_FUNCTION(0xCDA834, "SdSoundSystem_BankCtrl_IsUsing", SdSoundSystem::bankIsUsing);
@@ -210,6 +254,18 @@ struct Akb {
     static uint32_t getHeaderSize(uint32_t p) {
         if (isAkb1(p) == 1 || isAkb2(p) == 1) return ld16(p + 6);
         return 0xFFFF;
+    }
+    // sub_CDC460: AKB1 - its header size (-1 for version 0); AKB2 - the offset after the header and its n entries
+    static uint32_t getDataOffset(uint32_t p) {
+        if (isAkb1(p) == 1) {
+            if (getVersion(p) == 0) return 0xFFFFFFFFu;
+            return getHeaderSize(p);
+        }
+        const uint32_t n = ld8(p + 0xF);
+        if (n == 0) return ld16(p + 2);
+        const uint32_t header = ld16(p + 2);
+        const uint32_t table = isAkb1(p) == 1 ? 0 : p + header;
+        return ld16(table + 2) * n + header;
     }
     static uint32_t getFileSize(uint32_t p) {
         if (isAkb1(p) == 1 || isAkb2(p) == 1) return ld32(p + 8);
@@ -283,6 +339,7 @@ struct Akb {
 RW_FUNCTION(0xCDC2E0, "akbIsAkb1File", Akb::isAkb1);
 RW_FUNCTION(0xCDC3F8, "akbGetVersion", Akb::getVersion);
 RW_FUNCTION(0xCDC42C, "akbGetHeaderSize", Akb::getHeaderSize);
+RW_FUNCTION(0xCDC460, "akb (sub_CDC460): the data offset", Akb::getDataOffset);
 RW_FUNCTION(0xCDC4D4, "akbGetFileSize", Akb::getFileSize);
 RW_FUNCTION(0xCDC584, "akbGetSoundData", Akb::getSoundData);
 RW_FUNCTION(0xCDC61C, "akbSoundGetAttributeData", Akb::soundGetAttributeData);
@@ -423,5 +480,10 @@ struct CoreAudioOut {
 RW_FUNCTION(0xCE8260, "CoreAudioOutInit", CoreAudioOut::init);
 RW_FUNCTION(0xCE86A4, "CoreAudioOutQueueBuffer", CoreAudioOut::queueBuffer);
 RW_FUNCTION(0xCE8778, "CoreAudioOutKick", CoreAudioOut::kick);
+// sub_CE80B8: the buffer queue callback - the render callback (OUT + 0) with the same arguments, when set
+static void coreAudioOutCallback(uint32_t a0, uint32_t a1, uint32_t a2) {
+    if (const uint32_t fn = ld32(OUT)) rw::call(fn, {a0, a1, a2, fn});
+}
+RW_FUNCTION(0xCE80B8, "CoreAudioOut (sub_CE80B8): the buffer queue callback", coreAudioOutCallback);
 
 }  // namespace sqex
