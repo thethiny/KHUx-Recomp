@@ -15,8 +15,9 @@ tools only — they call the game's own functions, nothing ships with them.
 | Close the notice | `python -m recomp.emu.step tap name=Button_Close` |
 | Stop the game | `powershell -c "Stop-Process -Name khux"` |
 
-One game instance at a time. Never take screenshots: read `/ui` instead, or ask the user to look (he is faster
-than any script at "is it black / stuck / crashed").
+One game instance at a time. Read `/ui`, `/state` and the logs; a screenshot of the khux.exe window (PrintWindow) is
+for when everything else fails, not a routine check. Runs are
+often unattended: give every run a timeout and kill a stuck exe yourself.
 
 ## 2. Play: which script for which screen
 
@@ -80,6 +81,13 @@ The exe also prints `>>> screen` / `>>> api` lines into its log (`recomp/out/hos
   (`--reset ADDR` after fixing a function). Mismatch reports are the `RW MISMATCH` blocks in the exe log.
 - A full verifying session: `python recomp/rewrite/tools/verify_session.py [quests]` (boot, notices, campaign
   rounds with rush + insta-win, merge). The account is far ahead (stage ~162) and too weak for real fights.
+  - `--fight`: real fights with rush (HP and gauge kept full): the battle code runs under the verifier.
+  - `--lose`: real fights without rush; `KHUX_LOSE=1` makes auto_battle decline the continue prompt once, so the
+    quest is really lost (player down, retire, back to quest select).
+  - `--fs fs2`: the second account (Invitee, user 8, early story quests: story dramas, SceneLight scenes).
+  - `KHUX_RW_ONLY=@file` (one name prefix per line) verifies callees whose callers are rewritten (calls from
+    rewritten code are never compared on their own). Do not use `KHUX_RW_THREADS=1` for a whole session: it
+    parks the network thread and boot hangs on the loading indicator.
 - **A raid on demand** (raids are the server's call): from `server/`,
   `python -c "from sqlalchemy.orm import sessionmaker; from src.models import get_engine; from src import raid as r;
   db = sessionmaker(bind=get_engine('khux.db'))(); r.create(db, 7, 2300, 1000, 1); db.commit()"` spawns a Darkside

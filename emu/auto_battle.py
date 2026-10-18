@@ -19,6 +19,8 @@ from .ctl import advance_story, get, is_story
 
 VERBOSE = bool(__import__("os").environ.get("KHUX_BATTLE_VERBOSE"))
 RUSH = "--rush" in sys.argv or bool(__import__("os").environ.get("KHUX_RUSH"))
+# KHUX_LOSE=1: decline the continue prompt, so a lost fight ends the quest (the lose path, for verify sessions)
+LOSE = bool(__import__("os").environ.get("KHUX_LOSE"))
 
 
 def peek32(addr, n=4):
@@ -173,6 +175,7 @@ def main():
     t0 = time.time()
     since = get("state")["events"]
     last_prompt = None
+    declined_at = 0.0
     walk_step = 0
     bare = 0
     # attack progress: when tapping on-screen enemies changes nothing (enemy behind an obstacle), explore
@@ -280,6 +283,17 @@ def main():
             if prompt != last_prompt:
                 print(f"{time.time() - t0:5.0f}s prompt: {prompt!r}")
                 last_prompt = prompt
+            # KHUX_LOSE: decline the continue prompt (its other button) once, so the quest is really lost; the
+            # retire confirmation that follows gets OK
+            decline = next((w for w in widgets if w["touch"] and w["name"] in ("Button_Close", "Button_Cancel",
+                                                                              "Button_No")), None)
+            if LOSE and decline and time.time() - declined_at > 8:
+                print(f"{time.time() - t0:5.0f}s lose: declining ({decline['name']})")
+                declined_at = time.time()
+                r = decline["rect"]
+                get("tap", x=(r[0] + r[2]) / 2, y=(r[1] + r[3]) / 2)
+                time.sleep(1.5)
+                continue
             r = ok["rect"]
             get("tap", x=(r[0] + r[2]) / 2, y=(r[1] + r[3]) / 2)
             time.sleep(1.5)

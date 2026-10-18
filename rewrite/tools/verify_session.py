@@ -1,11 +1,12 @@
 """Run the native exe with every rewritten function shadow-verified, play a little, and merge the results.
 
-python recomp/rewrite/tools/verify_session.py [quests] [--fs fs2] [--fight]
+python recomp/rewrite/tools/verify_session.py [quests] [--fs fs2] [--fight | --lose]
 
 Boots (KHUX_RW_VERIFY=1), clears the startup notices to MyPage, plays `quests` story quests with rush +
 insta-win (battle load, win, results, quest select; default 2; the account is too far ahead to win real fights),
 closes the game and runs merge_stats.py. --fight: real fights instead of insta-win (rush keeps HP and the special
-gauge full), so the battle code runs under the verifier. Needs the private server running. Prints the rewrite
+gauge full), so the battle code runs under the verifier. --lose: real fights without rush (the account is too weak):
+the player goes down (revive, continue prompt). Needs the private server running. Prints the rewrite
 lines of the run log (mismatches, the per-function report).
 """
 import os
@@ -30,6 +31,7 @@ def main():
     quests = int(args[0]) if args and args[0].isdigit() else 2
     fs = args[args.index("--fs") + 1] if "--fs" in args else None
     fight = "--fight" in args
+    lose = "--lose" in args
     kill_exe()
     time.sleep(1)
     env = dict(os.environ, KHUX_RW_VERIFY="1")
@@ -60,7 +62,9 @@ def main():
         if quests:
             try:
                 subprocess.run([sys.executable, "-u", "-m", "recomp.emu.campaign", str(quests), "300"],
-                               cwd=str(ROOT), env=dict(os.environ, KHUX_RUSH="1", **({} if fight else {"KHUX_INSTAWIN": "1"})),
+                               cwd=str(ROOT), env=dict({k: v for k, v in os.environ.items() if k not in ("KHUX_RUSH", "KHUX_INSTAWIN")},
+                                        **({"KHUX_LOSE": "1"} if lose else {"KHUX_RUSH": "1"}),
+                                        **({} if fight or lose else {"KHUX_INSTAWIN": "1"})),
                                timeout=600 * quests)
             except subprocess.TimeoutExpired:
                 print("campaign took too long; keeping the results so far")
