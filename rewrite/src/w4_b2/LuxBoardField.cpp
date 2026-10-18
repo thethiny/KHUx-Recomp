@@ -92,7 +92,126 @@ struct LuxBoard {
         strFree(s);
         return 0;
     }
+
+    // the turn counter: bones LuxTurnNum1..5 of the number armature show the digits (units first, -1 = blank),
+    // the armature shifted right by the digit count
+    static constexpr uint32_t L_NUMBER = 0x270, L_TEXT = 0x274;   // cocostudio::Armature*
+    static constexpr uint32_t ARMATURE_GET_BONE = 0x27C, ARMATURE_GET_ANIMATION = 0x298;
+    static constexpr uint32_t BONE_CHANGE_DISPLAY_WITH_INDEX = 0x7A2681;   // Bone::changeDisplayWithIndex(int, bool)
+    static constexpr uint32_t LOG10 = 0x419E7C, DIV = 0x419E88;            // imports: log10(double), div(int, int)
+    static constexpr uint32_t S_TURN_BONE = 0xE01F0E;                      // "LuxTurnNum%d"
+    static constexpr uint32_t DIGITS_X = 0xE4B3D0;                         // float[5]: 75, 98, 121, 144, 167
+    static constexpr int32_t MAX_NUMBER = 99999;
+    static void setNumber(uint32_t self, int32_t number) {
+        int32_t n = number > MAX_NUMBER ? MAX_NUMBER : number;
+        int32_t digits = 1;
+        if (n >= 1) {
+            double x = double(n);
+            uint64_t bits;
+            std::memcpy(&bits, &x, 8);
+            const uint64_t r = rw::call64(LOG10, {uint32_t(bits), uint32_t(bits >> 32)});
+            double l;
+            std::memcpy(&l, &r, 8);
+            digits = int32_t(l) + 1;
+        }
+        guest::Frame f(0x44C);
+        const uint32_t quotRem = f.addr(0x20), name = f.addr(0x34), nameStr = f.addr(0x28);
+        uint32_t armature = ld32(self + L_NUMBER);
+        for (int32_t k = 0; k < 5;) {
+            const uint32_t getBone = ld32(ld32(armature) + ARMATURE_GET_BONE);
+            k++;
+            call(0x49140D, {name, S_TURN_BONE, uint32_t(k)});   // StringBuffer(fmt, k)
+            strInit(nameStr, name, host_strlen(name));
+            const uint32_t bone = call(getBone, {armature, nameStr});
+            strFree(nameStr);
+            if (bone) {
+                if (k - 1 < digits) {
+                    call(DIV, {quotRem, uint32_t(n), 10});
+                    call(BONE_CHANGE_DISPLAY_WITH_INDEX, {bone, ld32(quotRem + 4), 1});
+                    n = int32_t(ld32(quotRem));
+                } else {
+                    call(BONE_CHANGE_DISPLAY_WITH_INDEX, {bone, 0xFFFFFFFFu, 1});
+                }
+            }
+            armature = ld32(self + L_NUMBER);
+        }
+        vcall(armature, node::setPositionX, {armature, ld32(DIGITS_X + 4 * uint32_t(digits) - 4)});
+    }
+
+    // shows the board (raised by 37 when `raised`), restarting both armatures' finished animations
+    static void play(uint32_t self, uint32_t raised) {
+        vcall(self, node::setPositionY, {self, raised ? fbits(37.0f) : 0u});
+        restart(self + L_NUMBER);
+        restart(self + L_TEXT);
+        vcall(self, node::setVisible, {self, 1});
+    }
+    static void restart(uint32_t slot) {
+        const uint32_t armature = ld32(slot);
+        const uint32_t animation = vcall(armature, ARMATURE_GET_ANIMATION, {armature});
+        if (vcall(animation, 0x1C, {animation}) != 0) return;    // isPlaying
+        if (vcall(animation, 0x2C, {animation}) != 1) return;    // isComplete
+        vcall(animation, 0x10, {animation});                     // resume
+        vcall(ld32(slot), node::setVisible, {ld32(slot), 1});
+    }
+
+    // both animations' isPlaying() checked (and the results dropped): always false
+    static uint32_t isFinish(uint32_t self) {
+        for (uint32_t slot : {L_NUMBER, L_TEXT}) {
+            const uint32_t armature = ld32(self + slot);
+            const uint32_t animation = vcall(armature, ARMATURE_GET_ANIMATION, {armature});
+            if (vcall(animation, 0x1C, {animation})) vcall(animation, 0x34, {animation});
+        }
+        return 0;
+    }
+
+    // the board's origin in world space, kept at +0x284
+    static uint32_t getUIPos(uint32_t self) {
+        Frame f;
+        const uint32_t p = f.alloc(8);
+        call(0x895A39, {p, self, ld32(0xFD605C)});   // convertToWorldSpace(Vec2::ZERO)
+        st32(self + 0x288, ld32(p + 4));
+        st32(self + 0x284, ld32(p));
+        call(VEC2_DTOR, {p});
+        return self + 0x284;
+    }
+
+    // `done` hidden and stopped; the board hides too unless `other` is still showing
+    static void setCompleteVisible(uint32_t self, uint32_t done, uint32_t other) {
+        vcall(done, node::setVisible, {done, 0});
+        const uint32_t animation = vcall(done, ARMATURE_GET_ANIMATION, {done});
+        vcall(animation, 0x80, {animation, 0});
+        if (!vcall(other, node::isVisible, {other})) vcall(self, node::setVisible, {self, 0});
+    }
 };
+// init: the turn-number panel's frame event: on "lux" the prizes waiting at +0x278 burst out at the board
+static void onFrameEvent(uint32_t functor, uint32_t, uint32_t event) {
+    const uint32_t self = ld32(functor + 4);
+    if (call(0x47CBD5, {event, 0xDFA9FF}) != 0) return;   // std::string::compare("lux")
+    if (const uint32_t prizes = ld32(self + 0x278)) {
+        call(0x5DEAE1, {prizes, self + 0x27C, self + 0x27C});   // MapPrizes::eruption(from, to)
+        st32(self + 0x278, 0);
+    }
+}
+// init: a panel's movement event: when its animation completes it hides (the board too, unless the other panel
+// still shows)
+static void onNumberMovementEvent(uint32_t functor, uint32_t, uint32_t type) {
+    if (ld32(type) != 1) return;
+    const uint32_t self = ld32(functor + 4);
+    LuxBoard::setCompleteVisible(self, ld32(self + LuxBoard::L_NUMBER), ld32(self + LuxBoard::L_TEXT));
+}
+static void onTextMovementEvent(uint32_t functor, uint32_t, uint32_t type) {
+    if (ld32(type) != 1) return;
+    const uint32_t self = ld32(functor + 4);
+    LuxBoard::setCompleteVisible(self, ld32(self + LuxBoard::L_TEXT), ld32(self + LuxBoard::L_NUMBER));
+}
+RW_FUNCTION(0x5D4652, "LuxBoard::init number panel movement event lambda operator()", onNumberMovementEvent);
+RW_FUNCTION(0x5D44CE, "LuxBoard::init text panel movement event lambda operator()", onTextMovementEvent);
+RW_FUNCTION(0x5D4580, "LuxBoard::init frame event lambda operator() (\"lux\")", onFrameEvent);
+RW_FUNCTION(0x5D38C0, "LuxBoard::setNumber", LuxBoard::setNumber);
+RW_FUNCTION(0x5D3A44, "LuxBoard::play", LuxBoard::play);
+RW_FUNCTION(0x5D3B08, "LuxBoard::isFinish", LuxBoard::isFinish);
+RW_FUNCTION(0x5D3B68, "LuxBoard::getUIPos", LuxBoard::getUIPos);
+RW_FUNCTION(0x5D3CAA, "LuxBoard::setCompleteVisible", LuxBoard::setCompleteVisible);
 RW_FUNCTION(0x75F4F8, "LuxBoard::create", LuxBoard::create);
 RW_FUNCTION(0x7639C0, "LuxBoard::LuxBoard", LuxBoard::construct);
 RW_FUNCTION(0x5D3478, "LuxBoard::~LuxBoard", LuxBoard::destruct);

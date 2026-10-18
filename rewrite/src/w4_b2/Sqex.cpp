@@ -549,6 +549,54 @@ struct SoundImplFn {
         if (self->pauseState != 2) self->playTime = self->playTime + dt;
     }
 };
+// Pauses nest: the first PauseOn fades the sound out over `ms` (or pauses its voice at once), later ones only
+// count; ignored while stopping or finished. PauseOff undoes one; the last fades back in and resumes the voice.
+struct SoundPause {
+    static uint32_t on(SoundImpl *self, int32_t ms) {
+        if (uint32_t(self->state - 4) <= 1) return 0;
+        if (int8_t(self->flagB4) <= 0) {
+            rw::call(0xCF4450, {rw::guest_addr(&self->pauseFade), fbits(0.0f), uint32_t(ms)});   // SetTarget
+            if (ms != 0) {
+                self->pauseState = 1;
+            } else {
+                rw::call(0xCDDD14, {rw::guest_addr(self)});   // UpdateVolume
+                if (const uint32_t v = self->voice) vcallo(v, 0x20, {v});   // Voice::Pause
+                self->pauseState = 2;
+            }
+        }
+        self->flagB4 = uint8_t(self->flagB4 + 1);
+        return 0;
+    }
+    static uint32_t off(SoundImpl *self, int32_t ms) {
+        if (self->flagB4 == 1) {
+            rw::call(0xCF4450, {rw::guest_addr(&self->pauseFade), fbits(1.0f), uint32_t(ms)});   // SetTarget
+            if (ms == 0) rw::call(0xCDDD14, {rw::guest_addr(self)});   // UpdateVolume
+            if (const uint32_t v = self->voice) vcallo(v, 0x24, {v});   // Voice::Resume
+            self->pauseState = 0;
+        }
+        uint8_t count = uint8_t(self->flagB4 - 1);
+        if (count & 0x80) count = 0;
+        self->flagB4 = count;
+        return 0;
+    }
+};
+RW_FUNCTION(0xCDDDD0, "SQEX::SoundImpl::PauseOn", SoundPause::on);
+RW_FUNCTION(0xCDDE60, "SQEX::SoundImpl::PauseOff", SoundPause::off);
+
+// sdlib attribute comparisons: op & 0xF0 = 0 >=, 0x10 >, 0x20 <, 0x30 <=, 0x40 ==, 0x50 !=
+uint32_t attrIntCmp(uint32_t op, int32_t a, int32_t b) {
+    switch (op & 0xF0) {
+    case 0x00: return a >= b;
+    case 0x10: return a > b;
+    case 0x20: return a < b;
+    case 0x30: return a <= b;
+    case 0x40: return a == b;
+    case 0x50: return a != b;
+    default: return 0;
+    }
+}
+RW_FUNCTION(0xCDD03C, "attrIntCmp", attrIntCmp);
+
 RW_FUNCTION(0xCDD880, "SQEX::SoundImpl::SoundImpl", SoundImplFn::construct);
 RW_FUNCTION(0xCDD970, "SQEX::SoundImpl::GetState", SoundImplFn::getState);
 RW_FUNCTION(0xCDDA08, "SQEX::SoundImpl::Stop", SoundImplFn::stop);

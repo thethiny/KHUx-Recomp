@@ -1595,6 +1595,18 @@ RW_FUNCTION(0x74D8A2, "EnemyActor::Property::setBuff", Property::setBuff);
 int32_t Property::getMaxHP(const Property *self) { return self->get32(EnemyActor::P_HP_MAX); }
 RW_FUNCTION(0x74B0C8, "EnemyActor::Property::getMaxHP", Property::getMaxHP);
 
+// non-virtual thunks: the IStatusProtocol (+0x20) / IBuffProtocol (+0x24) bases' views of the same Property
+void thunkGetCondition(const uint8_t *out, uint32_t status, int32_t type) {
+    Property::getCondition(out, rw::host_ptr<Property>(status - 0x20), type);
+}
+RW_FUNCTION(0x74D766, "thunk to EnemyActor::Property::getCondition", thunkGetCondition);
+void thunkGetBuff(const uint8_t *out, uint32_t buffs, int32_t slot) {
+    Property::getBuff(out, rw::host_ptr<Property>(buffs - 0x24), slot);
+}
+RW_FUNCTION(0x74D80A, "thunk to EnemyActor::Property::getBuff", thunkGetBuff);
+int32_t thunkGetMaxHP(uint32_t status) { return Property::getMaxHP(rw::host_ptr<Property>(status - 0x20)); }
+RW_FUNCTION(0x74DB1C, "thunk to EnemyActor::Property::getMaxHP", thunkGetMaxHP);
+
 void Property::heal(Property *self, int32_t amount) {
     int32_t hp = self->get32(EnemyActor::P_HP);
     int32_t max = int32_t(rw::vcall(self, 8, {rw::guest_addr(self)}));   // virtual getMaxHP

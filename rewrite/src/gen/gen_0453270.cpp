@@ -3052,8 +3052,8 @@ static uint32_t return_constant_4841D0() {
 RW_FUNCTION(0x4841D0, "sub_4841D0", return_constant_4841D0);
 
 // sub_484424
-static uint32_t calls_sub_471200_484424(uint32_t a0, uint32_t a1) {
-    return rw::call(0x471201, {a0 + 8u, uint32_t(rw::load<uint8_t>(a1))});  // sub_471200
+static void calls_sub_471200_484424(uint32_t a0, uint32_t a1) {
+    const uint32_t r1 = rw::call(0x471201, {a0 + 8u, uint32_t(rw::load<uint8_t>(a1))});  // sub_471200
 }
 RW_FUNCTION(0x484424, "sub_484424", calls_sub_471200_484424);
 
@@ -3368,8 +3368,8 @@ static void forward_to_delete_486132(uint32_t a0) {
 RW_FUNCTION(0x486132, "sub_486132", forward_to_delete_486132);
 
 // sub_48613A
-static uint32_t calls_SceneManager_enableLoadingIndicator_48613A(uint32_t a0) {
-    return rw::call(0x60D169, {rw::call(0x60C26D, {a0}), 1u});  // SceneManager::enableLoadingIndicator; SceneManager::getInstance
+static void calls_SceneManager_enableLoadingIndicator_48613A(uint32_t a0) {
+    const uint32_t r1 = rw::call(0x60D169, {rw::call(0x60C26D, {a0}), 1u});  // SceneManager::enableLoadingIndicator; SceneManager::getInstance
 }
 RW_FUNCTION(0x48613A, "sub_48613A", calls_SceneManager_enableLoadingIndicator_48613A);
 
@@ -4516,8 +4516,8 @@ static void forward_to_delete_4899CA(uint32_t a0) {
 RW_FUNCTION(0x4899CA, "sub_4899CA", forward_to_delete_4899CA);
 
 // sub_4899D2
-static uint32_t calls_SceneManager_enableLoadingIndicator_4899D2(uint32_t a0) {
-    return rw::call(0x60D169, {rw::call(0x60C26D, {a0}), 1u});  // SceneManager::enableLoadingIndicator; SceneManager::getInstance
+static void calls_SceneManager_enableLoadingIndicator_4899D2(uint32_t a0) {
+    const uint32_t r1 = rw::call(0x60D169, {rw::call(0x60C26D, {a0}), 1u});  // SceneManager::enableLoadingIndicator; SceneManager::getInstance
 }
 RW_FUNCTION(0x4899D2, "sub_4899D2", calls_SceneManager_enableLoadingIndicator_4899D2);
 
@@ -4903,8 +4903,8 @@ static uint32_t fn_48F5B4(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3) {
 RW_FUNCTION(0x48F5B4, "sub_48F5B4", fn_48F5B4);
 
 // sub_48F600
-static uint32_t calls_sub_48F384_48F600(uint32_t a0, uint32_t a1) {
-    return rw::call(0x48F385, {a0 + 8u, uint32_t(rw::load<uint8_t>(a1))});  // sub_48F384
+static void calls_sub_48F384_48F600(uint32_t a0, uint32_t a1) {
+    const uint32_t r1 = rw::call(0x48F385, {a0 + 8u, uint32_t(rw::load<uint8_t>(a1))});  // sub_48F384
 }
 RW_FUNCTION(0x48F600, "sub_48F600", calls_sub_48F384_48F600);
 
@@ -4941,8 +4941,8 @@ static uint32_t return_constant_48FBF4() {
 RW_FUNCTION(0x48FBF4, "sub_48FBF4", return_constant_48FBF4);
 
 // sub_48FE48
-static uint32_t calls_sub_48F1A4_48FE48(uint32_t a0, uint32_t a1) {
-    return rw::call(0x48F1A5, {a0 + 8u, uint32_t(rw::load<uint8_t>(a1))});  // sub_48F1A4
+static void calls_sub_48F1A4_48FE48(uint32_t a0, uint32_t a1) {
+    const uint32_t r1 = rw::call(0x48F1A5, {a0 + 8u, uint32_t(rw::load<uint8_t>(a1))});  // sub_48F1A4
 }
 RW_FUNCTION(0x48FE48, "sub_48FE48", calls_sub_48F1A4_48FE48);
 
@@ -4963,8 +4963,8 @@ static uint32_t return_constant_48FE74() {
 RW_FUNCTION(0x48FE74, "sub_48FE74", return_constant_48FE74);
 
 // sub_4900C8
-static uint32_t calls_sub_48D9E0_4900C8(uint32_t a0, uint32_t a1) {
-    return rw::call(0x48D9E1, {a0 + 8u, uint32_t(rw::load<uint8_t>(a1))});  // sub_48D9E0
+static void calls_sub_48D9E0_4900C8(uint32_t a0, uint32_t a1) {
+    const uint32_t r1 = rw::call(0x48D9E1, {a0 + 8u, uint32_t(rw::load<uint8_t>(a1))});  // sub_48D9E0
 }
 RW_FUNCTION(0x4900C8, "sub_4900C8", calls_sub_48D9E0_4900C8);
 
@@ -5317,8 +5317,8 @@ static void forward_to_delete_491316(uint32_t a0) {
 RW_FUNCTION(0x491316, "sub_491316", forward_to_delete_491316);
 
 // sub_49131E
-static uint32_t calls_SceneManager_enableLoadingIndicator_49131E(uint32_t a0) {
-    return rw::call(0x60D169, {rw::call(0x60C26D, {a0}), 1u});  // SceneManager::enableLoadingIndicator; SceneManager::getInstance
+static void calls_SceneManager_enableLoadingIndicator_49131E(uint32_t a0) {
+    const uint32_t r1 = rw::call(0x60D169, {rw::call(0x60C26D, {a0}), 1u});  // SceneManager::enableLoadingIndicator; SceneManager::getInstance
 }
 RW_FUNCTION(0x49131E, "sub_49131E", calls_SceneManager_enableLoadingIndicator_49131E);
 

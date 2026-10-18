@@ -519,3 +519,85 @@ uint32_t setBattleTurnEntry(StageUI *self, uint32_t playerTurn) {
 }
 }  // namespace
 RW_FUNCTION(0x761726, "StageUI::setBattleTurn", setBattleTurnEntry);
+
+// ------------------------------------------------------------------------------------------- continue dialog
+namespace {
+constexpr uint32_t VT_CONTINUE_CHOICE = 0xF6E434;   // openContinueDialog $_?: {onClose, StageUI*, onClose}
+constexpr uint32_t VT_CONTINUE_CLOSED = 0xF6E53C;   // openContinueDialog $_?: {onClose} (no continue offered)
+constexpr uint32_t FUNCTION_VV_COPY = 0x4683CD;     // std::function<void()>::function(const function&)
+constexpr uint32_t SceneUtil_openContinuPopup = 0x45DDE1, SceneUtil_openOkDialog4Line = 0x45C775;
+constexpr uint32_t APIManager_getInstance = 0x4BA8C9;
+constexpr uint32_t API_CONTINUE_STATE = 0x64;       // APIManager: the continue offer (its byte +0x10: unavailable)
+constexpr int32_t TEXT_NO_CONTINUE = 103100050;
+
+// libc++'s std::function copy constructor, inline: the callable cloned into dst
+void copyFunction(uint32_t dst, uint32_t src) {
+    const uint32_t p = ld32(src + 16);
+    if (!p) {
+        st32(dst + 16, 0);
+    } else if (p == src) {
+        st32(dst + 16, dst);
+        vcall(p, 0x0C, {p, dst});   // __clone(dst)
+    } else {
+        st32(dst + 16, vcall(p, 0x08, {p}));   // __clone()
+    }
+}
+}  // namespace
+
+// The "continue?" popup after a lost quest (onClose runs when it is closed); when no continue can be offered,
+// an OK dialog with the "cannot continue" text instead.
+void openContinueDialog(uint32_t self, uint32_t onClose) {
+    Frame f;
+    // the popup's lambda: {onClose, this, onClose}
+    const uint32_t callback = f.alloc(24), lambda = f.alloc(0x38);
+    call(FUNCTION_VV_COPY, {callback, onClose});
+    copyFunction(lambda, callback);
+    st32(lambda + 0x18, self);
+    call(FUNCTION_VV_COPY, {lambda + 0x20, onClose});
+    const uint32_t offer = ld32(call(APIManager_getInstance, {}) + API_CONTINUE_STATE);
+    if (!offer || ld8(offer + 0x10)) {
+        const uint32_t moved = f.alloc(0x38);
+        copyFunction(moved, lambda);
+        st32(moved + 0x18, ld32(lambda + 0x18));
+        copyFunction(moved + 0x20, lambda + 0x20);
+        st32(moved + 0x18, ld32(lambda + 0x18));
+        const uint32_t choice = f.alloc(20);
+        st32(choice + 16, 0);
+        const uint32_t heap = call(fn::operator_new, {0x40});
+        if (heap) {
+            st32(heap, VT_CONTINUE_CHOICE);
+            copyFunction(heap + 8, moved);
+            st32(heap + 0x20, ld32(moved + 0x18));
+            copyFunction(heap + 0x28, moved + 0x20);
+            st32(heap + 0x20, ld32(moved + 0x18));
+        }
+        st32(choice + 16, heap);
+        call(SceneUtil_openContinuPopup, {choice});
+        functionDestroy(choice);
+        functionDestroy(moved + 0x20);
+        functionDestroy(moved);
+    } else {
+        const uint32_t text = f.alloc(8), message = f.alloc(12);
+        call(fn::TextData_get, {text, 0, uint32_t(TEXT_NO_CONTINUE)});
+        strInitC(message, ld32(ld32(text) + 4));
+        const uint32_t closed = f.alloc(24);
+        copyFunction(closed, callback);
+        const uint32_t done = f.alloc(20);
+        st32(done + 16, 0);
+        const uint32_t heap = call(fn::operator_new, {0x20});
+        if (heap) {
+            st32(heap, VT_CONTINUE_CLOSED);
+            copyFunction(heap + 8, closed);
+        }
+        st32(done + 16, heap);
+        call(SceneUtil_openOkDialog4Line, {message, done, 0});
+        functionDestroy(done);
+        functionDestroy(closed);
+        strFree(message);
+        sharedRelease(text);
+    }
+    functionDestroy(lambda + 0x20);
+    functionDestroy(lambda);
+    functionDestroy(callback);
+}
+RW_FUNCTION(0x75FDB8, "StageUI::openContinueDialog", openContinueDialog);

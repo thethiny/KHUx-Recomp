@@ -454,6 +454,16 @@ void StageState::setBuff(StageState *self, int32_t slot, const uint8_t *change) 
     SafeBuffer::write(self, self->data.get() + index, change, 12, index);
 }
 RW_FUNCTION(0x4F0238, "StageState::setBuff", StageState::setBuff);
+// the IBuffProtocol base's (+0x24) view
+void thunkSetBuff(uint32_t buffs, int32_t slot, const uint8_t *change) {
+    StageState::setBuff(const_cast<StageState *>(rw::host_ptr<StageState>(buffs - 0x24)), slot, change);
+}
+RW_FUNCTION(0x4F0258, "thunk to StageState::setBuff", thunkSetBuff);
+// the IStatusProtocol base's (+0x20) view (void: setCondition returns nothing)
+void thunkSetCondition(uint32_t status, uint32_t type, uint32_t condition) {
+    rw::call(0x4F03A9, {status - 0x20, type, condition});   // StageState::setCondition
+}
+RW_FUNCTION(0x4F03EC, "thunk to StageState::setCondition", thunkSetCondition);
 
 int32_t StageState::getBuffChange(const StageState *self, int32_t type, int32_t target) {
     return self->get32((uint32_t(type) * 4u + uint32_t(target)) * 4u + BUFF_CHANGES);

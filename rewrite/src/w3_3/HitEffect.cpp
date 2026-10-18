@@ -198,4 +198,37 @@ void showEffectEnterFrame(uint32_t lambda, const uint32_t *movieRef) {
 }
 RW_FUNCTION(0x5D8FE0, "ShowEffect enterFrame lambda", showEffectEnterFrame);
 
+// HitEffect::deploy's enterFrame lambda (__func, 0x30 bytes): {effect +8, std::function<void()> onEnd +0x10,
+// parent +0x28}. When the movie reaches its last frame the effect ends: onEnd() if set, else it is removed from
+// the parent (kept alive across the call).
+uint32_t deployLambdaClone(uint32_t self) {
+    const uint32_t copy = rw::call(bt::fn::operator_new, {0x30});
+    if (copy) {
+        rw::save<uint32_t>(copy, g::enterFrameLambda);
+        rw::save<uint32_t>(copy + 8, ld(self + 8));
+        rw::call(0x4683CD, {copy + 0x10, self + 0x10});   // std::function<void()>(const function&)
+        rw::save<uint32_t>(copy + 0x28, ld(self + 0x28));
+    }
+    return copy;
+}
+RW_FUNCTION(0x5D9778, "HitEffect::deploy enterFrame lambda __clone()", deployLambdaClone);
+void deployLambdaDestroyDeallocate(uint32_t self) {
+    destroyFunction(self + 0x10);
+    rw::call(bt::fn::operator_delete, {self});
+}
+RW_FUNCTION(0x5D9830, "HitEffect::deploy enterFrame lambda destroy_deallocate()", deployLambdaDestroyDeallocate);
+void deployLambdaCall(uint32_t self, uint32_t moviePtr) {
+    const uint32_t movie = ld(moviePtr);
+    if (ld(movie + MOVIE_CURRENT_FRAME) != ld(movie + MOVIE_TOTAL_FRAMES)) return;
+    rw::call(0x8FD0B5, {ld(self + 8)});   // Ref::retain
+    if (ld(self + 0x20)) {
+        rw::call(0x470E69, {self + 0x10});   // std::function<void()>::operator()
+    } else {
+        const uint32_t parent = ld(self + 0x28);
+        rw::call(vfn(parent, 0x12C), {parent, ld(self + 8), 1});   // removeChild(effect, true)
+    }
+    rw::call(0x8FD0D5, {ld(self + 8)});   // Ref::autorelease
+}
+RW_FUNCTION(0x5D985C, "HitEffect::deploy enterFrame lambda operator()", deployLambdaCall);
+
 }  // namespace hit_effect

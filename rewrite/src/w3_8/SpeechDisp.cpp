@@ -103,4 +103,13 @@ uint32_t runSpeechSet(uint32_t self, uint32_t done) {
 }
 RW_FUNCTION(0x492A4C, "SpeechDisp::runSpeechSet", runSpeechSet);
 
+// std::string::find(char c, size_t pos) (libc++, instantiated here): the index of c at or after pos, or npos
+uint32_t stringFindChar(const guest::String *str, uint32_t c, uint32_t pos) {
+    const uint32_t size = str->size(), data = str->data();
+    if (size <= pos) return 0xFFFFFFFFu;
+    const uint32_t hit = rw::call(0x41CDA4, {data + pos, c & 0xFF, size - pos});   // memchr
+    return hit ? hit - data : 0xFFFFFFFFu;
+}
+RW_FUNCTION(0x601CD0, "std::string::find(char, size_t) (sub_601CD0)", stringFindChar);
+
 }  // namespace SpeechDispFns

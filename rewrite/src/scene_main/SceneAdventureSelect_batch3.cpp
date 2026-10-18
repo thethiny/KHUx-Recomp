@@ -742,3 +742,10 @@ RW_FUNCTION(0x732728, "SceneAdventureSelect::callAdventureSelectAPI::$_0 (level 
 RW_FUNCTION(0x7329C0, "SceneAdventureSelect::callAdventureSelectAPI::$_0 (level 6) destroy_deallocate()", L::selectApiDelete);
 RW_FUNCTION(0x732C58, "SceneAdventureSelect::callAdventureSelectAPI::$_0 (level 7) destroy_deallocate()", L::selectApiDelete);
 RW_FUNCTION(0x732C84, "SceneAdventureSelect::callAdventureSelectAPI::$_0 (level 7) operator()", L::selectApiLast);
+
+// storyInAnimation::$_48 operator(): runs the captured std::function<void()> (+8) when one is set (void: the
+// function's result is a leftover)
+static void storyInAnimationDone(uint32_t functor) {
+    if (rw::load<uint32_t>(functor + 0x18)) rw::call(0x470E69, {functor + 8});   // std::function<void()>::operator()
+}
+RW_FUNCTION(0x72AA54, "SceneAdventureSelect::storyInAnimation::$_48 operator()", storyInAnimationDone);

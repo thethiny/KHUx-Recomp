@@ -177,6 +177,17 @@ struct SdSoundSystem {
         rw::call(SOUND_FROM_ID, {f.addr(4), handle});
         return rw::call(0xCE1368, {f.addr(4), fade});  // Sound::Stop
     }
+    // pause (pause != 0) or resume a sound, fading over transTime ms
+    static uint32_t soundSetPause(uint32_t handle, uint32_t pause, int32_t transMs) {
+        uint32_t trans = uint32_t(transMs);
+        if (transMs < 0) {
+            log(5, 0xEECDB4, uint32_t(transMs));
+            trans = 0;
+        }
+        guest::Frame f(0xC);
+        rw::call(SOUND_FROM_ID, {f.addr(4), handle});
+        return rw::call(pause ? 0xCE1390 : 0xCE13B8, {f.addr(4), trans});  // Sound::PauseOn / PauseOff
+    }
     static uint32_t soundIsExist(uint32_t handle) {
         guest::Frame f(8);
         rw::call(SOUND_FROM_ID, {f.addr(4), handle});
@@ -235,6 +246,7 @@ RW_FUNCTION(0xCDA880, "SdSoundSystem_BankCtrl_StopSounds", SdSoundSystem::bankSt
 RW_FUNCTION(0xCDA94C, "SdSoundSystem_CreateSound", SdSoundSystem::createSound);
 RW_FUNCTION(0xCDACAC, "SdSoundSystem_SoundCtrl_StartFadeIn", SdSoundSystem::soundStartFadeIn);
 RW_FUNCTION(0xCDAD4C, "SdSoundSystem_SoundCtrl_Stop", SdSoundSystem::soundStop);
+RW_FUNCTION(0xCDADE0, "SdSoundSystem_SoundCtrl_SetPause", SdSoundSystem::soundSetPause);
 RW_FUNCTION(0xCDADB0, "SdSoundSystem_SoundCtrl_IsExist", SdSoundSystem::soundIsExist);
 
 // ============================================================================================ AKB files

@@ -65,6 +65,9 @@ def in_game():
     if not cov.exists():
         return None
     blocks = set(json.loads(cov.read_text())["blocks"])
+    seen = paths.OUT / "host" / "seen.txt"   # the native exe's coverage (KHUX_COVERAGE=1)
+    if seen.exists():
+        blocks |= {int(l, 16) for l in seen.read_text().split() if l.strip()}
     an = json.loads((paths.OUT / "analysis.json").read_text())
     return sum(1 for f in an["functions"] if int(f["addr"], 16) in blocks or int(f["addr"], 16) | 1 in blocks)
 

@@ -1026,6 +1026,25 @@ def cond_str(w, c):
 
 
 # ------------------------------------------------------------------------------------------------ driver
+def void_rewrites():
+    """Addresses whose hand-written rewrite is a void function: their r0 is a leftover (a rewritten one leaves a
+    different value than the lifted code), so a generated caller that only passes it on is void too."""
+    reg = re.compile(r"RW_FUNCTION(?:_NOVERIFY)?\(\s*(0x[0-9A-Fa-f]+)\s*,\s*\"[^\"]*\"\s*,\s*([\w:]+)\s*\)")
+    out = set()
+    for f in (REWRITE / "src").rglob("*.cpp"):
+        if f.parent == OUT_DIR:
+            continue
+        t = f.read_text(encoding="utf-8", errors="replace")
+        for addr, fn in reg.findall(t):
+            short = fn.split("::")[-1]
+            if re.search(r"\bvoid\s+(?:[\w:]+::)?" + re.escape(short) + r"\s*\(", t):
+                out.add(int(addr, 16) & ~1)
+    return out
+
+
+VOID_REWRITES = None
+
+
 def registered_elsewhere():
     pat = re.compile(r"^\s*RW_FUNCTION(?:_NOVERIFY)?\(\s*0x([0-9A-Fa-f]+)", re.M)
     out = set()
@@ -1139,9 +1158,13 @@ class Generator:
                                           and re.search(r"\(\w+ \*\*?this, float \w+\)", raw or "") is not None)
         # every value r0 can have at a return is what a void callee left there (e.g. a wrapper around free)
         def void_callee(tid):
+            global VOID_REWRITES
+            if VOID_REWRITES is None:
+                VOID_REWRITES = void_rewrites()
             target = fn.temps[tid][1]
             return (isinstance(target, tuple) and target[0] == "const"
-                    and self.names.proto(target[1] & ~1)[2].strip() == "void")
+                    and (self.names.proto(target[1] & ~1)[2].strip() == "void"
+                         or (target[1] & ~1) in VOID_REWRITES))
         only_void_leftovers = bool(terms) and all(
             t[1] == ("in", 0) or (t[1][0] == "lo" and void_callee(t[1][1])) for _, t in terms) and any(
             t[1][0] == "lo" for _, t in terms)
