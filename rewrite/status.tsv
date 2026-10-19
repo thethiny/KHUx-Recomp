@@ -472,6 +472,7 @@ addr	name	calls	verified	mismatches	unverifiable
 004D8BD0	PurchaseManager::deserialize	60	0	0	0
 004D8DDC	SaveBin::get<int>	539	28	0	0
 004D8E8C	SaveBin::get<unsigned int>	154	8	0	0
+004D9890	iap::ProductInfo::ProductInfo(const ProductInfo&)	84	38	0	0
 004DAB70	std::__hash_table<std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>>>::~__hash_table [base destructor]	277	98	0	0
 004DB0E4	ChatManager::getInstance	58	20	0	0
 004DB18E	ChatManager::ChatManager	46	4	0	0
@@ -493,7 +494,17 @@ addr	name	calls	verified	mismatches	unverifiable
 004E0B28	md5::calculate(const char*, std::string&, unsigned*)	79	7	0	0
 004E0D08	_JNIEnv::CallStaticVoidMethod	1602	746	0	0
 004E0D5C	LocalNotification::cancel	74	1	0	0
+004E0DD4	iap::StoreManager::getInstance()	21	11	0	0
+004E0E84	iap::StoreManager::StoreManager()	6	3	0	0
+004E0F0A	iap::StoreManager::sendProductsRequest	8	4	0	0
+004E0F14	iap::StoreManagerImpl::sendProductsRequest(const unordered_set<string>&, const function&)	8	4	0	0
+004E10BC	iap::StoreManager::cancelProductsRequest	8	4	0	0
+004E10C0	iap::StoreManager::setPurchaseCallback	4	3	0	0
+004E14C4	iap::StoreManagerImpl::notifyProduct(Result, const unordered_map<string, ProductInfo>*)	2	0	0	2
+004E1524	iap::StoreManagerImpl::StoreManagerImpl()	7	3	0	0
 004E17DC	_JNIEnv::CallVoidMethod	2	0	0	0
+004E19A8	Java_org_cocos2dx_cpp_GooglePlayManager_onFinishInitialize	1	0	0	0
+004E19D4	Java_org_cocos2dx_cpp_GooglePlayManager_onRequestProductsResult	1	0	0	0
 004E2610	RemoteNotification::needsGetToken	321	313	0	0
 004E262C	RemoteNotification::getToken	49	45	0	0
 004E49AC	_JNIEnv::CallObjectMethod	6661	1186	0	0
@@ -707,7 +718,16 @@ addr	name	calls	verified	mismatches	unverifiable
 004F9C80	CustomTextView::createCustomElement	274	0	0	0
 004F9E14	non-virtual thunk to CustomTextView::textHandler	284	0	0	18
 004F9E9C	CustomTextView::~CustomTextView (deleting)	132	0	0	0
+004FA3AC	MagicStoneScrollView::~MagicStoneScrollView()	6	0	0	2
+004FA534	MagicStoneScrollView::~MagicStoneScrollView [deleting destructor]	4	0	0	4
+004FA568	MagicStoneScrollView::create()	4	0	0	2
+004FA5BC	MagicStoneScrollView::MagicStoneScrollView()	6	2	0	0
+004FA730	MagicStoneScrollView::init()	6	0	0	2
 004FA8A0	BaseScrollView<int>::init()	45	0	0	1
+004FA8DC	MagicStoneScrollView::createRow(int, int)	20	0	0	10
+004FA934	MagicStoneScrollView::changeRow(Widget*, int, int)	192	38	0	124
+004FB758	MagicStoneScrollView::registItemTouchEvent(Widget*, int)	66	44	0	0
+004FB934	MagicStoneScrollView::setProductInfoMap(const unordered_map<string, ProductInfo>*)	6	4	0	0
 004FC968	BaseScrollView<unsigned long long>::init()	63	0	0	2
 004FD230	BaseScrollView<unsigned long long>::setItemIDs(const vector<ull>&)	63	0	0	2
 005034BC	SupportCharacterScrollView::~SupportCharacterScrollView()	67	0	0	7
@@ -785,17 +805,17 @@ addr	name	calls	verified	mismatches	unverifiable
 005164A4	sub_5164A4	146	2	0	0
 005164C4	nullsub_348	225	70	0	0
 005164CE	sub_5164CE	135	68	0	0
-005196EC	MyRecordScrollView::~MyRecordScrollView	4	0	0	0
+005196EC	MyRecordScrollView::~MyRecordScrollView	5	0	0	0
 005197CC	MyRecordScrollView::~MyRecordScrollView [deleting destructor]	2	0	0	0
 00519800	MyRecordScrollView::create	2	0	0	2
 005198B8	MyRecordScrollView::init	5	0	0	3
-00519A2C	MyRecordScrollView::update	19874	19619	0	255
+00519A2C	MyRecordScrollView::update	20194	19939	0	255
 0051A090	MyRecordScrollView::setContentSize	66	64	0	2
 0051AF34	MyRecordScrollView::setEnabledScrollBar	5	0	0	3
 0051B99C	MyRecordScrollView::init::$_1 __clone(__base*)	10	0	0	0
-0051B9BC	MyRecordScrollView::init::$_1 destroy()	14	0	0	0
+0051B9BC	MyRecordScrollView::init::$_1 destroy()	15	0	0	0
 0051BA38	MyRecordScrollView::init::$_0 __clone(__base*)	10	0	0	0
-0051BA58	MyRecordScrollView::init::$_0 destroy()	14	0	0	0
+0051BA58	MyRecordScrollView::init::$_0 destroy()	15	0	0	0
 00525638	BaseSlideView::~BaseSlideView	140	38	0	0
 0052587C	BaseSlideView::~BaseSlideView [deleting destructor]	106	38	0	9
 005258B0	BaseSlideView::init	103	0	0	0
@@ -883,17 +903,17 @@ addr	name	calls	verified	mismatches	unverifiable
 0053212C	ImageButton::init::$_0 __clone(__base*)	497	3	0	0
 00532154	nullsub_423	1955	44	0	0
 00532160	ImageButton::init::$_0::operator()	722	666	0	56
-0053259C	AvatarInfoDialog::~AvatarInfoDialog	4	0	0	2
+0053259C	AvatarInfoDialog::~AvatarInfoDialog	5	0	0	3
 00532A10	AvatarInfoDialog::~AvatarInfoDialog [deleting destructor]	2	0	0	2
 00532A30	AvatarInfoDialog::create	2	2	0	0
 00532A9C	AvatarInfoDialog::AvatarInfoDialog	5	5	0	0
 00532E3C	AvatarInfoDialog::init	7	5	0	0
 00532E94	AvatarInfoDialog::open	5	0	0	5
 00534E78	BaseSlideView::create	103	0	0	0
-00534F50	AvatarInfoDialog::close	4	4	0	0
-0053C6CC	AvatarInfoDialog::setTouchEnabledUnderUIButtons	4	4	0	0
-00546D84	AvatarInfoDialog::close::$_12 __clone(__base*)	16	4	0	0
-00546DA4	AvatarInfoDialog::close::$_12 destroy()	20	8	0	0
+00534F50	AvatarInfoDialog::close	5	5	0	0
+0053C6CC	AvatarInfoDialog::setTouchEnabledUnderUIButtons	5	5	0	0
+00546D84	AvatarInfoDialog::close::$_12 __clone(__base*)	20	5	0	0
+00546DA4	AvatarInfoDialog::close::$_12 destroy()	25	10	0	0
 00546E7C	AvatarInfoDialog::createLayout::$_11 __clone(__base*)	4	4	0	0
 00546E9C	AvatarInfoDialog::createLayout::$_11 destroy()	6	6	0	0
 00546FA4	AvatarInfoDialog::createLayout::$_10 __clone(__base*)	4	4	0	0
@@ -1175,6 +1195,55 @@ addr	name	calls	verified	mismatches	unverifiable
 005889C4	AdvEventBannerScrollView::setEventBanner $_1 __func::destroy_deallocate	12	0	0	0
 00588ACC	AdvEventBannerScrollView::loadEventBanner::$_0 __clone(__base*)	9	0	0	0
 00588AF4	AdvEventBannerScrollView::loadEventBanner::$_0 destroy()	9	0	0	0
+00588CAC	BuyMagicStoneDialog::open(const function<void()>&, bool)	2	0	0	2
+00588E0C	BuyMagicStoneDialog::init(const function<...>&, Type)	2	0	0	1
+00589208	BuyMagicStoneDialog::initItemIDsAndProductIDs(vector<int>&, vector<string>&)	3	1	0	0
+00589638	BuyMagicStoneDialog::callGetPaymentInfo(const function<void(bool)>&)	6	0	0	3
+005897A4	BuyMagicStoneDialog::callSendProductsRequest(const vector<string>&, const function&)	12	6	0	0
+0058A2B0	BuyMagicStoneDialog::checkTransaction(const function<void(bool)>&)	6	4	0	0
+0058A4E8	BuyMagicStoneDialog::updatePaymentInfo(Node*)	6	4	0	0
+0058AD80	BuyMagicStoneDialog::hasOwnedItem(const unordered_map<string, ProductInfo>*)	6	4	0	0
+0058B1D0	BuyMagicStoneDialog::checkHasMaxMagicStone()	6	6	0	0
+0058B310	BuyMagicStoneDialog::initJewelInfoButton(Widget*)	6	0	0	4
+0058B504	BuyMagicStoneDialog::initFundSettlementButton(Widget*)	6	0	0	4
+0058B6F8	BuyMagicStoneDialog::initTokushohoButton(Widget*)	6	0	0	4
+0058B91C	BuyMagicStoneDialog::initTokushohoButton $_15 __func::__clone(__base*)	12	0	0	0
+0058B938	BuyMagicStoneDialog::initTokushohoButton $_15 __func::destroy	18	6	0	0
+0058BB60	BuyMagicStoneDialog::initFundSettlementButton $_14 __func::__clone(__base*)	12	0	0	0
+0058BB7C	BuyMagicStoneDialog::initFundSettlementButton $_14 __func::destroy	18	6	0	0
+0058BDA4	BuyMagicStoneDialog::initJewelInfoButton $_13 __func::__clone(__base*)	12	0	0	0
+0058BDC0	BuyMagicStoneDialog::initJewelInfoButton $_13 __func::destroy	18	6	0	0
+0058C398	std::__sort<BuyMagicStoneDialog sort comparator&, int*>	6	2	0	0
+0058C708	BuyMagicStoneDialog::initItemIDsAndProductIDs sort comparator	66	9	0	0
+0058C7C0	std::__sort3<BuyMagicStoneDialog sort comparator&, int*>	8	3	0	0
+0058D7AC	BuyMagicStoneDialog::callSendProductsRequest  __func::__clone()	12	6	0	0
+0058D850	BuyMagicStoneDialog::callSendProductsRequest  __func::destroy_deallocate	18	10	0	0
+0058D948	BuyMagicStoneDialog::callGetPaymentInfo $_3 __func::__clone()	12	6	0	0
+0058D9EC	BuyMagicStoneDialog::callGetPaymentInfo $_3 __func::destroy_deallocate	18	12	0	0
+0058DA18	BuyMagicStoneDialog::callGetPaymentInfo $_3::operator()(bool)	6	0	0	6
+0058DC70	BuyMagicStoneDialog::callGetPaymentInfo $_3 UlbE_ __func::__clone()	12	6	0	0
+0058DD14	BuyMagicStoneDialog::callGetPaymentInfo $_3 UlbE_ __func::destroy_deallocate	18	12	0	0
+0058DD40	BuyMagicStoneDialog::callGetPaymentInfo $_3 inner lambda::operator()(bool)	6	6	0	0
+0058DF70	BuyMagicStoneDialog::init $_2 __func::__clone()	60	12	0	0
+0058E0E8	BuyMagicStoneDialog::init  __func::destroy_deallocate	78	27	0	0
+0058E124	BuyMagicStoneDialog::init $_2::operator()(bool)	12	6	0	0
+0058E552	BuyMagicStoneDialog::init  __func::destroy_deallocate	46	10	0	0
+00590ABC	BuyMagicStoneDialog::open $_0 __func::__clone()	132	24	0	0
+00590B70	BuyMagicStoneDialog::open $_0 __func::destroy_deallocate	151	44	0	0
+00591B28	BuyMagicStoneDialog::open $_0 __func::destroy_deallocate	18	16	0	0
+00591DBC	BuyMagicStoneDialog::open $_0 __func::__clone()	6	6	0	0
+00591E7C	BuyMagicStoneDialog::open $_0 __func::destroy_deallocate	12	12	0	0
+00591F4C	BuyMagicStoneDialog::open $_0 __func::__clone(__base*)	6	4	0	0
+00591F6C	BuyMagicStoneDialog::open $_0 __func::destroy	12	10	0	0
+00591FE0	BuyMagicStoneDialog::open $_0 __func::__clone(__base*)	12	8	0	0
+00591FFC	BuyMagicStoneDialog::open $_0 __func::destroy	18	14	0	0
+0059207C	BuyMagicStoneDialog::open $_0 __func::__clone(__base*)	6	4	0	0
+005920A0	BuyMagicStoneDialog::open $_0 __func::destroy	12	4	0	0
+005924BC	BuyMagicStoneDialog::open $_0 __func::__clone(__base*)	12	8	0	0
+005924D8	BuyMagicStoneDialog::open $_0 __func::destroy	18	14	0	0
+00592560	BuyMagicStoneDialog::open $_0 __func::__clone(__base*)	36	26	0	0
+00592580	BuyMagicStoneDialog::open $_0 __func::destroy	58	32	0	0
+00592794	BuyMagicStoneDialog::open $_0 __func::destroy_deallocate	6	4	0	0
 0059734C	RaidBossLwfDialog::create	11	0	0	0
 005973EC	RaidBossLwfDialog::open	11	0	0	0
 00597940	RaidBossLwfDialog::settingRaidLwf	11	0	0	0
