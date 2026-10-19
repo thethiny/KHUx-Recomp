@@ -53,13 +53,15 @@ static const char *read_list(const char *v) {
     return buf;
 }
 
-/* is `name` prefixed by one of the comma-separated prefixes in `list`? */
+/* is `name` prefixed by one of the comma-separated prefixes in `list`? ("name$": that exact name) */
 static int name_listed(const char *list, const char *name) {
     char sep = list[0] == 10 ? 10 : ',';                  /* a list from a file: one per line */
     for (const char *p = list; *p;) {
         const char *e = strchr(p, sep);
         size_t n = e ? (size_t)(e - p) : strlen(p);
-        if (n && !strncmp(name, p, n)) return 1;
+        if (n > 1 && p[n - 1] == '$') {
+            if (strlen(name) == n - 1 && !strncmp(name, p, n - 1)) return 1;
+        } else if (n && !strncmp(name, p, n)) return 1;
         if (!e) break;
         p = e + 1;
     }
