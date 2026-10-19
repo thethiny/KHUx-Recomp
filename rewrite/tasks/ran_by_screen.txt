@@ -1,0 +1,868 @@
+# The run-but-unwritten functions (ran_unwritten.txt) by the cheapest screen they run on, in work order:
+# fewest taps from MyPage first, then the most functions. Recorded 2026-10-19 with the ctl "coverage" endpoint
+# (KHUX_COVERAGE=1). Unnamed functions show their likely owner (rewrite/tools/owners.py) in brackets.
+
+## _between: 33  (MyPage itself (player info / other menu / taps between screens))
+  00A42824  Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeKeyDown
+  00461FCC  sub_461FCC  [SceneUtil]
+  00493E04  sub_493E04  [TextFormat]
+  0054C000  sub_54C000  [SceneAvatarEdit]
+  0054C3F0  sub_54C3F0  [SceneAvatarEdit]
+  0059F710  sub_59F710  [OtherMenuDialog]
+  005A80E6  sub_5A80E6  [SceneSelectUnion]
+  005ACADC  sub_5ACADC  [SceneAlbum]
+  00637FB8  sub_637FB8  [SceneTitle]
+  00CA4984  sub_CA4984  [SQEX]
+  0044F6D8  sub_44F6D8  [?]
+  0044FF84  sub_44FF84  [?]
+  00CA338A  sub_CA338A  [SQEX]
+  00CA4A78  sub_CA4A78  [SQEX]
+  0053259C  AvatarInfoDialog::dtor
+  00532A30  AvatarInfoDialog::create
+  00532A9C  AvatarInfoDialog::ctor
+  00532E3C  AvatarInfoDialog::init
+  00532E94  AvatarInfoDialog::open
+  005332EC  AvatarInfoDialog::createLayout
+  00534F50  AvatarInfoDialog::close
+  0053C6CC  AvatarInfoDialog::setTouchEnabledUnderUIButtons
+  005196EC  MyRecordScrollView::dtor
+  00519800  MyRecordScrollView::create
+  005198B8  MyRecordScrollView::init
+  00519A2C  MyRecordScrollView::update
+  0051A090  MyRecordScrollView::setContentSize
+  0051AF34  MyRecordScrollView::setEnabledScrollBar
+  0059E84C  OtherMenuDialog::create
+  0059E8E0  OtherMenuDialog::open
+  0059FDB8  OtherMenuDialog::close
+  0046874C  SceneUtil::setMyPageTeamStatus
+  00469868  SceneUtil::setMyPageDeckStatus
+
+## magicstone: 36  (MyPage: tap the Jewel counter (MagicStone))
+  004E19A8  Java_org_cocos2dx_cpp_GooglePlayManager_onFinishInitialize
+  004E19D4  Java_org_cocos2dx_cpp_GooglePlayManager_onRequestProductsResult
+  00A3F174  Java_org_cocos2dx_lib_Cocos2dxBitmap_nativeInitBitmapDC
+  0058C398  sub_58C398  [BuyMagicStoneDialog]
+  0058C708  sub_58C708  [BuyMagicStoneDialog]
+  0058C7C0  sub_58C7C0  [BuyMagicStoneDialog]
+  0058DA18  sub_58DA18  [BuyMagicStoneDialog]
+  0058DD40  sub_58DD40  [BuyMagicStoneDialog]
+  0058DF70  sub_58DF70  [BuyMagicStoneDialog]
+  0058E124  sub_58E124  [BuyMagicStoneDialog]
+  00588CAC  BuyMagicStoneDialog::open
+  00588E0C  BuyMagicStoneDialog::init
+  00589208  BuyMagicStoneDialog::initItemIDsAndProductIDs
+  00589638  BuyMagicStoneDialog::callGetPaymentInfo
+  005897A4  BuyMagicStoneDialog::callSendProductsRequest
+  0058A2B0  BuyMagicStoneDialog::checkTransaction
+  0058A4E8  BuyMagicStoneDialog::updatePaymentInfo
+  0058AD80  BuyMagicStoneDialog::hasOwnedItem
+  0058B1D0  BuyMagicStoneDialog::checkHasMaxMagicStone
+  0058B310  BuyMagicStoneDialog::initJewelInfoButton
+  0058B504  BuyMagicStoneDialog::initFundSettlementButton
+  0058B6F8  BuyMagicStoneDialog::initTokushohoButton
+  004FA3AC  MagicStoneScrollView::dtor
+  004FA568  MagicStoneScrollView::create
+  004FA5BC  MagicStoneScrollView::ctor
+  004FA730  MagicStoneScrollView::init
+  004FA8DC  MagicStoneScrollView::createRow
+  004FA934  MagicStoneScrollView::changeRow
+  004FB758  MagicStoneScrollView::registItemTouchEvent
+  004FB934  MagicStoneScrollView::setProductInfoMap
+  004D9890  iap::ProductInfo::ctor
+  004E0DD4  iap::StoreManager::getInstance
+  004E0E84  iap::StoreManager::ctor
+  004E0F14  iap::StoreManagerImpl::sendProductsRequest
+  004E14C4  iap::StoreManagerImpl::notifyProduct
+  004E1524  iap::StoreManagerImpl::ctor
+
+## rankings: 25  (MyPage: Lux emblem (270,35) > Rankings)
+  006FDCF0  sub_6FDCF0  [SceneRanking]
+  006FDE40  sub_6FDE40  [SceneRanking]
+  006FE270  sub_6FE270  [SceneRanking]
+  00701194  sub_701194  [SceneRanking]
+  00701278  sub_701278  [SceneRanking]
+  0054F260  RankingScrollView::dtor
+  0054F3FC  RankingScrollView::create
+  0054F458  RankingScrollView::ctor
+  0054F5D4  RankingScrollView::init
+  0054F614  RankingScrollView::changeRankingScrollViewType
+  005529AC  RankingScrollView::setRankingData
+  0064A270  SceneRanking::create
+  0064A2C4  SceneRanking::ctor
+  006FBE1C  SceneRanking::dtor
+  006FBE80  SceneRanking::init
+  006FC928  SceneRanking::initScene
+  006FCA7C  SceneRanking::initRankingTitle
+  006FD858  SceneRanking::initMyRanking
+  006FD9FC  SceneRanking::initRankingScrollView
+  006FE008  SceneRanking::changeTickerMessage
+  006FE0E4  SceneRanking::changeScrollView
+  006FEEE8  SceneRanking::runInAnimation
+  006FF0A4  SceneRanking::runOutAnimationMain
+  006FF348  SceneRanking::openRankingRewardPopup
+  00700C44  SceneRanking::backScene
+
+## aboard: 24  (MyPage: Avatar Board)
+  006BB958  sub_6BB958  [SceneSphereBoardSelect]
+  00518B30  sub_518B30  [MyRecordScrollView]
+  00518D94  sub_518D94  [MyRecordScrollView]
+  00518EF0  sub_518EF0  [MyRecordScrollView]
+  00516510  BaseEndlessrollView::dtor
+  00516764  BaseEndlessrollView::createRow
+  005167F4  BaseEndlessrollView::init
+  00516D7C  BaseEndlessrollView::update
+  005177A0  BaseEndlessrollView::degree2radian
+  005177CC  BaseEndlessrollView::get_offset_move
+  005178E8  BaseEndlessrollView::setSub
+  006BE09C  BaseEndlessrollView::ctor
+  006B72C8  SceneSphereBoardSelect::initSphereBoardList
+  006B9550  SceneSphereBoardSelect::update
+  0050241C  SphereScrollView::dtor
+  005024DC  SphereScrollView::loadTextureIncentive
+  005025A8  SphereScrollView::loadTextureBoard
+  00502674  SphereScrollView::loadTextureKind
+  00502740  SphereScrollView::changeRow
+  00502F58  SphereScrollView::init
+  00502F98  SphereScrollView::setSphereBoard
+  00503008  SphereScrollView::Set_disp_param
+  00503278  SphereScrollView::setSphereBoardNewId
+  006B84C4  SphereScrollView::create
+
+## shop: 22  (MyPage: Shop)
+  004B6DCC  sub_4B6DCC  [hole::network]
+  005AF210  sub_5AF210  [DrawScrollView]
+  004DECB0  DownloadManager::getInstance
+  004DED64  DownloadManager::start
+  004DF1F4  DownloadManager::finalize
+  004DF2A0  DownloadManager::onRespond
+  004DF62C  DownloadManager::cancel
+  005AD174  DrawScrollView::dtor
+  005AD360  DrawScrollView::cancelShopHandle
+  005AD41C  DrawScrollView::setDrawFrame
+  005AD6C4  DrawScrollView::initShopTopGachaButton
+  005AE390  DrawScrollView::loadShopBanner
+  005AE4CC  DrawScrollView::init
+  005AECF4  DrawScrollView::update
+  005AED2C  DrawScrollView::createRow
+  005AED84  DrawScrollView::changeRow
+  005AEE58  DrawScrollView::updateRow
+  005AEF88  DrawScrollView::registItemTouchEvent
+  005AF284  DrawScrollView::updateScroll
+  0068CDBC  DrawScrollView::create
+  0068E7EC  DrawScrollView::ctor
+  005AE2CC  DrawScrollView::GachaData::ctor
+
+## party: 18  (MyPage: Lux emblem > Party)
+  00655DDC  sub_655DDC  [ScenePartyTop]
+  0065A7E8  sub_65A7E8  [ScenePartyMember]
+  0065A988  sub_65A988  [SceneSaleMedal]
+  0065AA2C  sub_65AA2C  [SceneSaleMedal]
+  0065AA58  sub_65AA58  [SceneSaleMedal]
+  0065AC20  sub_65AC20  [SceneSaleMedal]
+  0065ACC4  sub_65ACC4  [SceneSaleMedal]
+  0065ACF0  sub_65ACF0  [SceneSaleMedal]
+  0065AEB8  sub_65AEB8  [SceneSaleMedal]
+  0065AF5C  sub_65AF5C  [SceneSaleMedal]
+  0053E30C  ScenePartyTop::create
+  00652594  ScenePartyTop::callPartyTopAPI
+  00652A70  ScenePartyTop::dtor
+  00652AFC  ScenePartyTop::init
+  006530AC  ScenePartyTop::runInJoinLayout
+  006555C0  ScenePartyTop::runOutAnimationMain
+  006556B0  ScenePartyTop::runOutJoinLayout
+  00655CDC  ScenePartyTop::backScene
+
+## equip: 18  (MyPage: Equipment)
+  0067403C  sub_67403C  [IMedalSortFilter]
+  00674A04  sub_674A04  [IMedalSortFilter]
+  00674ADA  sub_674ADA  [IMedalSortFilter]
+  00677E00  sub_677E00  [MiniMedalScrollView]
+  0057AFD4  SceneDeckEdit::create
+  0057B028  SceneDeckEdit::ctor
+  0065FFD8  SceneDeckEdit::dtor
+  0066016C  SceneDeckEdit::init
+  00661658  SceneDeckEdit::initKeyBladePanel
+  00661C6C  SceneDeckEdit::initMedalSelectPanel
+  0066321C  SceneDeckEdit::checkPrepareFinishScene
+  0066360C  SceneDeckEdit::runInAnimation
+  00663A28  SceneDeckEdit::runOutAnimationMain
+  0066707C  SceneDeckEdit::updateDeckStauts
+  00667538  SceneDeckEdit::updateDeckView
+  00667EF8  SceneDeckEdit::updateDeckData
+  00668044  SceneDeckEdit::runUpdateKeybladeEvent
+  00669874  SceneDeckEdit::getSortFilter
+
+## chat: 17  (MyPage: chat button)
+  004DDB94  sub_4DDB94  [ChatManager]
+  0061507C  sub_61507C  [SceneManager]
+  006384E8  sub_6384E8  [SceneSplash]
+  00638558  sub_638558  [SceneSplash]
+  00638804  sub_638804  [SceneSplash]
+  0055C65C  ChatEditBoxMessageSend::dtor
+  0055C6E8  ChatEditBoxMessageSend::create
+  004DB7E0  ChatManager::getMessage
+  004DABE8  ChatManager::Message::init
+  004DE204  ChatManager::Message::ctor
+  005567B4  ChatScrollView::dtor
+  00556960  ChatScrollView::create
+  005569F4  ChatScrollView::init
+  00556C58  ChatScrollView::createRow
+  00556CB8  ChatScrollView::changeRow
+  0055852C  ChatScrollView::getTextLineCount
+  00558710  ChatScrollView::setMessages
+
+## presents: 9  (MyPage: Presents)
+  0050FED8  sub_50FED8  [AvatarTitleScrollView]
+  0050CA88  PresentBoxScrollView::dtor
+  0050CC14  PresentBoxScrollView::create
+  0050CC68  PresentBoxScrollView::ctor
+  0050CDD8  PresentBoxScrollView::init
+  0050CECC  PresentBoxScrollView::getLayoutPanel
+  0050CF94  PresentBoxScrollView::createRow
+  0050CFEC  PresentBoxScrollView::changeRow
+  0050DD00  PresentBoxScrollView::registItemTouchEvent
+
+## quests: 1  (MyPage: Quests)
+  0072834C  SceneAdventureSelect::backScene
+
+## aboard_board: 43  (Avatar Board > a board)
+  005181C4  sub_5181C4  [BaseEndlessrollView]
+  005183F4  sub_5183F4  [BaseEndlessrollView]
+  005186B4  sub_5186B4  [BaseEndlessrollView]
+  00518B64  sub_518B64  [MyRecordScrollView]
+  00518F20  sub_518F20  [MyRecordScrollView]
+  006BFFE8  sub_6BFFE8  [SceneSphereBoard]
+  006C0DB8  sub_6C0DB8  [SceneLight]
+  00517AD8  BaseEndlessrollView::updateAddMove
+  00517B64  BaseEndlessrollView::updateMoveMaxCheck
+  00793A64  ConnectingSphere::create
+  00798B5C  ConnectingSphere::dtor
+  00798B98  ConnectingSphere::get_user_data
+  00798DC0  ConnectingSphere::getSphereStatus
+  00798EC8  ConnectingSphere::executeSphereOpenlist
+  006BCE78  SceneSphereBoard::create
+  006BE1D8  SceneSphereBoard::dtor
+  006BE26C  SceneSphereBoard::init
+  006BF120  SceneSphereBoard::loadTextureIncentive
+  006BF1EC  SceneSphereBoard::loadTextureBoard
+  006BF2B8  SceneSphereBoard::loadTextureKind
+  006BF384  SceneSphereBoard::BoardMaking
+  006BF780  SceneSphereBoard::openTutorial30
+  006BF84C  SceneSphereBoard::runInAnimation
+  006BFB44  SceneSphereBoard::runOutAnimationMain
+  006BFEBC  SceneSphereBoard::backScene
+  006BF038  SphereUI::create
+  00793288  SphereUI::ctor
+  00793318  SphereUI::dtor
+  0079349C  SphereUI::create_sphere
+  007937B4  SphereUI::init
+  00793B18  SphereUI::load_board
+  00793E38  SphereUI::create_board
+  007941CC  SphereUI::update_status
+  00794C0C  SphereUI::setOpenCursor
+  0079597C  SphereUI::is_open_incentive
+  00795B3C  SphereUI::check_up_route
+  00795BA0  SphereUI::check_down_route
+  00795C04  SphereUI::check_right_route
+  00795C68  SphereUI::check_left_route
+  00795D30  SphereUI::check_up_status
+  00795E4C  SphereUI::check_left_status
+  00795F7C  SphereUI::check_right_status
+  007960AC  SphereUI::check_down_status
+
+## rank_rewards: 26  (Rankings > Rewards)
+  00561DD4  sub_561DD4  [BirthRegisterScrollView]
+  00561F7C  sub_561F7C  [BirthRegisterScrollView]
+  007107A0  sub_7107A0  [SceneRankingReward]
+  00711076  sub_711076  [SceneRankingReward]
+  0071112C  sub_71112C  [SceneRankingReward]
+  007116D0  sub_7116D0  [SceneBirthRegister]
+  0055DD24  RankingRewardScrollView::dtor
+  0055DEA8  RankingRewardScrollView::create
+  0055DF04  RankingRewardScrollView::ctor
+  0055E070  RankingRewardScrollView::init
+  0055E294  RankingRewardScrollView::createIncentivePanel
+  0055E3AC  RankingRewardScrollView::getLayoutPanel
+  0055E478  RankingRewardScrollView::createRow
+  0055E4D0  RankingRewardScrollView::setIncentiveItem
+  0055FEE0  RankingRewardScrollView::changeRow
+  00560888  RankingRewardScrollView::updateSelectItems
+  00560A08  RankingRewardScrollView::initLayout
+  005611EC  RankingRewardScrollView::registItemTouchEvent
+  00702404  SceneRankingReward::create
+  0070E570  SceneRankingReward::dtor
+  0070E5DC  SceneRankingReward::init
+  0070F218  SceneRankingReward::initRankingTitle
+  0070FDC8  SceneRankingReward::initRankingScrollVew
+  007102E8  SceneRankingReward::runInAnimation
+  00710460  SceneRankingReward::runOutAnimationMain
+  0071065C  SceneRankingReward::backScene
+
+## deck_list: 23  (Equipment > Medal List)
+  00473CAC  sub_473CAC  [SceneUtil]
+  0059AA7C  sub_59AA7C  [MedalListScrollView]
+  00674B7A  sub_674B7A  [IMedalSortFilter]
+  0073DDA0  sub_73DDA0  [SceneMedalList]
+  0073F2B0  sub_73F2B0  [AimTarget]
+  0059B8C8  sub_59B8C8  [BaseStageScrollView]
+  00599C68  MedalListScrollView::dtor
+  00599F24  MedalListScrollView::create
+  00599F78  MedalListScrollView::ctor
+  0059A1E8  MedalListScrollView::init
+  0059A244  MedalListScrollView::update
+  0059A2F8  MedalListScrollView::getLayoutPanel
+  0059A608  MedalListScrollView::createRow
+  0059A660  MedalListScrollView::changeRow
+  0059A924  MedalListScrollView::registItemTouchEvent
+  0059AB18  MedalListScrollView::setMedalIDs
+  0059AD3C  MedalListScrollView::isDisableMedal
+  0048A634  SceneMedalList::create
+  0073CCF0  SceneMedalList::dtor
+  0073CDA4  SceneMedalList::init
+  0073D6E4  SceneMedalList::runInAnimation
+  0073D8D0  SceneMedalList::runOutAnimationMain
+  0073DCA0  SceneMedalList::backScene
+
+## party_MemberCheckButton: 23  (Party > Members)
+  00524A00  sub_524A00  [BaseSlideView]
+  00525034  sub_525034  [BaseSlideView]
+  006599B8  sub_6599B8  [ScenePartyMember]
+  00659AE8  sub_659AE8  [ScenePartyMember]
+  00659C60  sub_659C60  [ScenePartyMember]
+  006F1208  sub_6F1208  [ScenePartyMember]
+  006F127C  sub_6F127C  [ScenePartyMember]
+  006F1B7C  sub_6F1B7C  [ScenePartyMember]
+  00520710  MemberScrollView::dtor
+  005208F8  MemberScrollView::create
+  00520954  MemberScrollView::ctor
+  00520AF4  MemberScrollView::init
+  00520CF8  MemberScrollView::getLayoutPanel
+  00520DC4  MemberScrollView::createRow
+  00520EB4  MemberScrollView::changeRow
+  00523378  MemberScrollView::registItemTouchEvent
+  00659E6C  ScenePartyMember::create
+  006F0AA8  ScenePartyMember::dtor
+  006F0B14  ScenePartyMember::init
+  006F0FDC  ScenePartyMember::initMemberLayer
+  006F16E0  ScenePartyMember::runInAnimation
+  006F188C  ScenePartyMember::runOutAnimationMain
+  006F1A50  ScenePartyMember::backScene
+
+## party_ManagementButton: 14  (Party > Manage)
+  006594E8  sub_6594E8  [ScenePartyMember]
+  00659630  sub_659630  [ScenePartyMember]
+  006E74CC  sub_6E74CC  [ScenePartyManagement]
+  006E9850  sub_6E9850  [ScenePartyManagement]
+  006EDCFC  sub_6EDCFC  [ScenePartyMember]
+  006F0748  sub_6F0748  [ScenePartyMember]
+  00657634  ScenePartyManagement::create
+  006E6384  ScenePartyManagement::callAPIs
+  006E6578  ScenePartyManagement::dtor
+  006E6604  ScenePartyManagement::init
+  006E767C  ScenePartyManagement::runInJoinLayout
+  006E8860  ScenePartyManagement::runOutAnimationMain
+  006E8950  ScenePartyManagement::runOutJoinLayout
+  006E9734  ScenePartyManagement::backScene
+
+## gacha: 10  (Shop > first banner)
+  005B1E5C  sub_5B1E5C  [DrawScrollView]
+  005B2030  sub_5B2030  [SceneShopTop]
+  005B20F4  sub_5B20F4  [SceneShopTop]
+  005B2120  sub_5B2120  [SceneShopTop]
+  005B2224  sub_5B2224  [SceneShopTop]
+  005B22E0  sub_5B22E0  [SceneShopTop]
+  005B230C  sub_5B230C  [SceneShopTop]
+  005AF5AC  DrawScrollView::openRaisePopup
+  005AF978  DrawScrollView::hasMagicStone
+  005AFA30  DrawScrollView::openCheckRaisePopup
+
+## party_RankingButton: 8  (Party > Rankings)
+  00659170  sub_659170  [ScenePartyMember]
+  006592A0  sub_6592A0  [ScenePartyMember]
+  00702F4C  sub_702F4C  [SceneRankingReward]
+  007031C0  sub_7031C0  [SceneAvatarEdit]
+  007031EC  sub_7031EC  [SceneAvatarEdit]
+  007033BC  sub_7033BC  [SceneAvatarEdit]
+  00703460  sub_703460  [SceneAvatarEdit]
+  006FBA64  SceneRanking::callPartyRankingAPI
+
+## party_InvitationButton: 6  (Party > Invitation Code)
+  00655F84  sub_655F84  [ScenePartyTop]
+  00656AF6  sub_656AF6  [ScenePartyManagement]
+  00656B44  sub_656B44  [ScenePartyManagement]
+  00656C82  sub_656C82  [ScenePartyManagement]
+  00656E7C  sub_656E7C  [ScenePartyManagement]
+  00655C40  ScenePartyTop::openPopupPartyInvite
+
+## deck_kbup: 3  (Equipment > Keyblade LV UP)
+  00662E2C  SceneDeckEdit::openKeyBladePanel
+  00663DD8  SceneDeckEdit::setKeybladeArrowVisible
+  00663ED8  SceneDeckEdit::updateKeyBladePanel
+
+## other_AlbumButton: 22  (MENU > Other > Album)
+  0050C1A0  sub_50C1A0  [AlbumScrollView]
+  005AAB40  sub_5AAB40  [SceneSelectUnion]
+  005AC894  sub_5AC894  [SceneAlbum]
+  006CE6E4  sub_6CE6E4  [SceneAlbum]
+  006CEC8C  sub_6CEC8C  [SceneAlbum]
+  006CEFFC  sub_6CEFFC  [SceneAlbum]
+  006CF158  sub_6CF158  [SceneAlbum]
+  006CF304  sub_6CF304  [SceneAlbum]
+  0050B694  AlbumScrollView::dtor
+  0050B7B8  AlbumScrollView::create
+  0050B80C  AlbumScrollView::ctor
+  0050B968  AlbumScrollView::init
+  0050BAA4  AlbumScrollView::getLayoutPanel
+  0050BB6C  AlbumScrollView::createRow
+  0050BBC4  AlbumScrollView::changeRow
+  0050C048  AlbumScrollView::registItemTouchEvent
+  005AC9FC  SceneAlbum::create
+  006CCD24  SceneAlbum::dtor
+  006CCD90  SceneAlbum::init
+  006CDD40  SceneAlbum::runInAnimation
+  006CDE04  SceneAlbum::runOutAnimationMain
+  006CE5E4  SceneAlbum::backScene
+
+## other_OptionButton: 3  (MENU > Other > Settings)
+  0046E6C8  sub_46E6C8  [SceneUtil]
+  0046E7D0  sub_46E7D0  [SceneUtil]
+  0046D19C  SceneUtil::openOptionPopup
+
+## other_SerialCodeButton: 3  (MENU > Other > Serial Codes)
+  005A6688  sub_5A6688  [OtherMenuDialog]
+  005A69A8  sub_5A69A8  [OtherMenuDialog]
+  005A058C  OtherMenuDialog::openSerialCodePopup
+
+## other_LicenseButton: 3  (MENU > Other > Legal Information)
+  005A76C4  sub_5A76C4  [OtherMenuDialog]
+  005A79D4  sub_5A79D4  [OtherMenuDialog]
+  0059FEAC  OtherMenuDialog::openLegalPopup
+
+## other_NoticeButton: 3  (MENU > Other > Notices)
+  005ACCEC  sub_5ACCEC  [SceneAlbum]
+  005ACE24  sub_5ACE24  [DrawScrollView]
+  00474700  SceneUtil::openWebViewInfoPopup
+
+## other_ItemButton: 1  (MENU > Other > Party)
+  005AC6C0  sub_5AC6C0  [SceneSelectUnion]
+
+## other_HelpButton: 1  (MENU > Other > Help)
+  0081ABF0  Java_org_cocos2dx_lib_Cocos2dxWebViewHelper_shouldStartLoading
+
+## boot_title: 102  (boot to the title (mostly static initializers: run before the verifier hooks, do last))
+  00453280  sub_453280  [?]
+  00453324  sub_453324  [?]
+  00453374  sub_453374  [?]
+  004533F8  sub_4533F8  [?]
+  00453B04  sub_453B04  [?]
+  00453B7C  sub_453B7C  [?]
+  00453C6C  sub_453C6C  [?]
+  00453EA4  sub_453EA4  [?]
+  0045534C  sub_45534C  [?]
+  00455388  sub_455388  [?]
+  004553DC  sub_4553DC  [?]
+  0045548C  sub_45548C  [?]
+  00455574  sub_455574  [?]
+  00455644  sub_455644  [?]
+  00455728  sub_455728  [?]
+  00455818  sub_455818  [?]
+  0045591C  sub_45591C  [?]
+  00455A24  sub_455A24  [?]
+  00455B34  sub_455B34  [?]
+  00455C2C  sub_455C2C  [?]
+  00455D34  sub_455D34  [?]
+  00455E40  sub_455E40  [?]
+  00455F50  sub_455F50  [?]
+  0045605C  sub_45605C  [?]
+  00456170  sub_456170  [?]
+  00456274  sub_456274  [?]
+  0045636C  sub_45636C  [?]
+  00456480  sub_456480  [?]
+  00456578  sub_456578  [?]
+  0045666C  sub_45666C  [?]
+  00456714  sub_456714  [?]
+  00456748  sub_456748  [?]
+  00456780  sub_456780  [?]
+  004567B8  sub_4567B8  [?]
+  004567F4  sub_4567F4  [?]
+  00456854  sub_456854  [?]
+  00456A80  sub_456A80  [?]
+  00456B68  sub_456B68  [?]
+  00456C38  sub_456C38  [?]
+  00456D08  sub_456D08  [?]
+  00456EA0  sub_456EA0  [?]
+  00456F84  sub_456F84  [?]
+  00457074  sub_457074  [?]
+  00457164  sub_457164  [?]
+  00457224  sub_457224  [?]
+  004572F8  sub_4572F8  [?]
+  004573D0  sub_4573D0  [?]
+  004574C8  sub_4574C8  [?]
+  004575B0  sub_4575B0  [?]
+  00457684  sub_457684  [?]
+  004576C0  sub_4576C0  [?]
+  004576E4  sub_4576E4  [?]
+  00457714  sub_457714  [?]
+  00457754  sub_457754  [?]
+  00457784  sub_457784  [?]
+  004577C4  sub_4577C4  [?]
+  00457800  sub_457800  [?]
+  004578B4  sub_4578B4  [?]
+  004579C4  sub_4579C4  [?]
+  00457A00  sub_457A00  [?]
+  00457E40  sub_457E40  [?]
+  00457EC4  sub_457EC4  [?]
+  00457F18  sub_457F18  [?]
+  00457F4C  sub_457F4C  [?]
+  00457FA4  sub_457FA4  [?]
+  00457FFC  sub_457FFC  [?]
+  00458074  sub_458074  [?]
+  004580E4  sub_4580E4  [?]
+  0045813C  sub_45813C  [?]
+  004581E8  sub_4581E8  [?]
+  0045821C  sub_45821C  [?]
+  004582CC  sub_4582CC  [?]
+  004584EC  sub_4584EC  [?]
+  00458524  sub_458524  [?]
+  0045888C  sub_45888C  [?]
+  004588C4  sub_4588C4  [?]
+  00458EFC  sub_458EFC  [?]
+  00458F3C  sub_458F3C  [?]
+  00458F7C  sub_458F7C  [?]
+  00458FB4  sub_458FB4  [?]
+  00493E84  sub_493E84  [shader]
+  00498A1C  sub_498A1C  [hole::network]
+  0092E42C  sub_92E42C  [tinyxml2::StrPair]
+  00C9C858  sub_C9C858  [SQEX]
+  00C9C8E0  sub_C9C8E0  [SQEX]
+  00C9CC58  sub_C9CC58  [SQEX]
+  00CA1C5C  sub_CA1C5C  [tinyxml2::XMLPrinter]
+  00CA3B24  sub_CA3B24  [SQEX]
+  00CD2ED0  sub_CD2ED0  [SQEX]
+  0044F07C  sub_44F07C  [?]
+  0044F154  sub_44F154  [?]
+  0044F368  sub_44F368  [?]
+  0044F3D0  sub_44F3D0  [?]
+  00C34D9C  sub_C34D9C  [SQEX]
+  00C34EB0  sub_C34EB0  [SQEX]
+  00C353F8  sub_C353F8  [SQEX]
+  00C35EEC  sub_C35EEC  [SQEX]
+  00CA1CDE  sub_CA1CDE  [SQEX]
+  00CA358E  sub_CA358E  [SQEX]
+  00CA35A4  sub_CA35A4  [SQEX]
+  00CA3BC4  sub_CA3BC4  [SQEX]
+  00CE646C  sub_CE646C  [SQEX]
+
+## (not seen in the tour): 312  (not on these screens: boot to MyPage (login bonus), quests / battle, fusion, material sale, party requests)
+  004E1D0C  Java_org_cocos2dx_cpp_GooglePlayManager_onPurchaseFinish
+  00A407F0  getFontSizeAccordingHeightJni
+  00A40A60  Java_org_cocos2dx_lib_Cocos2dxHelper_nativeSetEditTextDialogResult
+  00A40C3C  showEditTextDialogJNI
+  00A41D74  Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeInsertText
+  004658D4  sub_4658D4  [SceneUtil]
+  00497594  sub_497594  [AvatarUtil]
+  004C07EE  sub_4C07EE  [APIManager]
+  00501CF8  sub_501CF8  [MaterialScrollView]
+  00501E5C  sub_501E5C  [MaterialScrollView]
+  00502090  sub_502090  [MaterialScrollView]
+  00502234  sub_502234  [SphereScrollView]
+  0050C310  sub_50C310  [AlbumScrollView]
+  0050C780  sub_50C780  [PresentBoxScrollView]
+  0050C924  sub_50C924  [PresentBoxScrollView]
+  0050E8D8  sub_50E8D8  [PresentBoxScrollView]
+  0050EBFC  sub_50EBFC  [PresentBoxScrollView]
+  0050F1D4  sub_50F1D4  [PresentBoxScrollView]
+  00529DA6  sub_529DA6  [DeckMedalViewManager]
+  00529E16  sub_529E16  [DeckMedalViewManager]
+  00572B6A  sub_572B6A  [StartDeckEditDialog]
+  00572B94  sub_572B94  [StartDeckEditDialog]
+  00572E04  sub_572E04  [StartDeckEditDialog]
+  00573340  sub_573340  [StartDeckEditDialog]
+  005733F8  sub_5733F8  [StartDeckEditDialog]
+  00588844  sub_588844  [BuyMagicStoneDialog]
+  005889EC  sub_5889EC  [BuyMagicStoneDialog]
+  00588AFE  sub_588AFE  [BuyMagicStoneDialog]
+  0058C33C  sub_58C33C  [BuyMagicStoneDialog]
+  0059B380  sub_59B380  [MedalListScrollView]
+  0059B69C  sub_59B69C  [MedalListScrollView]
+  0059B8F8  sub_59B8F8  [BaseStageScrollView]
+  005B1D8C  sub_5B1D8C  [DrawScrollView]
+  005FDD04  sub_5FDD04  [SceneActionMap]
+  00659FE4  sub_659FE4  [ScenePartyMember]
+  0065A114  sub_65A114  [ScenePartyMember]
+  0065B050  sub_65B050  [SceneSaleMedal]
+  0065B0F4  sub_65B0F4  [SceneSaleMedal]
+  0065B120  sub_65B120  [SceneSaleMedal]
+  0065B2F4  sub_65B2F4  [SceneSaleMedal]
+  0065B398  sub_65B398  [SceneSaleMedal]
+  00666F84  sub_666F84  [SceneDeckEdit]
+  00678080  sub_678080  [MiniMedalScrollView]
+  006780F0  sub_6780F0  [MiniMedalScrollView]
+  00678330  sub_678330  [MiniMedalScrollView]
+  0067839A  sub_67839A  [MiniMedalScrollView]
+  0067853C  sub_67853C  [MiniMedalScrollView]
+  00688C2C  sub_688C2C  [SceneSellOutMaterialItem]
+  00688D64  sub_688D64  [SceneSellOutMaterialItem]
+  00688E50  sub_688E50  [SceneSellOutMaterialItem]
+  006890EA  sub_6890EA  [SceneSellOutMaterialItem]
+  006891A4  sub_6891A4  [SceneSellOutMaterialItem]
+  00689250  sub_689250  [SceneSellOutMaterialItem]
+  00689598  sub_689598  [SceneSellOutMaterialItem]
+  006899D8  sub_6899D8  [SceneSellOutMaterialItem]
+  00689B54  sub_689B54  [SceneSellOutMaterialItem]
+  0068A240  sub_68A240  [SceneSellOutMaterialItem]
+  0068A416  sub_68A416  [SceneShopTop]
+  0068A6A4  sub_68A6A4  [SceneShopTop]
+  0068A764  sub_68A764  [SceneShopTop]
+  0068A804  sub_68A804  [SceneShopTop]
+  0068A9C4  sub_68A9C4  [SceneShopTop]
+  0068AA84  sub_68AA84  [SceneShopTop]
+  0068AB7C  sub_68AB7C  [SceneShopTop]
+  0068AD28  sub_68AD28  [SceneShopTop]
+  0068ADCC  sub_68ADCC  [SceneShopTop]
+  0068AED8  sub_68AED8  [SceneSellOutMaterialItem]
+  0068B318  sub_68B318  [SceneSellOutMaterialItem]
+  0068B494  sub_68B494  [SceneSellOutMaterialItem]
+  0069344C  sub_69344C  [SceneDrawRaise]
+  006934B4  sub_6934B4  [SceneDrawRaise]
+  006936BE  sub_6936BE  [SceneDrawRaise]
+  00693A54  sub_693A54  [SceneDrawRaise]
+  00693AC4  sub_693AC4  [SceneDrawRaise]
+  00693C54  sub_693C54  [SceneDrawRaise]
+  00693CC0  sub_693CC0  [SceneDrawRaise]
+  00699998  sub_699998  [SceneMixedMedal]
+  0069FC70  sub_69FC70  [SceneMixedMedal]
+  0069FE00  sub_69FE00  [SceneMixedMedal]
+  006A02C4  sub_6A02C4  [SceneMixedMedal]
+  006A0424  sub_6A0424  [SceneMixedMedal]
+  006A04FA  sub_6A04FA  [SceneMixedMedal]
+  006A059A  sub_6A059A  [SceneMixedMedal]
+  006A0DB4  sub_6A0DB4  [SceneMixedMedal]
+  006A10CC  sub_6A10CC  [SceneMixedMedal]
+  006A1298  sub_6A1298  [SceneMixedMedal]
+  006A13EA  sub_6A13EA  [SceneMixedMedal]
+  006A1418  sub_6A1418  [SceneMixedMedal]
+  006A1AD4  sub_6A1AD4  [SceneMixedMedal]
+  006B1370  sub_6B1370  [SceneEvolveMedal]
+  006B19C8  sub_6B19C8  [SceneEvolveMedal]
+  006B1A6C  sub_6B1A6C  [SceneEvolveMedal]
+  006B1ECC  sub_6B1ECC  [SceneEvolveMedal]
+  006B3528  sub_6B3528  [SceneSphereBoardSelect]
+  006B37F0  sub_6B37F0  [SceneSphereBoardSelect]
+  006BB824  sub_6BB824  [SceneSphereBoardSelect]
+  006BCF7C  sub_6BCF7C  [SceneSphereBoard]
+  006BD16E  sub_6BD16E  [SceneSphereBoard]
+  006D6A60  sub_6D6A60  [ScenePartyRequest]
+  006D6C44  sub_6D6C44  [ScenePartyRequest]
+  006DD3C8  sub_6DD3C8  [ScenePartyRequest]
+  006DED2A  sub_6DED2A  [ScenePartyRequest]
+  006DEDA4  sub_6DEDA4  [ScenePartyRequest]
+  006DEEE2  sub_6DEEE2  [ScenePartyRequest]
+  006E4424  sub_6E4424  [ScenePartyManagement]
+  006E56F0  sub_6E56F0  [ScenePartyManagement]
+  006E5AB0  sub_6E5AB0  [ScenePartyManagement]
+  006F0278  sub_6F0278  [ScenePartyMember]
+  006FA580  sub_6FA580  [SceneLoginBonus]
+  006FABD4  sub_6FABD4  [SceneUnionRanking]
+  006FAC28  sub_6FAC28  [SceneUnionRanking]
+  006FACEC  sub_6FACEC  [SceneUnionRanking]
+  006FB144  sub_6FB144  [SceneUnionRanking]
+  00702878  sub_702878  [SceneRankingReward]
+  00702B18  sub_702B18  [SceneRankingReward]
+  00710B3C  sub_710B3C  [SceneRankingReward]
+  00710C74  sub_710C74  [SceneRankingReward]
+  0072AE30  sub_72AE30  [AdventurePanel]
+  0072C6C8  sub_72C6C8  [AdventurePanel]
+  0072C838  sub_72C838  [AdventurePanel]
+  0072C984  sub_72C984  [AdventurePanel]
+  0072CAF0  sub_72CAF0  [AdventurePanel]
+  0072CCC0  sub_72CCC0  [AdventurePanel]
+  0072CE2C  sub_72CE2C  [AdventurePanel]
+  0072D0B0  sub_72D0B0  [AdventurePanel]
+  0073DF48  sub_73DF48  [SceneMedalList]
+  0073E108  sub_73E108  [SceneMedalList]
+  0073E4D4  sub_73E4D4  [SceneMedalList]
+  0073EC78  sub_73EC78  [AimTarget]
+  0073EF7E  sub_73EF7E  [AimTarget]
+  0073EFEC  sub_73EFEC  [AimTarget]
+  0073F056  sub_73F056  [AimTarget]
+  00799094  sub_799094  [ConnectingSphere]
+  00CA1BF4  sub_CA1BF4  [tinyxml2::XMLPrinter]
+  004667B2  sub_4667B2  [SceneUtil]
+  004667C2  sub_4667C2  [SceneUtil]
+  004BEA90  sub_4BEA90  [APIManager]
+  004BF846  sub_4BF846  [APIManager]
+  004BF84A  sub_4BF84A  [APIManager]
+  004C07EA  sub_4C07EA  [APIManager]
+  004C0AA4  sub_4C0AA4  [APIManager]
+  004C0AA6  sub_4C0AA6  [APIManager]
+  004C0ACE  sub_4C0ACE  [APIManager]
+  004C0E6A  sub_4C0E6A  [APIManager]
+  004C0E74  sub_4C0E74  [APIManager]
+  004C1414  sub_4C1414  [APIManager]
+  004C163E  sub_4C163E  [APIManager]
+  004C1646  sub_4C1646  [APIManager]
+  004C1648  sub_4C1648  [APIManager]
+  004C164E  sub_4C164E  [APIManager]
+  004C1658  sub_4C1658  [APIManager]
+  004C1724  sub_4C1724  [APIManager]
+  004C17D4  sub_4C17D4  [APIManager]
+  004C1840  sub_4C1840  [APIManager]
+  004C1844  sub_4C1844  [APIManager]
+  004C186C  sub_4C186C  [APIManager]
+  004C1884  sub_4C1884  [APIManager]
+  004C197E  sub_4C197E  [APIManager]
+  004C19F0  sub_4C19F0  [APIManager]
+  004C1A02  sub_4C1A02  [APIManager]
+  004C1CFE  sub_4C1CFE  [APIManager]
+  004C1D08  sub_4C1D08  [APIManager]
+  004C1D12  sub_4C1D12  [APIManager]
+  004C1D1C  sub_4C1D1C  [APIManager]
+  004C1D8E  sub_4C1D8E  [APIManager]
+  004C1D96  sub_4C1D96  [APIManager]
+  00529218  sub_529218  [DeckMedalView]
+  00529E12  sub_529E12  [DeckMedalViewManager]
+  00529EFC  sub_529EFC  [DeckMedalViewManager]
+  0052A8DA  sub_52A8DA  [DeckMedalViewManager]
+  0052AEBC  sub_52AEBC  [DeckMedalViewManager]
+  005FDD0A  sub_5FDD0A  [SceneActionMap]
+  005FDE82  sub_5FDE82  [SceneActionMap]
+  005FDE8C  sub_5FDE8C  [SceneActionMap]
+  005FDED2  sub_5FDED2  [SceneActionMap]
+  005FE3E8  sub_5FE3E8  [SceneActionMap]
+  005FE4EE  sub_5FE4EE  [SceneActionMap]
+  005FE734  sub_5FE734  [SceneActionMap]
+  005FE73C  sub_5FE73C  [SceneActionMap]
+  006207D2  sub_6207D2  [SceneManager]
+  00641422  sub_641422  [SceneMyPage]
+  00641448  sub_641448  [SceneMyPage]
+  0067850C  sub_67850C  [MiniMedalScrollView]
+  0067E58A  sub_67E58A  [SceneTitle]
+  0068A3E4  sub_68A3E4  [SceneShopTop]
+  0069368C  sub_69368C  [SceneDrawRaise]
+  00693760  sub_693760  [SceneDrawRaise]
+  006940F0  sub_6940F0  [SceneDrawRaise]
+  006C47D6  sub_6C47D6  [SceneLight]
+  006C47E4  sub_6C47E4  [SceneLight]
+  006C4906  sub_6C4906  [SceneLight]
+  006C4918  sub_6C4918  [SceneLight]
+  0071EADC  sub_71EADC  [AdventurePanel]
+  0074337A  sub_74337A  [BattleMisc]
+  0074603C  sub_74603C  [BattleMisc]
+  00768F60  sub_768F60  [StageDirection]
+  00C9DF62  sub_C9DF62  [SQEX]
+  00C9E16A  sub_C9E16A  [SQEX]
+  00CA3A22  sub_CA3A22  [SQEX]
+  00CA3B02  sub_CA3B02  [SQEX]
+  00CA4A3C  sub_CA4A3C  [SQEX]
+  004BB4C6  APIManager::verifyResponse
+  00586588  AdvEventBannerScrollView::dtor
+  005867D0  AdvEventBannerScrollView::create
+  00586824  AdvEventBannerScrollView::ctor
+  005869BC  AdvEventBannerScrollView::clearLoadEventBanner
+  00586A20  AdvEventBannerScrollView::loadEventBanner
+  00586C84  AdvEventBannerScrollView::setEventBanner
+  00587394  AdvEventBannerScrollView::updateExpirationDate
+  0058745C  AdvEventBannerScrollView::setEventBannerTime
+  00587790  AdvEventBannerScrollView::init
+  0058783C  AdvEventBannerScrollView::update
+  00587968  AdvEventBannerScrollView::getLayoutPanel
+  00587A30  AdvEventBannerScrollView::createRow
+  00587A88  AdvEventBannerScrollView::changeRow
+  00587B70  AdvEventBannerScrollView::updateSelectItems
+  00587CF0  AdvEventBannerScrollView::registItemTouchEvent
+  00587ED8  AdvEventBannerScrollView::setSelectItem
+  007264D8  AdventurePanel::runLeftInAnimation
+  00589004  BuyMagicStoneDialog::openDiscount
+  00589414  BuyMagicStoneDialog::initItemIDsAndProductIDsDiscount
+  0058A7A0  BuyMagicStoneDialog::purchaseCallback
+  0058AC40  BuyMagicStoneDialog::getSkipTicketCnt
+  0055B874  ChatStampListScrollView::dtor
+  0055B9D8  ChatStampListScrollView::create
+  0055BA84  ChatStampListScrollView::init
+  0055BDA2  ChatStampListScrollView::createRow
+  0055BDE0  ChatStampListScrollView::changeRow
+  0055C4D4  ChatStampListScrollView::setStampList
+  00500EE4  MaterialScrollView::dtor
+  00501044  MaterialScrollView::create
+  00501098  MaterialScrollView::ctor
+  005011FC  MaterialScrollView::init
+  00501330  MaterialScrollView::getLayoutPanel
+  005013F8  MaterialScrollView::createRow
+  00501450  MaterialScrollView::changeRow
+  00501AD0  MaterialScrollView::loadTexture
+  00501BB0  MaterialScrollView::registItemTouchEvent
+  0059AE3C  MedalListScrollView::setSelectedMedal
+  005A0EB0  OtherMenuDialog::editBoxTextChanged
+  005A0FD8  OtherMenuDialog::editBoxEditingDidEnd
+  0050E3C4  PresentBoxScrollView::popUpAllGetPresent
+  00560018  RankingRewardScrollView::initColosseumRewardLayout
+  0054FAA0  RankingScrollView::getLayoutPanel
+  0054FB68  RankingScrollView::createRow
+  0054FC6C  RankingScrollView::changeRow
+  0055149C  RankingScrollView::initColosseumLayer
+  005520D0  RankingScrollView::initAvatarLayer
+  00720A5C  SceneAdventureSelect::initEventBanner
+  00723F78  SceneAdventureSelect::initColosseum
+  00724868  SceneAdventureSelect::colosseumInAnimation
+  00724908  SceneAdventureSelect::openTutorial25
+  00665584  SceneDeckEdit::openKeyBladePopup
+  00690658  SceneDrawRaise::openDrawResultsPopup
+  0065E1F8  SceneEvolveMedal::create
+  006AA324  SceneEvolveMedal::dtor
+  006AA434  SceneEvolveMedal::init
+  006AC518  SceneEvolveMedal::initEvolutLayer
+  006AD680  SceneEvolveMedal::createMaterialMedal
+  006ADB00  SceneEvolveMedal::initBurstInfo
+  006AF164  SceneEvolveMedal::runInAnimation
+  006AF314  SceneEvolveMedal::runOutAnimationMain
+  006AFD24  SceneEvolveMedal::backScene
+  006F6328  SceneLoginBonus::create
+  006F63C4  SceneLoginBonus::dtor
+  006F649C  SceneLoginBonus::init
+  006F710C  SceneLoginBonus::initLoginBonus
+  006F85BC  SceneLoginBonus::runInAnimation
+  006F8DEC  SceneLoginBonus::runOutAnimationMain
+  006F902C  SceneLoginBonus::skipEvent
+  006F90E4  SceneLoginBonus::make_getIncentive_name
+  006F9688  SceneLoginBonus::make_getIncentiveNext_name
+  006F9B50  SceneLoginBonus::make_getIncentive_id
+  006FA0D4  SceneLoginBonus::loadIncentiveTexture
+  006FA1A0  SceneLoginBonus::openLoginBonus
+  0073DB0C  SceneMedalList::onTapMedalInfoButton
+  0069BE84  SceneMixedMedal::openRareWarnPopup
+  0069DB88  SceneMixedMedal::runMixed
+  0069DE34  SceneMixedMedal::openResultPopup
+  0069F488  SceneMixedMedal::backScene
+  0069F56C  SceneMixedMedal::finalize
+  006D2320  ScenePartyCreate::openPopUpCreateParty
+  00657A80  ScenePartyRequest::create
+  00657AD4  ScenePartyRequest::ctor
+  006D5D1C  ScenePartyRequest::callUserSearchAPI
+  006D6050  ScenePartyRequest::dtor
+  006D6120  ScenePartyRequest::init
+  006D6FC8  ScenePartyRequest::runInAnimation
+  006D7190  ScenePartyRequest::runInJoinLayout
+  006D7584  ScenePartyRequest::runOutAnimationMain
+  006DB8D0  ScenePartyRequest::openPopUpSearchID
+  006DD290  ScenePartyRequest::backScene
+  006FBBE0  SceneRanking::callColosseumRankingAPI
+  006861AC  SceneSellOutMaterialItem::create
+  00686240  SceneSellOutMaterialItem::dtor
+  00686264  SceneSellOutMaterialItem::init
+  006869B0  SceneSellOutMaterialItem::updateListField
+  00686A9C  SceneSellOutMaterialItem::runInAnimation
+  00686C40  SceneSellOutMaterialItem::runOutAnimation
+  00686E6C  SceneSellOutMaterialItem::openSellDetailPopup
+  00688104  SceneSellOutMaterialItem::openSellCheckDialog
+  00688A60  SceneSellOutMaterialItem::backScene
+  0045E798  SceneUtil::openMedalMaxUpDialog
+  00462194  SceneUtil::updateMedalInfo
+  00466EF4  SceneUtil::openMedalInfoPopup
+  00470724  SceneUtil::openUserTitlePopup
+  00474DCC  SceneUtil::openSellOkPopup
+  0047546C  SceneUtil::openAvatarBoardFilterPopup
+  00478EDC  SceneUtil::openPurchaseSucceededPopup
+  007955EC  SphereUI::set_cursol
+  004D9254  bg::ioutil::_write<>
+  004E10E0  iap::StoreManagerImpl::purchase

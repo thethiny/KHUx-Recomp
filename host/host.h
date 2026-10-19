@@ -211,6 +211,7 @@ char *edit_box_take(void);
 void edit_box_dismiss(void);
 void edit_box_cancel(void);
 void edit_box_focus(void);
+char *coverage_take(void);   /* rewrite.c: functions called since the last take (ctl "coverage") */
 void edit_dialog_answer(CPU *c, const char *utf8);
 extern volatile LONG edit_dialog_open;
 uint8_t *text_render(const char *utf8, int size, int align, int want_w, int want_h, float r, float g, float b,

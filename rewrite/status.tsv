@@ -67,7 +67,9 @@ addr	name	calls	verified	mismatches	unverifiable
 00466C40	SceneUtil::numberToAtlasString	1014	87	0	0
 004684C8	SceneUtil::openTutorialPopup	746	185	0	0
 00468624	SceneUtil::setButtonEnabled	644	16	0	0
+0046874C	SceneUtil::setMyPageTeamStatus	35	25	0	10
 004697E8	SceneUtil::isLoggedInFacebook	339540	13911	0	0
+00469868	SceneUtil::setMyPageDeckStatus	20	10	0	10
 00469CB4	SceneUtil::calcDeckStatus	390	63	0	0
 00469FF8	SceneUtil::isMaxApOk	64	0	0	0
 0046A060	SceneUtil::isApOk	64	0	0	0
@@ -783,6 +785,17 @@ addr	name	calls	verified	mismatches	unverifiable
 005164A4	sub_5164A4	146	2	0	0
 005164C4	nullsub_348	225	70	0	0
 005164CE	sub_5164CE	135	68	0	0
+005196EC	MyRecordScrollView::~MyRecordScrollView	4	0	0	0
+005197CC	MyRecordScrollView::~MyRecordScrollView [deleting destructor]	2	0	0	0
+00519800	MyRecordScrollView::create	2	0	0	2
+005198B8	MyRecordScrollView::init	5	0	0	3
+00519A2C	MyRecordScrollView::update	19874	19619	0	255
+0051A090	MyRecordScrollView::setContentSize	66	64	0	2
+0051AF34	MyRecordScrollView::setEnabledScrollBar	5	0	0	3
+0051B99C	MyRecordScrollView::init::$_1 __clone(__base*)	10	0	0	0
+0051B9BC	MyRecordScrollView::init::$_1 destroy()	14	0	0	0
+0051BA38	MyRecordScrollView::init::$_0 __clone(__base*)	10	0	0	0
+0051BA58	MyRecordScrollView::init::$_0 destroy()	14	0	0	0
 00525638	BaseSlideView::~BaseSlideView	140	38	0	0
 0052587C	BaseSlideView::~BaseSlideView [deleting destructor]	106	38	0	9
 005258B0	BaseSlideView::init	103	0	0	0
@@ -870,7 +883,34 @@ addr	name	calls	verified	mismatches	unverifiable
 0053212C	ImageButton::init::$_0 __clone(__base*)	497	3	0	0
 00532154	nullsub_423	1955	44	0	0
 00532160	ImageButton::init::$_0::operator()	722	666	0	56
+0053259C	AvatarInfoDialog::~AvatarInfoDialog	4	0	0	2
+00532A10	AvatarInfoDialog::~AvatarInfoDialog [deleting destructor]	2	0	0	2
+00532A30	AvatarInfoDialog::create	2	2	0	0
+00532A9C	AvatarInfoDialog::AvatarInfoDialog	5	5	0	0
+00532E3C	AvatarInfoDialog::init	7	5	0	0
+00532E94	AvatarInfoDialog::open	5	0	0	5
 00534E78	BaseSlideView::create	103	0	0	0
+00534F50	AvatarInfoDialog::close	4	4	0	0
+0053C6CC	AvatarInfoDialog::setTouchEnabledUnderUIButtons	4	4	0	0
+00546D84	AvatarInfoDialog::close::$_12 __clone(__base*)	16	4	0	0
+00546DA4	AvatarInfoDialog::close::$_12 destroy()	20	8	0	0
+00546E7C	AvatarInfoDialog::createLayout::$_11 __clone(__base*)	4	4	0	0
+00546E9C	AvatarInfoDialog::createLayout::$_11 destroy()	6	6	0	0
+00546FA4	AvatarInfoDialog::createLayout::$_10 __clone(__base*)	4	4	0	0
+00546FC4	AvatarInfoDialog::createLayout::$_10 destroy()	6	6	0	0
+005470D0	AvatarInfoDialog::createLayout::$_9 __clone(__base*)	2	2	0	0
+005470F4	AvatarInfoDialog::createLayout::$_9 destroy()	4	4	0	0
+0054A5AC	AvatarInfoDialog::createLayout::$_8::lambda(float,int) destroy()	8	8	0	0
+0054A73C	AvatarInfoDialog::createLayout::$_8::lambda(N9SceneUtil19MedalInfoButtonTypeEbi) __clone(__base*)	8	8	0	0
+0054A758	AvatarInfoDialog::createLayout::$_8::lambda(N9SceneUtil19MedalInfoButtonTypeEbi) destroy()	12	10	0	0
+0054B008	AvatarInfoDialog::createLayout::$_8::lambda(PNS4_3RefENS6_14TouchEventTypeE) __clone(__base*)	40	40	0	0
+0054B02C	AvatarInfoDialog::createLayout::$_8::lambda(PNS4_3RefENS6_14TouchEventTypeE) destroy()	54	54	0	0
+0054B2F8	AvatarInfoDialog::createLayout::$_7 __clone(__base*)	2	2	0	0
+0054B318	AvatarInfoDialog::createLayout::$_7 destroy()	4	4	0	0
+0054BC28	AvatarInfoDialog::createLayout::$_5 __clone()	2	2	0	0
+0054BCB6	AvatarInfoDialog::createLayout::$_5 destroy_deallocate()	4	4	0	0
+0054CA3C	AvatarInfoDialog::createLayout::$_2 __clone()	2	2	0	0
+0054CACA	AvatarInfoDialog::createLayout::$_2 destroy_deallocate()	4	4	0	0
 0055DAE4	BaseStageScrollView::BaseStageScrollView()	93	0	0	0
 00561CE4	RankingRewardScrollView::setIncentiveItem::$_1 __clone(__base*)	54	9	0	0
 00561D04	RankingRewardScrollView::setIncentiveItem::$_1 destroy()	48	18	0	0
@@ -1204,6 +1244,44 @@ addr	name	calls	verified	mismatches	unverifiable
 0059E64C	BaseStageScrollView::init::$_0 __clone(__base*)	96	0	0	0
 0059E66C	BaseStageScrollView::init::$_0 destroy()	166	0	0	0
 0059E678	BaseStageScrollView::init::$_0::operator()(Touch*, Event*)	148	148	0	0
+0059E84C	OtherMenuDialog::create	5	5	0	0
+0059E8E0	OtherMenuDialog::open	2	0	0	2
+0059F710	OtherMenuDialog::setButtonLabel (sub_59F710)	65	29	0	10
+0059FDB8	OtherMenuDialog::close	5	5	0	0
+005A80BC	OtherMenuDialog::close $_22 __func::__clone(__base*)	20	5	0	0
+005A80DC	OtherMenuDialog::close $_22 __func::destroy	25	10	0	0
+005AA750	OtherMenuDialog::open $_17 __func::__clone(__base*)	4	2	0	0
+005AA770	OtherMenuDialog::open $_17 __func::destroy	6	4	0	0
+005AA7EC	OtherMenuDialog::open $_16 __func::__clone(__base*)	2	0	0	0
+005AA80C	OtherMenuDialog::open $_16 __func::destroy	4	2	0	0
+005AB0E0	OtherMenuDialog::open $_14 __func::__clone(__base*)	4	0	0	0
+005AB100	OtherMenuDialog::open $_14 __func::destroy	6	2	0	0
+005AB184	OtherMenuDialog::open $_13 __func::__clone(__base*)	4	0	0	0
+005AB1A0	OtherMenuDialog::open $_13 __func::destroy	6	2	0	0
+005AB3C8	OtherMenuDialog::open $_12 __func::__clone(__base*)	4	0	0	0
+005AB3E4	OtherMenuDialog::open $_12 __func::destroy	6	2	0	0
+005AB460	OtherMenuDialog::open $_11 __func::__clone(__base*)	4	0	0	0
+005AB47C	OtherMenuDialog::open $_11 __func::destroy	6	2	0	0
+005AB6BC	OtherMenuDialog::open $_10 __func::__clone(__base*)	4	0	0	0
+005AB6D8	OtherMenuDialog::open $_10 __func::destroy	6	2	0	0
+005ABAEC	OtherMenuDialog::open $_9 __func::__clone(__base*)	4	0	0	0
+005ABB0C	OtherMenuDialog::open $_9 __func::destroy	6	2	0	0
+005ABC08	OtherMenuDialog::open $_8 __func::__clone(__base*)	4	0	0	0
+005ABC24	OtherMenuDialog::open $_8 __func::destroy	6	2	0	0
+005AC144	OtherMenuDialog::open $_7 __func::__clone(__base*)	4	0	0	0
+005AC164	OtherMenuDialog::open $_7 __func::destroy	6	2	0	0
+005AC26C	OtherMenuDialog::open $_6 __func::__clone(__base*)	4	0	0	0
+005AC28C	OtherMenuDialog::open $_6 __func::destroy	6	2	0	0
+005AC690	OtherMenuDialog::open $_5 __func::__clone(__base*)	4	0	0	0
+005AC6B4	OtherMenuDialog::open $_5 __func::destroy	6	2	0	0
+005AC868	OtherMenuDialog::open $_4 __func::__clone(__base*)	4	0	0	0
+005AC888	OtherMenuDialog::open $_4 __func::destroy	6	2	0	0
+005ACAB4	OtherMenuDialog::open $_3 __func::__clone(__base*)	4	0	0	0
+005ACAD0	OtherMenuDialog::open $_3 __func::destroy	6	2	0	0
+005ACC30	OtherMenuDialog::open $_3 UlvE_ __func::__clone(__base*)	6	2	0	0
+005ACC4C	OtherMenuDialog::open $_3 UlvE_ __func::destroy	8	4	0	0
+005ACCC4	OtherMenuDialog::open $_1 __func::__clone(__base*)	4	0	0	0
+005ACCE0	OtherMenuDialog::open $_1 __func::destroy	6	2	0	0
 005B1430	DrawScrollView::openCheckbondsPopup $_20 __func::__clone()	6	0	0	0
 005B42D4	RaidSubdueScrollView::~RaidSubdueScrollView()	1	0	0	0
 005B43A0	RaidSubdueScrollView::~RaidSubdueScrollView() (deleting)	1	0	0	0

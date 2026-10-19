@@ -71,6 +71,7 @@ a **win** call the game's own stage finish, not `cheat kill` (that only ends the
 | `warp?avatar=0x..&to=0x..` (or `&x=&y=`) | DEV ONLY: move the player through the game's own walkability check |
 | `textdata?id=` | a text table entry |
 | `threads` | dump guest threads to the log (hangs) |
+| `coverage` | with `KHUX_COVERAGE=1`: the lifted functions called since the previous `coverage` call (tag functions with the screen that runs them) |
 
 The exe also prints `>>> screen` / `>>> api` lines into its log (`recomp/out/host/rwtest.log` above).
 

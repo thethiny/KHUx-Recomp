@@ -105,10 +105,10 @@ out/            analyzer output (generated, ignored)
 Decompiled              ████████████████████   99.0%
 Lifted                  ████████████████████  100.0%
 Rewritten               ███████████░░░░░░░░░   55.1%
-Run in game             ██░░░░░░░░░░░░░░░░░░    8.4%
-Verified                █░░░░░░░░░░░░░░░░░░░    5.5%
-  Game: rewritten       ████████████████░░░░   81.2%
-  Game: verified        ██░░░░░░░░░░░░░░░░░░    9.2%
+Run in game             ██░░░░░░░░░░░░░░░░░░    8.6%
+Verified                █░░░░░░░░░░░░░░░░░░░    5.6%
+  Game: rewritten       ████████████████░░░░   81.3%
+  Game: verified        ██░░░░░░░░░░░░░░░░░░    9.4%
   Libraries: rewritten  ████████░░░░░░░░░░░░   41.0%
   Libraries: verified   █░░░░░░░░░░░░░░░░░░░    3.5%
 1:1 binary match        ░░░░░░░░░░░░░░░░░░░░    0.0%
@@ -118,14 +118,14 @@ Recompiled              ██████████████████�
 Updated by `python recomp/progress.py`.
 
 - **Decompiled**: 56,014 of 56,604 functions have Hex-Rays pseudocode (590 failed). Reference only.
-- **Lifted**: 56,381 of 56,381 analysed functions translate to C (machine-generated, one C function per guest function, 65 instructions left to the emulator). 8,696 of them run and are checked against the emulator in game.
-- **Rewritten**: Readable, maintainable source (named types and variables, no register-level code). 31,046 functions.
-- **Run in game**: Rewritten functions the game has called while the M3 verifier compared them with the lifted original (4,764).
-- **Verified**: Rewritten functions whose every checked call matched the lifted original (3,099); normal play installs only these.
-- **Game: rewritten**: The game's own code (19,776 functions, including Square Enix's sound engine): 16,057 rewritten.
-- **Game: verified**: Game functions verified: 1,827.
+- **Lifted**: 56,381 of 56,381 analysed functions translate to C (machine-generated, one C function per guest function, 65 instructions left to the emulator). 12,297 of them run and are checked against the emulator in game.
+- **Rewritten**: Readable, maintainable source (named types and variables, no register-level code). 31,065 functions.
+- **Run in game**: Rewritten functions the game has called while the M3 verifier compared them with the lifted original (4,842).
+- **Verified**: Rewritten functions whose every checked call matched the lifted original (3,150); normal play installs only these.
+- **Game: rewritten**: The game's own code (19,776 functions, including Square Enix's sound engine): 16,076 rewritten.
+- **Game: verified**: Game functions verified: 1,852.
 - **Libraries: rewritten**: Open-source libraries (36,599 functions: cocos2d-x, libc++, OpenSSL, freetype, libpng, ...; `rewrite/tools/libsplit.py`), which a native build can take from upstream source: 14,989 rewritten.
-- **Libraries: verified**: Library functions verified: 1,272.
+- **Libraries: verified**: Library functions verified: 1,298.
 - **1:1 binary match**: Source that rebuilds the original ARM binary byte for byte (a matching decompilation). Not started.
 - **Recompiled**: A native executable that runs without the emulator. The native host (`host/`, Windows) runs all 56,381 lifted functions natively, with real threads, sound, sockets, JNI and OpenGL ES, and no emulator or Python: it plays the game through login, the main menu and quests against the private server.
 

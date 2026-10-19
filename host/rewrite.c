@@ -175,7 +175,7 @@ void rewrite_report(void) {
 /* KHUX_COVERAGE=1: which lifted functions the game calls. lift.dll sets a byte per function in rt_seen; every
  * report merges the called ones into out/host/seen.txt (one hex address per line, kept across sessions): the
  * "executed in game" list for planning rewrites (rewrite/tools/context.py). */
-static uint8_t *cov_seen;
+static uint8_t *cov_seen, *cov_all;   /* cov_seen: since the last coverage_take; cov_all: taken before */
 static char cov_path[1100];
 
 void coverage_init(const char *root) {
@@ -184,6 +184,7 @@ void coverage_init(const char *root) {
     uint8_t **slot = (uint8_t **)GetProcAddress(L.dll, "rt_seen");
     if (!slot) { hlog("coverage: lift.dll has no rt_seen (rebuild it)"); return; }
     cov_seen = calloc((size_t)L.count, 1);
+    cov_all = calloc((size_t)L.count, 1);
     *slot = cov_seen;
     snprintf(cov_path, sizeof(cov_path), "%s\\out\\host\\seen.txt", root);
     hlog("coverage: recording called functions into %s", cov_path);
@@ -210,8 +211,29 @@ void coverage_report(void) {
     if (!f) { free(known); return; }
     int n = 0;
     for (int k = 0; k < L.count; k++)
-        if (known[k] || cov_seen[k]) { fprintf(f, "%08X\n", L.table[k].addr & ~1u); n++; }
+        if (known[k] || cov_seen[k] || cov_all[k]) { fprintf(f, "%08X\n", L.table[k].addr & ~1u); n++; }
     fclose(f);
     free(known);
     hlog("coverage: %d functions called so far (all sessions)", n);
+}
+
+/* ctl "coverage": the functions called since the previous call (JSON list of hex addresses), for tagging
+ * functions with the screen they run on. Called from the control thread; a byte the game sets while it is
+ * being cleared here may be missed, which is fine for planning. */
+char *coverage_take(void) {
+    if (!cov_seen) return _strdup("{\"error\": \"run with KHUX_COVERAGE=1\"}");
+    size_t cap = 64, len = 0;
+    for (int k = 0; k < L.count; k++) if (cov_seen[k]) cap += 11;
+    char *out = malloc(cap + 16);
+    len += sprintf(out, "{\"fns\": [");
+    int first = 1;
+    for (int k = 0; k < L.count && len + 12 < cap; k++)
+        if (cov_seen[k]) {
+            cov_seen[k] = 0;
+            cov_all[k] = 1;
+            len += sprintf(out + len, "%s\"%08X\"", first ? "" : ",", L.table[k].addr & ~1u);
+            first = 0;
+        }
+    sprintf(out + len, "]}");
+    return out;
 }
