@@ -931,6 +931,15 @@ addr	name	calls	verified	mismatches	unverifiable
 0054BCB6	AvatarInfoDialog::createLayout::$_5 destroy_deallocate()	4	4	0	0
 0054CA3C	AvatarInfoDialog::createLayout::$_2 __clone()	2	2	0	0
 0054CACA	AvatarInfoDialog::createLayout::$_2 destroy_deallocate()	4	4	0	0
+0054F260	RankingScrollView::~RankingScrollView()	1	0	0	0
+0054F3C8	RankingScrollView::~RankingScrollView [deleting destructor]	1	0	0	0
+0054F3FC	RankingScrollView::create(RankingScrollViewType)	2	0	0	1
+0054F458	RankingScrollView::RankingScrollView()	2	1	0	0
+0054F5D4	RankingScrollView::init(RankingScrollViewType)	2	0	0	1
+0054F614	RankingScrollView::changeRankingScrollViewType(RankingScrollViewType)	10	0	0	5
+0055262E	RankingScrollView::registItemTouchEvent	38	0	0	0
+00552630	RankingScrollView::setEnabledTapItem	2	0	0	0
+005529AC	RankingScrollView::setRankingData(RankingSeason, std::vector<int>)	8	4	0	0
 0055DAE4	BaseStageScrollView::BaseStageScrollView()	93	0	0	0
 00561CE4	RankingRewardScrollView::setIncentiveItem::$_1 __clone(__base*)	54	9	0	0
 00561D04	RankingRewardScrollView::setIncentiveItem::$_1 destroy()	48	18	0	0
@@ -2528,6 +2537,8 @@ addr	name	calls	verified	mismatches	unverifiable
 006499BC	SceneMyPage::initLeftButtons::$_47 destroy()	117	0	0	0
 00649DE8	SceneMyPage::initLeftButtons::$_46 __clone(__base*)	78	0	0	0
 00649E08	SceneMyPage::initLeftButtons::$_46 destroy()	117	0	0	0
+0064A270	SceneRanking::create()	2	0	0	2
+0064A2C4	SceneRanking::SceneRanking()	2	1	0	0
 0064DAF0	SceneMyPage::createPartyAvatar::$_21 __clone(__base*)	78	0	0	0
 0064DB14	SceneMyPage::createPartyAvatar::$_21 destroy()	117	0	0	0
 0064E100	SceneMyPage::setCameraPosition::$_20 __clone()	80	32	0	0
@@ -2885,6 +2896,49 @@ addr	name	calls	verified	mismatches	unverifiable
 006FB736	sub_6FB736	2	0	0	0
 006FB7A8	sub_6FB7A8	8	0	0	0
 006FB7C8	nullsub_1870	12	2	0	0
+006FBE1C	SceneRanking::~SceneRanking() (deleting)	1	0	0	1
+006FBE80	SceneRanking::init()	2	0	0	1
+006FC928	SceneRanking::initScene(SceneManager::SelectRanking)	2	0	0	1
+006FCA7C	SceneRanking::initRankingTitle()	15	0	4	6
+006FD858	SceneRanking::initMyRanking()	2	1	0	0
+006FD9FC	SceneRanking::initRankingScrollView()	2	0	0	1
+006FDCF0	SceneRanking::init $_11::operator()(int, bool)	4	0	0	3
+006FDE40	SceneRanking::init $_14::operator()(SelectRanking, bool, int)	6	0	0	5
+006FE004	SceneRanking::update	8289	8289	0	0
+006FE008	SceneRanking::changeTickerMessage(SceneManager::SelectRanking)	2	0	0	1
+006FE0E4	SceneRanking::changeScrollView(bool)	8	5	0	1
+006FE270	SceneRanking::changeScrollView $_15::operator()()	8	0	0	7
+006FEEE8	SceneRanking::runInAnimation()	2	1	0	0
+006FF0A4	SceneRanking::runOutAnimationMain(std::function<void()>)	2	1	0	0
+006FF348	SceneRanking::openRankingRewardPopup(int, std::function<void()>)	2	2	0	0
+00700C44	SceneRanking::backScene()	2	0	0	2
+00701110	SceneRanking::setBackSceneType	1	1	0	0
+00701194	SceneRanking::backScene $_21 __func::__clone()	8	2	0	0
+0070124C	SceneRanking::backScene $_21 __func::destroy_deallocate	5	1	0	0
+00701278	SceneRanking::backScene $_21 __func::operator()()	2	2	0	0
+00701C48	SceneRanking::runOutAnimationMain $_17 __func::__clone()	1	0	0	0
+00701CEC	SceneRanking::runOutAnimationMain $_17 __func::destroy_deallocate	2	1	0	0
+00701D84	SceneRanking::runInAnimation $_16 __func::__clone(__base*)	2	0	0	0
+00701DA0	SceneRanking::runInAnimation $_16 __func::destroy	3	1	0	0
+00701E9C	SceneRanking::changeScrollView $_15 __func::__clone(__base*)	10	2	0	0
+00701EC0	SceneRanking::changeScrollView $_15 __func::destroy	13	5	0	0
+00701F40	SceneRanking::init $_13 __func::__clone(__base*)	2	0	0	0
+00701F68	SceneRanking::init $_13 __func::destroy	3	0	0	0
+00702020	SceneRanking::init $_12 __func::__clone(__base*)	2	0	0	0
+00702048	SceneRanking::init $_12 __func::destroy	3	0	0	0
+007020F4	SceneRanking::init $_10 __func::__clone(__base*)	2	0	0	0
+00702114	SceneRanking::init $_10 __func::destroy	3	0	0	0
+007024D0	SceneRanking::init $_9 __func::__clone(__base*)	2	0	0	0
+007024F0	SceneRanking::init $_9 __func::destroy	3	0	0	0
+0070257C	SceneRanking::init $_8 __func::__clone(__base*)	2	0	0	0
+0070259C	SceneRanking::init $_8 __func::destroy	3	1	0	0
+00702618	SceneRanking::init $_7 __func::__clone(__base*)	2	0	0	0
+00702638	SceneRanking::init $_7 __func::destroy	3	0	0	0
+007026B4	SceneRanking::init $_6 __func::__clone(__base*)	2	0	0	0
+007026D4	SceneRanking::init $_6 __func::destroy	3	0	0	0
+00702E7C	SceneRanking::callPartyRankingAPI $_3 __func::__clone()	2	1	0	0
+00702F20	SceneRanking::callPartyRankingAPI $_3 __func::destroy_deallocate	3	2	0	0
+0070311C	SceneRanking::callPartyRankingAPI $_3 UlbE_ __func::__clone()	2	2	0	0
 0071D260	SceneAdventureSelect::callAdventureSelectAPI	90	0	0	27
 0071D39C	SceneAdventureSelect::~SceneAdventureSelect	61	0	0	0
 0071D4C4	SceneAdventureSelect::~SceneAdventureSelect (deleting)	61	0	0	59

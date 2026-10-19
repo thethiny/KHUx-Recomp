@@ -73,3 +73,4 @@
 005983BC RaidBossLwfDialog::open $_1 inner operator(): the only differing words are on the audio thread's guest stack (0x202C4Bxx), which changes during the shadow run (see audio::Manager::updateQueue)
 006F40CC SceneFlashDrama::init::$_1 operator() (touch ended: skip): plays the decide SE through audio::Layer::playSE: the queued SQEX ACTION (AddAction, 0xCE43B4) copies stale stack words (0x005BF300) into the action queue; never read
 0076AAC4 StageDirection::cocos_start $_3 __func::operator(): plays a sound through audio::Layer::playSE: the queued SQEX ACTION (AddAction, 0xCE43B4) copies stale stack words (0x005BF300) into the action queue; never read
+006FCA7C SceneRanking::initRankingTitle(): TextData::format of the period dates goes through TextFormat::execute(va_list) (store pc 0x49326C), which copies two variadic words past the six dates passed into its heap argument array: stale stack words in both runs (lifted 9/0, rewrite stack addresses); never read
