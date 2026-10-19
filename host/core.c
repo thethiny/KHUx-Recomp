@@ -350,10 +350,10 @@ void glog(uint32_t a, uint32_t n) {
  * registers); the later runs get the recorded results without running it. Pure imports (string, formatting, math,
  * sorting: they only read and write guest memory) run every time. A replay that asks for a different import, or
  * more imports than were recorded, marks the shadow run as diverged (the verifier then reports a mismatch). */
-typedef struct ImpRec { uint32_t addr, r0, r1, nbytes, args[4]; uint64_t *bytes; } ImpRec;   /* bytes: (addr << 8) | value */
+typedef struct ImpRec { uint32_t addr, r0, r1, nbytes, args[4], sargs[6]; uint64_t *bytes; } ImpRec;   /* bytes: (addr << 8) | value; sargs: stack arguments (GL) */
 static __declspec(thread) int imp_mode;                 /* 0 off, 1 record, 2 replay */
 static __declspec(thread) ImpRec *imp_recs;
-static __declspec(thread) uint32_t imp_div_got;
+static __declspec(thread) uint32_t imp_div_got, imp_div_args[6];
 static __declspec(thread) int imp_div_pos, imp_opaque, imp_paused, imp_saved_mode;
 static __declspec(thread) int imp_n, imp_cap, imp_pos, imp_diverged;
 
@@ -372,12 +372,91 @@ static int import_pure(const char *n) {
     return 0;
 }
 
+/* OpenGL ES in a shadow run (KHUX_RW_GLREPLAY, default on; 0 = every run that draws is opaque, as before): recorded
+ * and replayed like the other imports. The GL calls run for real once, in the lifted run; the rewrite's run must
+ * make the same calls with the same arguments (a value, or a pointer that is a stack address in both runs) and gets
+ * the recorded results. lift.dll's GL code writes guest memory through host pointers, unlogged, so the outputs
+ * (glGen*, glGet*) are logged here; calls whose outputs are not known (glReadPixels, buffer mapping) stay opaque. */
+#include "gl_kinds.h"
+static int gl_replay_on(void) {
+    static int on = -1;
+    if (on < 0) on = !getenv("KHUX_RW_GLREPLAY") || strcmp(getenv("KHUX_RW_GLREPLAY"), "0") != 0;
+    return on;
+}
+static const char *gl_kinds(const char *n) {
+    for (int k = 0; GL_KINDS[k].name; k++) if (!strcmp(GL_KINDS[k].name, n)) return GL_KINDS[k].kinds;
+    return NULL;
+}
+static uint32_t gl_arg(const CPU *c, int k) { return k < 4 ? c->r[k] : g32(c->r[13] + 4u * (uint32_t)(k - 4)); }
+
+/* glGet{Integer,Float,Boolean}v: how many values a pname returns (0 = not known here) */
+static uint32_t gl_get_count(uint32_t pname) {
+    switch (pname) {
+    case 0x0BA2: case 0x0C10: case 0x0C22: case 0x0C23: case 0x8005: return 4;   /* viewport, scissor box, clear
+                                                                                   * colour, colour mask, blend colour */
+    case 0x0D3A: case 0x846D: case 0x846E: case 0x0B70: return 2;              /* max viewport dims, point / line
+                                                                                   * ranges, depth range */
+    case 0x86A2: case 0x8DF9: return 0;                                         /* format lists: any length */
+    default: return 1;
+    }
+}
+
+/* the guest buffers a GL call writes: {address, size} pairs, recorded whole; -1 = unknown (the run stays opaque) */
+static int gl_outputs(const CPU *c, const char *n, uint32_t out[][2]) {
+    int m = 0;
+#define OUT_(k, size) do { out[m][0] = gl_arg(c, k); out[m][1] = (size); m++; } while (0)
+    if (!strncmp(n, "glGen", 5) && strcmp(n, "glGenerateMipmap")) OUT_(1, 4u * c->r[0]);
+    else if (!strcmp(n, "glGetIntegerv") || !strcmp(n, "glGetFloatv") || !strcmp(n, "glGetBooleanv")) {
+        uint32_t k = gl_get_count(c->r[0]);
+        if (!k) return -1;
+        OUT_(1, k * (n[5] == 'B' ? 1u : 4u));
+    }
+    else if (!strcmp(n, "glGetShaderiv") || !strcmp(n, "glGetProgramiv") || !strcmp(n, "glGetBufferParameteriv")) OUT_(2, 4);
+    else if (!strcmp(n, "glGetShaderInfoLog") || !strcmp(n, "glGetProgramInfoLog") || !strcmp(n, "glGetShaderSource")) {
+        OUT_(2, 4); OUT_(3, c->r[1]);
+    } else if (!strcmp(n, "glGetActiveAttrib") || !strcmp(n, "glGetActiveUniform")) {
+        OUT_(3, 4); OUT_(4, 4); OUT_(5, 4); OUT_(6, c->r[2]);
+    } else if (!strcmp(n, "glReadPixels") || !strcmp(n, "glMapBufferOES") || !strcmp(n, "glUnmapBufferOES")) return -1;
+#undef OUT_
+    for (int k = 0; k < m; k++) {
+        if (!out[k][0]) out[k][1] = 0;
+        if (out[k][1] > 0x10000u) return -1;
+    }
+    return m;
+}
+
+/* gl_outputs' text buffers: an info log / shader source (output 1), an active attribute / uniform name (output 3) */
+static int n_is_text(const char *n, int k) {
+    if (!strcmp(n, "glGetShaderInfoLog") || !strcmp(n, "glGetProgramInfoLog") || !strcmp(n, "glGetShaderSource")) return k == 1;
+    if (!strcmp(n, "glGetActiveAttrib") || !strcmp(n, "glGetActiveUniform")) return k == 3;
+    return 0;
+}
+
+/* the rewrite's GL call against the recorded one: every argument equal, or a stack address in both runs */
+static int gl_args_match(const ImpRec *r, const CPU *c, const char *kinds) {
+    uint32_t sp = c->r[13], sp0 = r->sargs[5];
+    for (int k = 0; kinds[k] && k < 10; k++) {
+        uint32_t was = k < 4 ? r->args[k] : r->sargs[k - 4], now = gl_arg(c, k);
+        if (was == now) continue;
+        if (kinds[k] == 'p' && was - (sp0 - 0x10000u) < 0x20000u && now - (sp - 0x10000u) < 0x20000u) continue;
+        return 0;
+    }
+    return 1;
+}
+
 /* debugging: how many imports the first run recorded / the last replay consumed, and the names */
 int import_shadow_stats(int *recorded, int *replayed) { *recorded = imp_n; *replayed = imp_pos; return imp_diverged; }
 void import_shadow_opaque(void) { if (imp_mode != 2) imp_opaque = 1; }
 
 /* where the replay diverged: the record index, and the import that came instead of the recorded one */
 int import_shadow_divergence(const char **got) { *got = imp_div_got ? import_name(imp_div_got) : NULL; return imp_div_pos; }
+/* the divergence's arguments (r0-r3, two stack words): recorded (at the record) and called */
+void import_shadow_divergence_args(uint32_t rec[6], uint32_t got[6]) {
+    for (int k = 0; k < 6; k++) {
+        got[k] = imp_div_args[k];
+        rec[k] = imp_div_pos < imp_n ? (k < 4 ? imp_recs[imp_div_pos].args[k] : imp_recs[imp_div_pos].sargs[k - 4]) : 0;
+    }
+}
 const char *import_shadow_name(int k) { return k < imp_n ? import_name(imp_recs[k].addr) : NULL; }
 
 /* Where a recorded store goes in a replay: a store into the buffer of a pointer argument (at most 64 KB past it)
@@ -488,10 +567,20 @@ void host_emu(CPU *c, uint32_t target) {
     }
     if (imp_mode) {
         const char *name = import_name(a);
-        if (imp_mode == 1 && name && (!strncmp(name, "gl", 2) || !strncmp(name, "egl", 3))) {
+        const char *kinds = name && !strncmp(name, "gl", 2) && gl_replay_on() ? gl_kinds(name) : NULL;
+        uint32_t outs[4][2];
+        int nouts = kinds ? gl_outputs(c, name, outs) : -1;
+        if (nouts < 0) kinds = NULL;
+        if (imp_mode == 1 && name && !kinds && (!strncmp(name, "gl", 2) || !strncmp(name, "egl", 3))) {
             /* OpenGL ES: runs for real, once; its outputs are not logged, so this shadow run cannot be compared or
              * replayed: the verifier keeps it as the real call (imp_opaque) */
             imp_opaque = 1;
+            {   /* once per import: which calls keep shadow runs opaque */
+                static const char *seen[64];
+                int k = 0;
+                while (k < 64 && seen[k] && seen[k] != name) k++;
+                if (k < 64 && !seen[k]) { seen[k] = name; hlog("verifier: %s is not replayable (the shadow run stays opaque)", name); }
+            }
             int id = native_id(name), done = 0;
             if (id >= 0) { L.files_allow(1); done = L.native_call(c, id); L.files_allow(0); }
             if (!done) fn(c);
@@ -500,17 +589,33 @@ void host_emu(CPU *c, uint32_t target) {
         }
         if (!name || !import_pure(name)) {
             if (imp_mode == 2) {                          /* replay: the recorded result, nothing runs */
-                if (imp_pos < imp_n && imp_recs[imp_pos].addr == a) {
-                    ImpRec *r = &imp_recs[imp_pos++];
+                ImpRec *r = NULL;
+                if (imp_pos < imp_n && imp_recs[imp_pos].addr == a && (!kinds || gl_args_match(&imp_recs[imp_pos], c, kinds)))
+                    r = &imp_recs[imp_pos++];
+                else {
+                    if (!imp_diverged) {
+                        imp_div_pos = imp_pos; imp_div_got = a;
+                        for (int k = 0; k < 6; k++) imp_div_args[k] = k < 4 ? c->r[k] : g32(c->r[13] + 4u * (uint32_t)(k - 4));
+                    }
+                    imp_diverged = 1;
+                    /* diverged (a mismatch either way): the rewrite run goes on with a recorded call of the same
+                     * import and arguments when there is one (the next, else any), so it does not crash on a 0
+                     * from an import such as pthread_getspecific; the next ones resync after it */
+                    for (int pass = 0; pass < 2 && !r; pass++)
+                        for (int k = pass ? 0 : imp_pos; k < imp_n && !r; k++) {
+                            ImpRec *q = &imp_recs[k];
+                            if (q->addr != a) continue;
+                            if (kinds ? !gl_args_match(q, c, kinds) : memcmp(q->args, c->r, sizeof q->args)) continue;
+                            r = q;
+                            if (!pass) imp_pos = k + 1;
+                        }
+                }
+                if (r) {
                     for (uint32_t k = 0; k < r->nbytes; k++)
                         gw8(replay_addr(r, c, (uint32_t)(r->bytes[k] >> 8)), (uint8_t)r->bytes[k]);
                     c->r[0] = r->r0;
                     c->r[1] = r->r1;
-                } else {
-                    if (!imp_diverged) { imp_div_pos = imp_pos; imp_div_got = a; }
-                    imp_diverged = 1;
-                    c->r[0] = 0;
-                }
+                } else c->r[0] = 0;
                 c->pc = lr;
                 return;
             }
@@ -519,9 +624,35 @@ void host_emu(CPU *c, uint32_t target) {
             uint32_t outer = imp_target, w0 = c->wn, args_in[4] = {c->r[0], c->r[1], c->r[2], c->r[3]};
             imp_target = a;
             /* lift.dll's own stream functions decline inside logged runs: here they may run (once, recorded) */
+            uint32_t sargs[6] = {0};
+            uint8_t *pre[4] = {0};
+            if (kinds) {
+                for (int k = 4; kinds[k] && k < 9; k++) sargs[k - 4] = gl_arg(c, k);
+                sargs[5] = c->r[13];
+                for (int k = 0; k < nouts; k++)
+                    if (outs[k][1]) { pre[k] = (uint8_t *)malloc(outs[k][1]); memcpy(pre[k], GP(outs[k][0]), outs[k][1]); }
+            }
             int id = name ? native_id(name) : -1, done = 0;
             if (id >= 0) { L.files_allow(1); done = L.native_call(c, id); L.files_allow(0); }
             if (!done) fn(c);
+            if (kinds)                                    /* GL's unlogged output stores, logged (undone, replayed) */
+                for (int k = 0; k < nouts; k++) {
+                    if (!pre[k]) continue;
+                    /* every output byte (a replay into a buffer holding other bytes must still write them all);
+                     * an info log or name: its text and terminator only */
+                    uint32_t size = outs[k][1];
+                    if (n_is_text(name, k)) {
+                        uint32_t len = 0;
+                        while (len + 1 < size && *(uint8_t *)GP(outs[k][0] + len)) len++;
+                        size = len + 1 < size ? len + 1 : size;
+                    }
+                    for (uint32_t b = 0; b < size; b++) {
+                        uint8_t v = *(uint8_t *)GP(outs[k][0] + b);
+                        *(uint8_t *)GP(outs[k][0] + b) = pre[k][b];
+                        gw8(outs[k][0] + b, v);
+                    }
+                    free(pre[k]);
+                }
             imp_target = outer;
             imp_mode = mode;
             /* the guest bytes it stored (final values), replayed in the later runs */
@@ -543,6 +674,7 @@ void host_emu(CPU *c, uint32_t target) {
             imp_recs[imp_n].r1 = c->r[1];
             imp_recs[imp_n].nbytes = nb;
             memcpy(imp_recs[imp_n].args, args_in, sizeof args_in);
+            memcpy(imp_recs[imp_n].sargs, sargs, sizeof sargs);
             imp_recs[imp_n].bytes = bytes;
             imp_n++;
             c->pc = lr;

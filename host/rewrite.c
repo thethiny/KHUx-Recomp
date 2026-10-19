@@ -71,6 +71,7 @@ static int name_listed(const char *list, const char *name) {
 int import_shadow_stats(int *recorded, int *replayed);
 const char *import_shadow_name(int k);
 int import_shadow_divergence(const char **got);
+void import_shadow_divergence_args(uint32_t rec[6], uint32_t got[6]);
 /* rewrite.dll debug hook: a one-line summary of the last shadow run's imports */
 static void rw_debug(char *out, int cap) {
     int rec, rep, div = import_shadow_stats(&rec, &rep);
@@ -79,6 +80,12 @@ static void rw_debug(char *out, int cap) {
     int n = snprintf(out, (size_t)cap, "imports recorded %d replayed %d diverged %d", rec, rep, div);
     if (div) n += snprintf(out + n, (size_t)(cap - n), " (at #%d: recorded %s, called %s)", at,
                            at < rec ? import_shadow_name(at) : "(none)", got ? got : "?");
+    if (div) {
+        uint32_t ra[6], ga[6];
+        import_shadow_divergence_args(ra, ga);
+        n += snprintf(out + n, (size_t)(cap - n), " [args recorded %X %X %X %X %X %X, called %X %X %X %X %X %X]", ra[0], ra[1],
+                      ra[2], ra[3], ra[4], ra[5], ga[0], ga[1], ga[2], ga[3], ga[4], ga[5]);
+    }
     n += snprintf(out + n, (size_t)(cap - n), ":");
     for (int k = 0; k < rec && n < cap - 40; k++) n += snprintf(out + n, (size_t)(cap - n), " %s", import_shadow_name(k));
 }

@@ -415,6 +415,7 @@ void shadow_wait_begin(void) {
     if (!shadow_on) return;
     shadow_waits++;
     import_shadow_opaque();
+    { static int told; if (!told++) hlog("verifier: a blocking wait inside a shadow run (the run stays opaque)"); }
     L.heap_hold(0);
 }
 void shadow_wait_end(void) {

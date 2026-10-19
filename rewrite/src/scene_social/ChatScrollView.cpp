@@ -76,10 +76,10 @@ Self *Self::destroy(Self *self) {
 }
 RW_FUNCTION(0x5567B4, "ChatScrollView::~ChatScrollView", ChatScrollView::destroy);
 
-// 932 x 180 rows: an invisible template holding Chat_Panel ("mainPanel"); the avatar icons drawn from the panel's
+// 934 x 180 rows: an invisible template holding Chat_Panel ("mainPanel"); the avatar icons drawn from the panel's
 // Avatar texture at (-80, 130), scale 1.6.
 uint32_t Self::init(Self *self) {
-    self->itemWidth = 932.0f;
+    self->itemWidth = 934.0f;
     self->itemHeight = 180.0f;
     setEnabledScrollBar(self, 1);
     self->offsetX = self->itemWidth * 0.5f;

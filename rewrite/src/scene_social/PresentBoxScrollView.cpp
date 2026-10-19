@@ -148,9 +148,9 @@ Self *Self::destroy(Self *self) {
 }
 RW_FUNCTION(0x50CA88, "PresentBoxScrollView::~PresentBoxScrollView", PresentBoxScrollView::destroy);
 
-// 924 x 148 rows from PresentBOX_Panel (centred horizontally), with a scroll bar.
+// 925 x 148 rows from PresentBOX_Panel (centred horizontally), with a scroll bar.
 uint32_t Self::init(Self *self) {
-    self->itemWidth = 924.0f;
+    self->itemWidth = 925.0f;
     self->itemHeight = 148.0f;
     setEnabledScrollBar(self, 1);
     const uint32_t reader = call(fn::GUIReader_getInstance, {});

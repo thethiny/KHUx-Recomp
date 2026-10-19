@@ -16,6 +16,7 @@
 #include <cstring>
 #include <string>
 #include <map>
+#include <unordered_map>
 #include <mutex>
 #include <tuple>
 #include <utility>
@@ -214,6 +215,40 @@ static void gt_snapshot() {
 }
 // a differing word is garbage on both sides: the lifted value and the rewrite's were both loaded from stale words
 // (off unless KHUX_RW_STALE=1: experimental - the rewrite side cannot see stale loads made by rewritten C++)
+// rewrite/garbage_sites.txt: lifted functions that copy bytes they never set (struct padding, variadic words past
+// the passed arguments) into memory that outlives the call. A differing byte both runs last stored from the same
+// instruction inside one of them is garbage either way. Lines: "START END reason" (hex guest addresses, END exclusive).
+static std::vector<std::pair<uint32_t, uint32_t>> garbage_sites;
+static void load_garbage_sites(const char *verified_path) {
+    if (!verified_path) return;
+    std::string p(verified_path);
+    size_t cut = p.find_last_of("/\\");
+    p = (cut == std::string::npos ? std::string() : p.substr(0, cut + 1)) + "garbage_sites.txt";
+    FILE *f = fopen(p.c_str(), "r");
+    if (!f) return;
+    char line[512];
+    while (fgets(line, sizeof line, f)) {
+        unsigned a, b;
+        if (line[0] != '#' && sscanf(line, "%x %x", &a, &b) == 2 && a < b) garbage_sites.emplace_back(a, b);
+    }
+    fclose(f);
+}
+static bool garbage_site(uint32_t pc) {
+    for (auto &r : garbage_sites) if (pc >= r.first && pc < r.second) return true;
+    return false;
+}
+// each byte whose last store in the log came from a garbage site -> that store's pc
+static void site_pcs(const WLog *w, uint32_t n, std::unordered_map<uint32_t, uint32_t> &m) {
+    for (uint32_t k = 0; k < n; k++) {
+        const bool site = garbage_site(w[k].old_hi);
+        if (!site && m.empty()) continue;
+        for (uint32_t b = 0; b < w[k].size; b++) {
+            if (site) m[w[k].addr + b] = w[k].old_hi;
+            else m.erase(w[k].addr + b);
+        }
+    }
+}
+
 static bool stale_pair(uint32_t lifted, uint32_t rewrite) {
     static const bool enabled = getenv("KHUX_RW_STALE") && strcmp(getenv("KHUX_RW_STALE"), "0") != 0;
     if (!enabled) return false;
@@ -455,6 +490,9 @@ static void verify(CPU *c, int i) {
             logf("RW LOG FULL %s @%08X: kept as the real call; not shadowed from now on", e.name, e.addr);
         c->logging = 0;
         gt_end();
+        if (st.unverifiable.load() == 0)
+            logf("RW OPAQUE %s @%08X: %s", e.name, e.addr, full_l ? "store log full" : effect_handoff ?
+                 "handed work to another thread" : "an import that cannot be replayed (see 'verifier:' lines)");
         st.unverifiable++;
         where_fn = nullptr;
         H->shadow(2);
@@ -509,6 +547,10 @@ static void verify(CPU *c, int i) {
     gt_snapshot();                                        // the lifted run's stale values; the rewrite run's next
     gt_begin(sp);
     peek(1);
+    // the bytes the lifted run last stored from a garbage site, with that instruction
+    static thread_local std::unordered_map<uint32_t, uint32_t> site_l;
+    site_l.clear();
+    if (!garbage_sites.empty()) site_pcs(c->wlog, c->wn < c->wcap ? c->wn : c->wcap, site_l);
     H->undo(c);
     peek(2);
 
@@ -538,6 +580,7 @@ static void verify(CPU *c, int i) {
     auto mem_r = stored(c, sp);
 
     const char *why = "";
+    uint32_t fail_at = 0;                                 // the first byte that failed the comparison (reports)
     bool same = !full_l && !full_r;
     if (same && !effects_ok) { same = false; why = "effect calls"; }
     if (same && pc_l != pc_r) { same = false; why = "return address"; }
@@ -574,6 +617,7 @@ static void verify(CPU *c, int i) {
                 continue;
             }
             same = false;
+            fail_at = kv.first;
             break;
         }
         if (same) for (auto &kv : mem_r) {
@@ -590,7 +634,115 @@ static void verify(CPU *c, int i) {
                     break;
                 }
             }
-            if (!same) break;
+            if (!same) { fail_at = kv.first; break; }
+        }
+    }
+    // 3. a memory mismatch: does it only touch bytes whose value depends on dead stack contents (struct padding or
+    // fields compiled code copies without setting, variadic words past the passed arguments)? The original runs once
+    // more, on a dead stack overwritten with a pattern, with its imports and effects replayed; a byte that changes
+    // between the two original runs depends on what an earlier call left below sp. When every failing byte does,
+    // the call counts as verified (the original's result is kept, as on a mismatch). KHUX_RW_GARBAGE=0: off.
+    bool garbage_ok = false;
+    std::string garbage_note;                             // mismatch reports: what the garbage check found
+    static const bool garbage_check = !getenv("KHUX_RW_GARBAGE") || strcmp(getenv("KHUX_RW_GARBAGE"), "0") != 0;
+    if (!same && garbage_check && !full_l && !full_r && effects_ok && !strcmp(why, "memory")) {
+        std::vector<uint32_t> fails;                      // every failing byte, by the rules above
+        auto word = [](const std::map<uint32_t, uint8_t> &m, uint32_t a, uint32_t &v) {
+            v = 0;
+            for (uint32_t b = 0; b < 4; b++) {
+                auto it = m.find(a + b);
+                if (it == m.end()) return false;
+                v |= uint32_t(it->second) << (8 * b);
+            }
+            return true;
+        };
+        auto on_stack = [&](uint32_t v) { return v >= sp - STACK_WINDOW && v < sp + STACK_WINDOW; };
+        for (auto &kv : mem_l) {
+            auto it = mem_r.find(kv.first);
+            uint8_t r = it != mem_r.end() ? it->second : c->mem[kv.first];
+            if (r == kv.second) continue;
+            uint32_t wl, wr, a = kv.first & ~3u;
+            if (word(mem_l, a, wl) && word(mem_r, a, wr) && on_stack(wl) && on_stack(wr)) continue;
+            fails.push_back(kv.first);
+        }
+        {
+            uint32_t n = c->wn < c->wcap ? c->wn : c->wcap;
+            for (auto &kv : mem_r) {
+                if (mem_l.count(kv.first)) continue;
+                bool unchanged = false;
+                for (uint32_t k = 0; k < n; k++) {
+                    const WLog &w = c->wlog[k];
+                    if (kv.first >= w.addr && kv.first < w.addr + w.size) {
+                        unchanged = uint8_t(w.old_lo >> (8 * (kv.first - w.addr))) == kv.second;
+                        break;
+                    }
+                }
+                if (!unchanged) fails.push_back(kv.first);
+            }
+        }
+        // store sites (rewrite/garbage_sites.txt): failing bytes both runs last stored from the same listed instruction
+        size_t by_site = 0;
+        const size_t nfails = fails.size();
+        if (!site_l.empty() && !fails.empty()) {
+            std::unordered_map<uint32_t, uint32_t> site_r;
+            site_pcs(c->wlog, c->wn < c->wcap ? c->wn : c->wcap, site_r);
+            std::vector<uint32_t> rest;
+            for (uint32_t a : fails) {
+                auto l = site_l.find(a), r = site_r.find(a);
+                if (l != site_l.end() && r != site_r.end() && l->second == r->second) by_site++;
+                else rest.push_back(a);
+            }
+            fails.swap(rest);
+            if (fails.empty()) {
+                garbage_ok = true;
+                if (++st.stale_words <= 2)
+                    logf("RW GARBAGE %s @%08X: %zu differing bytes, all stored by garbage sites", e.name, e.addr, nfails);
+            } else fail_at = fails[0];
+        }
+        if (!fails.empty() && post_l.size() < LOG_CAP / 2) {
+        // undo the rewrite, overwrite the dead stack (logged, so the undo below restores it), run the original
+        c->logging = 1;
+        H->undo(c);
+        c->wn = 0; c->wfull = 0;
+        for (uint32_t a = (sp & ~3u) - GT_WINDOW; a < (sp & ~3u); a += 4) {
+            WLog &w = c->wlog[c->wn++];
+            w.addr = a; w.size = 4; std::memcpy(&w.old_lo, c->mem + a, 4); w.old_hi = 0;
+            const uint32_t v = 0xA5C3E71Bu ^ (a * 0x9E3779B1u);
+            std::memcpy(c->mem + a, &v, 4);
+        }
+        H->shadow(1);
+        restore(c, in);
+        phase = Phase::Replay; effect_pos = 0; effect_diverged = false;
+        where_side = "lifted (garbage check)";
+        lifted_run = true;
+        run_lifted(c, i);
+        lifted_run = false;
+        phase = Phase::Off;
+        const bool ok2 = !c->wfull && !effect_diverged && effect_pos == effect_calls.size() && !H->shadow(3);
+        if (!ok2) garbage_note = "; garbage check: the original diverged on a scribbled stack";
+        if (ok2 && !fails.empty()) {
+            auto mem_l2 = stored(c, sp);
+            garbage_ok = true;
+            for (uint32_t a : fails) {
+                auto i1 = mem_l.find(a), i2 = mem_l2.find(a);
+                const bool dep = (i1 == mem_l.end()) != (i2 == mem_l2.end()) ||
+                                 (i1 != mem_l.end() && i1->second != i2->second);
+                if (!dep) {
+                    garbage_ok = false;
+                    fail_at = a;
+                    char b[160];
+                    snprintf(b, sizeof b, "; garbage check: byte %08X is the same on a scribbled stack (%zu failing bytes, "
+                             "%zu stored by garbage sites)", a, nfails, by_site);
+                    garbage_note = b;
+                    break;
+                }
+            }
+            if (garbage_ok && ++st.stale_words <= 2)
+                logf("RW GARBAGE %s @%08X: %zu differing bytes, %zu stored by garbage sites, the rest depend on dead stack "
+                     "contents (first %08X)", e.name, e.addr, nfails, by_site, fails[0]);
+        }
+        // the log now holds the overwrite and this run: the mismatch path below undoes them and puts the original's
+        // result back
         }
     }
     c->logging = 0;
@@ -599,7 +751,7 @@ static void verify(CPU *c, int i) {
         st.unverifiable++;
         if (!st.too_big.exchange(true))
             logf("RW LOG FULL %s @%08X (rewrite run): its result is kept; not shadowed from now on", e.name, e.addr);
-    } else if (same) {
+    } else if (same || garbage_ok) {
         st.verified++;
         std::sort(nested.begin(), nested.end());
         nested.erase(std::unique(nested.begin(), nested.end()), nested.end());
@@ -614,6 +766,18 @@ static void verify(CPU *c, int i) {
                  pc_r, mem_r.size());
             char dbg[1536];
             H->debug(dbg, sizeof dbg);
+            if (fail_at) {
+                uint32_t a = fail_at & ~3u, wl = 0, pl = 0, pr = 0;
+                for (uint32_t b = 0; b < 4; b++) { auto j = mem_l.find(a + b); wl |= uint32_t(j != mem_l.end() ? j->second : c->mem[a + b]) << (8 * b); }
+                if (keep_pcs) {
+                    for (size_t k = log_l.size(); k-- > 0;) if (fail_at >= log_l[k].addr && fail_at < log_l[k].addr + log_l[k].size) { pl = log_l[k].old_hi; break; }
+                    for (uint32_t k = (c->wn < c->wcap ? c->wn : c->wcap); k-- > 0;) if (fail_at >= c->wlog[k].addr && fail_at < c->wlog[k].addr + c->wlog[k].size) { pr = c->wlog[k].old_hi; break; }
+                }
+                uint32_t wr = 0;
+                for (uint32_t b = 0; b < 4; b++) { auto j = mem_r.find(a + b); wr |= uint32_t(j != mem_r.end() ? j->second : (j = mem_l.find(a + b)) != mem_l.end() ? j->second : c->mem[a + b]) << (8 * b); }
+                logf("    failed at byte %08X: word lifted %08X, rewrite %08X; store pc lifted %08X, rewrite %08X%s", fail_at,
+                     wl, wr, pl, garbage_note.empty() ? pr : 0, garbage_note.c_str());
+            }
             logf("    heap %08X -> lifted %08X, rewrite %08X; effects %zu/%zu; %s", heap0, heap_l, heap_r, effect_pos,
                  effect_calls.size(), dbg);
             {   // stale stack tracking (rt.h GTrack): the sets, and the first differing word against them
@@ -730,6 +894,7 @@ __declspec(dllexport) int rw_init(const RwHost *host) {
     int n = int(rw::entries().size());
     rw::bound.assign(n, rw::Bound{});
     rw::stats = new std::vector<rw::Stats>(n);
+    rw::load_garbage_sites(host->verified_path);
     if (host->verified_path) {
         if (FILE *f = fopen(host->verified_path, "r")) {
             char line[256];

@@ -427,7 +427,7 @@ addr	name	calls	verified	mismatches	unverifiable
 004B6DA8	hole::network::api::UserPoint::~UserPoint (deleting)	521	254	0	0
 004B6DB4	hole::network::api::User::~User (deleting)	96	48	0	0
 004B6DC0	hole::network::api::Login::~Login (deleting)	96	48	0	0
-004B6DCC	std::string::replace(pos, n1, const char*, n2) (sub_4B6DCC)	248	31	0	0
+004B6DCC	std::string::replace(pos, n1, const char*, n2) (sub_4B6DCC)	581	47	0	0
 004B6FF4	hole::network::api::Client::Client	77	10	0	0
 004B710C	hole::network::api::LoadJSON	166	0	0	0
 004B7900	hole::network::api::Client::isLoginAction	2956	2956	0	0
@@ -475,24 +475,24 @@ addr	name	calls	verified	mismatches	unverifiable
 004D8E8C	SaveBin::get<unsigned int>	154	8	0	0
 004D9890	iap::ProductInfo::ProductInfo(const ProductInfo&)	84	38	0	0
 004DAB70	std::__hash_table<std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>>>::~__hash_table [base destructor]	277	98	0	0
-004DABE8	ChatManager::Message::init	20	4	0	0
+004DABE8	ChatManager::Message::init	84	7	0	0
 004DB0E4	ChatManager::getInstance	58	20	0	0
 004DB18E	ChatManager::ChatManager	46	4	0	0
 004DB224	ChatManager::updateInterval	65	58	0	0
 004DB270	ChatManager::getUser	41	0	0	14
 004DB698	createHeaders(bool)	57	6	0	0
-004DB7E0	ChatManager::getMessage	4	0	0	4
+004DB7E0	ChatManager::getMessage	10	0	0	10
 004DDAB4	ChatManager::getMessage  __func::__clone()	4	0	0	0
 004DDB68	ChatManager::getMessage  __func::destroy_deallocate	8	4	0	0
-004DDB94	ChatManager::getMessage::$_N::operator() (sub_4DDB94)	4	0	0	4
-004DE204	ChatManager::Message::Message(const Message&)	70	14	0	0
+004DDB94	ChatManager::getMessage::$_N::operator() (sub_4DDB94)	2	2	0	0
+004DE204	ChatManager::Message::Message(const Message&)	294	17	0	0
 004DE3E4	ChatManager::getUser  __func::__clone()	44	0	0	0
 004DE498	ChatManager::getUser  __func::destroy_deallocate	127	42	0	0
 004DE4C4	ChatManager::getUser::$_N::operator()	7	7	0	0
-004DED64	DownloadManager::start	54	0	0	6
-004DF1F4	DownloadManager::finalize	42	0	0	18
-004DF2A0	DownloadManager::onRespond	24	0	0	24
-004DF62C	DownloadManager::cancel	96	1	0	0
+004DED64	DownloadManager::start	105	0	0	21
+004DF1F4	DownloadManager::finalize	93	51	0	18
+004DF2A0	DownloadManager::onRespond	75	51	0	24
+004DF62C	DownloadManager::cancel	180	19	0	0
 004E00FC	SaveBin::set<unsigned char>	1027	240	0	0
 004E0334	SaveBin::get<unsigned char>	810	0	0	0
 004E04E4	TrackingSDKUtil::sendEventOnlyOnce	373	371	2	0
@@ -793,16 +793,16 @@ addr	name	calls	verified	mismatches	unverifiable
 00509F40	LoadingIndicator::init::$_0::__clone(dst)	74	0	0	0
 00509F5C	LoadingIndicator::init::$_0::destroy	74	0	0	0
 00509F66	LoadingIndicator::init::$_0::operator()	53	53	0	0
-0050CA88	PresentBoxScrollView::~PresentBoxScrollView	13	0	0	1
+0050CA88	PresentBoxScrollView::~PresentBoxScrollView	19	6	0	1
 0050CBE0	PresentBoxScrollView::~PresentBoxScrollView [deleting destructor]	12	0	0	12
-0050CC14	PresentBoxScrollView::create	4	0	0	4
-0050CC68	PresentBoxScrollView::PresentBoxScrollView	5	1	0	0
-0050CDD8	PresentBoxScrollView::init	6	0	0	2
-0050CECC	PresentBoxScrollView::getLayoutPanel	12	0	0	4
-0050CF94	PresentBoxScrollView::createRow	8	0	0	8
-0050CFEC	PresentBoxScrollView::changeRow	8	4	0	0
-0050DD00	PresentBoxScrollView::registItemTouchEvent	16	16	0	0
-0050FED8	PresentBoxScrollView::changeRow $_0 __func::__clone()	10	2	0	0
+0050CC14	PresentBoxScrollView::create	2	2	0	0
+0050CC68	PresentBoxScrollView::PresentBoxScrollView	11	7	0	0
+0050CDD8	PresentBoxScrollView::init	18	6	0	2
+0050CECC	PresentBoxScrollView::getLayoutPanel	25	5	0	4
+0050CF94	PresentBoxScrollView::createRow	4	4	0	0
+0050CFEC	PresentBoxScrollView::changeRow	45	21	0	0
+0050DD00	PresentBoxScrollView::registItemTouchEvent	64	64	0	0
+0050FED8	PresentBoxScrollView::changeRow $_0 __func::__clone()	35	7	0	0
 00510024	PresentBoxScrollView::changeRow $_0 __func::destroy_deallocate	8	0	0	0
 00511BB4	BattleResultScrollView::~BattleResultScrollView()	40	0	0	0
 00511D18	BattleResultScrollView::~BattleResultScrollView() (deleting)	40	0	0	0
@@ -968,7 +968,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00534E78	BaseSlideView::create	103	0	0	0
 00534F50	AvatarInfoDialog::close	5	5	0	0
 0053C6CC	AvatarInfoDialog::setTouchEnabledUnderUIButtons	5	5	0	0
-0053E30C	ScenePartyTop::create	3	0	0	3
+0053E30C	ScenePartyTop::create	2	2	0	0
 00546D84	AvatarInfoDialog::close::$_12 __clone(__base*)	20	5	0	0
 00546DA4	AvatarInfoDialog::close::$_12 destroy()	25	10	0	0
 00546E7C	AvatarInfoDialog::createLayout::$_11 __clone(__base*)	4	4	0	0
@@ -997,17 +997,17 @@ addr	name	calls	verified	mismatches	unverifiable
 0055262E	RankingScrollView::registItemTouchEvent	38	0	0	0
 00552630	RankingScrollView::setEnabledTapItem	2	0	0	0
 005529AC	RankingScrollView::setRankingData(RankingSeason, std::vector<int>)	8	4	0	0
-005567B4	ChatScrollView::~ChatScrollView	10	0	0	1
+005567B4	ChatScrollView::~ChatScrollView	16	6	0	1
 0055692C	ChatScrollView::~ChatScrollView [deleting destructor]	9	0	0	9
-00556960	ChatScrollView::create	4	0	0	4
-005569F4	ChatScrollView::init	7	0	0	3
-00556C58	ChatScrollView::createRow	20	0	0	4
-00556CB8	ChatScrollView::changeRow	96	5	1	6
-0055852C	ChatScrollView::getTextLineCount	90	10	0	0
-00558710	ChatScrollView::setMessages	7	0	0	3
-0055C65C	ChatEditBoxMessageSend::~ChatEditBoxMessageSend	4	2	0	0
+00556960	ChatScrollView::create	2	2	0	0
+005569F4	ChatScrollView::init	13	5	0	3
+00556C58	ChatScrollView::createRow	84	3	0	4
+00556CB8	ChatScrollView::changeRow	288	8	1	6
+0055852C	ChatScrollView::getTextLineCount	250	13	0	0
+00558710	ChatScrollView::setMessages	23	3	0	3
+0055C65C	ChatEditBoxMessageSend::~ChatEditBoxMessageSend	10	8	0	0
 0055C6C8	ChatEditBoxMessageSend::~ChatEditBoxMessageSend [deleting destructor]	2	2	0	0
-0055C6E8	ChatEditBoxMessageSend::create	2	2	0	0
+0055C6E8	ChatEditBoxMessageSend::create	8	8	0	0
 0055DAE4	BaseStageScrollView::BaseStageScrollView()	93	0	0	0
 00561CE4	RankingRewardScrollView::setIncentiveItem::$_1 __clone(__base*)	54	9	0	0
 00561D04	RankingRewardScrollView::setIncentiveItem::$_1 destroy()	48	18	0	0
@@ -1128,8 +1128,8 @@ addr	name	calls	verified	mismatches	unverifiable
 0057AE48	StartDeckEditDialog::close $_18 __func::__clone(__base*)	140	0	0	0
 0057AE68	StartDeckEditDialog::close $_18 __func::destroy	243	64	0	0
 0057AE74	StartDeckEditDialog::close::$_18::operator()	124	64	0	0
-0057AFD4	SceneDeckEdit::create	4	0	0	4
-0057B028	SceneDeckEdit::SceneDeckEdit	5	1	0	0
+0057AFD4	SceneDeckEdit::create	2	2	0	0
+0057B028	SceneDeckEdit::SceneDeckEdit	11	3	0	0
 0057B320	StartDeckEditDialog::initSupport::$_17 __clone(__base*)	136	0	0	0
 0057B344	StartDeckEditDialog::initSupport::$_17 destroy()	199	5	0	0
 0057B504	StartDeckEditDialog::initSupport::$_16 __clone(__base*)	66	2	0	0
@@ -1430,21 +1430,21 @@ addr	name	calls	verified	mismatches	unverifiable
 005ACC4C	OtherMenuDialog::open $_3 UlvE_ __func::destroy	8	4	0	0
 005ACCC4	OtherMenuDialog::open $_1 __func::__clone(__base*)	4	0	0	0
 005ACCE0	OtherMenuDialog::open $_1 __func::destroy	6	2	0	0
-005AD174	DrawScrollView::~DrawScrollView	14	0	0	1
-005AD360	DrawScrollView::cancelShopHandle	15	1	0	0
+005AD174	DrawScrollView::~DrawScrollView	20	6	0	1
+005AD360	DrawScrollView::cancelShopHandle	21	7	0	0
 005AD3E8	DrawScrollView::~DrawScrollView [deleting destructor]	13	0	0	13
-005AD41C	DrawScrollView::setDrawFrame	217	0	0	119
-005AD6C4	DrawScrollView::initShopTopGachaButton	248	0	0	31
-005AE2CC	DrawScrollView::GachaData::GachaData(const GachaData&)	840	105	0	0
-005AE390	DrawScrollView::loadShopBanner	248	25	0	6
-005AE4CC	DrawScrollView::init	7	0	0	3
-005AECF4	DrawScrollView::update	4775	4767	0	8
-005AED2C	DrawScrollView::createRow	20	0	0	5
-005AED84	DrawScrollView::changeRow	128	5	0	0
-005AEE58	DrawScrollView::updateRow	126	11	0	31
-005AEF88	DrawScrollView::registItemTouchEvent	22	12	0	0
-005AF210	DrawScrollView::registItemTouchEvent $_2 assign (sub_5AF210)	44	12	0	0
-005AF284	DrawScrollView::updateScroll	9838	4757	0	6
+005AD41C	DrawScrollView::setDrawFrame	424	16	0	119
+005AD6C4	DrawScrollView::initShopTopGachaButton	455	16	0	31
+005AE2CC	DrawScrollView::GachaData::GachaData(const GachaData&)	1695	127	0	0
+005AE390	DrawScrollView::loadShopBanner	455	41	0	6
+005AE4CC	DrawScrollView::init	19	6	0	3
+005AECF4	DrawScrollView::update	3137	3135	0	2
+005AED2C	DrawScrollView::createRow	50	0	0	5
+005AED84	DrawScrollView::changeRow	549	21	0	0
+005AEE58	DrawScrollView::updateRow	588	27	0	31
+005AEF88	DrawScrollView::registItemTouchEvent	88	48	0	0
+005AF210	DrawScrollView::registItemTouchEvent $_2 assign (sub_5AF210)	176	48	0	0
+005AF284	DrawScrollView::updateScroll	6566	3129	0	2
 005B1430	DrawScrollView::openCheckbondsPopup $_20 __func::__clone()	6	0	0	0
 005B42D4	RaidSubdueScrollView::~RaidSubdueScrollView()	1	0	0	0
 005B43A0	RaidSubdueScrollView::~RaidSubdueScrollView() (deleting)	1	0	0	0
@@ -2497,7 +2497,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00613E5A	SceneManager::setOnBackKeyCallback	242	0	0	0
 00613E68	SceneManager::getPopupLayer	195	5	0	0
 00613E70	SceneManager::getPopupLayer2	114	0	0	0
-0061507C	SceneManager::openChatPopup $_43::operator() (sub_61507C)	4	0	0	4
+0061507C	SceneManager::openChatPopup $_43::operator() (sub_61507C)	10	0	0	10
 0061524C	SceneManager::openPopup	194	7	0	0
 0061FB24	SceneManager::openNoTapScreen	20	0	0	0
 0061FC20	SceneManager::openPartyNewPopup(std::function<void()>)	76	39	0	0
@@ -2566,9 +2566,9 @@ addr	name	calls	verified	mismatches	unverifiable
 00638430	SceneManager::init $_0 __func::destroy	61	0	0	0
 0063843A	sub_63843A	53	53	0	0
 00638474	SceneSplash::create	75	0	0	1
-006384E8	SceneManager::openChatPopup $_129 __func::__clone() (sub_6384E8)	4	2	0	0
-00638558	SceneManager::openChatPopup $_129::operator()(bool) (sub_638558)	4	0	0	4
-00638804	SceneManager::openChatPopup $_130::operator() (sub_638804)	2	2	0	0
+006384E8	SceneManager::openChatPopup $_129 __func::__clone() (sub_6384E8)	16	8	0	0
+00638558	SceneManager::openChatPopup $_129::operator()(bool) (sub_638558)	10	0	0	10
+00638804	SceneManager::openChatPopup $_130::operator() (sub_638804)	8	8	0	0
 00638CE0	SceneMovie::create	97	51	0	0
 00638D64	SceneMovie::~SceneMovie (deleting)	96	51	0	0
 00638D88	SceneMovie::init	104	51	0	0
@@ -2690,17 +2690,17 @@ addr	name	calls	verified	mismatches	unverifiable
 006524A8	SceneMyPage::init::$_0 __clone(__base*)	78	0	0	0
 006524C8	SceneMyPage::init::$_0 destroy()	155	37	0	0
 0065253C	std::__hash_table<std::__hash_value_type<std::string,cocos2d::Value>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,cocos2d::Value>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,cocos2d::Value>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,cocos2d::Value>>>::~__hash_table [base destructor]	165348	9146	0	0
-00652594	ScenePartyTop::callPartyTopAPI	3	0	0	3
-00652A70	ScenePartyTop::~ScenePartyTop	10	0	0	1
+00652594	ScenePartyTop::callPartyTopAPI	9	0	0	9
+00652A70	ScenePartyTop::~ScenePartyTop	16	6	0	1
 00652ADC	ScenePartyTop::~ScenePartyTop [deleting destructor]	9	0	0	9
-00652AFC	ScenePartyTop::init	6	0	0	3
-006530AC	ScenePartyTop::runInJoinLayout	7	0	0	1
-006555C0	ScenePartyTop::runOutAnimationMain	2	1	0	0
-006556B0	ScenePartyTop::runOutJoinLayout	1	1	0	0
-00655CDC	ScenePartyTop::backScene	1	1	0	0
+00652AFC	ScenePartyTop::init	12	3	0	3
+006530AC	ScenePartyTop::runInJoinLayout	19	3	0	1
+006555C0	ScenePartyTop::runOutAnimationMain	14	7	0	0
+006556B0	ScenePartyTop::runOutJoinLayout	7	7	0	0
+00655CDC	ScenePartyTop::backScene	7	7	0	0
 00655DB4	ScenePartyTop::backScene $_25 __func::__clone(__base*)	10	1	0	0
 00655DD0	ScenePartyTop::backScene $_25 __func::destroy	11	2	0	0
-00655DDC	ScenePartyTop::backScene $_ __func::operator() (sub_655DDC)	3	0	0	3
+00655DDC	ScenePartyTop::backScene $_ __func::operator() (sub_655DDC)	9	0	0	9
 006580F0	ScenePartyTop::runInJoinLayout $_19 __func::__clone(__base*)	14	0	0	0
 00658110	ScenePartyTop::runInJoinLayout $_19 __func::destroy	21	0	0	0
 00658740	ScenePartyTop::runInJoinLayout $_16 __func::__clone(__base*)	7	0	0	0
@@ -2723,32 +2723,32 @@ addr	name	calls	verified	mismatches	unverifiable
 0065A60C	ScenePartyTop::init $_6 __func::destroy	18	0	0	0
 0065A6D0	ScenePartyTop::callPartyTopAPI $_5 __func::__clone()	6	3	0	0
 0065A774	ScenePartyTop::callPartyTopAPI $_5 __func::destroy_deallocate	9	6	0	0
-0065A7E8	ScenePartyTop::callPartyTopAPI lambda (sub_65A7E8)	3	0	0	3
-0065A988	ScenePartyTop::callPartyTopAPI chain 1 __func::__clone() (sub_65A988)	6	3	0	0
-0065AA2C	ScenePartyTop::callPartyTopAPI chain 1 __func::destroy_deallocate (sub_65AA2C)	9	6	0	0
-0065AA58	ScenePartyTop::callPartyTopAPI chain 1 __func::operator() (sub_65AA58)	3	0	0	3
-0065AC20	ScenePartyTop::callPartyTopAPI chain 2 __func::__clone() (sub_65AC20)	6	3	0	0
-0065ACC4	ScenePartyTop::callPartyTopAPI chain 2 __func::destroy_deallocate (sub_65ACC4)	9	6	0	0
-0065ACF0	ScenePartyTop::callPartyTopAPI chain 2 __func::operator() (sub_65ACF0)	3	0	0	3
-0065AEB8	ScenePartyTop::callPartyTopAPI chain 3 __func::__clone() (sub_65AEB8)	6	3	0	0
-0065AF5C	ScenePartyTop::callPartyTopAPI chain 3 __func::destroy_deallocate (sub_65AF5C)	9	6	0	0
-0065FFD8	SceneDeckEdit::~SceneDeckEdit	14	0	0	1
+0065A7E8	ScenePartyTop::callPartyTopAPI lambda (sub_65A7E8)	9	0	0	9
+0065A988	ScenePartyTop::callPartyTopAPI chain 1 __func::__clone() (sub_65A988)	18	9	0	0
+0065AA2C	ScenePartyTop::callPartyTopAPI chain 1 __func::destroy_deallocate (sub_65AA2C)	27	18	0	0
+0065AA58	ScenePartyTop::callPartyTopAPI chain 1 __func::operator() (sub_65AA58)	9	0	0	9
+0065AC20	ScenePartyTop::callPartyTopAPI chain 2 __func::__clone() (sub_65AC20)	18	9	0	0
+0065ACC4	ScenePartyTop::callPartyTopAPI chain 2 __func::destroy_deallocate (sub_65ACC4)	27	18	0	0
+0065ACF0	ScenePartyTop::callPartyTopAPI chain 2 __func::operator() (sub_65ACF0)	9	0	0	9
+0065AEB8	ScenePartyTop::callPartyTopAPI chain 3 __func::__clone() (sub_65AEB8)	18	9	0	0
+0065AF5C	ScenePartyTop::callPartyTopAPI chain 3 __func::destroy_deallocate (sub_65AF5C)	27	18	0	0
+0065FFD8	SceneDeckEdit::~SceneDeckEdit	20	6	0	1
 00660138	SceneDeckEdit::~SceneDeckEdit [deleting destructor]	13	0	0	13
-0066016C	SceneDeckEdit::init	7	0	0	3
-00661658	SceneDeckEdit::initKeyBladePanel	8	0	0	1
-00661C6C	SceneDeckEdit::initMedalSelectPanel	8	0	0	1
-0066321C	SceneDeckEdit::checkPrepareFinishScene	2	2	0	0
-0066360C	SceneDeckEdit::runInAnimation	8	1	0	0
-00663A28	SceneDeckEdit::runOutAnimationMain	2	2	0	0
-0066707C	SceneDeckEdit::updateDeckStauts	6	2	0	0
-00667538	SceneDeckEdit::updateDeckView	14	4	0	8
-00667EF8	SceneDeckEdit::updateDeckData	6	4	0	0
-00668044	SceneDeckEdit::runUpdateKeybladeEvent	4	0	0	4
-00669874	SceneDeckEdit::getSortFilter	24	3	0	0
-0067403C	std::__sort<runSortFilter comparator&, shared_ptr<UserMedalData>*> (sub_67403C)	12	1	0	0
-00674A04	std::__sort3<runSortFilter comparator&, shared_ptr<UserMedalData>*> (sub_674A04)	81	1	0	0
-00674ADA	std::__sort4<runSortFilter comparator&, shared_ptr<UserMedalData>*> (sub_674ADA)	9	1	0	0
-00677E00	SceneDeckEdit::updateDeckView $_ __func::__clone(dst) (sub_677E00)	9	2	0	0
+0066016C	SceneDeckEdit::init	19	2	0	3
+00661658	SceneDeckEdit::initKeyBladePanel	14	2	0	1
+00661C6C	SceneDeckEdit::initMedalSelectPanel	14	2	0	1
+0066321C	SceneDeckEdit::checkPrepareFinishScene	8	8	0	0
+0066360C	SceneDeckEdit::runInAnimation	20	4	0	0
+00663A28	SceneDeckEdit::runOutAnimationMain	8	8	0	0
+0066707C	SceneDeckEdit::updateDeckStauts	19	11	0	0
+00667538	SceneDeckEdit::updateDeckView	44	25	0	8
+00667EF8	SceneDeckEdit::updateDeckData	18	10	0	0
+00668044	SceneDeckEdit::runUpdateKeybladeEvent	10	6	0	4
+00669874	SceneDeckEdit::getSortFilter	60	8	0	0
+0067403C	std::__sort<runSortFilter comparator&, shared_ptr<UserMedalData>*> (sub_67403C)	48	4	0	0
+00674A04	std::__sort3<runSortFilter comparator&, shared_ptr<UserMedalData>*> (sub_674A04)	198	4	0	0
+00674ADA	std::__sort4<runSortFilter comparator&, shared_ptr<UserMedalData>*> (sub_674ADA)	22	4	0	0
+00677E00	SceneDeckEdit::updateDeckView $_ __func::__clone(dst) (sub_677E00)	46	17	0	0
 0067D8AC	SceneTitle::~SceneTitle (deleting)	48	0	0	43
 0067D8D0	SceneTitle::init	68	0	0	0
 0067E8C0	SceneTitle::update	45086	15687	0	0
@@ -2891,8 +2891,8 @@ addr	name	calls	verified	mismatches	unverifiable
 00685FC0	SceneBattleResult::init::$_3::lambda(bool) __clone(__base*)	171	57	0	0
 00685FE0	SceneBattleResult::init::$_3::lambda(bool) destroy()	228	114	0	0
 00685FEC	SceneBattleResult::init::$_3::{lambda(bool)#1}::operator()	32	0	0	32
-0068CDBC	DrawScrollView::create	4	0	0	4
-0068E7EC	DrawScrollView::DrawScrollView	5	1	0	0
+0068CDBC	DrawScrollView::create	10	6	0	4
+0068E7EC	DrawScrollView::DrawScrollView	11	7	0	0
 006B72C8	SceneSphereBoardSelect::initSphereBoardList	2	0	0	2
 006B84C4	SphereScrollView::create	3	0	0	3
 006B9550	SceneSphereBoardSelect::update	7269	7257	0	12
