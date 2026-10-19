@@ -730,6 +730,16 @@ addr	name	calls	verified	mismatches	unverifiable
 004FB934	MagicStoneScrollView::setProductInfoMap(const unordered_map<string, ProductInfo>*)	6	4	0	0
 004FC968	BaseScrollView<unsigned long long>::init()	63	0	0	2
 004FD230	BaseScrollView<unsigned long long>::setItemIDs(const vector<ull>&)	63	0	0	2
+0050241C	SphereScrollView::~SphereScrollView	2	0	0	1
+005024CE	SphereScrollView::~SphereScrollView [deleting destructor]	1	0	0	1
+005024DC	SphereScrollView::loadTextureIncentive	91	77	0	14
+005025A8	SphereScrollView::loadTextureBoard	91	91	0	0
+00502674	SphereScrollView::loadTextureKind	91	90	0	1
+00502740	SphereScrollView::changeRow	91	77	0	14
+00502F58	SphereScrollView::init	1	0	0	1
+00502F98	SphereScrollView::setSphereBoard	3	0	0	3
+00503008	SphereScrollView::Set_disp_param	1059	1050	0	0
+00503278	SphereScrollView::setSphereBoardNewId	3	3	0	0
 005034BC	SupportCharacterScrollView::~SupportCharacterScrollView()	67	0	0	7
 00503654	SupportCharacterScrollView::~SupportCharacterScrollView [deleting destructor]	62	0	0	0
 00503688	SupportCharacterScrollView::create()	68	0	0	7
@@ -805,6 +815,30 @@ addr	name	calls	verified	mismatches	unverifiable
 005164A4	sub_5164A4	146	2	0	0
 005164C4	nullsub_348	225	70	0	0
 005164CE	sub_5164CE	135	68	0	0
+00516510	BaseEndlessrollView::~BaseEndlessrollView	1	0	0	1
+00516764	BaseEndlessrollView::createRow	9	0	0	9
+005167F4	BaseEndlessrollView::init	1	0	0	1
+00516D7C	BaseEndlessrollView::update	3573	3569	0	4
+005177A0	BaseEndlessrollView::degree2radian	2272	2254	0	0
+005177CC	BaseEndlessrollView::get_offset_move	15072	14794	0	0
+005178E8	BaseEndlessrollView::setSub	277	263	0	12
+00517F68	BaseEndlessrollView::init $_11 __func::__clone(__base*)	1	0	0	0
+00517F88	BaseEndlessrollView::init $_11 __func::destroy	1	0	0	0
+00518198	BaseEndlessrollView::init $_10 __func::__clone(__base*)	1	0	0	0
+005181B8	BaseEndlessrollView::init $_10 __func::destroy	1	0	0	0
+005183C8	BaseEndlessrollView::init $_9 __func::__clone(__base*)	1	0	0	0
+005183E8	BaseEndlessrollView::init $_9 __func::destroy	1	0	0	0
+00518688	BaseEndlessrollView::init $_8 __func::__clone(__base*)	1	0	0	0
+005186A8	BaseEndlessrollView::init $_8 __func::destroy	1	0	0	0
+005187FC	BaseEndlessrollView::init $_7 __func::__clone(__base*)	4	0	0	0
+0051881C	BaseEndlessrollView::init $_7 __func::destroy	4	0	0	0
+005188A0	BaseEndlessrollView::init $_6 __func::__clone(__base*)	4	0	0	0
+005188C4	BaseEndlessrollView::init $_6 __func::destroy	4	0	0	0
+005189EC	BaseEndlessrollView::init $_5 __func::__clone(__base*)	4	0	0	0
+00518A0C	BaseEndlessrollView::init $_5 __func::destroy	4	0	0	0
+00518B30	BaseEndlessrollView::init $_4 __func::__clone(__base*)	8	4	0	0
+00518D94	BaseEndlessrollView::init $_3 __func::__clone(__base*)	2	1	0	0
+00518EF0	BaseEndlessrollView::init $_2 __func::__clone(__base*)	2	1	0	0
 005196EC	MyRecordScrollView::~MyRecordScrollView	5	0	0	0
 005197CC	MyRecordScrollView::~MyRecordScrollView [deleting destructor]	2	0	0	0
 00519800	MyRecordScrollView::create	2	0	0	2
@@ -2743,6 +2777,24 @@ addr	name	calls	verified	mismatches	unverifiable
 00685FC0	SceneBattleResult::init::$_3::lambda(bool) __clone(__base*)	171	57	0	0
 00685FE0	SceneBattleResult::init::$_3::lambda(bool) destroy()	228	114	0	0
 00685FEC	SceneBattleResult::init::$_3::{lambda(bool)#1}::operator()	32	0	0	32
+006B72C8	SceneSphereBoardSelect::initSphereBoardList	2	0	0	2
+006B84C4	SphereScrollView::create	3	0	0	3
+006B9550	SceneSphereBoardSelect::update	7269	7257	0	12
+006BB958	SceneSphereBoardSelect::backScene $_14 __func::operator()	2	0	0	2
+006BBC74	SceneSphereBoardSelect::initSphereBoardList $_10 __func::__clone(__base*)	4	0	0	0
+006BBC98	SceneSphereBoardSelect::initSphereBoardList $_10 __func::destroy	6	2	0	0
+006BBD54	SceneSphereBoardSelect::initSphereBoardList $_9 __func::__clone(__base*)	4	0	0	0
+006BBD78	SceneSphereBoardSelect::initSphereBoardList $_9 __func::destroy	6	2	0	0
+006BBE30	SceneSphereBoardSelect::initSphereBoardList $_8 __func::__clone(__base*)	4	0	0	0
+006BBE50	SceneSphereBoardSelect::initSphereBoardList $_8 __func::destroy	6	2	0	0
+006BBECC	SceneSphereBoardSelect::initSphereBoardList $_7 __func::__clone(__base*)	4	0	0	0
+006BBEEC	SceneSphereBoardSelect::initSphereBoardList $_7 __func::destroy	6	2	0	0
+006BC1A8	SceneSphereBoardSelect::initSphereBoardList $_6 __func::destroy_deallocate	2	0	0	0
+006BC770	SceneSphereBoardSelect::initSphereBoardList::$_5 __clone(__base*)	2	0	0	0
+006BC790	SceneSphereBoardSelect::initSphereBoardList::$_5 destroy()	4	0	0	0
+006BC810	SceneSphereBoardSelect::initSphereBoardList::$_4 __clone(__base*)	2	0	0	0
+006BC830	SceneSphereBoardSelect::initSphereBoardList::$_4 destroy()	4	0	0	0
+006BE09C	BaseEndlessrollView::BaseEndlessrollView	1	1	0	0
 006C10B8	SceneLight::load	9	0	0	0
 006C11EC	SceneLight::create	9	0	0	0
 006C1244	SceneLight::~SceneLight	9	0	0	0

@@ -332,4 +332,37 @@ static void init_L5_destroyDeallocate(uint32_t self) {
 }
 RW_FUNCTION(0x518A0E, "BaseEndlessrollView::init $_5 __func::destroy_deallocate", init_L5_destroyDeallocate);
 
+// BaseEndlessrollView::init $_4 / $_3 / $_2: __func::__clone(__base*) (listed as MyRecordScrollView subs). The
+// captures are copied last word first.
+static void init_L4_cloneInto(uint32_t self, uint32_t p) {
+    if (p) {
+        st32(p, 0xf56864u);
+        uint32_t a = ld32(self + 4), b = ld32(self + 8);
+        st32(p + 12, ld32(self + 12));
+        st32(p + 8, b);
+        st32(p + 4, a);
+    }
+}
+RW_FUNCTION(0x518B30, "BaseEndlessrollView::init $_4 __func::__clone(__base*)", init_L4_cloneInto);
+
+static void init_L3_cloneInto(uint32_t self, uint32_t p) {
+    if (p) {
+        st32(p, 0xf56890u);
+        uint32_t a = ld32(self + 4);
+        st32(p + 8, ld32(self + 8));
+        st32(p + 4, a);
+    }
+}
+RW_FUNCTION(0x518D94, "BaseEndlessrollView::init $_3 __func::__clone(__base*)", init_L3_cloneInto);
+
+static void init_L2_cloneInto(uint32_t self, uint32_t p) {
+    if (p) {
+        st32(p, 0xf568bcu);
+        uint32_t a = ld32(self + 4);
+        st32(p + 8, ld32(self + 8));
+        st32(p + 4, a);
+    }
+}
+RW_FUNCTION(0x518EF0, "BaseEndlessrollView::init $_2 __func::__clone(__base*)", init_L2_cloneInto);
+
 }  // namespace

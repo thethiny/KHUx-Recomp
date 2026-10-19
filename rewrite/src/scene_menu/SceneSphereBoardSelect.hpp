@@ -96,8 +96,8 @@ struct SceneSphereBoardSelect {
     static void onBuyResult(Addr fn, Addr ok, Addr jewel);            // initSphereBoardList $_6 inner
     static void onEnter(Addr fn);                                     // initSphereBoardList $_7
     static void onExit(Addr fn);                                      // initSphereBoardList $_8
-    static void onTapRightArrow(Addr fn, Addr ref, Addr type);        // initSphereBoardList $_9
-    static void onTapLeftArrow(Addr fn, Addr ref, Addr type);         // initSphereBoardList $_10
+    static void onTapLeftArrow(Addr fn, Addr ref, Addr type);         // initSphereBoardList $_9 {arrow, this}
+    static void onTapRightArrow(Addr fn, Addr ref, Addr type);        // initSphereBoardList $_10 {arrow, this}
     static void runOutDone(Addr fn);                                  // runOutAnimationMain $_11
     static void onBuyClosed(Addr fn, Addr ok);                        // openBoardBuyDialog $_13 inner
     static void onBuyCancel(Addr fn, Addr ok);                        // openBoardBuyDialog $_12 inner

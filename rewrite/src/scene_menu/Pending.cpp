@@ -19,7 +19,6 @@ void SceneAvatarEdit::changeTab(SceneAvatarEdit *self, uint32_t tab) { rw::call(
 void SceneAvatarEdit::settingDefaultCoordinate(SceneAvatarEdit *self, Coordinate *coordinate, uint32_t male) {
     rw::call(0x7061A1, {guest_addr(self), guest_addr(coordinate), male});
 }
-void SceneSphereBoardSelect::initSphereBoardList(Addr self) { rw::call(0x6B72C9, {self}); }
 void CarouselDeck::setDeckMedal(CarouselDeck *self, uint32_t unused) {
     rw::call(0x5D17A1, {guest_addr(self), unused});
 }
