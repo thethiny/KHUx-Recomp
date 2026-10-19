@@ -47,7 +47,9 @@ int touch_pop(Touch *t) {
 static LRESULT CALLBACK wndproc(HWND h, UINT msg, WPARAM wp, LPARAM lp) {
     float x = (float)(short)LOWORD(lp), y = (float)(short)HIWORD(lp);
     switch (msg) {
-    case WM_LBUTTONDOWN: SetCapture(h); mouse_down = 1; touch_push(0, x, y); return 0;
+    case WM_LBUTTONDOWN:
+        if (edit_dialog_open) { edit_box_focus(); return 0; }      /* the input box is modal */
+        SetCapture(h); mouse_down = 1; touch_push(0, x, y); return 0;
     case WM_MOUSEMOVE: if (mouse_down) touch_push(1, x, y); return 0;
     case WM_LBUTTONUP: ReleaseCapture(); if (mouse_down) touch_push(2, x, y); mouse_down = 0; return 0;
     case WM_CLOSE: closed = 1; return 0;

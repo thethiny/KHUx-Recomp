@@ -65,6 +65,7 @@ a **win** call the game's own stage finish, not `cheat kill` (that only ends the
 | `events?since=N` | scene changes (`>>> screen`), API results (`>>> api {"action": 106, ...}`) |
 | `ui` / `ui?all=1` | on-screen widgets (name, class, text, rect, addr) / the whole node tree |
 | `tap?x=&y=`, `tap?name=W`, `swipe?...`, `text?...`, `key?...` | input |
+| (text fields) | tapping a game text field (party comment, names, codes) opens the **text input dialog**: `state` shows `"edit_dialog": true` (native exe). It is modal like Android's: `tap` / `swipe` are refused and mouse clicks only raise it. Answer it with `text?s=...`, or `key?code=4` cancels it (old text kept). Drivers must check `edit_dialog` before tapping on screens with text fields, or they stall there |
 | `peek?addr=0x..&n=4` | read guest words |
 | `call?fn=0xADDR&args=a,b,zero` | DEV ONLY: call a guest function on the main thread (≤8 int args; `zero` = pointer to 64 zero bytes) |
 | `warp?avatar=0x..&to=0x..` (or `&x=&y=`) | DEV ONLY: move the player through the game's own walkability check |

@@ -809,6 +809,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00527130	DeckMedalViewManager::getInstance	848457	61711	0	0
 00527208	DeckMedalViewManager::update	848457	61711	0	0
 0052737C	DeckMedalView::updateStatusAndMixedPlate	1340	0	0	0
+005276D8	DeckMedalView::updateLayout	7070	3259	0	73
 0052B9D4	DeckMedalViewManager::getNormalMedalPanel	940	0	0	0
 0052BA08	DeckMedalViewManager::getMedalInfoPanel	940	0	0	0
 0052BA3C	DeckMedalViewManager::getOpenInfoPanel	940	0	0	0
@@ -842,6 +843,12 @@ addr	name	calls	verified	mismatches	unverifiable
 00530304	sub_530304	188	6	0	0
 00530324	nullsub_417	373	6	0	0
 00530330	DeckRevolverView::init::$_1::operator()	6	6	0	0
+00530E48	DeckMedalView::updateLayout::$_0 __func::__clone()	33	8	0	0
+00530EAA	DeckMedalView::updateLayout::$_0 __func::destroy_deallocate	34	19	0	0
+00530EB4	DeckMedalView::updateLayout::$_0::operator()	235	235	0	0
+00530FD0	DeckMedalView::updateLayout::$_0::{lambda()#1} __func::__clone()	122	61	0	0
+00531032	DeckMedalView::updateLayout::$_0::{lambda()#1} __func::destroy_deallocate	238	73	0	0
+0053103C	DeckMedalView::updateLayout::$_0::operator()::{lambda()#1}::operator()	6	6	0	0
 0053112C	DeckMedalView::~DeckMedalView (deleting)	925	0	0	0
 00531238	ImageButton::create(std::string, bool)	1025	17	0	0
 00531300	ImageButton::ImageButton()	1025	9	0	0

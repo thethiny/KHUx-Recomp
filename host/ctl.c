@@ -529,6 +529,14 @@ static char *find_widget_tap(const char *q) {
 static char *serve_main(Req *r) {
     char v[256], v2[256];
     if (!strcmp(r->path, "ui")) return ui_json(qget(r->q, "all", v, sizeof(v)) && !strcmp(v, "1"));
+    /* the text input box is modal (as Android's dialog): touches would land on it, not on the game; answer it with
+     * `text`, or BACK cancels it */
+    if (edit_dialog_open && (!strcmp(r->path, "tap") || !strcmp(r->path, "swipe")))
+        return _strdup("{\"error\": \"text input dialog open: answer it with text, or key 4 cancels it\"}");
+    if (edit_dialog_open && !strcmp(r->path, "key")) {
+        edit_box_cancel();
+        return _strdup("{\"key\": 4, \"handled\": 1, \"via\": \"edit dialog cancelled\"}");
+    }
     if (!strcmp(r->path, "tap")) {
         if (qget(r->q, "x", v, sizeof(v)) && qget(r->q, "y", v2, sizeof(v2))) return tap_json((float)atof(v), (float)atof(v2));
         return find_widget_tap(r->q);
@@ -837,7 +845,8 @@ static char *state_json(void) {
     sb_fmt(&b, "{\"frame\": %d, \"scene\": ", frame_no);
     sb_str(&b, scene_name[0] ? scene_name : NULL);
     sb_fmt(&b, ", \"screen\": %s, \"unchanged_frames\": %d, \"idle\": %s, \"events\": %d, \"threads\": [], "
-           "\"window\": [%d, %d]}", layers_json, unchanged, idle_reported ? "true" : "false", n_events, screen_w, screen_h);
+           "\"window\": [%d, %d], \"edit_dialog\": %s}", layers_json, unchanged, idle_reported ? "true" : "false", n_events,
+           screen_w, screen_h, edit_dialog_open ? "true" : "false");
     return b.s;
 }
 

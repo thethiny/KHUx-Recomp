@@ -1,0 +1,916 @@
+# unwritten game functions seen running: 809 (700 first seen in this session)
+
+## (unnamed): 329
+  00453280      0  sub_453280
+  00453324      0  sub_453324
+  00453374      0  sub_453374
+  004533F8      0  sub_4533F8
+  00453B04      0  sub_453B04
+  00453B7C      0  sub_453B7C
+  00453C6C      0  sub_453C6C
+  00453EA4      0  sub_453EA4
+  0045534C      0  sub_45534C
+  00455388      0  sub_455388
+  004553DC      0  sub_4553DC
+  0045548C      0  sub_45548C
+  00455574      0  sub_455574
+  00455644      0  sub_455644
+  00455728      0  sub_455728
+  00455818      0  sub_455818
+  0045591C      0  sub_45591C
+  00455A24      0  sub_455A24
+  00455B34      0  sub_455B34
+  00455C2C      0  sub_455C2C
+  00455D34      0  sub_455D34
+  00455E40      0  sub_455E40
+  00455F50      0  sub_455F50
+  0045605C      0  sub_45605C
+  00456170      0  sub_456170
+  00456274      0  sub_456274
+  0045636C      0  sub_45636C
+  00456480      0  sub_456480
+  00456578      0  sub_456578
+  0045666C      0  sub_45666C
+  00456714      0  sub_456714
+  00456748      0  sub_456748
+  00456780      0  sub_456780
+  004567B8      0  sub_4567B8
+  004567F4      0  sub_4567F4
+  00456854      0  sub_456854
+  00456A80      0  sub_456A80
+  00456B68      0  sub_456B68
+  00456C38      0  sub_456C38
+  00456D08      0  sub_456D08
+  00456EA0      0  sub_456EA0
+  00456F84      0  sub_456F84
+  00457074      0  sub_457074
+  00457164      0  sub_457164
+  00457224      0  sub_457224
+  004572F8      0  sub_4572F8
+  004573D0      0  sub_4573D0
+  004574C8      0  sub_4574C8
+  004575B0      0  sub_4575B0
+  00457684      0  sub_457684
+  004576C0      0  sub_4576C0
+  004576E4      0  sub_4576E4
+  00457714      0  sub_457714
+  00457754      0  sub_457754
+  00457784      0  sub_457784
+  004577C4      0  sub_4577C4
+  00457800      0  sub_457800
+  004578B4      0  sub_4578B4
+  004579C4      0  sub_4579C4
+  00457A00      0  sub_457A00
+  00457E40      0  sub_457E40
+  00457EC4      0  sub_457EC4
+  00457F18      0  sub_457F18
+  00457F4C      0  sub_457F4C
+  00457FA4      0  sub_457FA4
+  00457FFC      0  sub_457FFC
+  00458074      0  sub_458074
+  004580E4      0  sub_4580E4
+  0045813C      0  sub_45813C
+  004581E8      0  sub_4581E8
+  0045821C      0  sub_45821C
+  004582CC      0  sub_4582CC
+  004584EC      0  sub_4584EC
+  00458524      0  sub_458524
+  0045888C      0  sub_45888C
+  004588C4      0  sub_4588C4
+  00458EFC      0  sub_458EFC
+  00458F3C      0  sub_458F3C
+  00458F7C      0  sub_458F7C
+  00458FB4      0  sub_458FB4
+  00461FCC      0  sub_461FCC
+  004658D4      0  sub_4658D4
+  0046E6C8      0  sub_46E6C8
+  0046E7D0      0  sub_46E7D0
+  00473CAC      0  sub_473CAC
+  00493E04      0  sub_493E04
+  00493E84      0  sub_493E84
+  00497594      0  sub_497594
+  00498A1C      0  sub_498A1C
+  004B6DCC      0  sub_4B6DCC
+  004C07EE      0  sub_4C07EE
+  004DDB94      0  sub_4DDB94
+  00501CF8      0  sub_501CF8
+  00501E5C      0  sub_501E5C
+  00502090      0  sub_502090
+  00502234      0  sub_502234
+  0050C1A0      0  sub_50C1A0
+  0050C310      0  sub_50C310
+  0050C780      0  sub_50C780
+  0050C924      0  sub_50C924
+  0050E8D8      0  sub_50E8D8
+  0050EBFC      0  sub_50EBFC
+  0050F1D4      0  sub_50F1D4
+  0050FED8      0  sub_50FED8
+  005181C4      0  sub_5181C4
+  005183F4      0  sub_5183F4
+  005186B4      0  sub_5186B4
+  00518B64      0  sub_518B64
+  00518F20      0  sub_518F20
+  00524A00      0  sub_524A00
+  00525034      0  sub_525034
+  00529DA6      0  sub_529DA6
+  00529E16      0  sub_529E16
+  0054C000      0  sub_54C000
+  0054C3F0      0  sub_54C3F0
+  00561DD4      0  sub_561DD4
+  00561F7C      0  sub_561F7C
+  00572B6A      0  sub_572B6A
+  00572B94      0  sub_572B94
+  00572E04      0  sub_572E04
+  00573340      0  sub_573340
+  005733F8      0  sub_5733F8
+  00588844      0  sub_588844
+  005889EC      0  sub_5889EC
+  00588AFE      0  sub_588AFE
+  0058C33C      0  sub_58C33C
+  0058C398      0  sub_58C398
+  0058C708      0  sub_58C708
+  0058C7C0      0  sub_58C7C0
+  0058DA18      0  sub_58DA18
+  0058DD40      0  sub_58DD40
+  0058DF70      0  sub_58DF70
+  0058E124      0  sub_58E124
+  0059AA7C      0  sub_59AA7C
+  0059B380      0  sub_59B380
+  0059B69C      0  sub_59B69C
+  0059B8F8      0  sub_59B8F8
+  0059F710      0  sub_59F710
+  005A6688      0  sub_5A6688
+  005A69A8      0  sub_5A69A8
+  005A76C4      0  sub_5A76C4
+  005A79D4      0  sub_5A79D4
+  005A80E6      0  sub_5A80E6
+  005AAB40      0  sub_5AAB40
+  005AC6C0      0  sub_5AC6C0
+  005AC894      0  sub_5AC894
+  005ACADC      0  sub_5ACADC
+  005ACCEC      0  sub_5ACCEC
+  005ACE24      0  sub_5ACE24
+  005AF210      0  sub_5AF210
+  005B1D8C      0  sub_5B1D8C
+  005B1E5C      0  sub_5B1E5C
+  005B2030      0  sub_5B2030
+  005B20F4      0  sub_5B20F4
+  005B2120      0  sub_5B2120
+  005B2224      0  sub_5B2224
+  005B22E0      0  sub_5B22E0
+  005B230C      0  sub_5B230C
+  005FDD04      0  sub_5FDD04
+  0061507C      0  sub_61507C
+  00637FB8      0  sub_637FB8
+  006384E8      0  sub_6384E8
+  00638558      0  sub_638558
+  00638804      0  sub_638804
+  00655DDC      0  sub_655DDC
+  00655F84      0  sub_655F84
+  00656AF6      0  sub_656AF6
+  00656B44      0  sub_656B44
+  00656C82      0  sub_656C82
+  00656E7C      0  sub_656E7C
+  00659170      0  sub_659170
+  006592A0      0  sub_6592A0
+  006594E8      0  sub_6594E8
+  00659630      0  sub_659630
+  006599B8      0  sub_6599B8
+  00659AE8      0  sub_659AE8
+  00659C60      0  sub_659C60
+  00659FE4      0  sub_659FE4
+  0065A114      0  sub_65A114
+  0065A7E8      0  sub_65A7E8
+  0065A988      0  sub_65A988
+  0065AA2C      0  sub_65AA2C
+  0065AA58      0  sub_65AA58
+  0065AC20      0  sub_65AC20
+  0065ACC4      0  sub_65ACC4
+  0065ACF0      0  sub_65ACF0
+  0065AEB8      0  sub_65AEB8
+  0065AF5C      0  sub_65AF5C
+  0065B050      0  sub_65B050
+  0065B0F4      0  sub_65B0F4
+  0065B120      0  sub_65B120
+  0065B2F4      0  sub_65B2F4
+  0065B398      0  sub_65B398
+  00666F84      0  sub_666F84
+  0067403C      0  sub_67403C
+  00674A04      0  sub_674A04
+  00674ADA      0  sub_674ADA
+  00674B7A      0  sub_674B7A
+  00678080      0  sub_678080
+  006780F0      0  sub_6780F0
+  00678330      0  sub_678330
+  0067839A      0  sub_67839A
+  0067853C      0  sub_67853C
+  00688C2C      0  sub_688C2C
+  00688D64      0  sub_688D64
+  00688E50      0  sub_688E50
+  006890EA      0  sub_6890EA
+  006891A4      0  sub_6891A4
+  00689250      0  sub_689250
+  00689598      0  sub_689598
+  006899D8      0  sub_6899D8
+  00689B54      0  sub_689B54
+  0068A240      0  sub_68A240
+  0068A416      0  sub_68A416
+  0068A6A4      0  sub_68A6A4
+  0068A764      0  sub_68A764
+  0068A804      0  sub_68A804
+  0068A9C4      0  sub_68A9C4
+  0068AA84      0  sub_68AA84
+  0068AB7C      0  sub_68AB7C
+  0068AD28      0  sub_68AD28
+  0068ADCC      0  sub_68ADCC
+  0068AED8      0  sub_68AED8
+  0068B318      0  sub_68B318
+  0068B494      0  sub_68B494
+  0069344C      0  sub_69344C
+  006934B4      0  sub_6934B4
+  006936BE      0  sub_6936BE
+  00693A54      0  sub_693A54
+  00693AC4      0  sub_693AC4
+  00693C54      0  sub_693C54
+  00693CC0      0  sub_693CC0
+  00699998      0  sub_699998
+  0069FC70      0  sub_69FC70
+  0069FE00      0  sub_69FE00
+  006A02C4      0  sub_6A02C4
+  006A0424      0  sub_6A0424
+  006A04FA      0  sub_6A04FA
+  006A059A      0  sub_6A059A
+  006A0DB4      0  sub_6A0DB4
+  006A10CC      0  sub_6A10CC
+  006A1298      0  sub_6A1298
+  006A13EA      0  sub_6A13EA
+  006A1418      0  sub_6A1418
+  006A1AD4      0  sub_6A1AD4
+  006B1370      0  sub_6B1370
+  006B19C8      0  sub_6B19C8
+  006B1A6C      0  sub_6B1A6C
+  006B1ECC      0  sub_6B1ECC
+  006B3528      0  sub_6B3528
+  006B37F0      0  sub_6B37F0
+  006BB824      0  sub_6BB824
+  006BB958      0  sub_6BB958
+  006BCF7C      0  sub_6BCF7C
+  006BD16E      0  sub_6BD16E
+  006BFFE8      0  sub_6BFFE8
+  006C0DB8      0  sub_6C0DB8
+  006CE6E4      0  sub_6CE6E4
+  006CEC8C      0  sub_6CEC8C
+  006CEFFC      0  sub_6CEFFC
+  006CF158      0  sub_6CF158
+  006CF304      0  sub_6CF304
+  006D6A60      0  sub_6D6A60
+  006D6C44      0  sub_6D6C44
+  006DD3C8      0  sub_6DD3C8
+  006DED2A      0  sub_6DED2A
+  006DEDA4      0  sub_6DEDA4
+  006DEEE2      0  sub_6DEEE2
+  006E4424      0  sub_6E4424
+  006E56F0      0  sub_6E56F0
+  006E5AB0      0  sub_6E5AB0
+  006E74CC      0  sub_6E74CC
+  006E9850      0  sub_6E9850
+  006EDCFC      0  sub_6EDCFC
+  006F0278      0  sub_6F0278
+  006F0748      0  sub_6F0748
+  006F1208      0  sub_6F1208
+  006F127C      0  sub_6F127C
+  006F1B7C      0  sub_6F1B7C
+  006FA580      0  sub_6FA580
+  006FABD4      0  sub_6FABD4
+  006FAC28      0  sub_6FAC28
+  006FACEC      0  sub_6FACEC
+  006FB144      0  sub_6FB144
+  006FDCF0      0  sub_6FDCF0
+  006FDE40      0  sub_6FDE40
+  006FE270      0  sub_6FE270
+  00701194      0  sub_701194
+  00701278      0  sub_701278
+  00702878      0  sub_702878
+  00702B18      0  sub_702B18
+  00702F4C      0  sub_702F4C
+  007031C0      0  sub_7031C0
+  007031EC      0  sub_7031EC
+  007033BC      0  sub_7033BC
+  00703460      0  sub_703460
+  007107A0      0  sub_7107A0
+  00710B3C      0  sub_710B3C
+  00710C74      0  sub_710C74
+  00711076      0  sub_711076
+  0071112C      0  sub_71112C
+  007116D0      0  sub_7116D0
+  0072AE30      0  sub_72AE30
+  0072C6C8      0  sub_72C6C8
+  0072C838      0  sub_72C838
+  0072C984      0  sub_72C984
+  0072CAF0      0  sub_72CAF0
+  0072CCC0      0  sub_72CCC0
+  0072CE2C      0  sub_72CE2C
+  0072D0B0      0  sub_72D0B0
+  0073DDA0      0  sub_73DDA0
+  0073DF48      0  sub_73DF48
+  0073E108      0  sub_73E108
+  0073E4D4      0  sub_73E4D4
+  0073EC78      0  sub_73EC78
+  0073EF7E      0  sub_73EF7E
+  0073EFEC      0  sub_73EFEC
+  0073F056      0  sub_73F056
+  0073F2B0      0  sub_73F2B0
+  00799094      0  sub_799094
+  0092E42C      0  sub_92E42C
+  00C9C858      0  sub_C9C858
+  00C9C8E0      0  sub_C9C8E0
+  00C9CC58      0  sub_C9CC58
+  00CA1BF4      0  sub_CA1BF4
+  00CA1C5C      0  sub_CA1C5C
+  00CA3B24      0  sub_CA3B24
+  00CA4984      0  sub_CA4984
+  00CD2ED0      0  sub_CD2ED0
+
+## (unnamed, chunk): 89
+  0044F07C      0  sub_44F07C
+  0044F154      0  sub_44F154
+  0044F368      0  sub_44F368
+  0044F3D0      0  sub_44F3D0
+  0044F6D8      0  sub_44F6D8
+  0044FF84      0  sub_44FF84
+  004667B2      0  sub_4667B2
+  004667C2      0  sub_4667C2
+  004BEA90      0  sub_4BEA90
+  004BF846      0  sub_4BF846
+  004BF84A      0  sub_4BF84A
+  004C07EA      0  sub_4C07EA
+  004C0AA4      0  sub_4C0AA4
+  004C0AA6      0  sub_4C0AA6
+  004C0ACE      0  sub_4C0ACE
+  004C0E6A      0  sub_4C0E6A
+  004C0E74      0  sub_4C0E74
+  004C1414      0  sub_4C1414
+  004C163E      0  sub_4C163E
+  004C1646      0  sub_4C1646
+  004C1648      0  sub_4C1648
+  004C164E      0  sub_4C164E
+  004C1658      0  sub_4C1658
+  004C1724      0  sub_4C1724
+  004C17D4      0  sub_4C17D4
+  004C1840      0  sub_4C1840
+  004C1844      0  sub_4C1844
+  004C186C      0  sub_4C186C
+  004C1884      0  sub_4C1884
+  004C197E      0  sub_4C197E
+  004C19F0      0  sub_4C19F0
+  004C1A02      0  sub_4C1A02
+  004C1CFE      0  sub_4C1CFE
+  004C1D08      0  sub_4C1D08
+  004C1D12      0  sub_4C1D12
+  004C1D1C      0  sub_4C1D1C
+  004C1D8E      0  sub_4C1D8E
+  004C1D96      0  sub_4C1D96
+  00518B30      0  sub_518B30
+  00518D94      0  sub_518D94
+  00518EF0      0  sub_518EF0
+  00529218      0  sub_529218
+  00529E12      0  sub_529E12
+  00529EFC      0  sub_529EFC
+  0052A8DA      0  sub_52A8DA
+  0052AEBC      0  sub_52AEBC
+  0059B8C8      0  sub_59B8C8
+  005FDD0A      0  sub_5FDD0A
+  005FDE82      0  sub_5FDE82
+  005FDE8C      0  sub_5FDE8C
+  005FDED2      0  sub_5FDED2
+  005FE3E8      0  sub_5FE3E8
+  005FE4EE      0  sub_5FE4EE
+  005FE734      0  sub_5FE734
+  005FE73C      0  sub_5FE73C
+  006207D2      0  sub_6207D2
+  00641422      0  sub_641422
+  00641448      0  sub_641448
+  00677E00      0  sub_677E00
+  0067850C      0  sub_67850C
+  0067E58A      0  sub_67E58A
+  0068A3E4      0  sub_68A3E4
+  0069368C      0  sub_69368C
+  00693760      0  sub_693760
+  006940F0      0  sub_6940F0
+  006C47D6      0  sub_6C47D6
+  006C47E4      0  sub_6C47E4
+  006C4906      0  sub_6C4906
+  006C4918      0  sub_6C4918
+  0071EADC      0  sub_71EADC
+  0074337A      0  sub_74337A
+  0074603C      0  sub_74603C
+  00768F60      0  sub_768F60
+  00C34D9C      0  sub_C34D9C
+  00C34EB0      0  sub_C34EB0
+  00C353F8      0  sub_C353F8
+  00C35EEC      0  sub_C35EEC
+  00C9DF62      0  sub_C9DF62
+  00C9E16A      0  sub_C9E16A
+  00CA1CDE      0  sub_CA1CDE
+  00CA338A      0  sub_CA338A
+  00CA358E      0  sub_CA358E
+  00CA35A4      0  sub_CA35A4
+  00CA3A22      0  sub_CA3A22
+  00CA3B02      0  sub_CA3B02
+  00CA3BC4      0  sub_CA3BC4
+  00CA4A3C      0  sub_CA4A3C
+  00CA4A78      0  sub_CA4A78
+  00CE646C      0  sub_CE646C
+
+## SphereUI: 19
+  006BF038      0  SphereUI::create
+  00793288      0  SphereUI::ctor
+  00793318      0  SphereUI::dtor
+  0079349C      0  SphereUI::create_sphere
+  007937B4      0  SphereUI::init
+  00793B18      0  SphereUI::load_board
+  00793E38      0  SphereUI::create_board
+  007941CC      0  SphereUI::update_status
+  00794C0C      0  SphereUI::setOpenCursor
+  007955EC      0  SphereUI::set_cursol
+  0079597C      0  SphereUI::is_open_incentive
+  00795B3C      0  SphereUI::check_up_route
+  00795BA0      0  SphereUI::check_down_route
+  00795C04      0  SphereUI::check_right_route
+  00795C68      0  SphereUI::check_left_route
+  00795D30      0  SphereUI::check_up_status
+  00795E4C      0  SphereUI::check_left_status
+  00795F7C      0  SphereUI::check_right_status
+  007960AC      0  SphereUI::check_down_status
+
+## SceneDeckEdit: 18
+  0057AFD4      0  SceneDeckEdit::create
+  0057B028      0  SceneDeckEdit::ctor
+  0065FFD8      0  SceneDeckEdit::dtor
+  0066016C      0  SceneDeckEdit::init
+  00661658      0  SceneDeckEdit::initKeyBladePanel
+  00661C6C      0  SceneDeckEdit::initMedalSelectPanel
+  00662E2C      0  SceneDeckEdit::openKeyBladePanel
+  0066321C      0  SceneDeckEdit::checkPrepareFinishScene
+  0066360C      0  SceneDeckEdit::runInAnimation
+  00663A28      0  SceneDeckEdit::runOutAnimationMain
+  00663DD8      0  SceneDeckEdit::setKeybladeArrowVisible
+  00663ED8      0  SceneDeckEdit::updateKeyBladePanel
+  00665584      0  SceneDeckEdit::openKeyBladePopup
+  0066707C      0  SceneDeckEdit::updateDeckStauts
+  00667538      0  SceneDeckEdit::updateDeckView
+  00667EF8      0  SceneDeckEdit::updateDeckData
+  00668044      0  SceneDeckEdit::runUpdateKeybladeEvent
+  00669874      0  SceneDeckEdit::getSortFilter
+
+## DrawScrollView: 17
+  005AD174      0  DrawScrollView::dtor
+  005AD360      0  DrawScrollView::cancelShopHandle
+  005AD41C      0  DrawScrollView::setDrawFrame
+  005AD6C4      0  DrawScrollView::initShopTopGachaButton
+  005AE390      0  DrawScrollView::loadShopBanner
+  005AE4CC      0  DrawScrollView::init
+  005AECF4      0  DrawScrollView::update
+  005AED2C      0  DrawScrollView::createRow
+  005AED84      0  DrawScrollView::changeRow
+  005AEE58      0  DrawScrollView::updateRow
+  005AEF88      0  DrawScrollView::registItemTouchEvent
+  005AF284      0  DrawScrollView::updateScroll
+  005AF5AC      0  DrawScrollView::openRaisePopup
+  005AF978      0  DrawScrollView::hasMagicStone
+  005AFA30      0  DrawScrollView::openCheckRaisePopup
+  0068CDBC      0  DrawScrollView::create
+  0068E7EC      0  DrawScrollView::ctor
+
+## AdvEventBannerScrollView: 16
+  00586588      0  AdvEventBannerScrollView::dtor
+  005867D0      0  AdvEventBannerScrollView::create
+  00586824      0  AdvEventBannerScrollView::ctor
+  005869BC      0  AdvEventBannerScrollView::clearLoadEventBanner
+  00586A20      0  AdvEventBannerScrollView::loadEventBanner
+  00586C84      0  AdvEventBannerScrollView::setEventBanner
+  00587394      0  AdvEventBannerScrollView::updateExpirationDate
+  0058745C      0  AdvEventBannerScrollView::setEventBannerTime
+  00587790      0  AdvEventBannerScrollView::init
+  0058783C      0  AdvEventBannerScrollView::update
+  00587968      0  AdvEventBannerScrollView::getLayoutPanel
+  00587A30      0  AdvEventBannerScrollView::createRow
+  00587A88      0  AdvEventBannerScrollView::changeRow
+  00587B70      0  AdvEventBannerScrollView::updateSelectItems
+  00587CF0      0  AdvEventBannerScrollView::registItemTouchEvent
+  00587ED8      0  AdvEventBannerScrollView::setSelectItem
+
+## BuyMagicStoneDialog: 16
+  00588CAC      0  BuyMagicStoneDialog::open
+  00588E0C      0  BuyMagicStoneDialog::init
+  00589004      0  BuyMagicStoneDialog::openDiscount
+  00589208      0  BuyMagicStoneDialog::initItemIDsAndProductIDs
+  00589414      0  BuyMagicStoneDialog::initItemIDsAndProductIDsDiscount
+  00589638      0  BuyMagicStoneDialog::callGetPaymentInfo
+  005897A4      0  BuyMagicStoneDialog::callSendProductsRequest
+  0058A2B0      0  BuyMagicStoneDialog::checkTransaction
+  0058A4E8      0  BuyMagicStoneDialog::updatePaymentInfo
+  0058A7A0      0  BuyMagicStoneDialog::purchaseCallback
+  0058AC40      0  BuyMagicStoneDialog::getSkipTicketCnt
+  0058AD80      0  BuyMagicStoneDialog::hasOwnedItem
+  0058B1D0      0  BuyMagicStoneDialog::checkHasMaxMagicStone
+  0058B310      0  BuyMagicStoneDialog::initJewelInfoButton
+  0058B504      0  BuyMagicStoneDialog::initFundSettlementButton
+  0058B6F8      0  BuyMagicStoneDialog::initTokushohoButton
+
+## SceneRanking: 16
+  0064A270      0  SceneRanking::create
+  0064A2C4      0  SceneRanking::ctor
+  006FBA64      0  SceneRanking::callPartyRankingAPI
+  006FBBE0      0  SceneRanking::callColosseumRankingAPI
+  006FBE1C      0  SceneRanking::dtor
+  006FBE80      0  SceneRanking::init
+  006FC928      0  SceneRanking::initScene
+  006FCA7C      0  SceneRanking::initRankingTitle
+  006FD858      0  SceneRanking::initMyRanking
+  006FD9FC      0  SceneRanking::initRankingScrollView
+  006FE008      0  SceneRanking::changeTickerMessage
+  006FE0E4      0  SceneRanking::changeScrollView
+  006FEEE8      0  SceneRanking::runInAnimation
+  006FF0A4      0  SceneRanking::runOutAnimationMain
+  006FF348      0  SceneRanking::openRankingRewardPopup
+  00700C44      0  SceneRanking::backScene
+
+## RankingRewardScrollView: 13
+  0055DD24      0  RankingRewardScrollView::dtor
+  0055DEA8      0  RankingRewardScrollView::create
+  0055DF04      0  RankingRewardScrollView::ctor
+  0055E070      0  RankingRewardScrollView::init
+  0055E294      0  RankingRewardScrollView::createIncentivePanel
+  0055E3AC      0  RankingRewardScrollView::getLayoutPanel
+  0055E478      0  RankingRewardScrollView::createRow
+  0055E4D0      0  RankingRewardScrollView::setIncentiveItem
+  0055FEE0      0  RankingRewardScrollView::changeRow
+  00560018      0  RankingRewardScrollView::initColosseumRewardLayout
+  00560888      0  RankingRewardScrollView::updateSelectItems
+  00560A08      0  RankingRewardScrollView::initLayout
+  005611EC      0  RankingRewardScrollView::registItemTouchEvent
+
+## MedalListScrollView: 12
+  00599C68      0  MedalListScrollView::dtor
+  00599F24      0  MedalListScrollView::create
+  00599F78      0  MedalListScrollView::ctor
+  0059A1E8      0  MedalListScrollView::init
+  0059A244      0  MedalListScrollView::update
+  0059A2F8      0  MedalListScrollView::getLayoutPanel
+  0059A608      0  MedalListScrollView::createRow
+  0059A660      0  MedalListScrollView::changeRow
+  0059A924      0  MedalListScrollView::registItemTouchEvent
+  0059AB18      0  MedalListScrollView::setMedalIDs
+  0059AD3C      0  MedalListScrollView::isDisableMedal
+  0059AE3C      0  MedalListScrollView::setSelectedMedal
+
+## SceneLoginBonus: 12
+  006F6328      0  SceneLoginBonus::create
+  006F63C4      0  SceneLoginBonus::dtor
+  006F649C      0  SceneLoginBonus::init
+  006F710C      0  SceneLoginBonus::initLoginBonus
+  006F85BC      0  SceneLoginBonus::runInAnimation
+  006F8DEC      0  SceneLoginBonus::runOutAnimationMain
+  006F902C      0  SceneLoginBonus::skipEvent
+  006F90E4      0  SceneLoginBonus::make_getIncentive_name
+  006F9688      0  SceneLoginBonus::make_getIncentiveNext_name
+  006F9B50      0  SceneLoginBonus::make_getIncentive_id
+  006FA0D4      0  SceneLoginBonus::loadIncentiveTexture
+  006FA1A0      0  SceneLoginBonus::openLoginBonus
+
+## SceneUtil: 11
+  0045E798      0  SceneUtil::openMedalMaxUpDialog
+  00462194      0  SceneUtil::updateMedalInfo
+  00466EF4      0  SceneUtil::openMedalInfoPopup
+  0046874C      0  SceneUtil::setMyPageTeamStatus
+  00469868      0  SceneUtil::setMyPageDeckStatus
+  0046D19C      0  SceneUtil::openOptionPopup
+  00470724      0  SceneUtil::openUserTitlePopup
+  00474700      0  SceneUtil::openWebViewInfoPopup
+  00474DCC      0  SceneUtil::openSellOkPopup
+  0047546C      0  SceneUtil::openAvatarBoardFilterPopup
+  00478EDC      0  SceneUtil::openPurchaseSucceededPopup
+
+## RankingScrollView: 11
+  0054F260      0  RankingScrollView::dtor
+  0054F3FC      0  RankingScrollView::create
+  0054F458      0  RankingScrollView::ctor
+  0054F5D4      0  RankingScrollView::init
+  0054F614      0  RankingScrollView::changeRankingScrollViewType
+  0054FAA0      0  RankingScrollView::getLayoutPanel
+  0054FB68      0  RankingScrollView::createRow
+  0054FC6C      0  RankingScrollView::changeRow
+  0055149C      0  RankingScrollView::initColosseumLayer
+  005520D0      0  RankingScrollView::initAvatarLayer
+  005529AC      0  RankingScrollView::setRankingData
+
+## SceneSphereBoard: 11
+  006BCE78      0  SceneSphereBoard::create
+  006BE1D8      0  SceneSphereBoard::dtor
+  006BE26C      0  SceneSphereBoard::init
+  006BF120      0  SceneSphereBoard::loadTextureIncentive
+  006BF1EC      0  SceneSphereBoard::loadTextureBoard
+  006BF2B8      0  SceneSphereBoard::loadTextureKind
+  006BF384      0  SceneSphereBoard::BoardMaking
+  006BF780      0  SceneSphereBoard::openTutorial30
+  006BF84C      0  SceneSphereBoard::runInAnimation
+  006BFB44      0  SceneSphereBoard::runOutAnimationMain
+  006BFEBC      0  SceneSphereBoard::backScene
+
+## (free function): 10
+  004E19A8      0  Java_org_cocos2dx_cpp_GooglePlayManager_onFinishInitialize
+  004E19D4      0  Java_org_cocos2dx_cpp_GooglePlayManager_onRequestProductsResult
+  004E1D0C      0  Java_org_cocos2dx_cpp_GooglePlayManager_onPurchaseFinish
+  0081ABF0      0  Java_org_cocos2dx_lib_Cocos2dxWebViewHelper_shouldStartLoading
+  00A3F174      0  Java_org_cocos2dx_lib_Cocos2dxBitmap_nativeInitBitmapDC
+  00A407F0      0  getFontSizeAccordingHeightJni
+  00A40A60      0  Java_org_cocos2dx_lib_Cocos2dxHelper_nativeSetEditTextDialogResult
+  00A40C3C      0  showEditTextDialogJNI
+  00A41D74      0  Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeInsertText
+  00A42824      0  Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeKeyDown
+
+## SphereScrollView: 10
+  0050241C      0  SphereScrollView::dtor
+  005024DC      0  SphereScrollView::loadTextureIncentive
+  005025A8      0  SphereScrollView::loadTextureBoard
+  00502674      0  SphereScrollView::loadTextureKind
+  00502740      0  SphereScrollView::changeRow
+  00502F58      0  SphereScrollView::init
+  00502F98      0  SphereScrollView::setSphereBoard
+  00503008      0  SphereScrollView::Set_disp_param
+  00503278      0  SphereScrollView::setSphereBoardNewId
+  006B84C4      0  SphereScrollView::create
+
+## BaseEndlessrollView: 10
+  00516510      0  BaseEndlessrollView::dtor
+  00516764      0  BaseEndlessrollView::createRow
+  005167F4      0  BaseEndlessrollView::init
+  00516D7C      0  BaseEndlessrollView::update
+  005177A0      0  BaseEndlessrollView::degree2radian
+  005177CC      0  BaseEndlessrollView::get_offset_move
+  005178E8      0  BaseEndlessrollView::setSub
+  00517AD8      0  BaseEndlessrollView::updateAddMove
+  00517B64      0  BaseEndlessrollView::updateMoveMaxCheck
+  006BE09C      0  BaseEndlessrollView::ctor
+
+## ScenePartyRequest: 10
+  00657A80      0  ScenePartyRequest::create
+  00657AD4      0  ScenePartyRequest::ctor
+  006D5D1C      0  ScenePartyRequest::callUserSearchAPI
+  006D6050      0  ScenePartyRequest::dtor
+  006D6120      0  ScenePartyRequest::init
+  006D6FC8      0  ScenePartyRequest::runInAnimation
+  006D7190      0  ScenePartyRequest::runInJoinLayout
+  006D7584      0  ScenePartyRequest::runOutAnimationMain
+  006DB8D0      0  ScenePartyRequest::openPopUpSearchID
+  006DD290      0  ScenePartyRequest::backScene
+
+## MaterialScrollView: 9
+  00500EE4      0  MaterialScrollView::dtor
+  00501044      0  MaterialScrollView::create
+  00501098      0  MaterialScrollView::ctor
+  005011FC      0  MaterialScrollView::init
+  00501330      0  MaterialScrollView::getLayoutPanel
+  005013F8      0  MaterialScrollView::createRow
+  00501450      0  MaterialScrollView::changeRow
+  00501AD0      0  MaterialScrollView::loadTexture
+  00501BB0      0  MaterialScrollView::registItemTouchEvent
+
+## PresentBoxScrollView: 9
+  0050CA88      0  PresentBoxScrollView::dtor
+  0050CC14      0  PresentBoxScrollView::create
+  0050CC68      0  PresentBoxScrollView::ctor
+  0050CDD8      0  PresentBoxScrollView::init
+  0050CECC      0  PresentBoxScrollView::getLayoutPanel
+  0050CF94      0  PresentBoxScrollView::createRow
+  0050CFEC      0  PresentBoxScrollView::changeRow
+  0050DD00      0  PresentBoxScrollView::registItemTouchEvent
+  0050E3C4      0  PresentBoxScrollView::popUpAllGetPresent
+
+## ScenePartyTop: 9
+  0053E30C      0  ScenePartyTop::create
+  00652594      0  ScenePartyTop::callPartyTopAPI
+  00652A70      0  ScenePartyTop::dtor
+  00652AFC      0  ScenePartyTop::init
+  006530AC      0  ScenePartyTop::runInJoinLayout
+  006555C0      0  ScenePartyTop::runOutAnimationMain
+  006556B0      0  ScenePartyTop::runOutJoinLayout
+  00655C40      0  ScenePartyTop::openPopupPartyInvite
+  00655CDC      0  ScenePartyTop::backScene
+
+## SceneEvolveMedal: 9
+  0065E1F8      0  SceneEvolveMedal::create
+  006AA324      0  SceneEvolveMedal::dtor
+  006AA434      0  SceneEvolveMedal::init
+  006AC518      0  SceneEvolveMedal::initEvolutLayer
+  006AD680      0  SceneEvolveMedal::createMaterialMedal
+  006ADB00      0  SceneEvolveMedal::initBurstInfo
+  006AF164      0  SceneEvolveMedal::runInAnimation
+  006AF314      0  SceneEvolveMedal::runOutAnimationMain
+  006AFD24      0  SceneEvolveMedal::backScene
+
+## SceneSellOutMaterialItem: 9
+  006861AC      0  SceneSellOutMaterialItem::create
+  00686240      0  SceneSellOutMaterialItem::dtor
+  00686264      0  SceneSellOutMaterialItem::init
+  006869B0      0  SceneSellOutMaterialItem::updateListField
+  00686A9C      0  SceneSellOutMaterialItem::runInAnimation
+  00686C40      0  SceneSellOutMaterialItem::runOutAnimation
+  00686E6C      0  SceneSellOutMaterialItem::openSellDetailPopup
+  00688104      0  SceneSellOutMaterialItem::openSellCheckDialog
+  00688A60      0  SceneSellOutMaterialItem::backScene
+
+## MagicStoneScrollView: 8
+  004FA3AC      0  MagicStoneScrollView::dtor
+  004FA568      0  MagicStoneScrollView::create
+  004FA5BC      0  MagicStoneScrollView::ctor
+  004FA730      0  MagicStoneScrollView::init
+  004FA8DC      0  MagicStoneScrollView::createRow
+  004FA934      0  MagicStoneScrollView::changeRow
+  004FB758      0  MagicStoneScrollView::registItemTouchEvent
+  004FB934      0  MagicStoneScrollView::setProductInfoMap
+
+## AlbumScrollView: 8
+  0050B694      0  AlbumScrollView::dtor
+  0050B7B8      0  AlbumScrollView::create
+  0050B80C      0  AlbumScrollView::ctor
+  0050B968      0  AlbumScrollView::init
+  0050BAA4      0  AlbumScrollView::getLayoutPanel
+  0050BB6C      0  AlbumScrollView::createRow
+  0050BBC4      0  AlbumScrollView::changeRow
+  0050C048      0  AlbumScrollView::registItemTouchEvent
+
+## MemberScrollView: 8
+  00520710      0  MemberScrollView::dtor
+  005208F8      0  MemberScrollView::create
+  00520954      0  MemberScrollView::ctor
+  00520AF4      0  MemberScrollView::init
+  00520CF8      0  MemberScrollView::getLayoutPanel
+  00520DC4      0  MemberScrollView::createRow
+  00520EB4      0  MemberScrollView::changeRow
+  00523378      0  MemberScrollView::registItemTouchEvent
+
+## AvatarInfoDialog: 8
+  0053259C      0  AvatarInfoDialog::dtor
+  00532A30      0  AvatarInfoDialog::create
+  00532A9C      0  AvatarInfoDialog::ctor
+  00532E3C      0  AvatarInfoDialog::init
+  00532E94      0  AvatarInfoDialog::open
+  005332EC      0  AvatarInfoDialog::createLayout
+  00534F50      0  AvatarInfoDialog::close
+  0053C6CC      0  AvatarInfoDialog::setTouchEnabledUnderUIButtons
+
+## ScenePartyManagement: 8
+  00657634      0  ScenePartyManagement::create
+  006E6384      0  ScenePartyManagement::callAPIs
+  006E6578      0  ScenePartyManagement::dtor
+  006E6604      0  ScenePartyManagement::init
+  006E767C      0  ScenePartyManagement::runInJoinLayout
+  006E8860      0  ScenePartyManagement::runOutAnimationMain
+  006E8950      0  ScenePartyManagement::runOutJoinLayout
+  006E9734      0  ScenePartyManagement::backScene
+
+## SceneRankingReward: 8
+  00702404      0  SceneRankingReward::create
+  0070E570      0  SceneRankingReward::dtor
+  0070E5DC      0  SceneRankingReward::init
+  0070F218      0  SceneRankingReward::initRankingTitle
+  0070FDC8      0  SceneRankingReward::initRankingScrollVew
+  007102E8      0  SceneRankingReward::runInAnimation
+  00710460      0  SceneRankingReward::runOutAnimationMain
+  0071065C      0  SceneRankingReward::backScene
+
+## SceneMedalList: 7
+  0048A634      0  SceneMedalList::create
+  0073CCF0      0  SceneMedalList::dtor
+  0073CDA4      0  SceneMedalList::init
+  0073D6E4      0  SceneMedalList::runInAnimation
+  0073D8D0      0  SceneMedalList::runOutAnimationMain
+  0073DB0C      0  SceneMedalList::onTapMedalInfoButton
+  0073DCA0      0  SceneMedalList::backScene
+
+## ChatScrollView: 7
+  005567B4      0  ChatScrollView::dtor
+  00556960      0  ChatScrollView::create
+  005569F4      0  ChatScrollView::init
+  00556C58      0  ChatScrollView::createRow
+  00556CB8      0  ChatScrollView::changeRow
+  0055852C      0  ChatScrollView::getTextLineCount
+  00558710      0  ChatScrollView::setMessages
+
+## OtherMenuDialog: 7
+  0059E84C      0  OtherMenuDialog::create
+  0059E8E0      0  OtherMenuDialog::open
+  0059FDB8      0  OtherMenuDialog::close
+  0059FEAC      0  OtherMenuDialog::openLegalPopup
+  005A058C      0  OtherMenuDialog::openSerialCodePopup
+  005A0EB0      0  OtherMenuDialog::editBoxTextChanged
+  005A0FD8      0  OtherMenuDialog::editBoxEditingDidEnd
+
+## ScenePartyMember: 7
+  00659E6C      0  ScenePartyMember::create
+  006F0AA8      0  ScenePartyMember::dtor
+  006F0B14      0  ScenePartyMember::init
+  006F0FDC      0  ScenePartyMember::initMemberLayer
+  006F16E0      0  ScenePartyMember::runInAnimation
+  006F188C      0  ScenePartyMember::runOutAnimationMain
+  006F1A50      0  ScenePartyMember::backScene
+
+## MyRecordScrollView: 6
+  005196EC      0  MyRecordScrollView::dtor
+  00519800      0  MyRecordScrollView::create
+  005198B8      0  MyRecordScrollView::init
+  00519A2C      0  MyRecordScrollView::update
+  0051A090      0  MyRecordScrollView::setContentSize
+  0051AF34      0  MyRecordScrollView::setEnabledScrollBar
+
+## ChatStampListScrollView: 6
+  0055B874      0  ChatStampListScrollView::dtor
+  0055B9D8      0  ChatStampListScrollView::create
+  0055BA84      0  ChatStampListScrollView::init
+  0055BDA2      0  ChatStampListScrollView::createRow
+  0055BDE0      0  ChatStampListScrollView::changeRow
+  0055C4D4      0  ChatStampListScrollView::setStampList
+
+## SceneAlbum: 6
+  005AC9FC      0  SceneAlbum::create
+  006CCD24      0  SceneAlbum::dtor
+  006CCD90      0  SceneAlbum::init
+  006CDD40      0  SceneAlbum::runInAnimation
+  006CDE04      0  SceneAlbum::runOutAnimationMain
+  006CE5E4      0  SceneAlbum::backScene
+
+## DownloadManager: 5
+  004DECB0      0  DownloadManager::getInstance
+  004DED64      0  DownloadManager::start
+  004DF1F4      0  DownloadManager::finalize
+  004DF2A0      0  DownloadManager::onRespond
+  004DF62C      0  DownloadManager::cancel
+
+## SceneMixedMedal: 5
+  0069BE84      0  SceneMixedMedal::openRareWarnPopup
+  0069DB88      0  SceneMixedMedal::runMixed
+  0069DE34      0  SceneMixedMedal::openResultPopup
+  0069F488      0  SceneMixedMedal::backScene
+  0069F56C      0  SceneMixedMedal::finalize
+
+## SceneAdventureSelect: 5
+  00720A5C      0  SceneAdventureSelect::initEventBanner
+  00723F78      0  SceneAdventureSelect::initColosseum
+  00724868      0  SceneAdventureSelect::colosseumInAnimation
+  00724908      0  SceneAdventureSelect::openTutorial25
+  0072834C      0  SceneAdventureSelect::backScene
+
+## ConnectingSphere: 5
+  00793A64      0  ConnectingSphere::create
+  00798B5C      0  ConnectingSphere::dtor
+  00798B98      0  ConnectingSphere::get_user_data
+  00798DC0      0  ConnectingSphere::getSphereStatus
+  00798EC8      0  ConnectingSphere::executeSphereOpenlist
+
+## iap::StoreManagerImpl: 4
+  004E0F14      0  iap::StoreManagerImpl::sendProductsRequest
+  004E10E0      0  iap::StoreManagerImpl::purchase
+  004E14C4      0  iap::StoreManagerImpl::notifyProduct
+  004E1524      0  iap::StoreManagerImpl::ctor
+
+## ChatManager::Message: 2
+  004DABE8      0  ChatManager::Message::init
+  004DE204      0  ChatManager::Message::ctor
+
+## iap::StoreManager: 2
+  004E0DD4      0  iap::StoreManager::getInstance
+  004E0E84      0  iap::StoreManager::ctor
+
+## ChatEditBoxMessageSend: 2
+  0055C65C      0  ChatEditBoxMessageSend::dtor
+  0055C6E8      0  ChatEditBoxMessageSend::create
+
+## SceneSphereBoardSelect: 2
+  006B72C8      0  SceneSphereBoardSelect::initSphereBoardList
+  006B9550      0  SceneSphereBoardSelect::update
+
+## APIManager: 1
+  004BB4C6      0  APIManager::verifyResponse
+
+## bg::ioutil: 1
+  004D9254      0  bg::ioutil::_write<>
+
+## iap::ProductInfo: 1
+  004D9890      0  iap::ProductInfo::ctor
+
+## ChatManager: 1
+  004DB7E0      0  ChatManager::getMessage
+
+## DrawScrollView::GachaData: 1
+  005AE2CC      0  DrawScrollView::GachaData::ctor
+
+## SceneDrawRaise: 1
+  00690658      0  SceneDrawRaise::openDrawResultsPopup
+
+## ScenePartyCreate: 1
+  006D2320      0  ScenePartyCreate::openPopUpCreateParty
+
+## AdventurePanel: 1
+  007264D8      0  AdventurePanel::runLeftInAnimation

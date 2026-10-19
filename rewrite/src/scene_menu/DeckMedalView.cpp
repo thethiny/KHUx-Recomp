@@ -1,6 +1,5 @@
 // DeckMedalView: creation, data, the blinking plates, the type-match effect and updateLayout's LWF callbacks.
-// DeckMedalView::updateLayout itself (0x5276D8, 6976 bytes, ~5900 lifted lines with its outlined chunks) is not
-// rewritten.
+// updateLayout itself is in DeckMedalView_layout.cpp.
 #include "DeckMedalView.hpp"
 
 #include "DeckMedalViewManager.hpp"
@@ -105,14 +104,14 @@ DeckMedalView::Addr DeckMedalView::create(uint32_t smallLayout) {
     self->showType = 0;
     self->medal = 0;
     self->medalCtl = 0;
-    self->field_35C = -1;
-    self->field_360 = 0;
-    self->field_364 = 4;
-    self->field_368 = 3;
-    self->field_36C = 10000;
+    self->slotIndex = -1;
+    self->slotOpenRank = 0;
+    self->slotAttribute = 4;
+    self->slotDirection = 3;
+    self->attributeBonus = 10000;
     self->magnification = 10000;
     self->typeMatchPlaying = 0;
-    self->field_374 = 0;
+    self->typeMatched = 0;
     call(Memset, {obj + 0x378, 0x15, 0});
     call(Memset, {obj + 0x390, 0x2A, 0});
     self->field_3BA = 1;
@@ -163,39 +162,39 @@ RW_FUNCTION(0x52BB70, "DeckMedalView::init", DeckMedalView::init);
 // plates (which ones exist depends on the layout and the medal); plates that do not blink are fully shown.
 void DeckMedalView::updateStatusAndMixedPlate(DeckMedalView *self, uint32_t statusOpacity, uint32_t mixOpacity) {
     if (self->isSmall) {
-        if (self->isShowMixInfo && self->plate3A8) {
-            setOpacity(self->plate3A8, mixOpacity);
-            setOpacity(self->plate3A0, statusOpacity);
-            if (self->plate3B4) setOpacity(self->plate3B4, statusOpacity);
+        if (self->isShowMixInfo && self->mixIcon) {
+            setOpacity(self->mixIcon, mixOpacity);
+            setOpacity(self->statusIcon, statusOpacity);
+            if (self->coinPanel) setOpacity(self->coinPanel, statusOpacity);
             return;
         }
-        if (!self->plate3A0) return;
-        setOpacity(self->plate3A0, 0xFF);
-        if (self->plate3B4) setOpacity(self->plate3B4, 0xFF);
+        if (!self->statusIcon) return;
+        setOpacity(self->statusIcon, 0xFF);
+        if (self->coinPanel) setOpacity(self->coinPanel, 0xFF);
         return;
     }
     uint8_t has38A = self->field_38A;
-    if (!self->field_374) {
-        if (!has38A || !self->plate3A0) return;
-        setOpacity(self->plate3A0, 0xFF);
-        if (self->plate3A4) setOpacity(self->plate3A4, 0xFF);
-        if (self->plate3B4) setOpacity(self->plate3B4, 0xFF);
+    if (!self->typeMatched) {
+        if (!has38A || !self->statusIcon) return;
+        setOpacity(self->statusIcon, 0xFF);
+        if (self->statusPanel) setOpacity(self->statusPanel, 0xFF);
+        if (self->coinPanel) setOpacity(self->coinPanel, 0xFF);
         return;
     }
-    if (!has38A || !self->plate3A0) {
-        if (self->plate398) setOpacity(self->plate398, 0xFF);
-        if (self->plate39C) setOpacity(self->plate39C, 0xFF);
+    if (!has38A || !self->statusIcon) {
+        if (self->bonusIcon) setOpacity(self->bonusIcon, 0xFF);
+        if (self->bonusPanel) setOpacity(self->bonusPanel, 0xFF);
         return;
     }
     // while the type-match effect plays, the status plates are hidden and the fusion plates fully shown
     bool playing = self->typeMatchPlaying != 0;
     uint32_t mix = playing ? 0xFF : mixOpacity;
     uint32_t status = playing ? 0 : statusOpacity;
-    if (self->plate398) setOpacity(self->plate398, mix);
-    if (self->plate39C) setOpacity(self->plate39C, mix);
-    setOpacity(self->plate3A0, status);
-    if (self->plate3A4) setOpacity(self->plate3A4, status);
-    if (self->plate3B4) setOpacity(self->plate3B4, status);
+    if (self->bonusIcon) setOpacity(self->bonusIcon, mix);
+    if (self->bonusPanel) setOpacity(self->bonusPanel, mix);
+    setOpacity(self->statusIcon, status);
+    if (self->statusPanel) setOpacity(self->statusPanel, status);
+    if (self->coinPanel) setOpacity(self->coinPanel, status);
 }
 RW_FUNCTION(0x52737C, "DeckMedalView::updateStatusAndMixedPlate", DeckMedalView::updateStatusAndMixedPlate);
 
@@ -209,12 +208,12 @@ void DeckMedalView::setData(DeckMedalView *self, Addr medal, int32_t a1, int32_t
     uint32_t old = self->medalCtl;
     self->medalCtl = ctl;
     releaseIf(old);
-    self->field_35C = a1;
-    self->field_364 = a2;
-    self->field_368 = a3;
-    self->field_36C = a4;
+    self->slotIndex = a1;
+    self->slotAttribute = a2;
+    self->slotDirection = a3;
+    self->attributeBonus = a4;
     self->magnification = a5;
-    self->field_360 = a6;
+    self->slotOpenRank = a6;
     self->skills = skills;
     uint32_t dObj = ld32(detail), dCtl = ld32(detail + 4);
     if (dCtl) call(fn::shared_add, {dCtl});

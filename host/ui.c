@@ -5,8 +5,9 @@
 extern HWND gl_hwnd;
 
 /* ---------------------------------------------------------------- text input box
- * A small window over the game with an edit field and OK; Enter = OK, closing it = keep the old text. Not modal:
- * the game keeps rendering, and the main loop delivers the answer (edit_box_take). */
+ * A small window over the game with an edit field and OK; Enter = OK, closing it = keep the old text. Modal like
+ * Android's dialog: the game keeps rendering but gets no touches or keys while it is open (gl.c, ctl.c), so the
+ * screen that asked cannot go away before the answer arrives; the main loop delivers it (edit_box_take). */
 #define ID_EDIT 100
 static HWND box, edit;
 static char box_old[1024];
@@ -90,6 +91,16 @@ char *edit_box_take(void) {
     char *r = box_answer;
     box_answer = NULL;
     return r;
+}
+
+/* Android BACK on the dialog: cancel it (the old text is the answer, as when the box is closed) */
+void edit_box_cancel(void) { box_done(0); }
+
+/* a click on the game window while the box is open: bring the box back to the front */
+void edit_box_focus(void) {
+    if (!box) return;
+    SetForegroundWindow(box);
+    SetFocus(edit);
 }
 
 /* the control channel answered instead: close the box without an answer */

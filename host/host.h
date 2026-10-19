@@ -209,6 +209,8 @@ void edit_box_open(const char *title, const char *current, int max_len, int pass
 int edit_box_message(MSG *m);
 char *edit_box_take(void);
 void edit_box_dismiss(void);
+void edit_box_cancel(void);
+void edit_box_focus(void);
 void edit_dialog_answer(CPU *c, const char *utf8);
 extern volatile LONG edit_dialog_open;
 uint8_t *text_render(const char *utf8, int size, int align, int want_w, int want_h, float r, float g, float b,
