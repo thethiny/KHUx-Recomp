@@ -357,6 +357,10 @@ constexpr uint32_t G_MASTER_VOLUME = 0xFD9340, G_SUSPEND_VOLUME = 0xFD933C, G_RE
 constexpr uint32_t G_RENDER_BUFFER = 0xFD930C, G_BUF_LEN = 0xFD932C, G_BUFFERS = 0xFD9328;
 constexpr uint32_t G_PEAK_LEVELS = 0xFD9334, G_SOURCE_MUTEX = 0xFD9318, G_SOURCE_LIST = 0xFD931C;
 constexpr uint32_t G_LIST_NODE_VTABLE = 0xFD9344;
+constexpr uint32_t G_CAPTURE_MUTEX = 0xFD9314, G_RENDER_TIME = 0xFD9330;
+// the capture ring: on (byte +0), buffer +0x10, size +0x14, write position +0x18, read position +0x1C
+constexpr uint32_t CAPTURE = 0x100E6C0;
+constexpr uint32_t RENDER_FRAMES = 512;
 
 struct CoreSystem {
     static int32_t initialize(uint32_t sampleRate, int32_t channels) {
@@ -439,6 +443,112 @@ struct CoreSystem {
         return rw::call(0xCE8A2C, {dt});                 // CoreAudioOutUpdate
     }
 };
+// sub_CE646C: the output callback (CoreAudioOutInit's render callback, on the audio thread). Mixes every source
+// into the float render buffer (a source in state 4 is finished: released and taken off the list), copies the
+// mix into the capture ring when capturing, then converts 512 frames to 16-bit PCM (clamped to [-1, 1], the
+// clamp written back) into the current output buffer, queues it and flips to the other one. Keeps the time it
+// took and the peak level per channel.
+static uint64_t render() {
+    const uint64_t start = rw::call64(0xCE247C, {});  // SQEX::Timer::GetUTime
+    const uint32_t captureMutex = got(G_CAPTURE_MUTEX);
+    const uint32_t mix = ld32(got(G_RENDER_BUFFER));
+    const uint32_t len = ld32(got(G_RENDER_LEN));
+    mutexLock(captureMutex);
+    if (ld8(CAPTURE)) mutexUnlock(captureMutex);
+    rw::call(0x442310, {mix, 0, len});  // memset
+
+    const uint32_t mutex = got(G_SOURCE_MUTEX), list = got(G_SOURCE_LIST);  // head, tail, count
+    mutexLock(mutex);
+    uint32_t node = ld32(list);
+    mutexUnlock(mutex);
+    while (node) {
+        const uint32_t src = ld32(node + 0xC);
+        if (lds32(src + 0xC) != 4) {
+            rw::call(0xCE7B18, {src, mix, len});  // CoreSource::RenderMix
+            mutexLock(mutex);
+            node = ld32(node + 8);
+            mutexUnlock(mutex);
+            continue;
+        }
+        vcallo(src, 4, {src});
+        mutexLock(mutex);
+        const uint32_t prev = ld32(node + 4), next = ld32(node + 8);
+        if (prev) {
+            st32(prev + 8, next);
+            if (next) st32(next + 4, prev);
+            else st32(list + 4, prev);
+        } else {
+            st32(list, next);
+            if (next) st32(next + 4, 0);
+            else st32(list + 4, 0);
+        }
+        st32(list + 8, ld32(list + 8) - 1);
+        vcallo(node, 4, {node});
+        mutexUnlock(mutex);
+        node = next;
+    }
+
+    mutexLock(captureMutex);
+    if (!ld8(CAPTURE)) {
+        mutexUnlock(captureMutex);
+    } else {
+        const int32_t size = lds32(CAPTURE + 0x14);
+        int32_t pos = lds32(CAPTURE + 0x18);
+        int32_t room = size + lds32(CAPTURE + 0x1C) - pos;
+        int32_t left = int32_t(len);
+        if (room > 0 && left > 0) {
+            const uint32_t ring = ld32(CAPTURE + 0x10);
+            do {
+                const int32_t at = pos % size;
+                int32_t n = left < room ? left : room;
+                if (size < n + at) n = size - at;
+                const uint32_t from = mix + (len - uint32_t(left));
+                left -= n;
+                room -= n;
+                rw::call(0x442298, {ring + uint32_t(at), from, uint32_t(n)});  // memcpy
+                pos += n;
+                st32(CAPTURE + 0x18, uint32_t(pos));
+            } while (left > 0 && room > 0);
+        }
+        if (left > 0) log(5, 0xEEDD1C);  // "audio capture failed.. buffer full!!!"
+    }
+    mutexUnlock(captureMutex);
+
+    const uint32_t current = got(G_CURRENT_BUFFER);
+    const int32_t channels = lds32(got(G_NUM_CHANNELS));
+    const uint32_t buffer = ld32(got(G_BUFFERS) + ld32(current) * 4);
+    float peak[2] = {0, 0};
+    uint32_t in = mix, out = buffer;
+    for (uint32_t frame = 0; frame < RENDER_FRAMES; frame++) {
+        for (int32_t k = 0; k < channels; k++, in += 4, out += 2) {
+            const float s = ldf(in);
+            if (std::fabs(s) > peak[k]) peak[k] = std::fabs(s);
+            uint16_t pcm;
+            if (s > 1.0f) {
+                stf(in, 1.0f);
+                pcm = 0x7FFF;
+            } else if (s < -1.0f) {
+                stf(in, -1.0f);
+                pcm = 0x8001;  // -32767
+            } else {
+                pcm = uint16_t(f2i(s * 32767.0f));
+            }
+            st16(out, pcm);
+        }
+    }
+    rw::call(0xCE86A4, {buffer, ld32(got(G_BUF_LEN))});  // CoreAudioOutQueueBuffer
+    st32(current, uint32_t((lds32(current) + 1) % 2));
+    const uint64_t spent = rw::call64(0xCE247C, {}) - start;
+    const uint32_t time = got(G_RENDER_TIME);
+    st32(time, uint32_t(spent));
+    st32(time + 4, uint32_t(spent >> 32));
+    const uint32_t peaks = got(G_PEAK_LEVELS);
+    const float peak0 = ldf(peaks), peak1 = ldf(peaks + 4);
+    if (peak[0] > peak0) stf(peaks, peak[0]);
+    if (peak[1] > peak1) stf(peaks + 4, peak[1]);
+    return spent;
+}
+RW_FUNCTION(0xCE646C, "SQEX::CoreSystem (sub_CE646C): the output render callback", render);
 RW_FUNCTION(0xCE694C, "SQEX::CoreSystem::Initialize", CoreSystem::initialize);
 RW_FUNCTION(0xCE6B28, "SQEX::CoreSystem::CreateSource", CoreSystem::createSource);
 RW_FUNCTION(0xCE6D78, "SQEX::CoreSystem::Update", CoreSystem::update);

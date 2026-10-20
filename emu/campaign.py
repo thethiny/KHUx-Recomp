@@ -95,10 +95,13 @@ def main():
     for r in range(rounds):
         if screen() in ("SceneActionMap", "SceneRaidBattle") + STORY_SCENES:
             print(f"round {r}: finishing the battle in progress", flush=True)
+            won = False
             if os.environ.get("KHUX_INSTAWIN") and screen() == "SceneActionMap":
                 from .play_quest import instawin   # a resumed quest: the game's own stage finish
-                print(f"  insta-win: {instawin(120)}", flush=True)
-            subprocess.run([sys.executable, "-u", "-m", "recomp.emu.auto_battle", limit])
+                won = instawin(120)
+                print(f"  insta-win: {won}", flush=True)
+            if not won:
+                subprocess.run([sys.executable, "-u", "-m", "recomp.emu.auto_battle", limit])
         if not to_quest_select():
             print(f"round {r}: could not reach the quest screen (at {screen()})")
             return

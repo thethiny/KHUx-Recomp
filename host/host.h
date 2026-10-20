@@ -140,6 +140,8 @@ int import_shadow(int phase);
 void shadow_main_thread(void);
 void shadow_park_point(void);
 void shadow_guest_enter(void);
+void shadow_thread_exit(void);   /* a guest thread ends (thread.c) */
+void shadow_sleep_point(void);  /* a guest thread about to sleep: parks during another thread's shadow run */
 void shadow_guest_leave(void);
 void import_shadow_opaque(void);
 void shadow_wait_begin(void);   /* around a blocking wait (libc.c) */

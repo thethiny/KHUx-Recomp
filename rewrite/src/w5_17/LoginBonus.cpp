@@ -1,8 +1,7 @@
 // The login bonus (SceneLoginBonus, shown after login once a server day): create, destructor, init, the in / out
 // animations of the bonus "memory" pages and the stamp board, skipEvent, openLoginBonus (the day's stamp: an LWF
 // stamp on the continuous or the total panel, with its sound), the total-bonus stamp helper (sub_6FA580),
-// make_getIncentive_id and loadIncentiveTexture. initLoginBonus (split into chunks by IDA) and the two incentive
-// name builders stay lifted for now.
+// make_getIncentive_id, loadIncentiveTexture and the two incentive name builders; initLoginBonus is in w5_20.
 #include "../scene/SceneUi.hpp"
 
 using namespace scene;

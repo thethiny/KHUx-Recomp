@@ -477,23 +477,46 @@ static uint32_t replay_addr(const ImpRec *r, const CPU *c, uint32_t a) {
  * main thread did not park within 50 ms - it may wait on a lock this thread holds: run without a shadow), 8 ends. */
 static DWORD main_tid;
 static CRITICAL_SECTION excl_cs;
-static volatile LONG excl_req, main_parked, cb_busy;
+static volatile LONG excl_req, main_parked, cb_busy, cb_waiting;
 
 /* the audio callback thread runs guest code too (it decodes the voices a shadow run starts): it waits while a
- * shadow run on another thread is in progress, and that run waits until no callback is running */
+ * shadow run on another thread is in progress, and that run waits until no callback is running - on another
+ * thread: a shadow run inside the callback itself (the game's mixer) does not wait for its own callback */
+static __declspec(thread) LONG cb_own;
 void shadow_guest_enter(void) {
     for (;;) {
         while (excl_req) SwitchToThread();
         InterlockedIncrement(&cb_busy);
-        if (!excl_req) return;
+        if (!excl_req) { cb_own++; return; }
         InterlockedDecrement(&cb_busy);
     }
 }
-void shadow_guest_leave(void) { InterlockedDecrement(&cb_busy); }
+void shadow_guest_leave(void) { cb_own--; InterlockedDecrement(&cb_busy); }
 
 void shadow_main_thread(void) { main_tid = GetCurrentThreadId(); InitializeCriticalSection(&excl_cs); }
 
+/* Guest threads that sleep (the SQEX sound thread's frame loop) park at their sleeps while a shadow run on another
+ * thread is in progress: they hold no lock there, and they would change the state the run reads between its lifted
+ * and rewritten sides (a source the mixer renders, then finds finished). */
+static volatile LONG sleepers, sleepers_parked;
+static __declspec(thread) int sleeper;
+static volatile DWORD excl_tid;
+void shadow_sleep_point(void) {
+    if (!main_tid || GetCurrentThreadId() == main_tid) return;
+    if (!sleeper) { sleeper = 1; InterlockedIncrement(&sleepers); }
+    if (!excl_req || excl_tid == GetCurrentThreadId()) return;
+    InterlockedIncrement(&sleepers_parked);
+    while (excl_req) SwitchToThread();
+    InterlockedDecrement(&sleepers_parked);
+}
+/* a thread that slept ends: no longer waited for */
+void shadow_thread_exit(void) {
+    if (sleeper) { sleeper = 0; InterlockedDecrement(&sleepers); }
+}
+
+static volatile LONG main_looping;   /* the main thread reached its park point (the frame loop): it can park */
 void shadow_park_point(void) {
+    main_looping = 1;
     if (!excl_req) return;
     InterlockedExchange(&main_parked, 1);
     while (excl_req) SwitchToThread();
@@ -507,16 +530,34 @@ static int shadow_exclusive(int begin) {
     static int threads = -1;
     if (threads < 0) threads = getenv("KHUX_RW_THREADS") && strcmp(getenv("KHUX_RW_THREADS"), "0") != 0;
     if (!threads) return 0;
+    /* before the frame loop the main thread never parks (boot waits on the sound thread, which a request would
+     * keep parked at its sleeps): no request at all */
+    if (begin && !main_looping) return 0;
+    /* after a request that failed, none from this thread for 200 ms: the parked sleepers (the main thread may wait on
+     * them) run */
+    static __declspec(thread) DWORD retry_at;
+    if (begin && (LONG)(GetTickCount() - retry_at) < 0) return 0;
     if (!begin) {
         InterlockedExchange(&excl_req, 0);
         while (main_parked) SwitchToThread();
         LeaveCriticalSection(&excl_cs);
         return 0;
     }
+    /* waiting for another thread's request to end, this one runs nothing: it counts as parked */
+    if (sleeper) InterlockedIncrement(&sleepers_parked);
+    InterlockedAdd(&cb_waiting, cb_own);
     EnterCriticalSection(&excl_cs);
+    InterlockedAdd(&cb_waiting, -cb_own);
+    if (sleeper) InterlockedDecrement(&sleepers_parked);
+    excl_tid = GetCurrentThreadId();
     InterlockedExchange(&excl_req, 1);
-    for (int k = 0; k < 50 && (!main_parked || cb_busy); k++) Sleep(1);
-    if (main_parked && !cb_busy) return 1;
+    for (int k = 0; k < 50 && (!main_parked || cb_busy - cb_waiting > cb_own || sleepers_parked < sleepers - sleeper); k++)
+        Sleep(1);
+    if (main_parked && cb_busy - cb_waiting == cb_own && sleepers_parked == sleepers - sleeper) return 1;
+    { static int told; if (told++ < 5) hlog("verifier: thread %lu could not run alone (main parked %ld, callbacks %ld/%ld own, "
+                                         "sleepers parked %ld of %ld, own %d)", GetCurrentThreadId(), main_parked,
+                                         cb_busy - cb_waiting, cb_own, sleepers_parked, sleepers, sleeper); }
+    retry_at = GetTickCount() + 200;
     InterlockedExchange(&excl_req, 0);
     while (main_parked) SwitchToThread();
     LeaveCriticalSection(&excl_cs);

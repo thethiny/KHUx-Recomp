@@ -71,6 +71,7 @@ static unsigned __stdcall thread_entry(void *p) {
     uint32_t args[1] = {t->arg};
     t->retval = guest_call(t->cpu, t->fn, 1, args);
     hlog("  thread %d exited", t->tid);
+    shadow_thread_exit();
     InterlockedExchange(&t->done, 1);
     return 0;
 }
@@ -230,6 +231,7 @@ static void i_setspecific(CPU *c) {
 
 /* ---------------------------------------------------------------- sleeping */
 static void sleep_us(uint64_t us) {
+    shadow_sleep_point();
     if (us >= 1000) { shadow_wait_begin(); Sleep((DWORD)(us / 1000)); shadow_wait_end(); }
     else SwitchToThread();
 }

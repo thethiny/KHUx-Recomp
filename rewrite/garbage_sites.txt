@@ -7,3 +7,5 @@
 887210 887360 std::vector<Label::LetterInfo>::__swap_out_circular_buffer: moves LetterInfo records with that unset padding
 87A7B4 87ADC8 cocos2d::FontAtlas::prepareLetterDefinitions: stores FontLetterDefinition records built on the stack, padding unset
 561DD4 561EA4 RankingRewardScrollView icon touch lambda __clone: copies a short image-path string's whole 12-byte buffer; the bytes after its terminator are stale stack bytes of the frame that built the path
+815024 815066 map<string, shared_ptr<LWF::LWFContainer>> node construction (LWFNode::attachLWF): copies a short key string's whole 12-byte buffer; for the empty attach name the bytes after its terminator are stale stack bytes of the frame that built it
+80C290 80C31C map<string, int>::operator[](string&&) (LWF::AddMovieEventHandler's event name): moves a short key string's whole 12-byte buffer; the bytes after its terminator are stale stack bytes of the frame that built the name ("stamp" in SceneLoginBonus::initLoginBonus)

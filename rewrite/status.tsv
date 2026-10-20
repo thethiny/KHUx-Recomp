@@ -1,10 +1,20 @@
 addr	name	calls	verified	mismatches	unverifiable
 0044F6D8	FreeType TT_Hint_Glyph (sub_44F6D8)	88	66	0	0
 0044FF84	FreeType tt_size_run_prep (sub_44FF84)	7	5	0	0
-0045344C	Avatar.cpp static constructor (sub_45344C)	13	12	0	0
-0045355C	snow particle settings static constructor (sub_45355C)	13	12	0	0
-00453DD4	StageActorManager.cpp static constructor (sub_453DD4)	13	12	0	0
-00454160	MasterDataManager.cpp static constructor (sub_454160)	13	12	0	0
+00453280	bg::MemoryStream static constructor (sub_453280)	1	1	0	0
+00453324	RemoteNotification.cpp static constructor (sub_453324)	1	1	0	0
+00453374	audio sources static constructor (sub_453374)	1	1	0	0
+004533F8	audio names static constructor (sub_4533F8)	1	1	0	0
+0045344C	Avatar.cpp static constructor (sub_45344C)	14	13	0	0
+0045355C	snow particle settings static constructor (sub_45355C)	14	13	0	0
+00453B04	PauseState.cpp static constructor (sub_453B04)	1	1	0	0
+00453B7C	AvatarActor.cpp static constructor (sub_453B7C)	1	1	0	0
+00453C6C	direction table static constructor (sub_453C6C)	1	1	0	0
+00453DD4	StageActorManager.cpp static constructor (sub_453DD4)	14	13	0	0
+00453EA4	shape tables static constructor (sub_453EA4)	1	1	0	0
+00454160	MasterDataManager.cpp static constructor (sub_454160)	14	13	0	0
+00457A00	bg pixel formats static constructor (sub_457A00)	1	1	0	0
+00457E40	bg::Archive static constructor (sub_457E40)	1	1	0	0
 004595C8	SdSoundSystem static constructor (sub_4595C8)	11	11	0	0
 0045968C	SQEX action queue static constructor (sub_45968C)	11	11	0	0
 00459710	SQEX sound list static constructor (sub_459710)	11	11	0	0
@@ -62,12 +72,15 @@ addr	name	calls	verified	mismatches	unverifiable
 0045DDE0	SceneUtil::openContinuPopup	15	0	0	2
 00461DC4	SceneUtil::getMoneyStr	773	328	0	0
 00461FCC	std::operator+(const char*, const std::string&) (sub_461FCC)	31	24	0	0
+00462194	SceneUtil::updateMedalInfo	20	10	0	0
+004658D4	SceneUtil shadow text from TextData (sub_4658D4)	490	31	0	0
 004659F0	SceneUtil::setStatusChangeColor	1685	0	0	0
 00465C84	SceneUtil::updateMixCircle(Widget*, Widget*, Widget*, shared_ptr<UserMedalData>, bool, int, bool, bool, bool, bool, bool)	572	42	0	0
 0046695C	SceneUtil::showSupportMedalEffect	209	0	0	0
 00466B08	SceneUtil::hideSupportMedalEffect	418	0	0	0
 00466BA8	SceneUtil::setAdditionalKerningForAtlasLabel	478	0	0	0
 00466C40	SceneUtil::numberToAtlasString	1014	87	0	0
+00466EF4	SceneUtil::openMedalInfoPopup	25	14	0	0
 004684C8	SceneUtil::openTutorialPopup	746	185	0	0
 00468624	SceneUtil::setButtonEnabled	644	16	0	0
 0046874C	SceneUtil::setMyPageTeamStatus	35	25	0	10
@@ -1044,6 +1057,11 @@ addr	name	calls	verified	mismatches	unverifiable
 0054F458	RankingScrollView::RankingScrollView()	2	1	0	0
 0054F5D4	RankingScrollView::init(RankingScrollViewType)	2	0	0	1
 0054F614	RankingScrollView::changeRankingScrollViewType(RankingScrollViewType)	10	0	0	5
+0054FAA0	RankingScrollView::getLayoutPanel	2	1	0	0
+0054FB68	RankingScrollView::createRow	1	1	0	0
+0054FC6C	RankingScrollView::changeRow	4	3	0	0
+0055149C	RankingScrollView::initColosseumLayer	4	2	0	0
+005520D0	RankingScrollView::initAvatarLayer	4	2	0	0
 0055262E	RankingScrollView::registItemTouchEvent	38	0	0	0
 00552630	RankingScrollView::setEnabledTapItem	2	0	0	0
 005529AC	RankingScrollView::setRankingData(RankingSeason, std::vector<int>)	8	4	0	0
@@ -1068,6 +1086,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0055E478	RankingRewardScrollView::createRow	84	12	0	0
 0055E4D0	RankingRewardScrollView::setIncentiveItem	2395	1	0	0
 0055FEE0	RankingRewardScrollView::changeRow	470	7	31	0
+00560018	RankingRewardScrollView::initColosseumRewardLayout	36	36	0	0
 00560888	RankingRewardScrollView::updateSelectItems	479	1	0	0
 00560A08	RankingRewardScrollView::initLayout	687	1	16	0
 005611EC	RankingRewardScrollView::registItemTouchEvent	189	27	0	0
@@ -1138,6 +1157,11 @@ addr	name	calls	verified	mismatches	unverifiable
 0057219C	AdvStageScrollView::registItemTouchEvent::$_18 __clone(__base*)	2148	3	0	0
 005721C0	AdvStageScrollView::registItemTouchEvent::$_18 destroy()	4808	823	0	0
 005721CC	AdvStageScrollView::registItemTouchEvent::$_18 operator()	1470	1450	0	0
+00572B6A	AdvStageScrollView::setColosseumInfo $_7 __func::destroy_deallocate() (sub_572B6A)	11	11	0	0
+00572B94	AdvStageScrollView::setColosseumInfo $_7 __func::operator() (sub_572B94)	165	77	0	0
+00572E04	AdvStageScrollView colosseum enemy plate (sub_572E04)	2079	77	0	0
+00573340	AdvStageScrollView::setColosseumInfo $_8 __func::__clone() (sub_573340)	66	11	0	0
+005733F8	AdvStageScrollView::setColosseumInfo $_8 __func::destroy_deallocate() (sub_5733F8)	88	33	0	0
 005734F8	StartDeckEditDialog::~StartDeckEditDialog	133	64	0	0
 005735D2	StartDeckEditDialog::~StartDeckEditDialog [deleting destructor]	68	64	0	0
 005735DE	StartDeckEditDialog::create	65	3	0	0
@@ -1334,10 +1358,30 @@ addr	name	calls	verified	mismatches	unverifiable
 00586520	BattleResultDialog::init::$_0 __clone(__base*)	118	0	0	0
 00586540	BattleResultDialog::init::$_0 destroy()	226	52	0	0
 0058654A	sub_58654A	97	0	0	0
+00586588	AdvEventBannerScrollView::~AdvEventBannerScrollView	4	4	0	0
 0058679C	AdvEventBannerScrollView::~AdvEventBannerScrollView [deleting destructor]	1	0	0	0
+005867D0	AdvEventBannerScrollView::create	4	3	0	0
+00586824	AdvEventBannerScrollView::AdvEventBannerScrollView	7	3	0	0
+005869BC	AdvEventBannerScrollView::clearLoadEventBanner	4	3	0	0
+00586A20	AdvEventBannerScrollView::loadEventBanner	123	41	0	0
+00586C04	std::map<int, Texture2D*>::operator[] (AdvEventBannerScrollView)	102	34	0	0
+00586C84	AdvEventBannerScrollView::setEventBanner	121	39	0	0
+00587394	AdvEventBannerScrollView::updateExpirationDate	2115	279	0	0
+0058745C	AdvEventBannerScrollView::setEventBannerTime	1994	240	0	0
+00587790	AdvEventBannerScrollView::init	7	3	0	0
+0058783C	AdvEventBannerScrollView::update	33670	33670	0	0
+00587968	AdvEventBannerScrollView::getLayoutPanel	18	9	0	0
+00587A30	AdvEventBannerScrollView::createRow	9	0	0	4
+00587A88	AdvEventBannerScrollView::changeRow	102	54	0	21
+00587B70	AdvEventBannerScrollView::updateSelectItems	143	47	0	0
+00587CF0	AdvEventBannerScrollView::registItemTouchEvent	42	31	0	0
+00587ED8	AdvEventBannerScrollView::setSelectItem	16	8	0	0
+00588844	AdvEventBannerScrollView::setEventBanner $_1 __func::__clone() (sub_588844)	121	39	0	0
 005889C4	AdvEventBannerScrollView::setEventBanner $_1 __func::destroy_deallocate	12	0	0	0
+005889EC	AdvEventBannerScrollView::setEventBanner $_1 __func::operator() (sub_5889EC)	24	24	0	0
 00588ACC	AdvEventBannerScrollView::loadEventBanner::$_0 __clone(__base*)	9	0	0	0
 00588AF4	AdvEventBannerScrollView::loadEventBanner::$_0 destroy()	9	0	0	0
+00588AFE	AdvEventBannerScrollView::loadEventBanner $_0 __func::operator() (sub_588AFE)	34	34	0	0
 00588CAC	BuyMagicStoneDialog::open(const function<void()>&, bool)	2	0	0	2
 00588E0C	BuyMagicStoneDialog::init(const function<...>&, Type)	2	0	0	1
 00589208	BuyMagicStoneDialog::initItemIDsAndProductIDs(vector<int>&, vector<string>&)	3	1	0	0
@@ -1438,7 +1482,10 @@ addr	name	calls	verified	mismatches	unverifiable
 0059AA7C	MedalListScrollView::registItemTouchEvent $_2 std::function::operator=(&&) (sub_59AA7C)	166	1	0	0
 0059AB18	MedalListScrollView::setMedalIDs	2	1	0	0
 0059AD3C	MedalListScrollView::isDisableMedal	155	1	0	0
+0059B380	MedalListScrollView release lambda (sub_59B380)	14	14	0	0
+0059B69C	MedalListScrollView move lambda __func::operator() (sub_59B69C)	1099	1099	0	0
 0059B8C8	MedalListScrollView::registItemTouchEvent $_0 __func::__clone(__base*) (sub_59B8C8)	166	1	0	0
+0059B8F8	MedalListScrollView press lambda __func::operator() (sub_59B8F8)	574	574	0	0
 0059BADC	BaseStageScrollView::~BaseStageScrollView() [base]	68	0	0	0
 0059BD94	BaseStageScrollView::init	93	0	0	0
 0059BF24	std::function<void(Touch*,Event*)>::operator=(BaseStageScrollView::init::$_2&&)	162	0	0	0
@@ -3021,19 +3068,89 @@ addr	name	calls	verified	mismatches	unverifiable
 006869B0	SceneSellOutMaterialItem::updateListField	7	3	0	0
 00686A9C	SceneSellOutMaterialItem::runInAnimation	7	3	0	0
 00686C40	SceneSellOutMaterialItem::runOutAnimation	4	2	0	0
+00686E6C	SceneSellOutMaterialItem::openSellDetailPopup	5	5	0	0
+00688104	SceneSellOutMaterialItem::openSellCheckDialog	3	2	0	0
 00688A60	SceneSellOutMaterialItem::backScene	2	0	0	2
 00688C2C	SceneSellOutMaterialItem::backScene lambda __func::operator() (sub_688C2C)	4	4	0	0
+00688D64	SceneSellOutMaterialItem check closed lambda __func::__clone() (sub_688D64)	3	2	0	0
+00688E50	SceneSellOutMaterialItem check closed lambda __func::operator() (sub_688E50)	1	1	0	0
+0068A240	SceneSellOutMaterialItem detail closed lambda __func::operator() (sub_68A240)	4	4	0	0
+0068A6A4	SceneSellOutMaterialItem stock-up lambda __func::__clone() (sub_68A6A4)	8	4	0	0
+0068A764	SceneSellOutMaterialItem stock-up lambda __func::operator() (sub_68A764)	8	8	0	0
+0068A804	SceneSellOutMaterialItem sell amount texts (sub_68A804)	29	29	0	0
+0068A9C4	SceneSellOutMaterialItem stock-down lambda __func::__clone() (sub_68A9C4)	8	4	0	0
+0068AA84	SceneSellOutMaterialItem stock-down lambda __func::operator() (sub_68AA84)	4	4	0	0
+0068AB7C	SceneSellOutMaterialItem slider lambda __func::__clone() (sub_68AB7C)	8	4	0	0
+0068AC3C	SceneSellOutMaterialItem slider lambda __func::operator() (sub_68AC3C)	26	26	0	0
 0068AED8	std::__sort<material comparator&, ull*> (sub_68AED8)	7	3	0	0
 0068B318	SceneSellOutMaterialItem material sort comparator (sub_68B318)	234	3	0	0
 0068B494	std::__sort3<material comparator&, ull*> (sub_68B494)	9	3	0	0
 0068CDBC	DrawScrollView::create	10	6	0	4
 0068E7EC	DrawScrollView::DrawScrollView	11	7	0	0
-00699998	SceneMixedMedal touch lambda std::function::operator=(&&) (sub_699998)	2	2	0	0
-0069F488	SceneMixedMedal::backScene	1	1	0	0
-0069F56C	SceneMixedMedal::finalize	2	1	0	0
-0069FC70	SceneMixedMedal::backScene lambda __func::operator() (sub_69FC70)	1	1	0	0
+00699998	SceneMixedMedal touch lambda std::function::operator=(&&) (sub_699998)	14	14	0	0
+0069BE84	SceneMixedMedal::openRareWarnPopup	14	13	0	0
+0069DB88	SceneMixedMedal::runMixed	13	0	0	1
+0069DE34	SceneMixedMedal::openResultPopup	14	0	2	0
+0069F488	SceneMixedMedal::backScene	5	5	0	0
+0069F56C	SceneMixedMedal::finalize	11	6	0	0
+0069FC70	SceneMixedMedal::backScene lambda __func::operator() (sub_69FC70)	5	5	0	0
+0069FE00	std::__sort<SceneMixedMedal medal compare&, shared_ptr<UserMedalData>*> (sub_69FE00)	104	9	0	0
+006A02C4	SceneMixedMedal::settingOmakaseMedals comparator (sub_6A02C4)	6252	9	0	0
+006A0424	std::__sort3<SceneMixedMedal medal compare&, shared_ptr<UserMedalData>*> (sub_6A0424)	350	9	0	0
+006A04FA	std::__sort4<SceneMixedMedal medal compare&, shared_ptr<UserMedalData>*> (sub_6A04FA)	82	9	0	0
+006A059A	std::__sort5<SceneMixedMedal medal compare&, shared_ptr<UserMedalData>*> (sub_6A059A)	56	9	0	0
+006A1298	SceneMixedMedal::openResultPopup $_28 __func::__clone() (sub_6A1298)	9	1	0	0
+006A13EA	SceneMixedMedal::openResultPopup $_28 __func::destroy_deallocate (sub_6A13EA)	14	6	0	0
+006A1AD4	SceneMixedMedal::openResultPopup show lines (sub_6A1AD4)	5	5	0	0
+006A3670	SceneMixedMedal::openResultPopup $_41 __func::__clone() (sub_6A3670)	10	5	0	0
+006A36E0	SceneMixedMedal::openResultPopup $_41 __func::operator() (sub_6A36E0)	16	16	0	0
+006A391C	SceneMixedMedal::openResultPopup $_40 run out done __func::operator() (sub_6A391C)	4	0	0	4
+006A3AC4	SceneMixedMedal::openResultPopup $_40 new scene __func::__clone(p) (sub_6A3AC4)	8	0	0	0
+006A3AF2	SceneMixedMedal::openResultPopup $_40 new scene __func::operator() (sub_6A3AF2)	4	4	0	0
+006A3BB4	SceneMixedMedal::openResultPopup $_40 tutorial done __func::operator() (sub_6A3BB4)	4	2	0	0
+006A3CB8	SceneMixedMedal::openResultPopup $_40 remove popup __func::__clone(p) (sub_6A3CB8)	16	4	0	0
+006A3CEA	SceneMixedMedal::openResultPopup $_40 remove popup __func::operator() (sub_6A3CEA)	4	4	0	0
+006A3DA4	SceneMixedMedal::runMixed $_24 __func::__clone() (sub_6A3DA4)	13	0	0	0
+006A3E64	SceneMixedMedal::runMixed $_24 __func::operator() (sub_6A3E64)	13	0	0	0
+006A4000	SceneMixedMedal::runMixed $_39 __func::__clone(p) (sub_6A4000)	36	12	0	0
+006A4030	SceneMixedMedal::runMixed $_39 __func::operator() (sub_6A4030)	12	10	2	0
+006A41A0	SceneMixedMedal::runMixed $_38 __func::__clone(p) (sub_6A41A0)	78	10	0	0
+006A41D0	SceneMixedMedal::runMixed $_38 __func::operator() (sub_6A41D0)	26	10	0	0
+006A47AC	SceneMixedMedal::runMixed $_38 movie end __func::__clone() (sub_6A47AC)	26	10	0	0
+006A4818	SceneMixedMedal::runMixed $_38 movie end __func::operator() (sub_6A4818)	12	12	0	0
+006A4968	SceneMixedMedal::runMixed $_38 show result __func::__clone(p) (sub_6A4968)	48	12	0	0
+006A499C	SceneMixedMedal::runMixed $_38 show result __func::operator() (sub_6A499C)	9	0	9	0
+006A4B14	SceneMixedMedal::runMixed $_38 material load __func::__clone(p) (sub_6A4B14)	620	266	0	0
+006A4B44	SceneMixedMedal::runMixed $_38 material load __func::operator() (sub_6A4B44)	256	233	23	0
+006A4D84	SceneMixedMedal::runMixed $_38 base load __func::__clone(p) (sub_6A4D84)	90	22	0	0
+006A4DE8	SceneMixedMedal::runMixed $_38 base load __func::operator() (sub_6A4DE8)	12	12	0	0
+006A5808	SceneMixedMedal::openRareWarnPopup $_18 __func::__clone() (sub_6A5808)	36	24	0	0
+006A58D4	SceneMixedMedal::openRareWarnPopup $_18 __func::destroy_deallocate (sub_6A58D4)	48	36	0	0
+006A5900	SceneMixedMedal::openRareWarnPopup $_18 __func::operator() (sub_6A5900)	12	0	0	12
+006A5A90	SceneMixedMedal::openRareWarnPopup $_36 __func::__clone(p) (sub_6A5A90)	24	0	0	0
+006A5AC2	SceneMixedMedal::openRareWarnPopup $_36 __func::operator() (sub_6A5AC2)	12	12	0	0
+006A6454	SceneMixedMedal::updateExpGauge $_12 __func::operator() (sub_6A6454)	7	5	0	0
+006A67BC	SceneMixedMedal::initMaterialPanel $_11 __func::__clone(p) (sub_6A67BC)	10	7	0	0
+006A73E8	SceneMixedMedal::initMaterialPanel $_9 __func::__clone(p) (sub_6A73E8)	5	4	0	0
+006A7418	SceneMixedMedal::initMaterialPanel $_9 __func::operator() (sub_6A7418)	3	3	0	0
+006A7618	SceneMixedMedal::runOutAnimationMain $_8 __func::__clone() (sub_6A7618)	6	4	0	0
+006A76BC	SceneMixedMedal::runOutAnimationMain $_8 __func::destroy_deallocate (sub_6A76BC)	10	8	0	0
+006A7788	SceneMixedMedal::init $_7 (Sell Medals) __func::operator() (sub_6A7788)	4	4	0	0
+006A78D0	SceneMixedMedal::init $_7 run-out __func::operator() (sub_6A78D0)	1	1	0	0
+006A7A0A	SceneMixedMedal::init $_7 sale scene __func::operator() (sub_6A7A0A)	1	1	0	0
+006A7A9C	SceneMixedMedal::init $_6 __func::__clone(p) (sub_6A7A9C)	10	7	0	0
+006A7ACC	SceneMixedMedal::init $_6 (Level Up) __func::operator() (sub_6A7ACC)	4	4	0	0
+006A7E5C	SceneMixedMedal::init $_6 caution answer __func::__clone() (sub_6A7E5C)	8	2	0	0
+006A7EC4	SceneMixedMedal::init $_6 caution answer __func::operator() (sub_6A7EC4)	1	0	0	0
+006A7FDC	SceneMixedMedal::init $_6 go on (sub_6A7FDC)	1	0	0	0
+006A8338	SceneMixedMedal::init $_5 (Optimize) __func::operator() (sub_6A8338)	4	4	0	0
+006A8504	SceneMixedMedal::init $_3 __func::operator() (sub_6A8504)	4	4	0	0
+006A8908	SceneMixedMedal::openResultPopup result line (sub_6A8908)	52	4	0	0
 006AA324	SceneEvolveMedal::~SceneEvolveMedal	2	2	0	0
+006AA434	SceneEvolveMedal::init	2	2	0	0
+006AC518	SceneEvolveMedal::initEvolutLayer	6	4	0	0
 006AD680	SceneEvolveMedal::createMaterialMedal	4	2	0	0
+006ADB00	SceneEvolveMedal::initBurstInfo	8	4	0	0
 006AF164	SceneEvolveMedal::runInAnimation	4	2	0	0
 006AF314	SceneEvolveMedal::runOutAnimationMain	4	2	0	0
 006AFD24	SceneEvolveMedal::backScene	2	2	0	0
@@ -3249,6 +3366,7 @@ addr	name	calls	verified	mismatches	unverifiable
 006F63C4	SceneLoginBonus::~SceneLoginBonus	3	3	0	0
 006F647C	SceneLoginBonus::~SceneLoginBonus [deleting destructor]	2	0	0	2
 006F649C	SceneLoginBonus::init	4	2	0	0
+006F710C	SceneLoginBonus::initLoginBonus	3	1	2	0
 006F85B8	SceneLoginBonus::update	382	328	0	0
 006F85BC	SceneLoginBonus::runInAnimation	6	3	0	0
 006F8DEC	SceneLoginBonus::runOutAnimationMain	6	3	0	0
@@ -3283,6 +3401,7 @@ addr	name	calls	verified	mismatches	unverifiable
 006FB7A8	sub_6FB7A8	8	0	0	0
 006FB7C8	nullsub_1870	12	2	0	0
 006FBA64	SceneRanking::callPartyRankingAPI	1	0	0	0
+006FBBE0	SceneRanking::callColosseumRankingAPI	1	0	0	1
 006FBE1C	SceneRanking::~SceneRanking() (deleting)	1	0	0	1
 006FBE80	SceneRanking::init()	2	0	0	1
 006FC928	SceneRanking::initScene(SceneManager::SelectRanking)	2	0	0	1
@@ -3324,6 +3443,8 @@ addr	name	calls	verified	mismatches	unverifiable
 00702638	SceneRanking::init $_7 __func::destroy	3	0	0	0
 007026B4	SceneRanking::init $_6 __func::__clone(__base*)	2	0	0	0
 007026D4	SceneRanking::init $_6 __func::destroy	3	0	0	0
+00702878	SceneRanking::callColosseumRankingAPI $_5 __func::operator() (sub_702878)	1	0	0	1
+00702B18	SceneRanking::callColosseumRankingAPI $_5 inner __func::operator() (sub_702B18)	1	0	0	1
 00702E7C	SceneRanking::callPartyRankingAPI $_3 __func::__clone()	2	1	0	0
 00702F20	SceneRanking::callPartyRankingAPI $_3 __func::destroy_deallocate	3	2	0	0
 00702F4C	SceneRanking::callPartyRankingAPI reward-check lambda __func::operator() (sub_702F4C)	1	0	0	1
@@ -3340,6 +3461,8 @@ addr	name	calls	verified	mismatches	unverifiable
 00710460	SceneRankingReward::runOutAnimationMain	4	2	0	0
 0071065C	SceneRankingReward::backScene	2	2	0	0
 007107A0	SceneRankingReward::backScene lambda __func::operator() (sub_7107A0)	2	0	0	2
+00710B3C	SceneRankingReward::backScene $_14 stage lambda __func::operator() (sub_710B3C)	1	0	0	1
+00710C74	SceneRankingReward::backScene $_14 raid lambda __func::operator() (sub_710C74)	1	0	0	1
 00711076	SceneRankingReward list scroll end lambda __func::operator() (sub_711076)	8	8	0	0
 0071112C	SceneRankingReward list scroll lambda __func::operator() (sub_71112C)	22	22	0	0
 007116D0	SceneRankingReward page update lambda __func::operator() (sub_7116D0)	20	0	16	0
@@ -3357,11 +3480,15 @@ addr	name	calls	verified	mismatches	unverifiable
 0071FC3C	SceneAdventureSelect::changeAdventure	124	0	0	0
 0071FF14	SceneAdventureSelect::initAdvScrollView	124	0	0	0
 00720270	SceneAdventureSelect::initStory	84	0	0	0
+00720A5C	SceneAdventureSelect::initEventBanner	2	0	0	2
 00721F50	SceneAdventureSelect::initAdvSelect	39	0	0	0
 00722F58	SceneAdventureSelect::storyInAnimation	84	0	0	0
 00723088	SceneAdventureSelect::changeStageInfo	193	29	0	0
 00723954	AdventurePanel::createWidget	90	0	0	4
 00723D10	AdventurePanel::runLeftOutAnimation	608	142	0	0
+00723F78	SceneAdventureSelect::initColosseum	11	11	0	0
+00724868	SceneAdventureSelect::colosseumInAnimation	22	11	0	0
+00724908	SceneAdventureSelect::openTutorial25	22	11	0	0
 007249FC	AdvStageScrollView::create	93	0	0	12
 00724AEC	SceneAdventureSelect::setStageScrollViewItemsStory	84	0	0	0
 0072550C	SceneAdventureSelect::initSelectStage	124	0	0	0
@@ -3378,6 +3505,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00726114	AdventurePanel::runRightInAnimation	90	4	0	0
 007261CC	AdventurePanel::runBottomInAnimation	360	16	0	0
 00726284	SceneAdventureSelect::scrollRunInAnimation	84	0	0	0
+007264D8	AdventurePanel::runLeftInAnimation	8	4	0	0
 00726B60	SceneAdventureSelect::raidBossAnim	20	0	0	0
 00726D18	SceneAdventureSelect::raidBossEscapeAnim	7	0	0	0
 00726F10	SceneAdventureSelect::raidBossRewardPopup	86	0	0	0
@@ -3436,6 +3564,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0072AD58	sub_72AD58	156	38	0	0
 0072AD78	nullsub_2030	234	76	0	0
 0072AD84	sub_72AD84	78	38	0	0
+0072AE30	SceneAdventureSelect::changeStageInfo $_46 __func::operator() (sub_72AE30)	11	11	0	0
 0072B538	SceneAdventureSelect::changeStageInfo::$_44 __clone(__base*)	248	28	0	0
 0072B55C	SceneAdventureSelect::changeStageInfo::$_44 destroy()	394	117	0	0
 0072B568	SceneAdventureSelect::changeStageInfo::$_44::operator()	84	23	0	4
@@ -3460,6 +3589,13 @@ addr	name	calls	verified	mismatches	unverifiable
 0072C5B4	SceneAdventureSelect::initAdvScrollView::$_39 __clone(__base*)	84	0	0	0
 0072C5D4	SceneAdventureSelect::initAdvScrollView::$_39 destroy()	145	0	0	0
 0072C5E0	SceneAdventureSelect::initAdvScrollView::$_39::operator()	240	119	0	0
+0072C6C8	SceneAdventureSelect::initColosseum $_38 __func::operator() (sub_72C6C8)	1	1	0	0
+0072C838	SceneAdventureSelect::initColosseum $_38 inner __func::operator() (sub_72C838)	1	1	0	0
+0072C984	SceneAdventureSelect::initColosseum $_37 __func::operator() (sub_72C984)	2	2	0	0
+0072CAF0	SceneAdventureSelect::initColosseum $_37 inner __func::operator() (sub_72CAF0)	2	0	0	2
+0072CCC0	SceneAdventureSelect::initColosseum $_36 __func::operator() (sub_72CCC0)	2	2	0	0
+0072CE2C	SceneAdventureSelect::initColosseum $_36 inner __func::operator() (sub_72CE2C)	2	0	0	2
+0072D0B0	SceneAdventureSelect::initColosseum $_33 __func::__clone(p) (sub_72D0B0)	44	11	0	0
 0072DB80	SceneAdventureSelect::initEventBanner::$_24 __clone(__base*)	1	0	0	0
 0072DBA0	SceneAdventureSelect::initEventBanner::$_24 destroy()	2	0	0	0
 0072E008	SceneAdventureSelect::initEventBanner::$_23 __clone(__base*)	1	0	0	0
@@ -3586,8 +3722,18 @@ addr	name	calls	verified	mismatches	unverifiable
 0073CDA4	SceneMedalList::init	2	1	0	0
 0073D6E4	SceneMedalList::runInAnimation	2	1	0	0
 0073D8D0	SceneMedalList::runOutAnimationMain	2	1	0	0
+0073DB0C	SceneMedalList::onTapMedalInfoButton	12	9	0	0
 0073DCA0	SceneMedalList::backScene	1	1	0	0
 0073DDA0	SceneMedalList::backScene lambda __func::operator() (sub_73DDA0)	1	0	0	1
+0073DF48	SceneMedalList Evolve lambda __func::operator() (sub_73DF48)	4	4	0	0
+0073E108	SceneMedalList Level Up lambda __func::operator() (sub_73E108)	5	0	0	5
+0073E4D4	SceneMixedMedal material tap lambda __func::operator() (sub_73E4D4)	14	14	0	0
+0073E7AA	SceneMedalList::init $_5 close lambda __func::operator() (sub_73E7AA)	3	3	0	0
+0073E882	SceneMedalList::init $_5 button lambda __func::operator() (sub_73E882)	2	2	0	0
+0073EC78	SceneMedalList::init $_3 __func::operator() (sub_73EC78)	4	2	0	0
+0073EF7E	SceneMedalList::init $_3 close lambda __func::operator() (sub_73EF7E)	2	2	0	0
+0073EFEC	SceneMedalList::init $_3 button lambda __func::__clone() (sub_73EFEC)	24	2	0	0
+0073F056	SceneMedalList::init $_3 button lambda __func::operator() (sub_73F056)	1	1	0	0
 0073F2B0	SceneMedalList::init finish-scene lambda __func::operator() (sub_73F2B0)	1	1	0	0
 0073F40C	AimTarget::~AimTarget	42	0	0	0
 0073F4BC	AimTarget::~AimTarget(deleting)	42	0	0	0
@@ -5207,48 +5353,48 @@ addr	name	calls	verified	mismatches	unverifiable
 00CD7428	__fixunssfdi	17003	5767	0	0
 00CD7470	__fixunsdfdi	90684	18	0	0
 00CD8DB4	SQEX::FixedList<SQEX::BankImpl *>::NODE::~NODE [base destructor]	608	0	0	0
-00CD8E1C	SdSoundSystem (sub_CD8E1C): the bank of an id	9519	905	0	0
-00CD8EAC	SdSoundSystem (sub_CD8EAC): the sound thread	12	0	0	0
-00CD8FF0	SdSoundSystem_Initialize	56	2	9	0
-00CD92E0	SdSoundSystem_AddData	3527	222	0	0
+00CD8E1C	SdSoundSystem (sub_CD8E1C): the bank of an id	9551	921	0	0
+00CD8EAC	SdSoundSystem (sub_CD8EAC): the sound thread	16	0	0	0
+00CD8FF0	SdSoundSystem_Initialize	60	6	9	0
+00CD92E0	SdSoundSystem_AddData	3563	258	0	0
 00CDA460	SdSoundSystem_RemoveDataSync	4653	546	0	0
 00CDA740	SdSoundSystem_RemoveData	4556	276	0	0
 00CDA834	SdSoundSystem_BankCtrl_IsUsing	196547	812	0	0
 00CDA880	SdSoundSystem_BankCtrl_StopSounds	169	3	2	0
 00CDA948	SdSoundSystem_GetSoundsCount	665316	15916	0	0
-00CDA94C	SdSoundSystem_CreateSound	12791	918	0	0
-00CDACAC	SdSoundSystem_SoundCtrl_StartFadeIn	6864	247	6604	1
+00CDA94C	SdSoundSystem_CreateSound	12807	934	0	0
+00CDACAC	SdSoundSystem_SoundCtrl_StartFadeIn	6880	263	6604	1
 00CDAD4C	SdSoundSystem_SoundCtrl_Stop	969	8	10	0
-00CDADB0	SdSoundSystem_SoundCtrl_IsExist	17384	6492	0	0
+00CDADB0	SdSoundSystem_SoundCtrl_IsExist	17396	6504	0	0
 00CDADE0	SdSoundSystem_SoundCtrl_SetPause	14	0	0	0
-00CDC2E0	akbIsAkb1File	4749235	398	0	0
-00CDC3F8	akbGetVersion	1089978	5	0	0
-00CDC42C	akbGetHeaderSize	675536	5	0	0
-00CDC460	akb (sub_CDC460): the data offset	3557	73	0	0
-00CDC4D4	akbGetFileSize	339048	2	0	0
-00CDC584	akbGetSoundData	15016	921	0	0
+00CDC2E0	akbIsAkb1File	4834603	444	0	0
+00CDC3F8	akbGetVersion	1104123	21	0	0
+00CDC42C	akbGetHeaderSize	684887	11	0	0
+00CDC460	akb (sub_CDC460): the data offset	3592	77	0	0
+00CDC4D4	akbGetFileSize	343716	4	0	0
+00CDC584	akbGetSoundData	15048	937	0	0
 00CDC604	akbSoundGetType	7288	4	0	0
-00CDC61C	akbSoundGetAttributeData	8031	0	0	0
+00CDC61C	akbSoundGetAttributeData	8062	4	0	0
 00CDC65C	akbSoundGetSoundID	39562	0	0	0
-00CDC698	akbSoundGetVolume	22816	1	0	0
-00CDC7A4	akbSoundGetMaterialDataOffset	7074	1	0	0
+00CDC698	akbSoundGetVolume	22896	7	0	0
+00CDC7A4	akbSoundGetMaterialDataOffset	7090	3	0	0
 00CDC7E8	akbSoundGetMaterialData	7109	4	0	0
 00CDC838	akbSoundGetCategory	7109	4	0	0
 00CDC84C	akbSoundGetInnerRange	7109	4	0	0
 00CDC860	akbSoundGetOuterRange	7109	4	0	0
 00CDC874	akbSoundGetInteriorFactor	7109	4	0	0
 00CDC8A4	akbMaterialGetAudioFormat	7109	4	0	0
-00CDC8C0	akbMaterialGetAudioDataOffset	671019	4	0	0
+00CDC8C0	akbMaterialGetAudioDataOffset	680357	6	0	0
 00CDC9CC	akbMaterialGetChannel	432174	12013	0	0
 00CDC9E8	akbMaterialGetSampleRate	7109	4	0	0
-00CDCA04	akbMaterialIsLoopAudio	1244968	0	0	0
+00CDCA04	akbMaterialIsLoopAudio	1271782	2	0	0
 00CDCB70	akbMaterialGetLoopStart	1920	1	0	0
 00CDCB8C	akbMaterialGetLoopEnd	835908	24009	0	0
-00CDCBA8	akbMaterialGetAudioDataSize	337293	2	0	0
-00CDCBE0	akbMaterialGetEnableRandomVolume	7074	0	0	0
-00CDCC24	akbMaterialGetEnableRandomPitch	7074	0	0	0
-00CDCF70	akbMaterialGetEnableEncryption	331976	2	0	0
-00CDD00C	attrGetResultCommand	3209	0	0	0
+00CDCBA8	akbMaterialGetAudioDataSize	341981	4	0	0
+00CDCBE0	akbMaterialGetEnableRandomVolume	7090	2	0	0
+00CDCC24	akbMaterialGetEnableRandomPitch	7090	2	0	0
+00CDCF70	akbMaterialGetEnableEncryption	336646	4	0	0
+00CDD00C	attrGetResultCommand	3212	1	0	0
 00CDD03C	attrIntCmp	155	0	0	0
 00CDD240	SQEX::ActionManager::Initialize	65	1	0	0
 00CDD430	SQEX::ActionManager::AddAction	47291	459	0	0
@@ -5317,54 +5463,55 @@ addr	name	calls	verified	mismatches	unverifiable
 00CE2A38	thunk to SQEX::Voice::OnBufferEnd	601061	41252	0	0
 00CE2A58	SQEX::Transfer::IsFinished	644401	2187	0	0
 00CE2DEC	SQEX::TransferOggVorbis::ov_tell_callback	7049	6	0	0
-00CE2DF4	SQEX::TransferOggVorbis::~TransferOggVorbis	6953	0	0	0
+00CE2DF4	SQEX::TransferOggVorbis::~TransferOggVorbis	6965	1	0	0
 00CE2E40	SQEX::TransferOggVorbis::~TransferOggVorbis [deleting destructor]	7876	7	0	0
-00CE2E5C	SQEX::TransferOggVorbis::Initialize	7018	0	0	0
-00CE2F90	SQEX::TransferOggVorbis::Execute	637277	0	0	0
-00CE30DC	SQEX::TransferOggVorbis::ov_seek_callback	42920	1	0	0
-00CE3138	SQEX::TransferOggVorbis::ov_read_callback	329240	2	0	0
-00CE3214	SQEX::TransferOggVorbis::TransferOggVorbis	7018	0	0	0
+00CE2E5C	SQEX::TransferOggVorbis::Initialize	7034	2	0	0
+00CE2F90	SQEX::TransferOggVorbis::Execute	650671	2	0	0
+00CE30DC	SQEX::TransferOggVorbis::ov_seek_callback	43013	3	0	0
+00CE3138	SQEX::TransferOggVorbis::ov_read_callback	333910	4	0	0
+00CE3214	SQEX::TransferOggVorbis::TransferOggVorbis	7034	2	0	0
 00CE4378	SQEX::Memory::Initialize	118	2	0	0
 00CE43B4	SQEX::Memory::Malloc	2282088	1859	0	0
 00CE43B8	SQEX::Memory::Calloc	1166204	514	0	0
 00CE43BC	SQEX::Memory::Realloc	30262	14	0	0
 00CE43C0	SQEX::Memory::Free	646454	1297	0	0
-00CE5BC4	SQEX::CategoryManager::Initialize	65	1	0	0
-00CE5D44	SQEX::CategoryManager::Update	472860	4	0	0
-00CE5DAC	SQEX::CategoryManager::GetCategory	7018	0	0	0
-00CE5DF8	SQEX::DriverConfig::DriverConfig	65	1	0	0
+00CE5BC4	SQEX::CategoryManager::Initialize	73	5	0	0
+00CE5D44	SQEX::CategoryManager::Update	486572	2155	0	0
+00CE5DAC	SQEX::CategoryManager::GetCategory	7034	2	0	0
+00CE5DF8	SQEX::DriverConfig::DriverConfig	73	5	0	0
 00CE5E30	SQEX::DriverConfig::~DriverConfig [base destructor]	59	1	0	0
-00CE5E34	SQEX::DriverConfig::Analyse	65	1	0	0
-00CE6444	SQEX::List<SQEX::CoreSource*>::Node::~Node	6953	0	0	0
-00CE6908	SQEX::Mutex::Mutex	189	134	0	0
-00CE694C	SQEX::CoreSystem::Initialize	65	1	0	0
-00CE6B28	SQEX::CoreSystem::CreateSource	7018	1	0	0
+00CE5E34	SQEX::DriverConfig::Analyse	73	5	0	0
+00CE6444	SQEX::List<SQEX::CoreSource*>::Node::~Node	6965	0	0	0
+00CE646C	SQEX::CoreSystem (sub_CE646C): the output render callback	21481	3582	0	0
+00CE6908	SQEX::Mutex::Mutex	201	146	0	0
+00CE694C	SQEX::CoreSystem::Initialize	73	5	0	0
+00CE6B28	SQEX::CoreSystem::CreateSource	7034	3	0	0
 00CE6C60	SQEX::CoreSystem::GetOutputSampleRate	725071	49329	0	0
 00CE6C74	SQEX::CoreSystem::GetOutputChannels	725076	49327	0	0
 00CE6CF8	SQEX::CoreSystem::GetMasterVolume	2571038	181808	0	0
-00CE6D78	SQEX::CoreSystem::Update	472860	4	0	0
+00CE6D78	SQEX::CoreSystem::Update	486571	1307	0	0
 00CE763C	SQEX::CoreSource::GetQueueBufferCount	8269	8	0	0
-00CE7684	SQEX::CoreSource::~CoreSource	6953	0	0	0
+00CE7684	SQEX::CoreSource::~CoreSource	6965	0	0	0
 00CE76C8	SQEX::CoreSource::~CoreSource [deleting destructor]	7501	365	0	0
-00CE76E4	SQEX::CoreSource::Start	7017	0	0	0
-00CE7720	SQEX::CoreSource::Stop	3036	0	0	0
-00CE775C	SQEX::CoreSource::Destroy	6953	0	0	0
-00CE779C	SQEX::CoreSource::SetVolume	22547	1	0	0
-00CE77D8	SQEX::CoreSource::SetPitch	7018	0	0	0
-00CE7814	SQEX::CoreSource::QueueBuffer	637046	0	0	0
-00CE78AC	SQEX::CoreSource::CoreSource	7019	1	0	0
-00CE7990	SQEX::CoreSource::SetVolumeMatrix	14036	2	0	0
-00CE7A18	SQEX::CoreSource::SetPan	7018	0	0	0
-00CE7B18	SQEX::CoreSource::RenderMix	527241	0	0	0
-00CE7F60	SQEX::CoreSource::SetIIRLPF	7018	1	0	0
-00CE8024	SQEX::CoreSource::Initialize	7019	1	0	0
-00CE80B8	CoreAudioOut (sub_CE80B8): the buffer queue callback	161973	0	0	0
-00CE8260	CoreAudioOutInit	65	1	0	0
-00CE86A4	CoreAudioOutQueueBuffer	504202	1	0	0
-00CE8778	CoreAudioOutKick	65	1	0	0
+00CE76E4	SQEX::CoreSource::Start	7033	1	0	0
+00CE7720	SQEX::CoreSource::Stop	3039	1	0	0
+00CE775C	SQEX::CoreSource::Destroy	6965	1	0	0
+00CE779C	SQEX::CoreSource::SetVolume	22627	6	0	0
+00CE77D8	SQEX::CoreSource::SetPitch	7034	1	0	0
+00CE7814	SQEX::CoreSource::QueueBuffer	650430	2	0	0
+00CE78AC	SQEX::CoreSource::CoreSource	7037	3	0	0
+00CE7990	SQEX::CoreSource::SetVolumeMatrix	14068	5	0	0
+00CE7A18	SQEX::CoreSource::SetPan	7034	1	0	0
+00CE7B18	SQEX::CoreSource::RenderMix	542935	0	0	0
+00CE7F60	SQEX::CoreSource::SetIIRLPF	7034	3	0	0
+00CE8024	SQEX::CoreSource::Initialize	7037	3	0	0
+00CE80B8	CoreAudioOut (sub_CE80B8): the buffer queue callback	183454	0	0	0
+00CE8260	CoreAudioOutInit	73	5	0	0
+00CE86A4	CoreAudioOutQueueBuffer	520900	5	0	0
+00CE8778	CoreAudioOutKick	73	5	0	0
 00CE8A2C	CoreAudioOutUpdate	549960	2716	0	0
 00CE9404	SQEX::BankImpl::Initialize	3369	34	0	0
-00CE942C	SQEX::List<Sound>::Node::~Node	7101	0	0	0
+00CE942C	SQEX::List<Sound>::Node::~Node	7113	3	0	0
 00CE9454	SQEX::BankImpl::Update	7189115	13	0	0
 00CE953C	SQEX::BankImpl::~BankImpl	2499	546	0	0
 00CE960C	SQEX::BankImpl::BankImpl	3023	222	0	0
@@ -5388,8 +5535,8 @@ addr	name	calls	verified	mismatches	unverifiable
 00CF2270	ogg_page_bos	455083	2002	0	0
 00CF2280	ogg_page_eos	442817	1998	0	0
 00CF3768	SQEX::AttributeSystem::Execute	4893	7	0	0
-00CF412C	SQEX::DelegateManager (sub_CF412C): the delegate thread	12	0	0	0
-00CF41FC	SQEX::DelegateManager::Initialize	65	1	0	0
+00CF412C	SQEX::DelegateManager (sub_CF412C): the delegate thread	16	0	0	0
+00CF41FC	SQEX::DelegateManager::Initialize	73	5	0	0
 00CF43B4	SQEX::DynamicValue::Initialize	118946	974	0	0
 00CF43FC	SQEX::DynamicValue::DynamicValue [base constructor]	111403	1072	0	0
 00CF4418	SQEX::DynamicValue::GetValue	2663351	4	0	0
@@ -5398,8 +5545,8 @@ addr	name	calls	verified	mismatches	unverifiable
 00CF449C	SQEX::DynamicValue::Update	488467	4	0	0
 00CF4500	SQEX::OnMemorySound::GetType	14219	11	0	0
 00CF4508	SQEX::OnMemorySound::GetData	108020	116	0	0
-00CF4528	SQEX::OnMemorySound::~OnMemorySound	7101	0	0	0
+00CF4528	SQEX::OnMemorySound::~OnMemorySound	7113	1	0	0
 00CF4550	SQEX::OnMemorySound::IsReadyForPlay	7229	6	0	0
 00CF4564	SQEX::OnMemorySound::Initialize	13771	920	0	0
-00CF456C	SQEX::OnMemorySound::OnMemorySound	15154	990	0	0
+00CF456C	SQEX::OnMemorySound::OnMemorySound	15186	1006	0	0
 00CF67D4	sub_CF67D4	2267202	212	0	0

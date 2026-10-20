@@ -55,6 +55,33 @@ LIBS = [
 ]
 _LIB_RE = [(name, re.compile(pat)) for name, pat in LIBS]
 
+# Unnamed functions the nearest-name rule gives to the game although they are a library's, classified by what they
+# reference (2026-10-20): the libraries' static constructors (.init_array, linked after the game's own sources
+# 0x453280-0x454160) and helpers the boot runs.
+_COCOS = "cocos2d-x"
+OVERRIDES = {
+    # cocostudio: DataReaderHelper, the Com* components and widget readers (ObjectFactory::TInfo registrations)
+    **{a: _COCOS for a in (0x45534C, 0x455388, 0x4553DC, 0x45548C, 0x455574, 0x455644, 0x455728, 0x455818,
+                           0x45591C, 0x455A24, 0x455B34, 0x455C2C, 0x455D34, 0x455E40, 0x455F50, 0x45605C,
+                           0x456170, 0x456274, 0x45636C, 0x456480, 0x456578)},
+    # cocos2d: HttpClient's mutexes / flags, JNI and plugin-x globals, the ui widgets' TInfo, VideoPlayer, colors,
+    # fonts, Data::Null, the event listener ids (__cc_touch_one_by_one ...), apk path, renderer statics
+    **{a: _COCOS for a in (0x45666C, 0x4567B8, 0x4567F4, 0x456854, 0x456A80, 0x456B68, 0x456C38, 0x456D08,
+                           0x456EA0, 0x456F84, 0x457074, 0x457164, 0x457224, 0x4572F8, 0x4573D0, 0x4574C8,
+                           0x4575B0, 0x457684, 0x4576C0, 0x4576E4, 0x457714, 0x457754, 0x457784, 0x4577C4,
+                           0x457800, 0x4578B4, 0x4579C4, 0x457EC4, 0x457F18, 0x457F4C, 0x457FA4, 0x457FFC,
+                           0x458074, 0x4580E4, 0x45813C, 0x4581E8, 0x45821C, 0x4582CC, 0x4584EC, 0x458524,
+                           0x45888C, 0x4588C4, 0x458EFC, 0x458F3C, 0x458F7C, 0x458FB4, 0x92E42C)},
+    **{a: "LWF" for a in (0x456714, 0x456748, 0x456780)},
+    # a vector destructor and a string helper instantiated in the game's objects
+    **{a: "libc++ / C++ runtime" for a in (0x493E84, 0x498A1C)},
+    # newlocale / uselocale, strtod, the vfprintf family and its output sink
+    **{a: "libc / math helpers" for a in (0xC9C858, 0xC9C8E0, 0xC9CC58, 0xCA1C5C, 0xCA1CDE, 0xCA358E, 0xCA35A4,
+                                          0xCA3B24, 0xCA3BC4, 0xCD2ED0)},
+    **{a: "curl" for a in (0x44F07C, 0x44F154, 0x44F368, 0x44F3D0)},
+    **{a: "OpenSSL" for a in (0xC34D9C, 0xC34EB0, 0xC353F8, 0xC35EEC)},   # conf_def.c
+}
+
 
 # the outermost name of an Itanium-mangled symbol: "_ZN7cocos2d6Sprite..." -> "cocos2d", "_ZNSt3__1..." -> "std",
 # "_ZThn20_N7cocos2d..." (thunks) -> "cocos2d", "_Z12freeFunctioni" -> "freeFunction"
@@ -93,6 +120,9 @@ def groups():
         else:
             last = lib_of(name)
             out[a] = last
+    for a, lib in OVERRIDES.items():
+        if a in out: out[a] = lib
+        elif a | 1 in out: out[a | 1] = lib
     return out
 
 

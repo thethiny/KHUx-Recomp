@@ -2,7 +2,7 @@
 // (createMaterialMedal: a DeckMedalView with the owned count), the four panels' in / out animations, backScene and
 // its lambda (back to the Medal List, the Equipment screen or the medal's detail), and the run-out lambda's clone /
 // destroy, plus the clone of an init lambda that holds an unordered_set of medal ids. init, initEvolutLayer and
-// initBurstInfo (~15 KB of code) stay lifted for now.
+// initBurstInfo are in w5_20.
 #include "../scene/SceneUi.hpp"
 
 using namespace scene;

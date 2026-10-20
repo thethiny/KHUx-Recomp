@@ -1,7 +1,8 @@
 // The game's own source files' static constructors (the .init_array entries the host runs at load): the objects
-// at namespace scope of Avatar, StageActorManager, the snow particle settings and MasterDataManager's table
-// registry, each with its destructor registered through __cxa_atexit. The engine's (cocos2d-x, cocostudio, LWF,
-// FreeType) come from upstream source.
+// at namespace scope of Avatar, AvatarActor, StageActorManager, PauseState, RemoteNotification, the audio sources,
+// the snow particle settings, the direction and shape tables, MasterDataManager's table registry and bg's
+// (MemoryStream, Archive, pixel formats), each with its destructor registered through __cxa_atexit. The engine's
+// (cocos2d-x, cocostudio, LWF, FreeType, plugins) and the C libraries' come from upstream source.
 #include "Guest.hpp"
 
 namespace {
@@ -160,6 +161,170 @@ constexpr TableRow MASTER_TABLES[] = {
     {0xE07BB7, 0xFD6C54, 0xFD6C5C},  // world
 };
 
+// ------------------------------------------------------------------------------------------ std::function globals
+// A std::function holding a plain function pointer inline: __func vtable (from the GOT) + 8, the pointer, __f_ =
+// the buffer. Its destructor is registered through __cxa_atexit.
+void staticFunction(uint32_t at, uint32_t vtableGot, uint32_t fn, uint32_t dtorGot) {
+    save<uint32_t>(at + 0x10, at);
+    save<uint32_t>(at, load<uint32_t>(vtableGot) + 8);
+    save<uint32_t>(at + 4, fn);
+    atexit(load<uint32_t>(dtorGot), at);
+}
+constexpr uint32_t VT_ALLOCATOR_FN_GOT = 0xFD60F0;   // &vtable of __func<void*(*)(unsigned int)>
+constexpr uint32_t VT_DELETER_FN_GOT = 0xFD60E4;     // &vtable of __func<void(*)(void*)>
+constexpr uint32_t ALLOCATOR_FN_DTOR_GOT = 0xFD60FC; // &std::function<void*(unsigned int)>::~function
+constexpr uint32_t DELETER_FN_DTOR_GOT = 0xFD6100;   // &std::function<void(void*)>::~function
+
+// ------------------------------------------------------------------------------------------ bg::MemoryStream
+constexpr uint32_t MEMORY_STREAM_HEADER_CONSTANT = 0x10033F0;
+constexpr uint32_t MEMORY_STREAM_ALLOCATOR_GOT = 0xFD60D4;  // &bg::MemoryStream::_defaultAllocator
+constexpr uint32_t MEMORY_STREAM_DELETER_GOT = 0xFD60D8;    // &bg::MemoryStream::_defaultDeleter
+constexpr uint32_t MEMORY_STREAM_ALLOCATE = 0x49160F;       // sub_49160E: malloc
+constexpr uint32_t MEMORY_STREAM_FREE = 0x491639;           // sub_491638: free
+
+// ------------------------------------------------------------------------------------------ bg::Archive
+constexpr uint32_t ARCHIVE_ALLOCATOR_GOT = 0xFD8180;        // &bg::Archive::_defaultAllocator
+constexpr uint32_t ARCHIVE_DELETER_GOT = 0xFD8184;          // &bg::Archive::_defaultDeleter
+constexpr uint32_t ARCHIVE_ALLOCATE = 0x8DC8E1;             // sub_8DC8E0
+constexpr uint32_t ARCHIVE_FREE = 0x8DC8E9;                 // sub_8DC8E8
+
+// ------------------------------------------------------------------------------------------ RemoteNotification.cpp
+// the device token callback (RemoteNotification::getToken sets it, AppActivity.didRegister calls it): empty
+constexpr uint32_t REMOTE_NOTIFICATION_HEADER_CONSTANT = 0x1003A14;
+constexpr uint32_t TOKEN_CALLBACK = 0x10039F0;              // std::function<void(const char*)>
+constexpr uint32_t TOKEN_CALLBACK_DTOR_GOT = 0xFD6508;
+
+// ------------------------------------------------------------------------------------------ the audio sources
+// AudioPlayGameMainSE / AudioPushGameMainBGM ...: the resource map and the main BGM stack
+constexpr uint32_t AUDIO_HEADER_CONSTANT = 0x1003C38;
+constexpr uint32_t AUDIO_RESOURCES = 0x1003C50;             // unordered_map<int, audio::ResourceID>
+constexpr uint32_t AUDIO_RESOURCES_DTOR_GOT = 0xFD6724;
+constexpr uint32_t MAIN_BGM_STACK = 0x1003C64;              // six words (begin / end / capacity of two vectors)
+constexpr uint32_t MAIN_BGM_STACK_DTOR = 0x5C0B73;          // sub_5C0B72
+constexpr uint32_t AUDIO_NAMES_HEADER_CONSTANT = 0x1003C80;
+constexpr uint32_t AUDIO_NAMES = 0x1003C98;                 // unordered_map<std::string, int>
+constexpr uint32_t AUDIO_NAMES_DTOR_GOT = 0xFD6728;
+
+// ------------------------------------------------------------------------------------------ PauseState.cpp
+constexpr uint32_t PAUSE_STATE_HEADER_CONSTANT = 0x1003E5C;
+constexpr uint32_t PAUSE_MUTEX = 0x1003E50;                 // std::mutex (sub_C8DE14 lock, sub_C8DE58 unlock)
+constexpr uint32_t MUTEX_DTOR_GOT = 0xFD6828;
+constexpr uint32_t PAUSED_TARGETS = 0x1003E74;              // std::set<void*>: the Scheduler targets it paused
+constexpr uint32_t PAUSED_TARGETS_DTOR_GOT = 0xFD682C;
+
+// ------------------------------------------------------------------------------------------ AvatarActor.cpp
+constexpr uint32_t AVATAR_ACTOR_HEADER_CONSTANT = 0x1003E90;
+constexpr uint32_t AVATAR_ACTOR_SIZES = 0x1003EA8;          // unordered_map<int, float>
+constexpr uint32_t UNORDERED_MAP_INT_FLOAT_CTOR = 0x740A0D; // unordered_map<int, float>(initializer_list)
+constexpr uint32_t UNORDERED_MAP_INT_FLOAT_DTOR_GOT = 0xFD69AC;
+struct IntFloat { uint32_t key; float value; };
+constexpr IntFloat AVATAR_ACTOR_SIZE_LIST[] = {{31, 20}, {33, 96}, {34, 85}, {35, 108}, {36, 74}, {37, 67}};
+
+// ------------------------------------------------------------------------------------------ the eight directions
+// 2.0, then the 3x3 grid of unit steps {-1, 0, 1} x {-1, 0, 1} (y outer)
+constexpr uint32_t DIRECTIONS = 0x1003F70;
+constexpr uint32_t DIRECTIONS_DTOR = 0x453C49;              // sub_453C48: ~ the nine Vec2
+
+// ------------------------------------------------------------------------------------------ the shape tables
+// Shapes {int kind; Vec2 at; float a, b}: kind 2 = circle (center, radius), kind 1 = rectangle (origin, size).
+constexpr uint32_t VEC2_DEFAULT_CTOR = 0x8E4B95;            // cocos2d::Vec2::Vec2()
+constexpr uint32_t SHAPES_HEADER_CONSTANT = 0x1004020;
+constexpr uint32_t SHAPES_1 = 0x1004038, SHAPES_2 = 0x1004060, SHAPES_3 = 0x1004090, SHAPE_SIZE = 0x14;
+constexpr uint32_t SHAPES_1_DTOR = 0x453E31, SHAPES_2_DTOR = 0x453E55, SHAPES_3_DTOR = 0x453E79;
+struct Shape { uint32_t kind; float x, y, a, b; };
+constexpr Shape SHAPE_TABLE_1[] = {{2, 70, 74, 67, 0}, {1, 0, 0, 340, 110}};
+constexpr Shape SHAPE_TABLE_2[] = {{1, -630, 0, 630, 42}, {1, -128, 4, 128, 62}};
+constexpr Shape SHAPE_TABLE_3[] = {{2, 45, -51, 151, 0}, {2, 76, -170, 69, 0}, {2, 171, -56, 61, 0}};
+
+// a shape: zeroed (the constructor), then filled in; a circle has no fourth value
+void shape(uint32_t at, const Shape &s) {
+    save<uint32_t>(at, 0);
+    call(VEC2_DEFAULT_CTOR, {at + 4});
+    save<uint32_t>(at, s.kind);
+    save<uint32_t>(at + 4, fbits(s.x));
+    save<uint32_t>(at + 8, fbits(s.y));
+    save<uint32_t>(at + 0xC, fbits(s.a));
+    if (s.kind != 2) save<uint32_t>(at + 0x10, fbits(s.b));
+}
+
+// ------------------------------------------------------------------------------------------ bg's pixel formats
+// Two std::map built from initializer lists (the lists themselves are globals the constructor fills first):
+// a format code -> Texture2D::PixelFormat, and (channel order fourcc | bits per channel << 32) -> PixelFormat.
+constexpr uint32_t FORMAT_CODES = 0x10067C0;                // std::map<uint8_t, int>
+constexpr uint32_t FORMAT_CODE_LIST = 0x10067D8;            // pair<uint8_t, int>[11]
+constexpr uint32_t FORMAT_CODES_DTOR = 0x8D9657;            // sub_8D9656
+constexpr uint32_t FORMAT_LAYOUTS = 0x10067CC;              // std::map<uint64_t, int>
+constexpr uint32_t FORMAT_LAYOUT_LIST = 0x10066F0;          // pair<uint64_t, int>[13] (16 bytes each)
+constexpr uint32_t FORMAT_LAYOUTS_DTOR = 0x8D9669;          // sub_8D9668
+constexpr uint32_t TREE_BALANCE_AFTER_INSERT = 0x493F5B;    // std::__tree_balance_after_insert
+struct FormatCode { uint8_t code; uint32_t format; };
+constexpr FormatCode FORMAT_CODE_ROWS[] = {{26, 1}, {18, 2}, {16, 8}, {17, 9}, {19, 4}, {21, 3},
+                                           {27, 5}, {22, 6}, {23, 7}, {24, 13}, {25, 11}};
+struct FormatLayout { uint32_t order, bits, format; };
+constexpr uint32_t BGRA = 0x61726762, RGBA = 0x61626772, RGB = 0x626772, LA = 0x616C;
+constexpr FormatLayout FORMAT_LAYOUT_ROWS[] = {
+    {BGRA, 0x08080808, 1}, {RGBA, 0x08080808, 2}, {RGBA, 0x04040404, 8}, {RGBA, 0x01050505, 9},
+    {RGB, 0x050605, 4},    {RGB, 0x080808, 3},    {'a', 8, 5},           {'l', 8, 6},
+    {LA, 0x0808, 7},       {0, 0, 12},            {1, 0, 13},            {2, 0, 10},
+    {3, 0, 11},
+};
+
+// libc++'s map insert(end(), value) as the initializer_list constructor inlines it. The node (its value already
+// copied in) goes after the last element when its key is greater, else to the place a search from the root
+// finds; a key already present frees it. Map: begin node +0, root (the end node's left) +4, size +8.
+template <class Less>
+void insertAtEnd(uint32_t map, uint32_t node, Less less) {
+    const uint32_t end = map + 4;
+    const uint32_t root = load<uint32_t>(end);
+    uint32_t parent = end, child = end;
+    bool found = false;
+    bool afterLast = load<uint32_t>(map) == end;
+    if (!afterLast) {
+        uint32_t last = end;
+        if (root) {
+            for (last = root; load<uint32_t>(last + 4);) last = load<uint32_t>(last + 4);
+        } else {
+            uint32_t n = end;
+            do { last = load<uint32_t>(n + 8); } while (load<uint32_t>(last) == n && ((n = last), true));
+        }
+        afterLast = less(last, node);
+        if (afterLast && root) parent = last, child = last + 4;
+    }
+    if (!afterLast && root) {
+        for (uint32_t n = root;;) {
+            if (less(node, n)) {
+                parent = n, child = n;
+                if (!load<uint32_t>(n)) break;
+                n = load<uint32_t>(n);
+            } else if (less(n, node)) {
+                parent = n, child = n + 4;
+                if (!load<uint32_t>(n + 4)) break;
+                n = load<uint32_t>(n + 4);
+            } else {
+                found = true;
+                break;
+            }
+        }
+    }
+    if (found) {
+        guest::deleteObject(node);
+        return;
+    }
+    save<uint32_t>(node, 0);
+    save<uint32_t>(node + 4, 0);
+    save<uint32_t>(node + 8, parent);
+    save<uint32_t>(child, node);
+    const uint32_t beginLeft = load<uint32_t>(load<uint32_t>(map));
+    if (beginLeft) save<uint32_t>(map, beginLeft);
+    call(TREE_BALANCE_AFTER_INSERT, {load<uint32_t>(end), load<uint32_t>(child)});
+    save<uint32_t>(map + 8, load<uint32_t>(map + 8) + 1);
+}
+void emptyTree(uint32_t map) {
+    save<uint32_t>(map + 4, 0);
+    save<uint32_t>(map + 8, 0);
+    save<uint32_t>(map, map + 4);
+}
+
 }  // namespace
 
 struct StaticConstructors {
@@ -218,8 +383,141 @@ struct StaticConstructors {
         }
         atexit(TABLE_DESCRIPTORS_DTOR, 0);
     }
+
+    // bg::MemoryStream's default allocator and deleter (malloc / free)
+    static void memoryStream() {
+        headerConstant(MEMORY_STREAM_HEADER_CONSTANT);
+        staticFunction(load<uint32_t>(MEMORY_STREAM_ALLOCATOR_GOT), VT_ALLOCATOR_FN_GOT, MEMORY_STREAM_ALLOCATE,
+                       ALLOCATOR_FN_DTOR_GOT);
+        staticFunction(load<uint32_t>(MEMORY_STREAM_DELETER_GOT), VT_DELETER_FN_GOT, MEMORY_STREAM_FREE,
+                       DELETER_FN_DTOR_GOT);
+    }
+
+    // RemoteNotification.cpp: the token callback, empty
+    static void remoteNotification() {
+        headerConstant(REMOTE_NOTIFICATION_HEADER_CONSTANT);
+        save<uint32_t>(TOKEN_CALLBACK + 0x10, 0);
+        atexit(load<uint32_t>(TOKEN_CALLBACK_DTOR_GOT), TOKEN_CALLBACK);
+    }
+
+    // the audio resources and the main BGM stack
+    static void audio() {
+        headerConstant(AUDIO_HEADER_CONSTANT);
+        emptyHashMap(AUDIO_RESOURCES);
+        atexit(load<uint32_t>(AUDIO_RESOURCES_DTOR_GOT), AUDIO_RESOURCES);
+        for (uint32_t k = 0; k < 0x18; k += 4) save<uint32_t>(MAIN_BGM_STACK + k, 0);
+        atexit(MAIN_BGM_STACK_DTOR, MAIN_BGM_STACK);
+    }
+
+    // the audio names
+    static void audioNames() {
+        headerConstant(AUDIO_NAMES_HEADER_CONSTANT);
+        emptyHashMap(AUDIO_NAMES);
+        atexit(load<uint32_t>(AUDIO_NAMES_DTOR_GOT), AUDIO_NAMES);
+    }
+
+    // PauseState.cpp: its mutex and the set of targets it paused
+    static void pauseState() {
+        headerConstant(PAUSE_STATE_HEADER_CONSTANT);
+        save<uint32_t>(PAUSE_MUTEX, 0);
+        atexit(load<uint32_t>(MUTEX_DTOR_GOT), PAUSE_MUTEX);
+        emptyTree(PAUSED_TARGETS);
+        atexit(load<uint32_t>(PAUSED_TARGETS_DTOR_GOT), PAUSED_TARGETS);
+    }
+
+    // AvatarActor.cpp: a size per id
+    static void avatarActor() {
+        headerConstant(AVATAR_ACTOR_HEADER_CONSTANT);
+        guest::Frame f(0x50);
+        const uint32_t list = f.addr(8);
+        uint32_t at = list;
+        for (const IntFloat &p : AVATAR_ACTOR_SIZE_LIST) {
+            save<uint32_t>(at, p.key);
+            save<uint32_t>(at + 4, fbits(p.value));
+            at += 8;
+        }
+        call(UNORDERED_MAP_INT_FLOAT_CTOR, {AVATAR_ACTOR_SIZES, list, 6});
+        atexit(load<uint32_t>(UNORDERED_MAP_INT_FLOAT_DTOR_GOT), AVATAR_ACTOR_SIZES);
+    }
+
+    // 2.0 and the nine unit steps
+    static void directions() {
+        headerConstant(DIRECTIONS + 4);
+        save<uint32_t>(DIRECTIONS, fbits(2.0f));
+        uint32_t at = DIRECTIONS + 0x1C;
+        for (int y = -1; y <= 1; y++)
+            for (int x = -1; x <= 1; x++, at += 8) call(VEC2_CTOR, {at, fbits(float(x)), fbits(float(y))});
+        atexit(DIRECTIONS_DTOR, 0);
+    }
+
+    // the three shape tables
+    static void shapes() {
+        headerConstant(SHAPES_HEADER_CONSTANT);
+        for (uint32_t k = 0; k < 2; k++) shape(SHAPES_1 + k * SHAPE_SIZE, SHAPE_TABLE_1[k]);
+        atexit(SHAPES_1_DTOR, 0);
+        for (uint32_t k = 0; k < 2; k++) shape(SHAPES_2 + k * SHAPE_SIZE, SHAPE_TABLE_2[k]);
+        atexit(SHAPES_2_DTOR, 0);
+        for (uint32_t k = 0; k < 3; k++) shape(SHAPES_3 + k * SHAPE_SIZE, SHAPE_TABLE_3[k]);
+        atexit(SHAPES_3_DTOR, 0);
+    }
+
+    // bg's pixel format maps
+    static void pixelFormats() {
+        uint32_t at = FORMAT_CODE_LIST;
+        for (const FormatCode &r : FORMAT_CODE_ROWS) {
+            save<uint8_t>(at, r.code);
+            save<uint32_t>(at + 4, r.format);
+            at += 8;
+        }
+        emptyTree(FORMAT_CODES);
+        for (at = FORMAT_CODE_LIST; at != FORMAT_CODE_LIST + 8 * 11; at += 8) {
+            const uint32_t node = guest::newObject(0x18);
+            save<uint32_t>(node + 0x10, load<uint32_t>(at));
+            save<uint32_t>(node + 0x14, load<uint32_t>(at + 4));
+            insertAtEnd(FORMAT_CODES, node, [](uint32_t a, uint32_t b) {
+                return load<uint8_t>(a + 0x10) < load<uint8_t>(b + 0x10);
+            });
+        }
+        atexit(FORMAT_CODES_DTOR, FORMAT_CODES);
+
+        at = FORMAT_LAYOUT_LIST;
+        for (const FormatLayout &r : FORMAT_LAYOUT_ROWS) {
+            save<uint32_t>(at + 4, r.bits);
+            save<uint32_t>(at, r.order);
+            save<uint32_t>(at + 8, r.format);
+            at += 0x10;
+        }
+        emptyTree(FORMAT_LAYOUTS);
+        for (at = FORMAT_LAYOUT_LIST; at != FORMAT_LAYOUT_LIST + 0x10 * 13; at += 0x10) {
+            const uint32_t node = guest::newObject(0x20);
+            save<uint32_t>(node + 0x14, load<uint32_t>(at + 4));
+            save<uint32_t>(node + 0x10, load<uint32_t>(at));
+            save<uint32_t>(node + 0x18, load<uint32_t>(at + 8));
+            insertAtEnd(FORMAT_LAYOUTS, node, [](uint32_t a, uint32_t b) {
+                return load<uint64_t>(a + 0x10) < load<uint64_t>(b + 0x10);
+            });
+        }
+        atexit(FORMAT_LAYOUTS_DTOR, FORMAT_LAYOUTS);
+    }
+
+    // bg::Archive's default allocator and deleter
+    static void archive() {
+        staticFunction(load<uint32_t>(ARCHIVE_ALLOCATOR_GOT), VT_ALLOCATOR_FN_GOT, ARCHIVE_ALLOCATE,
+                       ALLOCATOR_FN_DTOR_GOT);
+        staticFunction(load<uint32_t>(ARCHIVE_DELETER_GOT), VT_DELETER_FN_GOT, ARCHIVE_FREE, DELETER_FN_DTOR_GOT);
+    }
 };
 RW_FUNCTION(0x45344C, "Avatar.cpp static constructor (sub_45344C)", StaticConstructors::avatar);
 RW_FUNCTION(0x453DD4, "StageActorManager.cpp static constructor (sub_453DD4)", StaticConstructors::stageActorManager);
 RW_FUNCTION(0x45355C, "snow particle settings static constructor (sub_45355C)", StaticConstructors::snow);
 RW_FUNCTION(0x454160, "MasterDataManager.cpp static constructor (sub_454160)", StaticConstructors::masterTables);
+RW_FUNCTION(0x453280, "bg::MemoryStream static constructor (sub_453280)", StaticConstructors::memoryStream);
+RW_FUNCTION(0x453324, "RemoteNotification.cpp static constructor (sub_453324)", StaticConstructors::remoteNotification);
+RW_FUNCTION(0x453374, "audio sources static constructor (sub_453374)", StaticConstructors::audio);
+RW_FUNCTION(0x4533F8, "audio names static constructor (sub_4533F8)", StaticConstructors::audioNames);
+RW_FUNCTION(0x453B04, "PauseState.cpp static constructor (sub_453B04)", StaticConstructors::pauseState);
+RW_FUNCTION(0x453B7C, "AvatarActor.cpp static constructor (sub_453B7C)", StaticConstructors::avatarActor);
+RW_FUNCTION(0x453C6C, "direction table static constructor (sub_453C6C)", StaticConstructors::directions);
+RW_FUNCTION(0x453EA4, "shape tables static constructor (sub_453EA4)", StaticConstructors::shapes);
+RW_FUNCTION(0x457A00, "bg pixel formats static constructor (sub_457A00)", StaticConstructors::pixelFormats);
+RW_FUNCTION(0x457E40, "bg::Archive static constructor (sub_457E40)", StaticConstructors::archive);
