@@ -15,6 +15,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <string>
+#include <stdexcept>
 #include <map>
 #include <unordered_map>
 #include <mutex>
@@ -155,7 +156,7 @@ uint64_t call64(uint32_t fn, std::initializer_list<uint32_t> args) {
 // 64M stores (1 GB of address space per verifying thread; only the pages a run touches get memory). A run that
 // fills it skips its later stores and is void, so it must be rare: constructing a singleton (big zero-filled
 // tables) took more than the 1M of the first version.
-static constexpr uint32_t LOG_CAP = 1u << 26;
+static constexpr uint32_t LOG_CAP = 1u << 27;   // 128M stores (2 GB): AvatarInfoDialog::createLayout makes ~60M
 static constexpr uint32_t STACK_WINDOW = 1u << 20;         // callee frames live in [sp - 1 MB, sp)
 
 struct Regs {
@@ -172,18 +173,34 @@ static void restore(CPU *c, const Regs &s) {
     c->n = s.n; c->z = s.z; c->c = s.c; c->v = s.v;
 }
 
-// Final bytes of every logged store outside the callee stack frames: address -> byte.
-static std::map<uint32_t, uint8_t> stored(const CPU *c, uint32_t sp) {
-    std::map<uint32_t, uint8_t> out;
+// Final bytes of every logged store outside the callee stack frames: address -> byte. A sorted vector (8 bytes a
+// byte; a std::map took ~40 and big shadow runs - textures - ran out of memory) with the map lookups used here.
+struct ByteMap {
+    std::vector<std::pair<uint32_t, uint8_t>> v;
+    using const_iterator = std::vector<std::pair<uint32_t, uint8_t>>::const_iterator;
+    const_iterator begin() const { return v.begin(); }
+    const_iterator end() const { return v.end(); }
+    size_t size() const { return v.size(); }
+    const_iterator find(uint32_t a) const {
+        auto it = std::lower_bound(v.begin(), v.end(), a, [](const auto &x, uint32_t k) { return x.first < k; });
+        return it != v.end() && it->first == a ? it : v.end();
+    }
+    size_t count(uint32_t a) const { return find(a) != v.end() ? 1 : 0; }
+};
+static ByteMap stored(const CPU *c, uint32_t sp) {
+    ByteMap out;
     uint32_t n = c->wn < c->wcap ? c->wn : c->wcap;
     for (uint32_t k = 0; k < n; k++) {
         const WLog &w = c->wlog[k];
         for (uint32_t b = 0; b < w.size; b++) {
             uint32_t a = w.addr + b;
             if (a < sp && sp - a <= STACK_WINDOW) continue;
-            out[a] = c->mem[a];
+            out.v.emplace_back(a, c->mem[a]);      // the final value (duplicates are equal)
         }
     }
+    std::sort(out.v.begin(), out.v.end(), [](const auto &x, const auto &y) { return x.first < y.first; });
+    out.v.erase(std::unique(out.v.begin(), out.v.end(), [](const auto &x, const auto &y) { return x.first == y.first; }),
+                out.v.end());
     return out;
 }
 
@@ -369,14 +386,33 @@ static void effect_enter(CPU *c, int i) {
         H->shadow(6);
         phase = Phase::Record;
         uint32_t n = c->wn < c->wcap ? c->wn : c->wcap;
-        std::map<uint32_t, uint8_t> bytes;
-        for (uint32_t k = w0; k < n; k++)
-            for (uint32_t b = 0; b < c->wlog[k].size; b++) {
-                uint32_t a = c->wlog[k].addr + b;
-                if (a < rec.sp && rec.sp - a <= STACK_WINDOW) continue;     // the effect's own (dead) frames
-                bytes[a] = c->mem[a];
+        size_t bytes = 0;
+        for (uint32_t k = w0; k < n; k++) bytes += c->wlog[k].size;
+        if (n - w0 > (1u << 24) || bytes > (size_t(1) << 25)) {
+            // a huge effect (textures, files): recording its stores would not fit in memory - the shadow run is
+            // kept as the real call, as for a handoff
+            effect_handoff = true;
+        } else {
+            // the final value of every byte it stored (sorted, one per address)
+            try {
+                rec.stores.reserve(bytes);
+                for (uint32_t k = w0; k < n; k++)
+                    for (uint32_t b = 0; b < c->wlog[k].size; b++) {
+                        uint32_t a = c->wlog[k].addr + b;
+                        if (a < rec.sp && rec.sp - a <= STACK_WINDOW) continue;     // the effect's own (dead) frames
+                        rec.stores.emplace_back(a, c->mem[a]);
+                    }
+                std::sort(rec.stores.begin(), rec.stores.end(),
+                          [](const auto &x, const auto &y) { return x.first < y.first; });
+                rec.stores.erase(std::unique(rec.stores.begin(), rec.stores.end(),
+                                             [](const auto &x, const auto &y) { return x.first == y.first; }),
+                                 rec.stores.end());
+            } catch (const std::exception &) {
+                // out of memory for the record: as a huge effect
+                std::vector<std::pair<uint32_t, uint8_t>>().swap(rec.stores);
+                effect_handoff = true;
             }
-        rec.stores.assign(bytes.begin(), bytes.end());
+        }
         rec.ret0 = c->r[0];
         rec.ret1 = c->r[1];
         effect_calls.push_back(std::move(rec));
@@ -477,12 +513,19 @@ static void verify(CPU *c, int i) {
     lifted_run = true;
     where_fn = e.name; where_side = "lifted";
     nested.clear();
-    run_lifted(c, i);
+    try {
+        run_lifted(c, i);
+    } catch (const std::exception &x) {
+        logf("RW EXCEPTION %s @%08X in the lifted run (%u stores, %zu effects): %s", e.name, e.addr, c->wn,
+             effect_calls.size(), x.what());
+        throw;
+    }
     lifted_run = false;
     phase = Phase::Off;
     const Regs out_l = save(c);
     const uint32_t pc_l = c->pc;
-    const bool full_l = c->wfull != 0;
+    // a lifted run over half the log is too big to compare (the byte maps would not fit in memory): the real call
+    const bool full_l = c->wfull != 0 || c->wn > LOG_CAP / 2;
     if (H->shadow(4) || full_l || effect_handoff) {
         // it called OpenGL ES, handed work to another thread, or it filled the store log (logging stopped, the rest ran for real): either way
         // this run cannot be undone or replayed, so it is the real call
@@ -501,17 +544,35 @@ static void verify(CPU *c, int i) {
         c->wn = 0;
         return;
     }
-    auto mem_l = stored(c, sp);
+    ByteMap mem_l;
     // the lifted run's final bytes, its dead frames included: a mismatch puts these back instead of running the
     // original a second time (a rerun after two undone runs replayed its imports against a different path)
     std::vector<std::pair<uint32_t, uint8_t>> post_l;
-    {
+    try {
+        mem_l = stored(c, sp);
         uint32_t n = c->wn < c->wcap ? c->wn : c->wcap;
+        size_t bytes = 0;
+        for (uint32_t k = 0; k < n; k++) bytes += c->wlog[k].size;
+        post_l.reserve(bytes);
         for (uint32_t k = 0; k < n; k++)
             for (uint32_t b = 0; b < c->wlog[k].size; b++) {
                 uint32_t a = c->wlog[k].addr + b;
                 post_l.emplace_back(a, c->mem[a]);
             }
+    } catch (const std::exception &x) {
+        // out of memory for the comparison: the lifted run stands as the real call
+        logf("RW TOO BIG %s @%08X: %s (%u stores, %zu bytes kept so far); kept as the real call", e.name, e.addr,
+             x.what(), c->wn, post_l.size());
+        st.too_big = true;
+        c->logging = 0;
+        gt_end();
+        st.unverifiable++;
+        where_fn = nullptr;
+        H->shadow(2);
+        c->wlog = old_log;
+        c->wcap = old_cap;
+        c->wn = 0;
+        return;
     }
     const uint32_t heap_l = *reinterpret_cast<const uint32_t *>(c->mem + 0x20000010);
     auto dump_log = [&](const char *tag) {               // KHUX_RW_DUMPLOG: every store of both runs, appended
@@ -576,8 +637,16 @@ static void verify(CPU *c, int i) {
     dump_log("rewrite");
     const Regs out_r = save(c);
     const uint32_t pc_r = c->pc;
-    const bool full_r = c->wfull != 0;
-    auto mem_r = stored(c, sp);
+    ByteMap mem_r;
+    bool oom_r = false;
+    try {
+        mem_r = stored(c, sp);
+    } catch (const std::exception &x) {
+        // out of memory for the rewrite run's byte map: its result stays, as when it fills the log
+        logf("RW TOO BIG %s @%08X (rewrite run): %s (%u stores); its result is kept", e.name, e.addr, x.what(), c->wn);
+        oom_r = true;
+    }
+    const bool full_r = c->wfull != 0 || oom_r;
 
     const char *why = "";
     uint32_t fail_at = 0;                                 // the first byte that failed the comparison (reports)
@@ -592,7 +661,7 @@ static void verify(CPU *c, int i) {
         // the other run, which the undo restored - so compare against the current memory for those)
         // a word both runs stored whole that points into this thread's stack in both is the address of a local
         // (callee frames sit elsewhere in the rewrite): equal when both are stack addresses
-        auto word = [](const std::map<uint32_t, uint8_t> &m, uint32_t a, uint32_t &v) {
+        auto word = [](const ByteMap &m, uint32_t a, uint32_t &v) {
             v = 0;
             for (uint32_t b = 0; b < 4; b++) {
                 auto it = m.find(a + b);
@@ -647,7 +716,7 @@ static void verify(CPU *c, int i) {
     static const bool garbage_check = !getenv("KHUX_RW_GARBAGE") || strcmp(getenv("KHUX_RW_GARBAGE"), "0") != 0;
     if (!same && garbage_check && !full_l && !full_r && effects_ok && !strcmp(why, "memory")) {
         std::vector<uint32_t> fails;                      // every failing byte, by the rules above
-        auto word = [](const std::map<uint32_t, uint8_t> &m, uint32_t a, uint32_t &v) {
+        auto word = [](const ByteMap &m, uint32_t a, uint32_t &v) {
             v = 0;
             for (uint32_t b = 0; b < 4; b++) {
                 auto it = m.find(a + b);
@@ -720,8 +789,12 @@ static void verify(CPU *c, int i) {
         phase = Phase::Off;
         const bool ok2 = !c->wfull && !effect_diverged && effect_pos == effect_calls.size() && !H->shadow(3);
         if (!ok2) garbage_note = "; garbage check: the original diverged on a scribbled stack";
-        if (ok2 && !fails.empty()) {
-            auto mem_l2 = stored(c, sp);
+        ByteMap mem_l2;
+        bool ok3 = ok2;
+        if (ok3) {
+            try { mem_l2 = stored(c, sp); } catch (const std::exception &) { ok3 = false; garbage_note = "; garbage check: out of memory"; }
+        }
+        if (ok3 && !fails.empty()) {
             garbage_ok = true;
             for (uint32_t a : fails) {
                 auto i1 = mem_l.find(a), i2 = mem_l2.find(a);
@@ -749,8 +822,19 @@ static void verify(CPU *c, int i) {
     if (full_r) {
         // the rewrite filled the log: it went on unlogged and cannot be undone, so its result stays
         st.unverifiable++;
-        if (!st.too_big.exchange(true))
+        if (!st.too_big.exchange(true)) {
             logf("RW LOG FULL %s @%08X (rewrite run): its result is kept; not shadowed from now on", e.name, e.addr);
+            // where the stores came from: the most frequent storing pcs, and the lifted run's store count
+            std::unordered_map<uint32_t, uint32_t> pcs;
+            const uint32_t n = c->wn < c->wcap ? c->wn : c->wcap;
+            for (uint32_t k = 0; k < n; k++) pcs[c->wlog[k].old_hi]++;
+            std::vector<std::pair<uint32_t, uint32_t>> top(pcs.begin(), pcs.end());
+            std::sort(top.begin(), top.end(), [](auto &x, auto &y) { return x.second > y.second; });
+            std::string t;
+            char b[48];
+            for (size_t k = 0; k < top.size() && k < 8; k++) { snprintf(b, sizeof b, " %08X x%u", top[k].first, top[k].second); t += b; }
+            logf("    lifted run %zu stores; rewrite run's top store pcs:%s", post_l.size(), t.c_str());
+        }
     } else if (same || garbage_ok) {
         st.verified++;
         std::sort(nested.begin(), nested.end());

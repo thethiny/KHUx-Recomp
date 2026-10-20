@@ -75,3 +75,16 @@
 0076AAC4 StageDirection::cocos_start $_3 __func::operator(): plays a sound through audio::Layer::playSE: the queued SQEX ACTION (AddAction, 0xCE43B4) copies stale stack words (0x005BF300) into the action queue; never read
 006FCA7C SceneRanking::initRankingTitle(): TextData::format of the period dates goes through TextFormat::execute(va_list) (store pc 0x49326C), which copies two variadic words past the six dates passed into its heap argument array: stale stack words in both runs (lifted 9/0, rewrite stack addresses); never read
 00556CB8 ChatScrollView::changeRow: the date text (TextData::format -> TextFormat::execute) takes variadic words past the passed arguments; they are stale stack words (flagged stale on both sides), so the stored text bytes differ with the frame
+0055FEE0 RankingRewardScrollView::changeRow: setIncentiveItem's icon-touch lambda copies the image-path strings' whole 12-byte buffers into its heap block (store pc 0x55E9CC; the __clone at 0x561E82 copies them again, garbage_sites.txt); a short path's bytes after its terminator are stale stack bytes of the frame that built it; never read
+007116D0! SceneRankingReward page update lambda (sub_7116D0): builds the reward rows (the stale image-path bytes of RankingRewardScrollView::changeRow)
+00702404! SceneRankingReward::create: the stale image-path bytes of RankingRewardScrollView::changeRow, and tinyxml2::XMLDocument::Identify (0x92F3FC) storing the address of a stack XMLDocument into its node pool (the rewrite's frames sit at other depths); the parse is over before the call returns and nobody reads them
+00560A08 RankingRewardScrollView::initLayout: calls setIncentiveItem (the stale image-path bytes of RankingRewardScrollView::changeRow)
+0070FDC8! SceneRankingReward::initRankingScrollVew: fills the reward rows (the stale image-path bytes of RankingRewardScrollView::changeRow)
+0070E5DC! SceneRankingReward::init: fills the reward rows (the stale image-path bytes of RankingRewardScrollView::changeRow)
+00520DC4! MemberScrollView::createRow: the lifted MemberScrollView::changeRow builds its rows' touch lambdas on its 0x1D58-byte frame; their captures include words it never sets, copied whole into the heap by the __clone sub_524A00 (memcpy at 0x524A32), and those words hold what earlier calls of the same run left there (a __dynamic_cast vs a Widget::setPosition return address); SafeBuffer::SafeBuffer (0x459F66) stores bytes derived from its own stack address; both differ with the rewrite's frame depths; never read
+006F127C! ScenePartyMember::initMemberLayer load members lambda (sub_6F127C): fills the member rows (the stale capture words and SafeBuffer stack-address bytes of MemberScrollView::createRow)
+006F0FDC! ScenePartyMember::initMemberLayer: fills the member rows (as MemberScrollView::createRow)
+006F16E0! ScenePartyMember::runInAnimation: calls initMemberLayer (as MemberScrollView::createRow)
+006F0B14! ScenePartyMember::init: runs runInAnimation (as MemberScrollView::createRow); Label::recordLetterInfo padding as well (garbage sites)
+006CCD90! SceneAlbum::init: tinyxml2::XMLDocument::Identify (0x92F3FC) stores the address of a stack XMLDocument into its node pool (as SceneRankingReward::create); Label::recordLetterInfo padding as well (garbage sites)
+005AC9FC! SceneAlbum::create: runs init (as SceneAlbum::init)

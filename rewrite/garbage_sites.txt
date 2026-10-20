@@ -6,3 +6,4 @@
 88527C 8853E8 cocos2d::Label::recordLetterInfo: copies a FontLetterDefinition whose padding after its bool is never set
 887210 887360 std::vector<Label::LetterInfo>::__swap_out_circular_buffer: moves LetterInfo records with that unset padding
 87A7B4 87ADC8 cocos2d::FontAtlas::prepareLetterDefinitions: stores FontLetterDefinition records built on the stack, padding unset
+561DD4 561EA4 RankingRewardScrollView icon touch lambda __clone: copies a short image-path string's whole 12-byte buffer; the bytes after its terminator are stale stack bytes of the frame that built the path

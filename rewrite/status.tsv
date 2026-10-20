@@ -1,4 +1,6 @@
 addr	name	calls	verified	mismatches	unverifiable
+0044F6D8	FreeType TT_Hint_Glyph (sub_44F6D8)	88	66	0	0
+0044FF84	FreeType tt_size_run_prep (sub_44FF84)	7	5	0	0
 0045344C	Avatar.cpp static constructor (sub_45344C)	13	12	0	0
 0045355C	snow particle settings static constructor (sub_45355C)	13	12	0	0
 00453DD4	StageActorManager.cpp static constructor (sub_453DD4)	13	12	0	0
@@ -59,6 +61,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0045D8D0	SceneUtil::settingTitleLabel	1657	35	0	8
 0045DDE0	SceneUtil::openContinuPopup	15	0	0	2
 00461DC4	SceneUtil::getMoneyStr	773	328	0	0
+00461FCC	std::operator+(const char*, const std::string&) (sub_461FCC)	31	24	0	0
 004659F0	SceneUtil::setStatusChangeColor	1685	0	0	0
 00465C84	SceneUtil::updateMixCircle(Widget*, Widget*, Widget*, shared_ptr<UserMedalData>, bool, int, bool, bool, bool, bool, bool)	572	42	0	0
 0046695C	SceneUtil::showSupportMedalEffect	209	0	0	0
@@ -80,6 +83,9 @@ addr	name	calls	verified	mismatches	unverifiable
 0046BE74	SceneUtil::changePartnerPanel(Widget*, int, int)	572	42	0	0
 0046C4C4	SceneUtil::setBossTypeImage	13239	3253	0	0
 0046C71C	SceneUtil::setItemImageData(string&, string&, int, int, bool)	287	33	0	0
+0046D19C	SceneUtil::openOptionPopup	1	1	0	0
+0046E6C8	SceneUtil::openOptionPopup ON label (sub_46E6C8)	6	1	0	0
+0046E7D0	SceneUtil::openOptionPopup OFF label (sub_46E7D0)	6	1	0	0
 0046E8D8	SceneUtil::settingTitleLabel(Node*, string, string)	522	28	0	0
 0046ED98	SceneUtil::createUserTitleImagePath	5	0	0	0
 0046EE0C	SceneUtil::calcLuxGaugePer	388	86	0	0
@@ -96,9 +102,11 @@ addr	name	calls	verified	mismatches	unverifiable
 00472BA0	SceneUtil::updateTutorialPhase	41	39	0	0
 00472D74	SceneUtil::dispTutorialCheck	1606	189	0	0
 004733C4	SceneUtil::isBenefits	74	35	0	0
+00473CAC	SceneUtil count label helper (sub_473CAC)	6	1	0	0
 00473DF4	SceneUtil::callUpdateLockMedalAPI	464	396	0	0
 004741BC	SceneUtil::getCampaignPoint	269	0	0	0
 004744F4	SceneUtil (sub_4744F4): a text's on / off look	238	0	0	0
+00474700	SceneUtil::openWebViewInfoPopup(Layer*, ...)	3	2	0	0
 00478928	BaseScrollView<int>::setItemIDs(const vector<int>&)	5	0	0	1
 00478BA8	SceneUtil::addBackKeyCallback	82	12	0	0
 0047AAB4	cocos2d::Node::setZOrder	3515298	56144	0	0
@@ -142,6 +150,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00487512	sub_487512	127	2	0	0
 00487D40	nullsub_51	1017	59	0	0
 00487D4A	sub_487D4A	1017	59	0	0
+0048A634	SceneMedalList::create	1	1	0	0
 0048A714	std::__function::__func<cocos2d::Layer * (*)(void),std::allocator<cocos2d::Layer * (*)(void)>,cocos2d::Layer * ()(void)>::__clone	1319	195	0	0
 0048A734	std::__function::__func<cocos2d::Layer * (*)(void),std::allocator<cocos2d::Layer * (*)(void)>,cocos2d::Layer * ()(void)>::destroy	1656	431	0	0
 0048A73E	std::__function::__func<cocos2d::Layer * (*)(void),std::allocator<cocos2d::Layer * (*)(void)>,cocos2d::Layer * ()(void)>::operator()	379	44	0	58
@@ -225,6 +234,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00492A4C	SpeechDisp::runSpeechSet	4	0	0	0
 00492C5C	TextFormat::execute(const char*, ...)	156	6	0	0
 00492CAC	TextFormat::execute(const char*, va_list)	69	6	0	0
+00493E04	TextFormat element vector ~__vector_base (sub_493E04)	23	20	0	0
 004948EC	shader::set_guilt_shader	71	0	0	0
 00494B14	shader::set_concentration_shader	71	0	0	0
 00494CC8	shader::set_guilt_shader_param	284	0	0	24
@@ -741,6 +751,18 @@ addr	name	calls	verified	mismatches	unverifiable
 004FB934	MagicStoneScrollView::setProductInfoMap(const unordered_map<string, ProductInfo>*)	6	4	0	0
 004FC968	BaseScrollView<unsigned long long>::init()	63	0	0	2
 004FD230	BaseScrollView<unsigned long long>::setItemIDs(const vector<ull>&)	63	0	0	2
+00500EE4	MaterialScrollView::~MaterialScrollView	8	4	0	0
+00501044	MaterialScrollView::create	2	1	0	0
+00501098	MaterialScrollView::MaterialScrollView	7	1	0	0
+005011FC	MaterialScrollView::init	11	1	0	0
+00501330	MaterialScrollView::getLayoutPanel	99	23	0	0
+005013F8	MaterialScrollView::createRow	77	23	0	0
+00501450	MaterialScrollView::changeRow	460	329	0	0
+00501AD0	MaterialScrollView::loadTexture	627	287	0	0
+00501BB0	MaterialScrollView::registItemTouchEvent	161	47	0	0
+00501CF8	MaterialScrollView::registItemTouchEvent $_2 std::function::operator=(&&) (sub_501CF8)	230	47	0	0
+00501E5C	MaterialScrollView::registItemTouchEvent $_2 call operator (sub_501E5C)	32	24	0	0
+00502090	MaterialScrollView::registItemTouchEvent $_1 __func::operator() (sub_502090)	192	192	0	0
 0050241C	SphereScrollView::~SphereScrollView	2	0	0	1
 005024CE	SphereScrollView::~SphereScrollView [deleting destructor]	1	0	0	1
 005024DC	SphereScrollView::loadTextureIncentive	91	77	0	14
@@ -793,6 +815,15 @@ addr	name	calls	verified	mismatches	unverifiable
 00509F40	LoadingIndicator::init::$_0::__clone(dst)	74	0	0	0
 00509F5C	LoadingIndicator::init::$_0::destroy	74	0	0	0
 00509F66	LoadingIndicator::init::$_0::operator()	53	53	0	0
+0050B694	AlbumScrollView::~AlbumScrollView	10	5	0	0
+0050B7B8	AlbumScrollView::create	8	2	0	0
+0050B80C	AlbumScrollView::AlbumScrollView	5	2	0	0
+0050B968	AlbumScrollView::init	10	2	0	0
+0050BAA4	AlbumScrollView::getLayoutPanel	205	82	0	0
+0050BB6C	AlbumScrollView::createRow	328	82	0	0
+0050BBC4	AlbumScrollView::changeRow	2746	2172	0	0
+0050C048	AlbumScrollView::registItemTouchEvent	664	166	0	0
+0050C1A0	AlbumScrollView::registItemTouchEvent $_2 std::function::operator=(&&) (sub_50C1A0)	830	166	0	0
 0050CA88	PresentBoxScrollView::~PresentBoxScrollView	19	6	0	1
 0050CBE0	PresentBoxScrollView::~PresentBoxScrollView [deleting destructor]	12	0	0	12
 0050CC14	PresentBoxScrollView::create	2	2	0	0
@@ -844,14 +875,19 @@ addr	name	calls	verified	mismatches	unverifiable
 005177A0	BaseEndlessrollView::degree2radian	2272	2254	0	0
 005177CC	BaseEndlessrollView::get_offset_move	15072	14794	0	0
 005178E8	BaseEndlessrollView::setSub	277	263	0	12
+00517AD8	BaseEndlessrollView::updateAddMove	1216	1073	0	0
+00517B64	BaseEndlessrollView::updateMoveMaxCheck	558	389	0	0
 00517F68	BaseEndlessrollView::init $_11 __func::__clone(__base*)	1	0	0	0
 00517F88	BaseEndlessrollView::init $_11 __func::destroy	1	0	0	0
 00518198	BaseEndlessrollView::init $_10 __func::__clone(__base*)	1	0	0	0
 005181B8	BaseEndlessrollView::init $_10 __func::destroy	1	0	0	0
+005181C4	BaseEndlessrollView touch ended lambda (sub_5181C4)	24	24	0	0
 005183C8	BaseEndlessrollView::init $_9 __func::__clone(__base*)	1	0	0	0
 005183E8	BaseEndlessrollView::init $_9 __func::destroy	1	0	0	0
+005183F4	BaseEndlessrollView touch moved lambda (sub_5183F4)	158	158	0	0
 00518688	BaseEndlessrollView::init $_8 __func::__clone(__base*)	1	0	0	0
 005186A8	BaseEndlessrollView::init $_8 __func::destroy	1	0	0	0
+005186B4	BaseEndlessrollView touch began lambda (sub_5186B4)	24	24	0	0
 005187FC	BaseEndlessrollView::init $_7 __func::__clone(__base*)	4	0	0	0
 0051881C	BaseEndlessrollView::init $_7 __func::destroy	4	0	0	0
 005188A0	BaseEndlessrollView::init $_6 __func::__clone(__base*)	4	0	0	0
@@ -859,8 +895,10 @@ addr	name	calls	verified	mismatches	unverifiable
 005189EC	BaseEndlessrollView::init $_5 __func::__clone(__base*)	4	0	0	0
 00518A0C	BaseEndlessrollView::init $_5 __func::destroy	4	0	0	0
 00518B30	BaseEndlessrollView::init $_4 __func::__clone(__base*)	8	4	0	0
+00518B64	BaseEndlessrollView row touch began lambda (sub_518B64)	96	96	0	0
 00518D94	BaseEndlessrollView::init $_3 __func::__clone(__base*)	2	1	0	0
 00518EF0	BaseEndlessrollView::init $_2 __func::__clone(__base*)	2	1	0	0
+00518F20	BaseEndlessrollView row touch ended lambda (sub_518F20)	13	13	0	0
 005196EC	MyRecordScrollView::~MyRecordScrollView	5	0	0	0
 005197CC	MyRecordScrollView::~MyRecordScrollView [deleting destructor]	2	0	0	0
 00519800	MyRecordScrollView::create	2	0	0	2
@@ -872,6 +910,15 @@ addr	name	calls	verified	mismatches	unverifiable
 0051B9BC	MyRecordScrollView::init::$_1 destroy()	15	0	0	0
 0051BA38	MyRecordScrollView::init::$_0 __clone(__base*)	10	0	0	0
 0051BA58	MyRecordScrollView::init::$_0 destroy()	15	0	0	0
+00520710	MemberScrollView::~MemberScrollView	2	1	0	0
+005208F8	MemberScrollView::create	11	1	0	0
+00520954	MemberScrollView::MemberScrollView	8	1	0	0
+00520AF4	MemberScrollView::init	12	1	0	0
+00520CF8	MemberScrollView::getLayoutPanel	12	1	0	0
+00520DC4	MemberScrollView::createRow	14	0	1	0
+00523378	MemberScrollView::registItemTouchEvent	79	6	0	0
+00524A00	MemberScrollView row lambda (0x130 captures) __func::__clone() (sub_524A00)	2	1	0	0
+00525034	MemberScrollView row lambda (0x138 captures) __func::__clone() (sub_525034)	2	1	0	0
 00525638	BaseSlideView::~BaseSlideView	140	38	0	0
 0052587C	BaseSlideView::~BaseSlideView [deleting destructor]	106	38	0	9
 005258B0	BaseSlideView::init	103	0	0	0
@@ -965,6 +1012,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00532A9C	AvatarInfoDialog::AvatarInfoDialog	5	5	0	0
 00532E3C	AvatarInfoDialog::init	7	5	0	0
 00532E94	AvatarInfoDialog::open	5	0	0	5
+005332EC	AvatarInfoDialog::createLayout	3	1	0	2
 00534E78	BaseSlideView::create	103	0	0	0
 00534F50	AvatarInfoDialog::close	5	5	0	0
 0053C6CC	AvatarInfoDialog::setTouchEnabledUnderUIButtons	5	5	0	0
@@ -986,6 +1034,8 @@ addr	name	calls	verified	mismatches	unverifiable
 0054B318	AvatarInfoDialog::createLayout::$_7 destroy()	4	4	0	0
 0054BC28	AvatarInfoDialog::createLayout::$_5 __clone()	2	2	0	0
 0054BCB6	AvatarInfoDialog::createLayout::$_5 destroy_deallocate()	4	4	0	0
+0054C000	SceneAvatarEdit lambda __func::__clone() (sub_54C000)	4	1	0	0
+0054C3F0	SceneAvatarEdit lambda __func::__clone() (sub_54C3F0)	4	1	0	0
 0054CA3C	AvatarInfoDialog::createLayout::$_2 __clone()	2	2	0	0
 0054CACA	AvatarInfoDialog::createLayout::$_2 destroy_deallocate()	4	4	0	0
 0054F260	RankingScrollView::~RankingScrollView()	1	0	0	0
@@ -1009,8 +1059,22 @@ addr	name	calls	verified	mismatches	unverifiable
 0055C6C8	ChatEditBoxMessageSend::~ChatEditBoxMessageSend [deleting destructor]	2	2	0	0
 0055C6E8	ChatEditBoxMessageSend::create	8	8	0	0
 0055DAE4	BaseStageScrollView::BaseStageScrollView()	93	0	0	0
+0055DD24	RankingRewardScrollView::~RankingRewardScrollView	12	2	0	0
+0055DEA8	RankingRewardScrollView::create	21	3	0	0
+0055DF04	RankingRewardScrollView::RankingRewardScrollView	12	3	0	0
+0055E070	RankingRewardScrollView::init	24	3	0	0
+0055E294	RankingRewardScrollView::createIncentivePanel	24	3	0	0
+0055E3AC	RankingRewardScrollView::getLayoutPanel	96	12	0	0
+0055E478	RankingRewardScrollView::createRow	84	12	0	0
+0055E4D0	RankingRewardScrollView::setIncentiveItem	2395	1	0	0
+0055FEE0	RankingRewardScrollView::changeRow	470	7	31	0
+00560888	RankingRewardScrollView::updateSelectItems	479	1	0	0
+00560A08	RankingRewardScrollView::initLayout	687	1	16	0
+005611EC	RankingRewardScrollView::registItemTouchEvent	189	27	0	0
 00561CE4	RankingRewardScrollView::setIncentiveItem::$_1 __clone(__base*)	54	9	0	0
 00561D04	RankingRewardScrollView::setIncentiveItem::$_1 destroy()	48	18	0	0
+00561DD4	RankingRewardScrollView icon touch lambda __func::__clone() (sub_561DD4)	2900	392	0	0
+00561F7C	RankingRewardScrollView icon touch lambda __func::destroy_deallocate() (sub_561F7C)	4790	3	0	0
 005682A0	FlashMovieView::create	7	1	0	0
 0056832C	FlashMovieView::init	7	1	0	0
 005687D0	FlashMovieView::~FlashMovieView	10	2	0	0
@@ -1362,6 +1426,19 @@ addr	name	calls	verified	mismatches	unverifiable
 00599930	sub_599930	286	28	0	0
 0059994C	nullsub_86	572	28	0	0
 00599C30	CampaignAnimationView::~CampaignAnimationView (deleting)	67	7	0	0
+00599C68	MedalListScrollView::~MedalListScrollView	2	1	0	0
+00599F24	MedalListScrollView::create	2	1	0	0
+00599F78	MedalListScrollView::MedalListScrollView	1	1	0	0
+0059A1E8	MedalListScrollView::init	2	1	0	0
+0059A244	MedalListScrollView::update	2714	2714	0	0
+0059A2F8	MedalListScrollView::getLayoutPanel	41	1	0	0
+0059A608	MedalListScrollView::createRow	82	1	0	0
+0059A660	MedalListScrollView::changeRow	916	259	0	0
+0059A924	MedalListScrollView::registItemTouchEvent	166	1	0	0
+0059AA7C	MedalListScrollView::registItemTouchEvent $_2 std::function::operator=(&&) (sub_59AA7C)	166	1	0	0
+0059AB18	MedalListScrollView::setMedalIDs	2	1	0	0
+0059AD3C	MedalListScrollView::isDisableMedal	155	1	0	0
+0059B8C8	MedalListScrollView::registItemTouchEvent $_0 __func::__clone(__base*) (sub_59B8C8)	166	1	0	0
 0059BADC	BaseStageScrollView::~BaseStageScrollView() [base]	68	0	0	0
 0059BD94	BaseStageScrollView::init	93	0	0	0
 0059BF24	std::function<void(Touch*,Event*)>::operator=(BaseStageScrollView::init::$_2&&)	162	0	0	0
@@ -1396,12 +1473,20 @@ addr	name	calls	verified	mismatches	unverifiable
 0059E8E0	OtherMenuDialog::open	2	0	0	2
 0059F710	OtherMenuDialog::setButtonLabel (sub_59F710)	65	29	0	10
 0059FDB8	OtherMenuDialog::close	5	5	0	0
+0059FEAC	OtherMenuDialog::openLegalPopup	1	1	0	0
+005A058C	OtherMenuDialog::openSerialCodePopup	1	1	0	0
+005A6688	OtherMenuDialog serial popup result __func::operator()(bool) (sub_5A6688)	1	1	0	0
+005A69A8	OtherMenuDialog serial popup closed __func::operator() (sub_5A69A8)	1	1	0	0
+005A76C4	OtherMenuDialog legal popup result __func::operator()(bool) (sub_5A76C4)	1	1	0	0
+005A79D4	OtherMenuDialog legal popup closed __func::operator() (sub_5A79D4)	1	1	0	0
 005A80BC	OtherMenuDialog::close $_22 __func::__clone(__base*)	20	5	0	0
 005A80DC	OtherMenuDialog::close $_22 __func::destroy	25	10	0	0
+005A80E6	SceneSelectUnion lambda: remove two children (sub_5A80E6)	2	2	0	0
 005AA750	OtherMenuDialog::open $_17 __func::__clone(__base*)	4	2	0	0
 005AA770	OtherMenuDialog::open $_17 __func::destroy	6	4	0	0
 005AA7EC	OtherMenuDialog::open $_16 __func::__clone(__base*)	2	0	0	0
 005AA80C	OtherMenuDialog::open $_16 __func::destroy	4	2	0	0
+005AAB40	side menu scene change (sub_5AAB40)	5	1	0	0
 005AB0E0	OtherMenuDialog::open $_14 __func::__clone(__base*)	4	0	0	0
 005AB100	OtherMenuDialog::open $_14 __func::destroy	6	2	0	0
 005AB184	OtherMenuDialog::open $_13 __func::__clone(__base*)	4	0	0	0
@@ -1422,14 +1507,20 @@ addr	name	calls	verified	mismatches	unverifiable
 005AC28C	OtherMenuDialog::open $_6 __func::destroy	6	2	0	0
 005AC690	OtherMenuDialog::open $_5 __func::__clone(__base*)	4	0	0	0
 005AC6B4	OtherMenuDialog::open $_5 __func::destroy	6	2	0	0
+005AC6C0	side menu party button lambda __func::operator() (sub_5AC6C0)	4	3	0	1
 005AC868	OtherMenuDialog::open $_4 __func::__clone(__base*)	4	0	0	0
 005AC888	OtherMenuDialog::open $_4 __func::destroy	6	2	0	0
+005AC894	side menu album button lambda __func::operator() (sub_5AC894)	16	12	0	4
+005AC9FC	SceneAlbum::create	2	1	1	0
 005ACAB4	OtherMenuDialog::open $_3 __func::__clone(__base*)	4	0	0	0
 005ACAD0	OtherMenuDialog::open $_3 __func::destroy	6	2	0	0
+005ACADC	SceneAlbum avatar button touch lambda (sub_5ACADC)	8	6	0	2
 005ACC30	OtherMenuDialog::open $_3 UlvE_ __func::__clone(__base*)	6	2	0	0
 005ACC4C	OtherMenuDialog::open $_3 UlvE_ __func::destroy	8	4	0	0
 005ACCC4	OtherMenuDialog::open $_1 __func::__clone(__base*)	4	0	0	0
 005ACCE0	OtherMenuDialog::open $_1 __func::destroy	6	2	0	0
+005ACCEC	side menu notices button lambda __func::operator() (sub_5ACCEC)	8	6	0	2
+005ACE24	side menu notices list callback __func::operator()(bool) (sub_5ACE24)	1	1	0	0
 005AD174	DrawScrollView::~DrawScrollView	20	6	0	1
 005AD360	DrawScrollView::cancelShopHandle	21	7	0	0
 005AD3E8	DrawScrollView::~DrawScrollView [deleting destructor]	13	0	0	13
@@ -1445,7 +1536,17 @@ addr	name	calls	verified	mismatches	unverifiable
 005AEF88	DrawScrollView::registItemTouchEvent	88	48	0	0
 005AF210	DrawScrollView::registItemTouchEvent $_2 assign (sub_5AF210)	176	48	0	0
 005AF284	DrawScrollView::updateScroll	6566	3129	0	2
+005AF5AC	DrawScrollView::openRaisePopup	2	2	0	0
+005AF978	DrawScrollView::hasMagicStone	2	2	0	0
+005AFA30	DrawScrollView::openCheckRaisePopup	4	2	0	0
 005B1430	DrawScrollView::openCheckbondsPopup $_20 __func::__clone()	6	0	0	0
+005B1E5C	DrawScrollView::openCheckRaisePopup close lambda (sub_5B1E5C)	2	2	0	0
+005B2030	DrawScrollView popup closed lambda __func::__clone() (sub_5B2030)	4	2	0	0
+005B20F4	DrawScrollView popup closed lambda __func::destroy_deallocate() (sub_5B20F4)	6	4	0	0
+005B2120	DrawScrollView popup closed lambda __func::operator() (sub_5B2120)	2	1	0	1
+005B2224	DrawScrollView popup result lambda __func::__clone() (sub_5B2224)	6	4	0	0
+005B22E0	DrawScrollView popup result lambda __func::destroy_deallocate() (sub_5B22E0)	8	6	0	0
+005B230C	DrawScrollView popup result lambda __func::operator()(bool) (sub_5B230C)	2	2	0	0
 005B42D4	RaidSubdueScrollView::~RaidSubdueScrollView()	1	0	0	0
 005B43A0	RaidSubdueScrollView::~RaidSubdueScrollView() (deleting)	1	0	0	0
 005B43D4	RaidSubdueScrollView::setDrawFrame(Widget*, int)	8	0	0	0
@@ -2551,6 +2652,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00637EC0	SceneTitle::create	68	0	0	1
 00637F8C	SceneManager::init::$_5 __clone(__base*)	180	0	0	0
 00637FAC	SceneManager::init::$_5 destroy()	180	0	0	0
+00637FB8	SceneManager back key lambda (sub_637FB8)	2	2	0	0
 006380CC	SceneManager::init::$_4 __clone(__base*)	120	0	0	0
 006380EC	SceneManager::init::$_4 destroy()	120	0	0	0
 00638168	SceneManager::init::$_3 __clone(__base*)	120	0	0	0
@@ -2697,10 +2799,19 @@ addr	name	calls	verified	mismatches	unverifiable
 006530AC	ScenePartyTop::runInJoinLayout	19	3	0	1
 006555C0	ScenePartyTop::runOutAnimationMain	14	7	0	0
 006556B0	ScenePartyTop::runOutJoinLayout	7	7	0	0
+00655C40	ScenePartyTop::openPopupPartyInvite	1	0	0	1
 00655CDC	ScenePartyTop::backScene	7	7	0	0
 00655DB4	ScenePartyTop::backScene $_25 __func::__clone(__base*)	10	1	0	0
 00655DD0	ScenePartyTop::backScene $_25 __func::destroy	11	2	0	0
 00655DDC	ScenePartyTop::backScene $_ __func::operator() (sub_655DDC)	9	0	0	9
+00655F84	ScenePartyTop::openPopupPartyInvite callback __func::operator() (sub_655F84)	1	1	0	0
+00656AF6	ScenePartyTop invite popup result __func::operator()(bool) (sub_656AF6)	1	1	0	0
+00656B44	ScenePartyTop invite popup close (sub_656B44)	1	1	0	0
+00656C82	ScenePartyTop invite popup closed __func::operator() (sub_656C82)	1	1	0	0
+00656E7C	ScenePartyTop invite copy button lambda __func::__clone() (sub_656E7C)	2	1	0	0
+00657634	ScenePartyManagement::create	1	1	0	0
+00657A80	ScenePartyRequest::create	1	1	0	0
+00657AD4	ScenePartyRequest::ScenePartyRequest	8	1	0	0
 006580F0	ScenePartyTop::runInJoinLayout $_19 __func::__clone(__base*)	14	0	0	0
 00658110	ScenePartyTop::runInJoinLayout $_19 __func::destroy	21	0	0	0
 00658740	ScenePartyTop::runInJoinLayout $_16 __func::__clone(__base*)	7	0	0	0
@@ -2709,10 +2820,18 @@ addr	name	calls	verified	mismatches	unverifiable
 006590C0	ScenePartyTop::runInJoinLayout $_15 __func::destroy	21	0	0	0
 00659144	ScenePartyTop::runInJoinLayout $_14 __func::__clone(__base*)	14	0	0	0
 00659164	ScenePartyTop::runInJoinLayout $_14 __func::destroy	21	0	0	0
+00659170	ScenePartyTop ranking button lambda __func::operator() (sub_659170)	4	4	0	0
+006592A0	ScenePartyTop ranking run-out lambda __func::operator() (sub_6592A0)	1	0	0	1
 006594B8	ScenePartyTop::runInJoinLayout $_13 __func::__clone(__base*)	14	0	0	0
 006594DC	ScenePartyTop::runInJoinLayout $_13 __func::destroy	21	0	0	0
+006594E8	ScenePartyTop management button lambda __func::operator() (sub_6594E8)	4	4	0	0
+00659630	ScenePartyTop management run-out lambda __func::operator() (sub_659630)	1	0	0	1
 0065998C	ScenePartyTop::runInJoinLayout $_12 __func::__clone(__base*)	14	0	0	0
 006599AC	ScenePartyTop::runInJoinLayout $_12 __func::destroy	21	0	0	0
+006599B8	ScenePartyTop member-check button lambda __func::operator() (sub_6599B8)	4	4	0	0
+00659AE8	ScenePartyTop member-check run-out lambda __func::operator() (sub_659AE8)	1	0	0	1
+00659C60	ScenePartyTop member list callback __func::operator() (sub_659C60)	1	1	0	0
+00659E6C	ScenePartyMember::create	1	0	0	1
 00659FB8	ScenePartyTop::runInJoinLayout $_11 __func::__clone(__base*)	14	0	0	0
 00659FD8	ScenePartyTop::runInJoinLayout $_11 __func::destroy	21	0	0	0
 0065A4B4	ScenePartyTop::init $_8 __func::__clone(__base*)	12	0	0	0
@@ -2732,14 +2851,18 @@ addr	name	calls	verified	mismatches	unverifiable
 0065ACF0	ScenePartyTop::callPartyTopAPI chain 2 __func::operator() (sub_65ACF0)	9	0	0	9
 0065AEB8	ScenePartyTop::callPartyTopAPI chain 3 __func::__clone() (sub_65AEB8)	18	9	0	0
 0065AF5C	ScenePartyTop::callPartyTopAPI chain 3 __func::destroy_deallocate (sub_65AF5C)	27	18	0	0
+0065E1F8	SceneEvolveMedal::create	2	2	0	0
 0065FFD8	SceneDeckEdit::~SceneDeckEdit	20	6	0	1
 00660138	SceneDeckEdit::~SceneDeckEdit [deleting destructor]	13	0	0	13
 0066016C	SceneDeckEdit::init	19	2	0	3
 00661658	SceneDeckEdit::initKeyBladePanel	14	2	0	1
 00661C6C	SceneDeckEdit::initMedalSelectPanel	14	2	0	1
+00662E2C	SceneDeckEdit::openKeyBladePanel	2	2	0	0
 0066321C	SceneDeckEdit::checkPrepareFinishScene	8	8	0	0
 0066360C	SceneDeckEdit::runInAnimation	20	4	0	0
 00663A28	SceneDeckEdit::runOutAnimationMain	8	8	0	0
+00663DD8	SceneDeckEdit::setKeybladeArrowVisible	14	6	0	0
+00663ED8	SceneDeckEdit::updateKeyBladePanel	4	2	0	0
 0066707C	SceneDeckEdit::updateDeckStauts	19	11	0	0
 00667538	SceneDeckEdit::updateDeckView	44	25	0	8
 00667EF8	SceneDeckEdit::updateDeckData	18	10	0	0
@@ -2748,6 +2871,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0067403C	std::__sort<runSortFilter comparator&, shared_ptr<UserMedalData>*> (sub_67403C)	48	4	0	0
 00674A04	std::__sort3<runSortFilter comparator&, shared_ptr<UserMedalData>*> (sub_674A04)	198	4	0	0
 00674ADA	std::__sort4<runSortFilter comparator&, shared_ptr<UserMedalData>*> (sub_674ADA)	22	4	0	0
+00674B7A	std::__sort5<runSortFilter comparator&, shared_ptr<UserMedalData>*> (sub_674B7A)	2	1	0	0
 00677E00	SceneDeckEdit::updateDeckView $_ __func::__clone(dst) (sub_677E00)	46	17	0	0
 0067D8AC	SceneTitle::~SceneTitle (deleting)	48	0	0	43
 0067D8D0	SceneTitle::init	68	0	0	0
@@ -2891,8 +3015,32 @@ addr	name	calls	verified	mismatches	unverifiable
 00685FC0	SceneBattleResult::init::$_3::lambda(bool) __clone(__base*)	171	57	0	0
 00685FE0	SceneBattleResult::init::$_3::lambda(bool) destroy()	228	114	0	0
 00685FEC	SceneBattleResult::init::$_3::{lambda(bool)#1}::operator()	32	0	0	32
+006861AC	SceneSellOutMaterialItem::create	1	1	0	0
+00686240	SceneSellOutMaterialItem::~SceneSellOutMaterialItem (deleting)	4	4	0	0
+00686264	SceneSellOutMaterialItem::init	5	1	0	0
+006869B0	SceneSellOutMaterialItem::updateListField	7	3	0	0
+00686A9C	SceneSellOutMaterialItem::runInAnimation	7	3	0	0
+00686C40	SceneSellOutMaterialItem::runOutAnimation	4	2	0	0
+00688A60	SceneSellOutMaterialItem::backScene	2	0	0	2
+00688C2C	SceneSellOutMaterialItem::backScene lambda __func::operator() (sub_688C2C)	4	4	0	0
+0068AED8	std::__sort<material comparator&, ull*> (sub_68AED8)	7	3	0	0
+0068B318	SceneSellOutMaterialItem material sort comparator (sub_68B318)	234	3	0	0
+0068B494	std::__sort3<material comparator&, ull*> (sub_68B494)	9	3	0	0
 0068CDBC	DrawScrollView::create	10	6	0	4
 0068E7EC	DrawScrollView::DrawScrollView	11	7	0	0
+00699998	SceneMixedMedal touch lambda std::function::operator=(&&) (sub_699998)	2	2	0	0
+0069F488	SceneMixedMedal::backScene	1	1	0	0
+0069F56C	SceneMixedMedal::finalize	2	1	0	0
+0069FC70	SceneMixedMedal::backScene lambda __func::operator() (sub_69FC70)	1	1	0	0
+006AA324	SceneEvolveMedal::~SceneEvolveMedal	2	2	0	0
+006AD680	SceneEvolveMedal::createMaterialMedal	4	2	0	0
+006AF164	SceneEvolveMedal::runInAnimation	4	2	0	0
+006AF314	SceneEvolveMedal::runOutAnimationMain	4	2	0	0
+006AFD24	SceneEvolveMedal::backScene	2	2	0	0
+006B1370	SceneEvolveMedal::backScene lambda __func::operator() (sub_6B1370)	2	2	0	0
+006B19C8	SceneEvolveMedal run-out lambda __func::__clone() (sub_6B19C8)	4	2	0	0
+006B1A6C	SceneEvolveMedal run-out lambda __func::destroy_deallocate() (sub_6B1A6C)	6	4	0	0
+006B1ECC	SceneEvolveMedal::init id-set lambda __func::__clone() (sub_6B1ECC)	4	2	0	0
 006B72C8	SceneSphereBoardSelect::initSphereBoardList	2	0	0	2
 006B84C4	SphereScrollView::create	3	0	0	3
 006B9550	SceneSphereBoardSelect::update	7269	7257	0	12
@@ -2910,7 +3058,21 @@ addr	name	calls	verified	mismatches	unverifiable
 006BC790	SceneSphereBoardSelect::initSphereBoardList::$_5 destroy()	4	0	0	0
 006BC810	SceneSphereBoardSelect::initSphereBoardList::$_4 __clone(__base*)	2	0	0	0
 006BC830	SceneSphereBoardSelect::initSphereBoardList::$_4 destroy()	4	0	0	0
+006BCE78	SceneSphereBoard::create	8	0	0	5
 006BE09C	BaseEndlessrollView::BaseEndlessrollView	1	1	0	0
+006BE1D8	SceneSphereBoard::~SceneSphereBoard	6	6	0	0
+006BE26C	SceneSphereBoard::init	8	3	0	0
+006BF038	SphereUI::create	11	3	0	0
+006BF120	SceneSphereBoard::loadTextureIncentive	16	8	0	0
+006BF1EC	SceneSphereBoard::loadTextureBoard	16	8	0	0
+006BF2B8	SceneSphereBoard::loadTextureKind	16	8	0	0
+006BF384	SceneSphereBoard::BoardMaking	8	8	0	0
+006BF780	SceneSphereBoard::openTutorial30	16	8	0	0
+006BF84C	SceneSphereBoard::runInAnimation	11	3	0	0
+006BFB44	SceneSphereBoard::runOutAnimationMain	12	6	0	0
+006BFEBC	SceneSphereBoard::backScene	6	6	0	0
+006BFFE8	SceneSphereBoard back lambda: to the board list (sub_6BFFE8)	6	6	0	0
+006C0DB8	SceneSphereBoard open lambda: send the picked spheres (sub_6C0DB8)	6	6	0	0
 006C10B8	SceneLight::load	9	0	0	0
 006C11EC	SceneLight::create	9	0	0	0
 006C1244	SceneLight::~SceneLight	9	0	0	0
@@ -2993,6 +3155,50 @@ addr	name	calls	verified	mismatches	unverifiable
 006C7D64	SceneRaidList::init $_0 __clone(dst)	2	0	0	0
 006C7D84	SceneRaidList::init $_0 destroy	3	0	0	0
 006C7D8E	SceneRaidList::init $_0 operator()	1	0	0	0
+006CCD24	SceneAlbum::~SceneAlbum (deleting)	5	5	0	0
+006CCD90	SceneAlbum::init	5	1	1	0
+006CDD40	SceneAlbum::runInAnimation	8	2	0	0
+006CDE04	SceneAlbum::runOutAnimationMain	10	5	0	0
+006CE5E4	SceneAlbum::backScene	5	5	0	0
+006CE6E4	SceneAlbum::backScene lambda __func::operator() (sub_6CE6E4)	5	0	0	5
+006CEC8C	std::__sort<album order comparator&, int*> (sub_6CEC8C)	83	2	0	0
+006CEFFC	SceneAlbum::init album order comparator (sub_6CEFFC)	44770	4754	0	0
+006CF158	std::__sort3<album order comparator&, int*> (sub_6CF158)	380	44	0	0
+006CF304	std::__insertion_sort_incomplete<album order comparator&, int*> (sub_6CF304)	18	2	0	0
+006D5D1C	ScenePartyRequest::callUserSearchAPI	3	0	0	3
+006D6050	ScenePartyRequest::~ScenePartyRequest	2	2	0	0
+006D6120	ScenePartyRequest::init	8	1	0	0
+006D6A60	ScenePartyRequest::init list loader (sub_6D6A60)	8	1	0	0
+006D6C44	ScenePartyRequest::init search filter button (sub_6D6C44)	32	1	0	0
+006D6FC8	ScenePartyRequest::runInAnimation	8	1	0	0
+006D7190	ScenePartyRequest::runInJoinLayout	12	3	0	0
+006D7584	ScenePartyRequest::runOutAnimationMain	4	2	0	0
+006DB8D0	ScenePartyRequest::openPopUpSearchID	2	2	0	0
+006DD290	ScenePartyRequest::backScene	2	2	0	0
+006DD3C8	ScenePartyRequest::backScene lambda __func::operator() (sub_6DD3C8)	2	0	0	2
+006DED2A	ScenePartyRequest ID popup result __func::operator()(bool) (sub_6DED2A)	2	2	0	0
+006DEDA4	ScenePartyRequest ID popup close (sub_6DEDA4)	4	2	0	0
+006DEEE2	ScenePartyRequest ID popup closed __func::operator() (sub_6DEEE2)	2	2	0	0
+006E6384	ScenePartyManagement::callAPIs	1	0	0	0
+006E6578	ScenePartyManagement::~ScenePartyManagement	1	1	0	0
+006E6604	ScenePartyManagement::init	2	1	0	0
+006E74CC	ScenePartyManagement::init tab switch lambda (sub_6E74CC)	1	1	0	0
+006E767C	ScenePartyManagement::runInJoinLayout	2	1	0	0
+006E8860	ScenePartyManagement::runOutAnimationMain	2	1	0	0
+006E8950	ScenePartyManagement::runOutJoinLayout	1	1	0	0
+006E9734	ScenePartyManagement::backScene	1	1	0	0
+006E9850	ScenePartyManagement::backScene lambda __func::operator() (sub_6E9850)	1	0	0	1
+006EDCFC	ScenePartyManagement applicant lambda __func::destroy_deallocate() (sub_6EDCFC)	2	1	0	0
+006F0748	ScenePartyManagement::callAPIs applicants lambda __func::operator() (sub_6F0748)	1	0	0	1
+006F0AA8	ScenePartyMember::~ScenePartyMember (deleting)	1	1	0	0
+006F0B14	ScenePartyMember::init	2	0	1	0
+006F0FDC	ScenePartyMember::initMemberLayer	6	0	1	0
+006F1208	ScenePartyMember::initMemberLayer select callback assign (sub_6F1208)	16	2	0	0
+006F127C	ScenePartyMember::initMemberLayer load members lambda (sub_6F127C)	8	0	1	0
+006F16E0	ScenePartyMember::runInAnimation	5	0	1	0
+006F188C	ScenePartyMember::runOutAnimationMain	2	1	0	0
+006F1A50	ScenePartyMember::backScene	1	1	0	0
+006F1B7C	ScenePartyMember::backScene lambda __func::operator() (sub_6F1B7C)	1	0	0	1
 006F24B4	IInOutAnimation::runOutAnimation	44	3	0	0
 006F2564	FlashDrama::FlashDrama()	7	0	0	0
 006F2838	FlashDrama::FlashDrama(const char*)	7	0	0	0
@@ -3039,9 +3245,21 @@ addr	name	calls	verified	mismatches	unverifiable
 006F6044	nullsub_1860	18	3	0	0
 006F6234	std::__hash_table<std::__hash_value_type<std::string,std::list<int>>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,std::list<int>>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,std::list<int>>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,std::list<int>>>>::~__hash_table [base destructor]	11	3	0	0
 006F628A	std::__hash_table<std::__hash_value_type<std::string,SpeechDisp *>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,SpeechDisp *>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,SpeechDisp *>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,SpeechDisp *>>>::~__hash_table [base destructor]	11	3	0	0
+006F6328	SceneLoginBonus::create	3	3	0	0
+006F63C4	SceneLoginBonus::~SceneLoginBonus	3	3	0	0
 006F647C	SceneLoginBonus::~SceneLoginBonus [deleting destructor]	2	0	0	2
+006F649C	SceneLoginBonus::init	4	2	0	0
 006F85B8	SceneLoginBonus::update	382	328	0	0
+006F85BC	SceneLoginBonus::runInAnimation	6	3	0	0
+006F8DEC	SceneLoginBonus::runOutAnimationMain	6	3	0	0
 006F901C	thunk to SceneLoginBonus::runOutAnimationMain	4	0	0	0
+006F902C	SceneLoginBonus::skipEvent	3	3	0	0
+006F90E4	SceneLoginBonus::make_getIncentive_name	4	1	0	0
+006F9688	SceneLoginBonus::make_getIncentiveNext_name	2	1	0	0
+006F9B50	SceneLoginBonus::make_getIncentive_id	30	3	0	0
+006FA0D4	SceneLoginBonus::loadIncentiveTexture	36	3	0	0
+006FA1A0	SceneLoginBonus::openLoginBonus	3	3	0	0
+006FA580	SceneLoginBonus::openLoginBonus total stamp (sub_6FA580)	3	3	0	0
 006FAAC8	SceneLoginBonus::openLoginBonus::$_9 __clone(__base*)	8	0	0	0
 006FAAF0	SceneLoginBonus::openLoginBonus::$_9 destroy()	12	2	0	0
 006FAAFA	sub_6FAAFA	4	0	0	0
@@ -3064,6 +3282,7 @@ addr	name	calls	verified	mismatches	unverifiable
 006FB736	sub_6FB736	2	0	0	0
 006FB7A8	sub_6FB7A8	8	0	0	0
 006FB7C8	nullsub_1870	12	2	0	0
+006FBA64	SceneRanking::callPartyRankingAPI	1	0	0	0
 006FBE1C	SceneRanking::~SceneRanking() (deleting)	1	0	0	1
 006FBE80	SceneRanking::init()	2	0	0	1
 006FC928	SceneRanking::initScene(SceneManager::SelectRanking)	2	0	0	1
@@ -3096,6 +3315,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00702048	SceneRanking::init $_12 __func::destroy	3	0	0	0
 007020F4	SceneRanking::init $_10 __func::__clone(__base*)	2	0	0	0
 00702114	SceneRanking::init $_10 __func::destroy	3	0	0	0
+00702404	SceneRankingReward::create	2	0	2	0
 007024D0	SceneRanking::init $_9 __func::__clone(__base*)	2	0	0	0
 007024F0	SceneRanking::init $_9 __func::destroy	3	0	0	0
 0070257C	SceneRanking::init $_8 __func::__clone(__base*)	2	0	0	0
@@ -3106,7 +3326,23 @@ addr	name	calls	verified	mismatches	unverifiable
 007026D4	SceneRanking::init $_6 __func::destroy	3	0	0	0
 00702E7C	SceneRanking::callPartyRankingAPI $_3 __func::__clone()	2	1	0	0
 00702F20	SceneRanking::callPartyRankingAPI $_3 __func::destroy_deallocate	3	2	0	0
+00702F4C	SceneRanking::callPartyRankingAPI reward-check lambda __func::operator() (sub_702F4C)	1	0	0	1
 0070311C	SceneRanking::callPartyRankingAPI $_3 UlbE_ __func::__clone()	2	2	0	0
+007031C0	SceneRanking reward-check lambda __func::destroy_deallocate() (sub_7031C0)	3	2	0	0
+007031EC	SceneRanking party ranking lambda __func::operator() (sub_7031EC)	1	0	0	1
+007033BC	SceneRanking party own lambda __func::__clone() (sub_7033BC)	2	1	0	0
+00703460	SceneRanking party own lambda __func::destroy_deallocate() (sub_703460)	3	2	0	0
+0070E570	SceneRankingReward::~SceneRankingReward (deleting)	2	2	0	0
+0070E5DC	SceneRankingReward::init	5	0	1	0
+0070F218	SceneRankingReward::initRankingTitle	14	2	0	0
+0070FDC8	SceneRankingReward::initRankingScrollVew	40	0	8	0
+007102E8	SceneRankingReward::runInAnimation	7	1	0	0
+00710460	SceneRankingReward::runOutAnimationMain	4	2	0	0
+0071065C	SceneRankingReward::backScene	2	2	0	0
+007107A0	SceneRankingReward::backScene lambda __func::operator() (sub_7107A0)	2	0	0	2
+00711076	SceneRankingReward list scroll end lambda __func::operator() (sub_711076)	8	8	0	0
+0071112C	SceneRankingReward list scroll lambda __func::operator() (sub_71112C)	22	22	0	0
+007116D0	SceneRankingReward page update lambda __func::operator() (sub_7116D0)	20	0	16	0
 0071D260	SceneAdventureSelect::callAdventureSelectAPI	90	0	0	27
 0071D39C	SceneAdventureSelect::~SceneAdventureSelect	61	0	0	0
 0071D4C4	SceneAdventureSelect::~SceneAdventureSelect (deleting)	61	0	0	59
@@ -3152,6 +3388,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00727F70	SceneAdventureSelect::openTutorial34	90	0	0	0
 0072804C	SceneAdventureSelect::openTutorial104	42	0	0	0
 007281A4	SceneAdventureSelect::openTutorial105	123	65	0	0
+0072834C	SceneAdventureSelect::backScene	2	1	0	0
 00728548	SceneAdventureSelect::runInAnimation	89	0	0	0
 00728B8C	SceneAdventureSelect::backScene::$_66 __clone(__base*)	8	1	0	0
 00728BAC	SceneAdventureSelect::backScene::$_66 destroy()	9	3	0	0
@@ -3345,6 +3582,13 @@ addr	name	calls	verified	mismatches	unverifiable
 00735910	SceneNotice::callPrepareAPI $_0 __func::__clone(__base*)	216	64	0	0
 0073592C	SceneNotice::callPrepareAPI $_0 __func::destroy	278	126	0	0
 00735938	SceneNotice::callPrepareAPI $_0 operator()	54	8	0	46
+0073CCF0	SceneMedalList::~SceneMedalList	1	1	0	0
+0073CDA4	SceneMedalList::init	2	1	0	0
+0073D6E4	SceneMedalList::runInAnimation	2	1	0	0
+0073D8D0	SceneMedalList::runOutAnimationMain	2	1	0	0
+0073DCA0	SceneMedalList::backScene	1	1	0	0
+0073DDA0	SceneMedalList::backScene lambda __func::operator() (sub_73DDA0)	1	0	0	1
+0073F2B0	SceneMedalList::init finish-scene lambda __func::operator() (sub_73F2B0)	1	1	0	0
 0073F40C	AimTarget::~AimTarget	42	0	0	0
 0073F4BC	AimTarget::~AimTarget(deleting)	42	0	0	0
 0073F4C8	AimTarget::init	46	0	0	0
@@ -3914,6 +4158,29 @@ addr	name	calls	verified	mismatches	unverifiable
 00793144	master::EvResource::getHash	80	7	0	0
 00793210	master::EvResource::create(int) __shared_ptr_emplace<impl>::__on_zero_shared	26	0	0	0
 0079321C	master::EvResource::create(int) __shared_ptr_emplace<impl>::__on_zero_shared_weak	26	0	0	0
+00793288	SphereUI::SphereUI	8	3	0	0
+00793318	SphereUI::~SphereUI	12	6	0	0
+0079349C	SphereUI::create_sphere	180	8	0	0
+007937B4	SphereUI::init	11	3	0	0
+00793A64	ConnectingSphere::create	11	3	0	0
+00793B18	SphereUI::load_board	8	8	0	0
+00793E38	SphereUI::create_board	16	8	0	0
+007941CC	SphereUI::update_status	20810	20810	0	0
+00794C0C	SphereUI::setOpenCursor	8	8	0	0
+007955EC	SphereUI::set_cursol	12	12	0	0
+0079597C	SphereUI::is_open_incentive	23	15	0	0
+00795B3C	SphereUI::check_up_route	46789	20810	0	0
+00795BA0	SphereUI::check_down_route	75488	20810	0	0
+00795C04	SphereUI::check_right_route	24552	20810	0	0
+00795C68	SphereUI::check_left_route	90633	20810	0	0
+00795D30	SphereUI::check_up_status	20810	20810	0	0
+00795E4C	SphereUI::check_left_status	16136	16136	0	0
+00795F7C	SphereUI::check_right_status	20810	20810	0	0
+007960AC	SphereUI::check_down_status	20810	20810	0	0
+00798B5C	ConnectingSphere::~ConnectingSphere (deleting)	12	6	0	0
+00798B98	ConnectingSphere::get_user_data	16	8	0	0
+00798DC0	ConnectingSphere::getSphereStatus	8	8	0	0
+00798EC8	ConnectingSphere::executeSphereOpenlist	12	6	0	0
 00799B30	AppGetGrameFrameWidth()	262730	17455	0	0
 00799D20	AppGetGrameFrameHeight()	264837	17930	0	0
 00799F04	AppSetTextureCacheLimit(unsigned)	155	0	0	0
@@ -4153,6 +4420,7 @@ addr	name	calls	verified	mismatches	unverifiable
 008194E0	cocos2d::plugin::WebViewImpl::~WebViewImpl [deleting destructor]	43	0	0	0
 0081AB18	_JNIEnv::CallStaticBooleanMethod	1	1	0	0
 0081AB6C	_JNIEnv::CallStaticIntMethod	233	92	0	0
+0081ABF0	Java_org_cocos2dx_lib_Cocos2dxWebViewHelper_shouldStartLoading	2	0	0	0
 0081ACA0	Java_org_cocos2dx_lib_Cocos2dxWebViewHelper_didFinishLoading	28	0	0	0
 0081B1F4	cocos2d::PluginJniHelper::setJavaVM	108	63	0	0
 00825854	cocos2d::ui::Widget::~Widget [deleting destructor]	2363	895	0	0
@@ -4714,6 +4982,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00A424C0	Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeTouchesBegin	1896	0	0	0
 00A4251C	Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeTouchesEnd	1895	0	0	0
 00A42578	Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeTouchesMove	8242	0	0	0
+00A42824	Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeKeyDown	2	0	0	0
 00A465D4	deflateInit_	18031	144	0	0
 00A47F20	inflateInit_	116532	7918	0	0
 00A4C448	sub_A4C448	206699	8037	0	0
@@ -4913,6 +5182,8 @@ addr	name	calls	verified	mismatches	unverifiable
 00C98F9A	delete	105164732	1111140	0	0
 00C98FB2	delete[]	1144268	20578	0	0
 00CA4978	sub_CA4978	2426	145	0	0
+00CA4984	frexp (sub_CA4984)	40	21	0	0
+00CA4A78	snprintf (sub_CA4A78)	1425	1150	0	0
 00CD2EA4	sub_CD2EA4	18	6	0	0
 00CD2EB2	sub_CD2EB2	807929	25274	0	0
 00CD63A0	__floatunsidf	4028340	15801	0	0
