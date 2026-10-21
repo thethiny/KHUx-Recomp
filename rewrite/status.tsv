@@ -1770,6 +1770,7 @@ addr	name	calls	verified	mismatches	unverifiable
 005B23B8	nullsub_804	3	0	0	0
 005B2434	sub_5B2434	6	0	0	0
 005B2454	nullsub_805	6	0	0	0
+005B245E	DrawScrollView::openCheckRaisePopup::$_11 operator()	4	4	0	0
 005B33A8	sub_5B33A8	24	1	0	0
 005B33C8	nullsub_813	24	1	0	0
 005B42D4	RaidSubdueScrollView::~RaidSubdueScrollView()	1	0	0	0
@@ -3127,6 +3128,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00661658	SceneDeckEdit::initKeyBladePanel	15	2	0	1
 00661C6C	SceneDeckEdit::initMedalSelectPanel	15	2	0	1
 0066204C	IMedalSortFilter::runSortFilter	2	0	0	0
+00662610	SceneDeckEdit::openMedalSelectPanelMain	8	4	0	0
 00662E2C	SceneDeckEdit::openKeyBladePanel	2	2	0	0
 0066321C	SceneDeckEdit::checkPrepareFinishScene	12	12	0	0
 0066360C	SceneDeckEdit::runInAnimation	21	4	0	0
@@ -3135,12 +3137,14 @@ addr	name	calls	verified	mismatches	unverifiable
 00663ED8	SceneDeckEdit::updateKeyBladePanel	4	2	0	0
 00664DA4	IMedalSortFilter::registSortButton	2	0	0	0
 0066527C	IMedalSortFilter::getShowType	2	0	0	0
+006652C0	SceneDeckEdit::openMedalSelectPanel	4	4	0	0
 00665584	SceneDeckEdit::openKeyBladePopup(int, shared_ptr<UserKeyBladeData>)	1	1	0	0
 00666F84	SceneDeckEdit strengthen result arrow (sub_666F84)	2	1	0	0
 0066707C	SceneDeckEdit::updateDeckStauts	21	11	0	0
 00667538	SceneDeckEdit::updateDeckView	52	31	0	8
 00667EF8	SceneDeckEdit::updateDeckData	26	14	0	0
 00668044	SceneDeckEdit::runUpdateKeybladeEvent	12	7	0	4
+006697B4	SceneDeckEdit::backScene	2	2	0	0
 00669874	SceneDeckEdit::getSortFilter	63	8	0	0
 006698C0	IMedalSortFilter::registSortButton sort label lambda	1	0	0	0
 00669D50	IMedalSortFilter::openMedalSortPopup	8	7	1	0
@@ -3207,6 +3211,12 @@ addr	name	calls	verified	mismatches	unverifiable
 0067839A	SceneDeckEdit::openKeyBladePopup $_100 UlvE_ __func::operator() (sub_67839A)	2	1	0	0
 0067850C	SceneDeckEdit::openKeyBladePopup $_27 __func::__clone(__base*) (sub_67850C)	4	2	0	0
 0067853C	SceneDeckEdit::openKeyBladePopup $_27 __func::operator() (sub_67853C)	8	4	0	0
+00678800	SceneDeckEdit::openMedalSelectPanelMain::$_26 __clone()	12	8	0	0
+0067886C	SceneDeckEdit::openMedalSelectPanelMain::$_26 operator()	4	4	0	0
+00678A00	SceneDeckEdit::openMedalSelectPanelMain::$_26 animation end __clone(p)	16	4	0	0
+00678A32	SceneDeckEdit::openMedalSelectPanelMain::$_26 animation end operator()	4	4	0	0
+00678B28	SceneDeckEdit::openMedalSelectPanelMain::$_25 __clone(p)	8	4	0	0
+00678B56	SceneDeckEdit::openMedalSelectPanelMain::$_25 operator()	4	4	0	0
 00678CB4	nullsub_1346	2	0	0	0
 00678FCC	nullsub_132	2	0	0	0
 00679304	nullsub_130	2	0	0	0
@@ -3904,6 +3914,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00710C74	SceneRankingReward::backScene $_14 raid lambda __func::operator() (sub_710C74)	1	0	0	1
 00711076	SceneRankingReward list scroll end lambda __func::operator() (sub_711076)	8	8	0	0
 0071112C	SceneRankingReward list scroll lambda __func::operator() (sub_71112C)	22	22	0	0
+007113B4	SceneRankingReward::init::$_7 operator() (scroll on)	3	3	0	0
 007116D0	SceneRankingReward page update lambda __func::operator() (sub_7116D0)	20	0	16	0
 0071D260	SceneAdventureSelect::callAdventureSelectAPI	108	0	0	38
 0071D39C	SceneAdventureSelect::~SceneAdventureSelect	61	0	0	0
