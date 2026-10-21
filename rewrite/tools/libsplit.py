@@ -72,12 +72,17 @@ OVERRIDES = {
                            0x457800, 0x4578B4, 0x4579C4, 0x457EC4, 0x457F18, 0x457F4C, 0x457FA4, 0x457FFC,
                            0x458074, 0x4580E4, 0x45813C, 0x4581E8, 0x45821C, 0x4582CC, 0x4584EC, 0x458524,
                            0x45888C, 0x4588C4, 0x458EFC, 0x458F3C, 0x458F7C, 0x458FB4, 0x92E42C)},
+    # cocos2d-x's Android glue (platform/android/jni: Java_org_cocos2dx_lib_*, the edit-text dialog, font size);
+    # their extern "C" names do not match the cocos2d patterns
+    **{a: _COCOS for a in (0xA407F0, 0xA40A60, 0xA40C3C, 0xA41D74)},
     **{a: "LWF" for a in (0x456714, 0x456748, 0x456780)},
     # a vector destructor and a string helper instantiated in the game's objects
     **{a: "libc++ / C++ runtime" for a in (0x493E84, 0x498A1C)},
-    # newlocale / uselocale, strtod, the vfprintf family and its output sink
+    # newlocale / uselocale, strtod, the vfprintf family and its output sink, printf; with IDA's chunks of strtod
+    # (0xC9DF62, 0xC9E16A) and vfprintf (0xCA338A, 0xCA3A22, 0xCA3B02)
     **{a: "libc / math helpers" for a in (0xC9C858, 0xC9C8E0, 0xC9CC58, 0xCA1C5C, 0xCA1CDE, 0xCA358E, 0xCA35A4,
-                                          0xCA3B24, 0xCA3BC4, 0xCD2ED0)},
+                                          0xCA3B24, 0xCA3BC4, 0xCD2ED0, 0xCA1BF4, 0xCA4A3C, 0xC9DF62, 0xC9E16A,
+                                          0xCA338A, 0xCA3A22, 0xCA3B02)},
     **{a: "curl" for a in (0x44F07C, 0x44F154, 0x44F368, 0x44F3D0)},
     **{a: "OpenSSL" for a in (0xC34D9C, 0xC34EB0, 0xC353F8, 0xC35EEC)},   # conf_def.c
 }

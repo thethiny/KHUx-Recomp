@@ -7,12 +7,29 @@ uint32_t *init_array;
 int init_count;
 uint32_t exidx_addr, exidx_count;
 
+/* The 3 GB guest heap is only reserved: its first access to each 1 MB chunk commits that chunk (zero-filled, as a
+ * committed page would be). Committing all of it up front charged 3 GB against the system commit limit for the
+ * whole session (other programs could not start) although the game touches a few hundred MB. */
+#define HEAP_CHUNK 0x100000u
+static void heap_chunk_committed(uint32_t chunk);
+static LONG CALLBACK heap_fault(EXCEPTION_POINTERS *e) {
+    EXCEPTION_RECORD *r = e->ExceptionRecord;
+    if (r->ExceptionCode != EXCEPTION_ACCESS_VIOLATION || r->NumberParameters < 2) return EXCEPTION_CONTINUE_SEARCH;
+    uint8_t *a = (uint8_t *)r->ExceptionInformation[1];
+    if (a < G + HEAP_BASE || a >= G + HEAP_BASE + HEAP_SIZE) return EXCEPTION_CONTINUE_SEARCH;
+    uint32_t chunk = (uint32_t)(a - G) & ~(HEAP_CHUNK - 1);
+    if (!VirtualAlloc(G + chunk, HEAP_CHUNK, MEM_COMMIT, PAGE_READWRITE)) return EXCEPTION_CONTINUE_SEARCH;
+    heap_chunk_committed(chunk);
+    return EXCEPTION_CONTINUE_EXECUTION;
+}
+
 void mem_init(void) {
     G = VirtualAlloc(NULL, (SIZE_T)1 << 32, MEM_RESERVE, PAGE_READWRITE);
     if (!G) fatal("cannot reserve the 4 GB guest space (error %lu)", GetLastError());
     mem_commit(IMAGE_LO, IMAGE_HI - IMAGE_LO);
     mem_commit(TRAP_BASE, TRAP_SIZE);
-    mem_commit(HEAP_BASE, HEAP_SIZE);
+    AddVectoredExceptionHandler(1, heap_fault);
+    mem_commit(HEAP_BASE, HEAP_CHUNK);
     mem_commit(STACK_BASE, STACK_SIZE);
     mem_commit(KUSER_PAGE, 0x1000);
     gw32(KUSER_PAGE + 0xFFC, 5);                         /* __kuser_helper_version */
@@ -219,4 +236,124 @@ uint32_t data_import(const char *name) {
     strncpy(data_imports[n_data].name, name, 63);
     data_imports[n_data++].addr = a;
     return a;
+}
+
+/* ---------------------------------------------------------------- M3 replay sandbox: page capture
+ * KHUX_RW_CAPTURE (rewrite.dll asks through RwHost.track): for one shadow run every committed guest page is made
+ * inaccessible; the first access to each (any thread, lifted code or the host's own imports) saves the page as it
+ * was and opens it again. The saved pages are the call's input memory: rewrite.dll writes them with the call's
+ * registers and imports to a record that the replay mode (KHUX_RW_REPLAY) runs again without the game.
+ * Heap chunks committed during the capture start zero-filled: they are listed as zero chunks. */
+static volatile LONG trk_on;
+static uint8_t *trk_bits;                            /* 1 bit per guest page: inaccessible, not yet saved */
+static CRITICAL_SECTION trk_cs;
+static uint32_t *trk_addr; static uint8_t *trk_data; static int trk_n, trk_cap;
+static uint32_t (*trk_regions)[2]; static int trk_nreg, trk_regcap;   /* the protected ranges (guest lo, size) */
+static uint8_t heap_committed[HEAP_SIZE / HEAP_CHUNK];        /* chunks committed so far */
+static uint32_t trk_zero[4096]; static int trk_nzero;
+static DWORD trk_tid; static int trk_foreign;                /* the capturing thread; pages first touched by others */
+
+static LONG CALLBACK trk_fault(EXCEPTION_POINTERS *e) {
+    EXCEPTION_RECORD *r = e->ExceptionRecord;
+    if (!trk_on || r->ExceptionCode != EXCEPTION_ACCESS_VIOLATION || r->NumberParameters < 2) return EXCEPTION_CONTINUE_SEARCH;
+    uint8_t *a = (uint8_t *)r->ExceptionInformation[1];
+    if (a < G || a >= G + ((SIZE_T)1 << 32)) return EXCEPTION_CONTINUE_SEARCH;
+    uint32_t page = (uint32_t)(a - G) >> 12;
+    EnterCriticalSection(&trk_cs);
+    /* an access that straddles two pages can report the first (open) one: the closed one is the next */
+    if (!(trk_bits[page >> 3] & (1u << (page & 7))) && page + 1 < (1u << 20) &&
+        (trk_bits[(page + 1) >> 3] & (1u << ((page + 1) & 7))))
+        page++;
+    if (!(trk_bits[page >> 3] & (1u << (page & 7)))) {
+        LeaveCriticalSection(&trk_cs);
+        /* another thread opened it meanwhile: retry; not ours at all: the next handler */
+        MEMORY_BASIC_INFORMATION mi;
+        if (VirtualQuery(a, &mi, sizeof mi) && mi.State == MEM_COMMIT && mi.Protect == PAGE_READWRITE)
+            return EXCEPTION_CONTINUE_EXECUTION;
+        return EXCEPTION_CONTINUE_SEARCH;
+    }
+    DWORD old;
+    VirtualProtect(G + ((size_t)page << 12), 0x1000, PAGE_READWRITE, &old);
+    if (trk_n == trk_cap) {
+        trk_cap = trk_cap ? trk_cap * 2 : 256;
+        trk_addr = realloc(trk_addr, sizeof(uint32_t) * (size_t)trk_cap);
+        trk_data = realloc(trk_data, (size_t)0x1000 * (size_t)trk_cap);
+    }
+    if (GetCurrentThreadId() != trk_tid) trk_foreign++;
+    trk_addr[trk_n] = page << 12;
+    memcpy(trk_data + (size_t)0x1000 * (size_t)trk_n, G + ((size_t)page << 12), 0x1000);
+    trk_n++;
+    trk_bits[page >> 3] &= (uint8_t)~(1u << (page & 7));
+    LeaveCriticalSection(&trk_cs);
+    return EXCEPTION_CONTINUE_EXECUTION;
+}
+
+static void trk_protect(uint32_t lo, uint32_t size) {
+    DWORD old;
+    if (!size || !VirtualProtect(G + lo, size, PAGE_NOACCESS, &old)) return;
+    if (trk_nreg == trk_regcap) {
+        trk_regcap = trk_regcap ? trk_regcap * 2 : 256;
+        trk_regions = realloc(trk_regions, sizeof(uint32_t[2]) * (size_t)trk_regcap);
+    }
+    trk_regions[trk_nreg][0] = lo; trk_regions[trk_nreg][1] = size; trk_nreg++;
+    for (uint32_t p = lo >> 12; p < (lo + size) >> 12; p++) trk_bits[p >> 3] |= (uint8_t)(1u << (p & 7));
+}
+
+/* 1: start capturing (every committed guest page inaccessible); 0: stop (all accessible again) */
+void shadow_capture_park(int on);
+int mem_track(int on) {
+    static int init;
+    if (!init) {
+        init = 1;
+        InitializeCriticalSection(&trk_cs);
+        trk_bits = calloc((size_t)1 << 17, 1);
+        AddVectoredExceptionHandler(1, trk_fault);      /* first: before heap_fault */
+    }
+    if (on) {
+        if (trk_on) return -1;                          /* one capture at a time */
+        shadow_capture_park(1);
+        EnterCriticalSection(&trk_cs);
+        trk_n = 0; trk_nreg = 0; trk_nzero = 0; trk_foreign = 0; trk_tid = GetCurrentThreadId();
+        /* on before the first page closes: another thread's access to a closed page waits in trk_fault for the
+         * lock, then finds its page saved and opened */
+        InterlockedExchange(&trk_on, 1);
+        /* the committed runs of the guest space (the heap's chunks are listed by heap_fault) */
+        for (uint8_t *p = G; p < G + ((SIZE_T)1 << 32);) {
+            MEMORY_BASIC_INFORMATION mi;
+            if (!VirtualQuery(p, &mi, sizeof mi)) break;
+            uint8_t *end = (uint8_t *)mi.BaseAddress + mi.RegionSize;
+            uint32_t lo = (uint32_t)((uint8_t *)mi.BaseAddress - G);
+            if (mi.State == MEM_COMMIT && mi.Protect == PAGE_READWRITE && !(lo >= TRAP_BASE && lo < TRAP_BASE + TRAP_SIZE))
+                trk_protect(lo, (uint32_t)mi.RegionSize);
+            p = end;
+        }
+        LeaveCriticalSection(&trk_cs);
+    } else {
+        EnterCriticalSection(&trk_cs);
+        DWORD old;
+        for (int k = 0; k < trk_nreg; k++) {
+            VirtualProtect(G + trk_regions[k][0], trk_regions[k][1], PAGE_READWRITE, &old);
+            for (uint32_t p = trk_regions[k][0] >> 12; p < (trk_regions[k][0] + trk_regions[k][1]) >> 12; p++)
+                trk_bits[p >> 3] &= (uint8_t)~(1u << (p & 7));
+        }
+        InterlockedExchange(&trk_on, 0);                /* off once every page is open again */
+        LeaveCriticalSection(&trk_cs);
+        shadow_capture_park(0);
+        return trk_foreign;                             /* stop: how many pages another thread touched first */
+    }
+    return trk_n;
+}
+/* the pages saved by the last capture, and the heap chunks committed (zero-filled) during it */
+int mem_track_pages(const uint32_t **addrs, const uint8_t **data) { *addrs = trk_addr; *data = trk_data; return trk_n; }
+int mem_track_zero(const uint32_t **chunks) { *chunks = trk_zero; return trk_nzero; }
+/* replay: put guest memory in a page's state (committing it first when needed) */
+void mem_put(uint32_t addr, const void *bytes, uint32_t size) {
+    VirtualAlloc(G + addr, size, MEM_COMMIT, PAGE_READWRITE);
+    memcpy(G + addr, bytes, size);
+}
+static void heap_chunk_committed(uint32_t chunk) {
+    uint32_t k = (chunk - HEAP_BASE) / HEAP_CHUNK;
+    if (heap_committed[k]) return;
+    heap_committed[k] = 1;
+    if (trk_on && trk_nzero < 4096) trk_zero[trk_nzero++] = chunk;    /* zero-filled: its state before the call */
 }

@@ -25,7 +25,8 @@ constexpr uint32_t VectorULL_dtor = 0x468499;
 constexpr uint32_t VectorULL_pushBackSlow = 0x4ECB6D;       // vector<ull>::__push_back_slow_path(const ull&)
 constexpr uint32_t MapULLBool_destroy = 0x5004F1;           // __tree<ull, bool>::destroy(node)
 constexpr uint32_t MapULLBool_index = 0x4FFAC5;             // map<ull, bool>::operator[](const ull&)
-constexpr uint32_t IScrollProtocol_dtor = 0x4F57E1;
+constexpr uint32_t IScrollProtocol_dtor = 0x4F57E1, IScrollProtocol_updateLayout = 0x4F6CF5;
+constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
 constexpr uint32_t IScrollProtocol_update = 0x4F5CFD;
 constexpr uint32_t IScrollProtocol_setEnabledScrollBar = 0x4F6FE9;
 constexpr uint32_t BaseScrollViewULL_init = 0x4FC969, BaseScrollViewULL_setItemIDs = 0x4FD231;
@@ -104,6 +105,7 @@ struct MedalListScrollView {
     static uint32_t cloneTouchBeganInto(uint32_t functor, uint32_t dst);
     static uint32_t setMedalIDs(uint32_t self, uint32_t ids);
     static uint32_t isDisableMedal(uint32_t self, uint32_t medal);
+    static void setSelectedMedal(uint32_t self, uint64_t id, uint32_t selected);
 };
 
 // ------------------------------------------------------------------------------------------ lifetime
@@ -443,6 +445,82 @@ uint32_t MedalListScrollView::setMedalIDs(uint32_t s, uint32_t ids) {
     return 0;
 }
 
+// Select / deselect medal `id` (only one with a selection entry): a favourite, the user's support medal (user
+// data +0x58) or a locked medal (+0x26) is never selected; otherwise the decide SE and `selected`. Then the
+// unsellable list is rebuilt from the item ids and the layout refreshed.
+void MedalListScrollView::setSelectedMedal(uint32_t s, uint64_t id, uint32_t selected) {
+    bool found = false;
+    for (uint32_t node = ld32(s + F_SELECTED + 4); node;) {
+        const uint64_t nk = (uint64_t(ld32(node + 0x14)) << 32) | ld32(node + 0x10);
+        if (id < nk) {
+            node = ld32(node);
+        } else if (nk < id) {
+            node = ld32(node + 4);
+        } else {
+            found = true;
+            break;
+        }
+    }
+    if (!found) return;
+    Frame f;
+    const uint32_t key = f.alloc(8);
+    st32(key, uint32_t(id));
+    st32(key + 4, uint32_t(id >> 32));
+    const uint32_t medal = medalData(f, call(a::MedalDataManager_getInstance, {}), uint32_t(id), uint32_t(id >> 32));
+    const uint32_t mgr = call(a::MedalDataManager_getInstance, {});
+    const uint32_t copy = f.alloc(8);
+    st32(copy, ld32(medal));
+    st32(copy + 4, ld32(medal + 4));
+    addRefIf(ld32(copy + 4));
+    const uint32_t favourite = call(a::MedalDataManager_isFavoriteMedal, {mgr, copy});
+    releaseIf(ld32(copy + 4));
+    const uint32_t api = call(fn::APIManager_getInstance, {});
+    const uint32_t userData = ld32(api + API_USER_DATA), ctl = ld32(api + API_USER_DATA + 4);
+    addRefIf(ctl);
+    const uint32_t support = safeBytes(f, userData, 0x58, 8);
+    const uint64_t supportId = (uint64_t(ld32(support + 4)) << 32) | ld32(support);
+    if (!favourite && id != supportId && !ld8(ld32(medal) + 0x26)) {
+        call(a::AudioPlaySystemSEDecide, {});
+        st8(call(a::MapULLBool_index, {s + F_SELECTED, key}), uint8_t(selected));
+    } else {
+        st8(call(a::MapULLBool_index, {s + F_SELECTED, key}), 0);
+    }
+    // the unsellable medals of the list, again
+    const uint32_t begin = ld32(s + F_DISABLED), end = ld32(s + F_DISABLED + 4);
+    if (end != begin) st32(s + F_DISABLED + 4, end + (~(end - 8 - begin) & ~7u));
+    const uint32_t idsEnd = ld32(s + F_ITEM_IDS + 4);
+    for (uint32_t at = ld32(s + F_ITEM_IDS); at != idsEnd; at += 8) {
+        Frame m;
+        const uint32_t item = medalData(m, call(a::MedalDataManager_getInstance, {}), ld32(at), ld32(at + 4));
+        const uint32_t itemCopy = m.alloc(8);
+        st32(itemCopy, ld32(item));
+        const uint32_t copyCtl = ld32(item + 4);
+        st32(itemCopy + 4, copyCtl);
+        addRefIf(copyCtl);
+        const uint32_t disabled = isDisableMedal(s, itemCopy);
+        releaseIf(copyCtl);
+        if (disabled == 1) {
+            const uint32_t data = ld32(item);
+            const uint32_t last = ld32(s + F_DISABLED + 4);
+            if (last == ld32(s + F_DISABLED + 8)) {
+                call(a::VectorULL_pushBackSlow, {s + F_DISABLED, data});
+            } else {
+                uint32_t n = 0;
+                if (last) {
+                    st32(last, ld32(data));
+                    st32(last + 4, ld32(data + 4));
+                    n = ld32(s + F_DISABLED + 4);
+                }
+                st32(s + F_DISABLED + 4, n + 8);
+            }
+        }
+        releaseIf(ld32(item + 4));
+    }
+    call(a::IScrollProtocol_updateLayout, {s, 0});
+    releaseIf(ctl);
+    releaseIf(ld32(medal + 4));
+}
+
 // A medal that cannot be sold: a favourite, the user's support medal, or a locked one.
 uint32_t MedalListScrollView::isDisableMedal(uint32_t, uint32_t medal) {
     const uint32_t mgr = call(a::MedalDataManager_getInstance, {});
@@ -487,3 +565,4 @@ RW_FUNCTION(0x59B8C8, "MedalListScrollView::registItemTouchEvent $_0 __func::__c
             MedalListScrollView::cloneTouchBeganInto);
 RW_FUNCTION(0x59AB18, "MedalListScrollView::setMedalIDs", MedalListScrollView::setMedalIDs);
 RW_FUNCTION(0x59AD3C, "MedalListScrollView::isDisableMedal", MedalListScrollView::isDisableMedal);
+RW_FUNCTION(0x59AE3C, "MedalListScrollView::setSelectedMedal(unsigned long long, bool)", MedalListScrollView::setSelectedMedal);

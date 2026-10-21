@@ -189,9 +189,11 @@ uint32_t setLabel(uint32_t capture, uint32_t name, uint32_t text) {
 
 // The boss box of a stage row: the boss type image, the boss actor (from the stage's mappoi file) clipped into a
 // "Dummy_Panel" over the raid boss icon, the boss's name, Lux (interpolated from its level), level and info, and
-// the "Clear" mark (story stages already passed). stageId 0: nothing. Returns the stack-guard difference (0).
+// the "Clear" mark (story stages already passed). stageId 0: nothing. Returns what the epilogue leaves in r0 (the
+// frame size, 0x102C) on every path.
 uint32_t setBossInfo(uint32_t widget, int32_t stageId, int32_t stageType) {
-    if (stageId == 0) return 0;
+    constexpr uint32_t EPILOGUE_R0 = 0x102C;
+    if (stageId == 0) return EPILOGUE_R0;
     Frame f;
     uint32_t data = f.alloc(8);   // cocos2d::Data
     {
@@ -388,7 +390,7 @@ uint32_t setBossInfo(uint32_t widget, int32_t stageId, int32_t stageType) {
     sharedRelease(bossRow);
     sharedRelease(enemyRow);
     call(lib::Data_dtor, {data});
-    return 0;
+    return EPILOGUE_R0;
 }
 
 // The boss box of a raid row: boss image, type, name, level, HP (number and bar), time texts, the rare mark.

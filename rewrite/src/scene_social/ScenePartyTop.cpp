@@ -1,6 +1,7 @@
 // ScenePartyTop: the Party screen (MyPage: Lux emblem > Party). A Layer with IInOutAnimation at +0x288; the scene
 // file's root at +0x28C. Members of the party see the join layout (the party card, the member / manage / ranking /
-// invitation buttons and the leader's edit buttons); others the entry layout (not rewritten here).
+// invitation buttons and the leader's edit buttons); others the entry layout (Create Party / Find Party / Manage,
+// PartyTop_Initial.json).
 //
 // Layout: +0x290 in a party, +0x291 manager, +0x292 party flag, +0x293 has members, +0x294 show the "party full"
 // dialog, +0x295 sub-leader, +0x298 std::function<void()> (the party card's tap), +0x2B0 Back allowed.
@@ -39,10 +40,18 @@ constexpr uint32_t SceneUtil_callPrepareMypageAPIs = 0x46F37D;
 constexpr uint32_t Function_vb_assign = 0x490109;
 constexpr uint32_t SceneManager_changeSceneLayer = 0x612B99;
 constexpr uint32_t Vec2_dtor = 0x8E4C17;
+constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
+constexpr uint32_t Misc_create = 0x786D5D;
+constexpr uint32_t SafeBuffer_read = 0x45A269;
+constexpr uint32_t SceneManager_enableLoadingIndicator = 0x60D169;
+constexpr uint32_t APIManager_openErrorDialog = 0x4C3C8D;
+constexpr uint32_t APIManager_executePartyApplicationList = 0x4CF4BD;   // (api, const function<void(bool)>&)
+constexpr uint32_t APIManager_executePartyOfferList = 0x4D0E89;
 }  // namespace g
 
 constexpr uint32_t GOT_FUNC_LAYER_FACTORY_VTABLE = 0xFD6074;
 constexpr uint32_t GOT_CREATE_MYPAGE = 0xFD6078;
+constexpr uint32_t GOT_CREATE_MANAGEMENT = 0xFD68C8;     // createSceneLayer<ScenePartyManagement>
 
 constexpr uint32_t SIZE = 0x2B8;
 constexpr uint32_t VTABLE = 0xF99B68, VTABLE2 = 0xF99E78;
@@ -62,6 +71,11 @@ constexpr uint32_t S_DeckBG = 0xE03AF2, S_PartyTopJson = 0xE03B0D, S_RightUI = 0
                    S_AvatarNode = 0xDFE76A, S_ButtonJoinEditCenter = 0xE03BDB, S_ButtonJoinEdit = 0xE03BF2,
                    S_ButtonLeaderChange = 0xE03C02, S_TxtJoinEdit = 0xE03C16, S_TxtLeaderChange = 0xE03C23,
                    S_TxtJoinEditCenter = 0xE03C34, S_Empty = 0xDF8A1A;
+constexpr uint32_t S_PartyTopInitialJson = 0xE03C48, S_EntryLayout = 0xE03C71, S_TxtWording1 = 0xDFF14C,
+                   S_TxtWording2 = 0xDF863B, S_TxtWording3 = 0xE0014B, S_TxtWording4 = 0xE00158,
+                   S_TxtPREdit = 0xE03C7E, S_ButtonPREdit = 0xE03C89, S_TxtInitialRequest = 0xE03C97,
+                   S_ButtonInitialRequest = 0xE03CAA, S_TxtInitialManagement = 0xE03CC0,
+                   S_ButtonInitialManagement = 0xE03CD6;
 
 // texts
 constexpr int32_t TXT_TICKER_PARTY = 100620040, TXT_TICKER_NO_PARTY = 100620037, TXT_PARTY_FULL = 103810008;
@@ -70,11 +84,18 @@ constexpr int32_t TXT_MEMBER_INVITATION = 103800001, TXT_MEMBER_CHECK = 10380000
                   TXT_MEMBERS = 103800023, TXT_PLAY_STYLE = 102400003, TXT_JOIN_TYPE = 103800019,
                   TXT_UNSET = 103800011, TXT_JOIN_EDIT = 103800005, TXT_LEADER_CHANGE = 103800038;
 constexpr int32_t TXT_PLAY_STYLES[3] = {102400004, 102400005, 102400006};
+constexpr int32_t TXT_ENTRY_CREATE = 103800058, TXT_ENTRY_FIND = 103800059, TXT_ENTRY_MANAGE = 103800060,
+                  TXT_CREATE_PARTY = 103810021, TXT_FIND_PARTY = 103810022, TXT_MANAGE = 103810023,
+                  TXT_FIRST_JOIN_REWARD = 103810026;
+constexpr uint32_t MISC_FIRST_JOIN_JEWELS = 117;
 constexpr int32_t TXT_JOIN_TYPES[3] = {103800049, 103800021, 103800020};
 constexpr uint32_t PARTY_MAX = 30;
 
 // lambdas (__func vtables + 8)
 constexpr uint32_t VT_OnEnter = 0xF626B0, VT_OnExit = 0xF62684, VT_BackKey = 0xF62658, VT_FullClosed = 0xF6262C;
+constexpr uint32_t VT_CreateParty = 0xF62130, VT_FindParty = 0xF620D8, VT_Manage = 0xF62028,
+                   VT_ManageOut = 0xF62054, VT_ManageApplications = 0xF62080, VT_ManageError = 0xF620AC;
+constexpr uint32_t V_SET_NAME = 0x154;                    // Node::setName(const string&)
 constexpr uint32_t VT_MemberInvitation = 0xF625A8, VT_MemberCheck = 0xF624F8, VT_Management = 0xF62474,
                    VT_Ranking = 0xF623F0, VT_Invitation = 0xF623C4, VT_CardTap = 0xF622BC, VT_JoinEdit = 0xF62290,
                    VT_LeaderChange = 0xF62238, VT_JoinEditCenter = 0xF621E0, VT_LeaderChangeCenter = 0xF62188;
@@ -641,4 +662,117 @@ RW_FUNCTION(0x65ACF0, "ScenePartyTop::callPartyTopAPI chain 2 __func::operator()
 RW_FUNCTION(0x65AEB8, "ScenePartyTop::callPartyTopAPI chain 3 __func::__clone() (sub_65AEB8)", party_top::chain3Clone);
 RW_FUNCTION(0x65AF5C, "ScenePartyTop::callPartyTopAPI chain 3 __func::destroy_deallocate (sub_65AF5C)", party_top::chain3Free);
 
+
+// ------------------------------------------------------------------------------------------------ the entry layout
+// No party yet: PartyTop_Initial.json as "_entryLayout" over the hidden RightUI / CenterUI - Create Party, Find
+// Party and Manage (requests / invitations), the first-join reward line (misc 117 Jewels; hidden once received).
+void runInEntryLayout(uint32_t me) {
+    setVisible(findNode(ld32(me + ROOT), S_RightUI, 7), 0);
+    setVisible(findNode(ld32(me + ROOT), S_CenterUI, 8), 0);
+    const uint32_t layout =
+        call(fn::GUIReader_widgetFromJsonFile, {call(fn::GUIReader_getInstance, {}), S_PartyTopInitialJson});
+    {
+        Frame f;
+        const uint32_t name = newStr(f, S_EntryLayout, 0xC);
+        vcall(layout, V_SET_NAME, {layout, name});
+        strFree(name);
+    }
+    vcall(ld32(me + ROOT), node::addChild, {ld32(me + ROOT), layout});
+    titleLabel(layout, S_TxtWording1, 0xC, TXT_ENTRY_CREATE);
+    label(layout, S_TxtPREdit, 0xA, TXT_CREATE_PARTY);
+    addTouch(findNode(layout, S_ButtonPREdit, 0xD), VT_CreateParty, {me});
+    titleLabel(layout, S_TxtWording2, 0xC, TXT_ENTRY_FIND);
+    label(layout, S_TxtInitialRequest, 0x12, TXT_FIND_PARTY);
+    addTouch(findNode(layout, S_ButtonInitialRequest, 0x15), VT_FindParty, {me});
+    titleLabel(layout, S_TxtWording3, 0xC, TXT_ENTRY_MANAGE);
+    label(layout, S_TxtInitialManagement, 0x15, TXT_MANAGE);
+    addTouch(findNode(layout, S_ButtonInitialManagement, 0x18), VT_Manage, {me});
+    const uint32_t reward = findNode(layout, S_TxtWording4, 0xC);
+    SceneUtil::setShadow(reward);
+    {
+        Frame f;
+        const uint32_t fmt = textData(f, TXT_FIRST_JOIN_REWARD);
+        const uint32_t row = f.alloc(8);
+        call(g::Misc_create, {row, MISC_FIRST_JOIN_JEWELS});
+        const uint32_t sb = ld32(row);
+        const uint32_t jewels = f.alloc(4);
+        call(g::SafeBuffer_read, {sb, jewels, ld32(sb + 0xC) + 4, 4, 4});
+        setTextC(reward, stringBuffer(f, {textDataStr(fmt), ld32(jewels)}));
+        sharedRelease(row);
+        sharedRelease(fmt);
+    }
+    const uint32_t api = call(fn::APIManager_getInstance, {});
+    const uint32_t userCtrl = addRef(ld32(api + API_USER + 4));
+    const uint32_t user = ld32(api + API_USER);
+    {
+        Frame f;
+        const uint32_t received = f.alloc(4);
+        call(g::SafeBuffer_read, {user, received + 3, ld32(user + 0xC) + 0x13, 1, 0x13});
+        setVisible(reward, ld8(received + 3) == 0 ? 1 : 0);
+    }
+    runAnimation(layout, leftIn);
+    release(userCtrl);
+}
+RW_FUNCTION(0x654C34, "ScenePartyTop::runInEntryLayout", party_top::runInEntryLayout);
+
+// The entry layout slides out to the left, then `done`.
+void runOutEntryLayout(uint32_t me, uint32_t done) {
+    const uint32_t layout = findNode(ld32(me + ROOT), S_EntryLayout, 0xC);
+    Frame f;
+    const uint32_t copy = f.alloc(20);
+    call(fn::function_vv_copy, {copy, done});
+    call(fn::Node_runAction, {layout, SceneUtil::createLeftOutAnimation(layout, 0.0f, 0.0f, copy)});
+    functionDestroy(copy);
+}
+RW_FUNCTION(0x655B34, "ScenePartyTop::runOutEntryLayout", party_top::runOutEntryLayout);
+
+// runInEntryLayout $_23 {scene}: Manage - the scene runs out, then the request list
+void manageTouch(uint32_t functor, uint32_t /*sender*/, uint32_t typeRef) {
+    if (ld32(typeRef) != 2) return;
+    const uint32_t me = ld32(functor + 4);
+    call(g::AudioPlaySystemSEDecide, {});
+    Frame f;
+    const uint32_t then = newFunction(f, VT_ManageOut, {});
+    call(g::IInOutAnimation_runOutAnimation, {me + 0x288, then});
+    functionDestroy(then);
+}
+RW_FUNCTION(0x65722C, "ScenePartyTop::runInEntryLayout::$_23 operator() (Manage)", party_top::manageTouch);
+// its lambda(): /party/application/list
+void manageOut(uint32_t) {
+    const uint32_t api = call(fn::APIManager_getInstance, {});
+    Frame f;
+    const uint32_t cb = newFunction(f, VT_ManageApplications, {});
+    call(g::APIManager_executePartyApplicationList, {api, cb});
+    functionDestroy(cb);
+}
+RW_FUNCTION(0x65735C, "ScenePartyTop::runInEntryLayout::$_23::lambda() operator()", party_top::manageOut);
+// that lambda's lambda(bool ok): the offer list, then ScenePartyManagement; or the error dialog
+void manageApplications(uint32_t, uint32_t okRef) {
+    const uint32_t ok = ld8(okRef);
+    call(g::SceneManager_enableLoadingIndicator, {sceneManager(), 0});
+    Frame f;
+    if (ok) {
+        const uint32_t sm = sceneManager();
+        const uint32_t none = newEmptyFunction(f);
+        st8(sm + 0x4CC, 1);
+        call(g::Function_vb_assign, {sm + 0x548, none});
+        functionDestroy(none);
+        const uint32_t api = call(fn::APIManager_getInstance, {});
+        const uint32_t none2 = newEmptyFunction(f);
+        call(g::APIManager_executePartyOfferList, {api, none2});
+        functionDestroy(none2);
+        const uint32_t sm2 = sceneManager();
+        const uint32_t layer = newFunction(f, ld32(GOT_FUNC_LAYER_FACTORY_VTABLE) + 8, {ld32(GOT_CREATE_MANAGEMENT)});
+        rw::call(g::SceneManager_changeSceneLayer, {sm2, layer, 1, 1, 1});
+        functionDestroy(layer);
+        return;
+    }
+    if (!ld8(call(fn::APIManager_getInstance, {}) + 0x14)) return;
+    const uint32_t api = call(fn::APIManager_getInstance, {});
+    const uint32_t cb = newFunction(f, VT_ManageError, {});
+    call(g::APIManager_openErrorDialog, {api, cb, 1});
+    functionDestroy(cb);
+}
+RW_FUNCTION(0x657478, "ScenePartyTop::runInEntryLayout::$_23::lambda()::lambda(bool) operator()",
+            party_top::manageApplications);
 }  // namespace party_top

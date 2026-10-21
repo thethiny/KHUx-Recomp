@@ -26,7 +26,26 @@ typedef struct RwHost {
     uint32_t ret_magic;                                   /* lr of host -> guest calls */
     GTrack *gtrack;                                       /* rt.h stale stack tracking, shared with lift.dll */
     const volatile int *host_call_returns;                /* 1 while the host's calls return (constructors) */
+    /* replay sandbox (version 10): page capture, import records, guest memory writes */
+    int (*track)(int on);
+    int (*track_pages)(const uint32_t **addrs, const uint8_t **data);
+    int (*track_zero)(const uint32_t **chunks);
+    size_t (*imports_export)(uint8_t **out);
+    int (*imports_import)(const uint8_t *b, size_t n);
+    void (*put)(uint32_t addr, const void *bytes, uint32_t size);
 } RwHost;
+int mem_track(int on);
+int mem_track_pages(const uint32_t **addrs, const uint8_t **data);
+int mem_track_zero(const uint32_t **chunks);
+void mem_put(uint32_t addr, const void *bytes, uint32_t size);
+size_t import_shadow_export(uint8_t **out);
+int import_shadow_import(const uint8_t *b, size_t n);
+static int (*rw_replay_fn)(CPU *c, const char *dir);
+/* KHUX_RW_REPLAY: run the recorded calls in a directory against their rewrites (rewrite.dll rw_replay) */
+int rewrite_replay(CPU *c, const char *dir) {
+    if (!rw_replay_fn) fatal("rewrite.dll has no rw_replay (rebuild it)");
+    return rw_replay_fn(c, dir);
+}
 
 static RwHost host;
 /* the host's own calls into guest code normally are not shadow-run (a thread entry never returns); the
@@ -108,6 +127,7 @@ void rewrite_load(const char *root) {
     int (*bind)(int, uint32_t, int) = (int (*)(int, uint32_t, int))GetProcAddress(dll, "rw_bind");
     rw_report_fn = (void (*)(void))GetProcAddress(dll, "rw_report");
     rw_where_fn = (const char *(*)(void))GetProcAddress(dll, "rw_where");
+    rw_replay_fn = (int (*)(CPU *, const char *))GetProcAddress(dll, "rw_replay");
     LiftFn **slot_ptr = (LiftFn **)GetProcAddress(L.dll, "rt_override");
     int (*index)(uint32_t) = (int (*)(uint32_t))GetProcAddress(L.dll, "rt_index");
     void (*undo)(CPU *) = (void (*)(CPU *))GetProcAddress(L.dll, "rt_undo");
@@ -125,7 +145,13 @@ void rewrite_load(const char *root) {
     snprintf(stats_path, sizeof(stats_path), "%s/%04d%02d%02d_%02d%02d%02d.tsv", stats_dir, t.wYear, t.wMonth,
              t.wDay, t.wHour, t.wMinute, t.wSecond);
     snprintf(verified_path, sizeof(verified_path), "%s/rewrite/verified.txt", root);
-    host.version = 9;
+    host.version = 10;
+    host.track = mem_track;
+    host.track_pages = mem_track_pages;
+    host.track_zero = mem_track_zero;
+    host.imports_export = import_shadow_export;
+    host.imports_import = import_shadow_import;
+    host.put = mem_put;
     host.host_call_returns = &rewrite_host_call_returns;
     /* the stale stack tracker (rt.h GTrack): lift.dll's loads and stores feed it during shadow runs */
     GTrack **gt_slot = (GTrack **)GetProcAddress(L.dll, "rt_gtrack");

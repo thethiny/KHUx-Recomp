@@ -9,13 +9,6 @@
 
 using rw::guest_addr;
 
-void SceneAvatarEdit::initAvatarPartsList(SceneAvatarEdit *self) { rw::call(0x7051F9, {guest_addr(self)}); }
-void SceneAvatarEdit::initTabButton(SceneAvatarEdit *self) { rw::call(0x7054AD, {guest_addr(self)}); }
-void SceneAvatarEdit::initMyCordinateButton(SceneAvatarEdit *self) { rw::call(0x7058C9, {guest_addr(self)}); }
-void SceneAvatarEdit::changeMyCordinate(SceneAvatarEdit *self, int32_t index) {
-    rw::call(0x705C25, {guest_addr(self), uint32_t(index)});
-}
-void SceneAvatarEdit::changeTab(SceneAvatarEdit *self, uint32_t tab) { rw::call(0x705CF5, {guest_addr(self), tab}); }
 void SceneAvatarEdit::settingDefaultCoordinate(SceneAvatarEdit *self, Coordinate *coordinate, uint32_t male) {
     rw::call(0x7061A1, {guest_addr(self), guest_addr(coordinate), male});
 }

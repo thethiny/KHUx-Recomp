@@ -390,6 +390,14 @@ static __declspec(thread) double shadow_real, shadow_mono;
 static uint64_t shadow_rand;
 static double now_real_raw(void);
 static double now_mono_raw(void);
+/* replay sandbox: the frozen clocks and random state of the last shadow run (capture), and forcing them (replay) */
+static int shadow_forced;
+static double forced_real, forced_mono;
+static uint64_t forced_rand;
+void libc_shadow_state(double *real, double *mono, uint64_t *rnd) { *real = shadow_real; *mono = shadow_mono; *rnd = shadow_rand; }
+void libc_shadow_force(double real, double mono, uint64_t rnd) {
+    shadow_forced = 1; forced_real = real; forced_mono = mono; forced_rand = rnd;
+}
 int libc_shadow(int phase) {
     if (phase >= 3) return import_shadow(phase);
     import_shadow(phase);
@@ -397,6 +405,9 @@ int libc_shadow(int phase) {
         L.heap_hold(1);                     /* no other guest thread allocates during the shadow run */
         shadow_real = now_real_raw();
         shadow_mono = now_mono_raw();
+        if (shadow_forced) {                /* replay sandbox: the captured call's clocks and random state */
+            shadow_real = forced_real; shadow_mono = forced_mono; rand_state = forced_rand;
+        }
         shadow_rand = rand_state;
         shadow_on = 1;
     } else if (phase == 1) {                /* before another run: the same random numbers again */

@@ -9,3 +9,7 @@
 561DD4 561EA4 RankingRewardScrollView icon touch lambda __clone: copies a short image-path string's whole 12-byte buffer; the bytes after its terminator are stale stack bytes of the frame that built the path
 815024 815066 map<string, shared_ptr<LWF::LWFContainer>> node construction (LWFNode::attachLWF): copies a short key string's whole 12-byte buffer; for the empty attach name the bytes after its terminator are stale stack bytes of the frame that built it
 80C290 80C31C map<string, int>::operator[](string&&) (LWF::AddMovieEventHandler's event name): moves a short key string's whole 12-byte buffer; the bytes after its terminator are stale stack bytes of the frame that built the name ("stamp" in SceneLoginBonus::initLoginBonus)
+6235B4 623610 SceneManager::openPartyNewPopup $_111 __clone() / __clone(__base*): copies the {popup, shadow, opacity} word whose upper three bytes openPartyNewPopup never sets (only the opacity byte is stored), stale stack bytes of its frame
+624C6C 624D48 SceneManager::openPartyNewPopup $_106 (the OK button lambda) __clone() / __clone(__base*): copies the same {popup, shadow, opacity} block with its unset bytes
+50544C 505490 SupportCharacterScrollView::changeRow $_0 __clone(): copies the medal lambda whole; changeRow never sets its word +4 (heap) and builds +0xC from an unset stack word in front of the SupportUser copy
+50405C 504060 SupportCharacterScrollView::changeRow: the memcpy of the medal lambda's captures into its heap __func; the first word (+0xC) is an unset stack word in front of the SupportUser copy

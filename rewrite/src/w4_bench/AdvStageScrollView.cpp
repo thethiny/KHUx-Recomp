@@ -124,10 +124,10 @@ uint32_t AdvStageScrollView::init(AdvStageScrollView *self) {
     call(lib::ImageDownloader_ctor, {dl});
     self->imageDownloader = dl;
     rw::host_ptr<ImageDownloader>(dl)->defaultTimeout = 3600;
-    rw::set<float>(self, 1404, 168.0f);
-    rw::set<float>(self, 1408, 179.0f);
-    rw::set<float>(self, 1528, 40.0f);
-    rw::set<float>(self, 1532, 40.0f);
+    rw::set<float>(self, 1404, 169.0f);
+    rw::set<float>(self, 1408, 180.0f);
+    rw::set<float>(self, 1528, 38.25f);
+    rw::set<float>(self, 1532, 38.25f);
     rw::set<float>(self, 1524, 24.0f);
     vcall(me, VS_31C, {me, 0});
     rw::set<uint8_t>(self, 1488, 0);
@@ -327,7 +327,7 @@ uint32_t AdvStageScrollView::removeSelectItemAll(AdvStageScrollView *self) {
 // with `hasSecond`, "<second>k<point>" ('k' is the separator). Negative values index outside the digit table, as
 // in the original.
 void AdvStageScrollView::pointToString(Addr out, int32_t point, int32_t second, uint32_t hasSecond) {
-    constexpr uint32_t LETTERS = 0xDF959C;   // "a b c ...k ": eleven one-letter strings
+    constexpr uint32_t LETTERS = 0xDF959C;   // "a\0b\0c\0...k\0": eleven one-letter strings
     constexpr uint32_t EMPTY = 0xDF8A1A;     // ""
     Frame f;
     uint32_t digits = f.alloc(11 * 12);

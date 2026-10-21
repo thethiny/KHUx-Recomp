@@ -52,9 +52,16 @@ struct RwHost {
     uint32_t ret_magic;                  // lr of a call made by the host itself (thread entries, callbacks)
     GTrack *gtrack;                      // rt.h: stale stack loads during shadow runs (shared with lift.dll)
     const volatile int *host_call_returns;   // 1 while the host's own calls return (the .init_array constructors)
+    // replay sandbox (version 10): page capture, import records, guest memory writes
+    int (*track)(int on);
+    int (*track_pages)(const uint32_t **addrs, const uint8_t **data);
+    int (*track_zero)(const uint32_t **chunks);
+    size_t (*imports_export)(uint8_t **out);
+    int (*imports_import)(const uint8_t *b, size_t n);
+    void (*put)(uint32_t addr, const void *bytes, uint32_t size);
 };
 }
-#define RW_HOST_VERSION 9
+#define RW_HOST_VERSION 10
 
 // rt.h wlog: a full store log stops logging and the run goes on for real (the verifier keeps it)
 extern "C" EXPORT int rt_log_full_continue = 1;
@@ -156,7 +163,48 @@ uint64_t call64(uint32_t fn, std::initializer_list<uint32_t> args) {
 // 64M stores (1 GB of address space per verifying thread; only the pages a run touches get memory). A run that
 // fills it skips its later stores and is void, so it must be rare: constructing a singleton (big zero-filled
 // tables) took more than the 1M of the first version.
-static constexpr uint32_t LOG_CAP = 1u << 27;   // 128M stores (2 GB): AvatarInfoDialog::createLayout makes ~60M
+// The store log's capacity: 128M stores (2 GB of address space, committed only as runs use it):
+// AvatarInfoDialog::createLayout makes ~60M. KHUX_RW_LOGCAP=n sets 2^n (20..27). A bigger run counts as too big.
+static uint32_t log_cap() {
+    static const uint32_t cap = [] {
+        const char *v = getenv("KHUX_RW_LOGCAP");
+        int n = v ? atoi(v) : 27;
+        return 1u << (n < 20 ? 20 : n > 27 ? 27 : n);
+    }();
+    return cap;
+}
+#define LOG_CAP (log_cap())
+// After a shadow run that used more than this many log entries, the log's pages go back to Windows (decommitted):
+// otherwise every page a big run touched stays in the game's working set for the rest of the session.
+static constexpr uint32_t LOG_RESET_ENTRIES = 1u << 22;     // 4M entries = 64 MB
+static thread_local uint32_t log_peak = 0;
+// Store logs are only reserved; a vectored handler commits the 1 MB chunk a store first touches (as host/mem.c does
+// for the guest heap), so a session commits what its biggest run used, not the whole capacity.
+static constexpr size_t LOG_CHUNK = size_t(1) << 20;
+static std::mutex log_ranges_lock;
+static std::vector<std::pair<uint8_t *, size_t>> log_ranges;
+static LONG CALLBACK log_fault(EXCEPTION_POINTERS *e) {
+    EXCEPTION_RECORD *r = e->ExceptionRecord;
+    if (r->ExceptionCode != EXCEPTION_ACCESS_VIOLATION || r->NumberParameters < 2) return EXCEPTION_CONTINUE_SEARCH;
+    uint8_t *a = reinterpret_cast<uint8_t *>(r->ExceptionInformation[1]);
+    std::lock_guard<std::mutex> g(log_ranges_lock);
+    for (auto &[base, size] : log_ranges)
+        if (a >= base && a < base + size) {
+            uint8_t *chunk = base + (size_t(a - base) & ~(LOG_CHUNK - 1));
+            return VirtualAlloc(chunk, LOG_CHUNK, MEM_COMMIT, PAGE_READWRITE) ? EXCEPTION_CONTINUE_EXECUTION
+                                                                               : EXCEPTION_CONTINUE_SEARCH;
+        }
+    return EXCEPTION_CONTINUE_SEARCH;
+}
+static WLog *reserve_log() {
+    const size_t bytes = size_t(LOG_CAP) * sizeof(WLog);
+    auto *p = static_cast<uint8_t *>(VirtualAlloc(nullptr, bytes, MEM_RESERVE, PAGE_READWRITE));
+    if (!p) return nullptr;
+    std::lock_guard<std::mutex> g(log_ranges_lock);
+    if (log_ranges.empty()) AddVectoredExceptionHandler(1, log_fault);
+    log_ranges.emplace_back(p, bytes);
+    return reinterpret_cast<WLog *>(p);
+}
 static constexpr uint32_t STACK_WINDOW = 1u << 20;         // callee frames live in [sp - 1 MB, sp)
 
 struct Regs {
@@ -483,9 +531,15 @@ static void verify(CPU *c, int i) {
     // lifted run's stores before the undo); when it cannot park in time, the original runs without a comparison
     if (!H->shadow(7)) { run_lifted(c, i); return; }
     struct Exclusive { ~Exclusive() { H->shadow(8); } } exclusive;
+    struct ReleaseLog {
+        ~ReleaseLog() {
+            if (log_peak > LOG_RESET_ENTRIES && logbuf)
+                VirtualFree(logbuf, size_t(log_peak) * sizeof(WLog), MEM_DECOMMIT);   // recommitted on the next touch
+            log_peak = 0;
+        }
+    } release_log;
     if (!logbuf) {
-        logbuf = static_cast<WLog *>(VirtualAlloc(nullptr, size_t(LOG_CAP) * sizeof(WLog), MEM_RESERVE | MEM_COMMIT,
-                                                  PAGE_READWRITE));
+        logbuf = reserve_log();
         if (!logbuf) { logf("RW: no memory for the store log"); run_lifted(c, i); return; }
     }
     WLog *old_log = c->wlog;
@@ -525,6 +579,7 @@ static void verify(CPU *c, int i) {
     const Regs out_l = save(c);
     const uint32_t pc_l = c->pc;
     // a lifted run over half the log is too big to compare (the byte maps would not fit in memory): the real call
+    log_peak = c->wn < LOG_CAP ? c->wn : LOG_CAP;
     const bool full_l = c->wfull != 0 || c->wn > LOG_CAP / 2;
     if (H->shadow(4) || full_l || effect_handoff) {
         // it called OpenGL ES, handed work to another thread, or it filled the store log (logging stopped, the rest ran for real): either way
@@ -940,11 +995,204 @@ static void verify(CPU *c, int i) {
     where_fn = nullptr;
 }
 
+// ------------------------------------------------------------------------------------------------- replay sandbox
+// KHUX_RW_CAPTURE=@file (names, one per line, "name$" exact or a prefix; "*" = all) during a verify session: a call shadow-run
+// for one of these is recorded - its registers, its imports (the lifted run's records) and every guest page the
+// shadow run touched, as it was before the call (the host makes all guest pages inaccessible for the run and saves
+// each on its first access). KHUX_RW_CAPTURE_MAX calls per function (default 3), files in KHUX_RW_CAPTURE_DIR
+// (default out/rewrite/replay). Runs with effects (requests, saves), opaque runs and runs too big are not recorded.
+// KHUX_RW_REPLAY=dir (host): rw_replay runs each record again through verify() - the same input, lifted against
+// rewrite - without the game, and compares the outcome with the live one.
+struct RecHeader {
+    char magic[8];                                         // "KRWREC1"
+    uint32_t addr, live;                                   // the function, the live outcome (0 verified, 1 mismatch)
+    uint32_t r[16], n, z, cf, v, vfp_on, fpscr;
+    uint64_t d[32];
+    uint32_t nimp, npages, nzero, foreign;                // foreign: pages another thread touched first
+};
+static std::vector<std::string> capture_names;
+static bool capture_on = false;
+static std::string capture_dir;
+static uint32_t capture_max = 3;
+static std::vector<uint32_t> captured;                     // per entry: calls recorded
+static std::vector<uint8_t> capture_tries;                 // per entry: captures that recorded nothing
+static DWORD capture_tid;                                  // the main thread (the only one that shadow-runs)
+static ULONGLONG capture_from;                             // KHUX_RW_CAPTURE_DELAY: no captures before (boot)
+static void capture_init() {
+    capture_tid = GetCurrentThreadId();
+    const char *v = getenv("KHUX_RW_CAPTURE");
+    if (!v || !*v) return;
+    if (v[0] == '@') {
+        FILE *f = fopen(v + 1, "rb");
+        if (!f) { logf("RW CAPTURE: cannot read %s", v + 1); return; }
+        char line[1024];
+        while (fgets(line, sizeof line, f)) {
+            size_t n = strlen(line);
+            while (n && (line[n - 1] == '\n' || line[n - 1] == '\r')) line[--n] = 0;
+            if (n) capture_names.emplace_back(line);
+        }
+        fclose(f);
+    } else if (!strcmp(v, "*")) capture_names.emplace_back("");      // every function: an empty prefix
+    else capture_names.emplace_back(v);
+    const char *d = getenv("KHUX_RW_CAPTURE_DIR");
+    capture_dir = d ? d : "out/rewrite/replay";
+    CreateDirectoryA(capture_dir.c_str(), nullptr);
+    if (getenv("KHUX_RW_CAPTURE_MAX")) capture_max = uint32_t(strtoul(getenv("KHUX_RW_CAPTURE_MAX"), nullptr, 10));
+    capture_from = GetTickCount64() + 1000ull * strtoull(getenv("KHUX_RW_CAPTURE_DELAY") ? getenv("KHUX_RW_CAPTURE_DELAY") : "0", nullptr, 10);
+    captured.assign(entries().size(), 0);
+    capture_tries.assign(entries().size(), 0);
+    capture_on = true;
+    // the functions installed in this session (KHUX_RW_ONLY), next to the records: a replay must install the same
+    // set (callees that ran lifted here must run lifted there); no file = all of them
+    if (const char *only = getenv("KHUX_RW_ONLY")) {
+        std::string text;
+        if (only[0] == '@') {
+            if (FILE *in = fopen(only + 1, "rb")) {
+                char buf[4096];
+                size_t n;
+                while ((n = fread(buf, 1, sizeof buf, in)) > 0) text.append(buf, n);
+                fclose(in);
+            }
+        } else {
+            for (const char *p = only; *p; p++) text += *p == ',' ? '\n' : *p;
+        }
+        if (FILE *out = fopen((capture_dir + "/only.txt").c_str(), "wb")) { fwrite(text.data(), 1, text.size(), out); fclose(out); }
+    }
+    logf("RW CAPTURE: %zu names, up to %u calls each, into %s", capture_names.size(), capture_max, capture_dir.c_str());
+}
+static bool capture_wanted(int i, const CPU *c) {
+    if (!capture_on || lifted_run || c->logging || captured[i] >= capture_max) return false;
+    if (capture_tries[i] >= 3) return false;               // calls that are never compared (too big, opaque, effects)
+    // the cases verify() runs without a shadow run: nothing to record
+    const Stats &st = (*stats)[i];
+    if (st.too_big) return false;
+    static const uint64_t cap = getenv("KHUX_RW_CAP") ? strtoull(getenv("KHUX_RW_CAP"), nullptr, 10) : 200;
+    if (cap && st.verified.load() >= cap && st.mismatches.load() == 0) return false;
+    if ((c->r[14] & ~1u) == H->ret_magic && !*H->host_call_returns) return false;
+    if (GetCurrentThreadId() != capture_tid || GetTickCount64() < capture_from) return false;
+    const char *name = entries()[i].name;
+    for (const std::string &p : capture_names) {
+        if (!p.empty() && p.back() == '$') {
+            if (strlen(name) == p.size() - 1 && !strncmp(name, p.c_str(), p.size() - 1)) return true;
+        } else if (!strncmp(name, p.c_str(), p.size())) return true;
+    }
+    return false;
+}
+static void verify_captured(CPU *c, int i) {
+    RecHeader h{};
+    memcpy(h.magic, "KRWREC1", 8);
+    h.addr = entries()[i].addr;
+    memcpy(h.r, c->r, sizeof h.r);
+    h.n = c->n; h.z = c->z; h.cf = c->c; h.v = c->v; h.vfp_on = c->vfp_on; h.fpscr = c->fpscr;
+    memcpy(h.d, c->vf.d, sizeof h.d);
+    Stats &st = (*stats)[i];
+    const uint64_t v0 = st.verified.load(), m0 = st.mismatches.load(), u0 = st.unverifiable.load();
+    static const bool trace = getenv("KHUX_RW_CAPTURE_TRACE") != nullptr;
+    if (trace) logf("RW CAPTURE begin %s @%08X", entries()[i].name, entries()[i].addr);
+    if (H->track(1) < 0) { verify(c, i); return; }       // another capture is running
+    verify(c, i);
+    h.foreign = uint32_t(H->track(0));
+    const uint64_t dv = st.verified.load() - v0, dm = st.mismatches.load() - m0, du = st.unverifiable.load() - u0;
+    if (du || (!dv && !dm) || !effect_calls.empty()) {     // no comparison made, opaque, or effects
+        if (capture_tries[i] < 255) capture_tries[i]++;
+        return;
+    }
+    h.live = dm ? 1 : 0;
+    uint8_t *imp = nullptr;
+    const size_t nimp = H->imports_export(&imp);
+    const uint32_t *pa; const uint8_t *pd; const uint32_t *za;
+    h.npages = uint32_t(H->track_pages(&pa, &pd));
+    h.nzero = uint32_t(H->track_zero(&za));
+    h.nimp = uint32_t(nimp);
+    char path[1024];
+    snprintf(path, sizeof path, "%s/%08X_%02u.rwr", capture_dir.c_str(), h.addr, captured[i]);
+    FILE *f = fopen(path, "wb");
+    if (f) {
+        fwrite(&h, sizeof h, 1, f);
+        if (nimp) fwrite(imp, 1, nimp, f);
+        if (h.nzero) fwrite(za, 4, h.nzero, f);
+        if (h.npages) { fwrite(pa, 4, h.npages, f); fwrite(pd, 0x1000, h.npages, f); }
+        fclose(f);
+        captured[i]++;
+        logf("RW CAPTURE %s @%08X -> %s (%u pages, %u first touched by another thread, %u zero chunks, %zu import "
+             "bytes, %s)", entries()[i].name, h.addr, path, h.npages, h.foreign, h.nzero, nimp,
+             h.live ? "mismatch" : "verified");
+    }
+    free(imp);
+}
+
+extern "C" EXPORT int rw_replay(CPU *c, const char *dir) {
+    std::vector<std::string> files;
+    WIN32_FIND_DATAA fd;
+    HANDLE hf = FindFirstFileA((std::string(dir) + "/*.rwr").c_str(), &fd);
+    if (hf != INVALID_HANDLE_VALUE) {
+        do files.emplace_back(std::string(dir) + "/" + fd.cFileName); while (FindNextFileA(hf, &fd));
+        FindClose(hf);
+    }
+    std::sort(files.begin(), files.end());
+    // KHUX_RW_REPLAY_FROM=n: start at the n-th record (a driver resumes after a record that crashed)
+    if (const char *from = getenv("KHUX_RW_REPLAY_FROM")) {
+        const size_t n = strtoul(from, nullptr, 10);
+        files.erase(files.begin(), files.begin() + (n < files.size() ? n : files.size()));
+    }
+    std::unordered_map<uint32_t, int> by_addr;
+    for (size_t k = 0; k < entries().size(); k++) by_addr[entries()[k].addr] = int(k);
+    int agree = 0, differ = 0, skipped = 0, differ_tainted = 0;
+    LARGE_INTEGER fq, t0, t1;
+    QueryPerformanceFrequency(&fq);
+    QueryPerformanceCounter(&t0);
+    std::vector<uint8_t> zero(0x100000, 0);
+    for (const std::string &path : files) {
+        FILE *f = fopen(path.c_str(), "rb");
+        if (!f) continue;
+        RecHeader h;
+        if (fread(&h, sizeof h, 1, f) != 1 || memcmp(h.magic, "KRWREC1", 8)) { fclose(f); skipped++; continue; }
+        std::vector<uint8_t> imp(h.nimp), pd(size_t(h.npages) * 0x1000);
+        std::vector<uint32_t> za(h.nzero), pa(h.npages);
+        bool ok = (!h.nimp || fread(imp.data(), 1, h.nimp, f) == h.nimp) &&
+                  (!h.nzero || fread(za.data(), 4, h.nzero, f) == h.nzero) &&
+                  (!h.npages || (fread(pa.data(), 4, h.npages, f) == h.npages &&
+                                 fread(pd.data(), 0x1000, h.npages, f) == h.npages));
+        fclose(f);
+        auto it = by_addr.find(h.addr);
+        if (!ok || it == by_addr.end() || !entries()[it->second].verify) {
+            skipped++;
+            logf("RW REPLAY %s: skipped (%s)", path.c_str(), !ok ? "short file" : "function not installed");
+            continue;
+        }
+        const int i = it->second;
+        logf("RW REPLAY start %s", path.c_str());
+        for (uint32_t a : za) H->put(a, zero.data(), 0x100000);
+        for (uint32_t k = 0; k < h.npages; k++) H->put(pa[k], pd.data() + size_t(k) * 0x1000, 0x1000);
+        memcpy(c->r, h.r, sizeof h.r);
+        c->n = h.n; c->z = h.z; c->c = h.cf; c->v = h.v; c->vfp_on = h.vfp_on; c->fpscr = h.fpscr;
+        memcpy(c->vf.d, h.d, sizeof h.d);
+        c->logging = 0; c->wn = 0;
+        H->imports_import(imp.data(), imp.size());
+        Stats &st = (*stats)[i];
+        const uint64_t v0 = st.verified.load(), m0 = st.mismatches.load();
+        st.calls++;
+        verify(c, i);
+        const int got = st.mismatches.load() != m0 ? 1 : st.verified.load() != v0 ? 0 : 2;
+        static const char *const what[] = {"verified", "MISMATCH", "not compared"};
+        if (got == int(h.live)) agree++; else if (h.foreign) differ_tainted++; else differ++;
+        logf("RW REPLAY %s %s: %s, live %s%s%s", path.c_str(), entries()[i].name, what[got], what[h.live],
+             h.foreign ? " (tainted: other threads touched its pages)" : "", got == int(h.live) ? "" : "  <-- differs");
+    }
+    QueryPerformanceCounter(&t1);
+    logf("RW REPLAY: %d records, %d agree with the live outcome, %d differ (+%d tainted records differ), %d skipped, "
+         "%.3f s", agree + differ + differ_tainted + skipped, agree, differ, differ_tainted, skipped,
+         double(t1.QuadPart - t0.QuadPart) / double(fq.QuadPart));
+    return differ;
+}
+
 void enter(CPU *c, int i) {
     if (entries()[i].effect) { effect_enter(c, i); return; }
     (*stats)[i].calls++;
-    if (H->verify && entries()[i].verify) verify(c, i);
-    else run_rewrite(c, i);
+    if (H->verify && entries()[i].verify) {
+        if (capture_on && capture_wanted(i, c)) verify_captured(c, i);
+        else verify(c, i);
+    } else run_rewrite(c, i);
 }
 
 static std::vector<uint32_t> verified_set;     // sorted guest addresses from verified.txt
@@ -979,6 +1227,7 @@ __declspec(dllexport) int rw_init(const RwHost *host) {
     rw::bound.assign(n, rw::Bound{});
     rw::stats = new std::vector<rw::Stats>(n);
     rw::load_garbage_sites(host->verified_path);
+    if (host->verify) rw::capture_init();
     if (host->verified_path) {
         if (FILE *f = fopen(host->verified_path, "r")) {
             char line[256];

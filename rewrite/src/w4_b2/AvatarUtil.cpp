@@ -188,6 +188,23 @@ struct AvatarUtil {
         return 0;
     }
 
+    // sub_497594: the default style (parts 40001 / 50001 / 20001 / 1 / 30001, keyblade 1 / 1, accessories
+    // {109001, 0, 0, 0, 0})
+    static void defaultStyle(uint32_t out) {
+        call(SB_CTOR, {out, 0x30, 1});
+        st32(out, ld32(STYLE_VTABLE_GOT) + 8);
+        Frame f;
+        uint32_t v = f.alloc(20);
+        const uint32_t parts[] = {40001, 50001, 20001, 1, 30001, 1, 1};
+        for (uint32_t k = 0; k < 7; k++) {
+            st32(v, parts[k]);
+            sbWrite(out, 4 * k, v, 4);
+        }
+        for (uint32_t k = 0; k < 20; k += 4) st32(v + k, 0);
+        st32(v, 109001);
+        sbWrite(out, 0x1C, v, 0x14);
+    }
+
     static uint32_t getSupportUserStyle(uint32_t out) {
         Frame f;
         uint32_t am = call(API_MANAGER, {});
@@ -215,5 +232,6 @@ RW_FUNCTION(0x497104, "AvatarUtil::makeStyle", AvatarUtil::makeStyle);
 RW_FUNCTION(0x4976FC, "AvatarUtil::getCurrentKeyblade", AvatarUtil::getCurrentKeyblade);
 RW_FUNCTION(0x4977AC, "AvatarUtil::getCurrentStyle", AvatarUtil::getCurrentStyle);
 RW_FUNCTION(0x49794C, "AvatarUtil::getSupportUserStyle", AvatarUtil::getSupportUserStyle);
+RW_FUNCTION(0x497594, "AvatarUtil default style (sub_497594)", AvatarUtil::defaultStyle);
 
 }  // namespace w4b2

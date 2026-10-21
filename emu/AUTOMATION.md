@@ -90,6 +90,14 @@ The exe also prints `>>> screen` / `>>> api` lines into its log (`recomp/out/hos
   - `KHUX_RW_ONLY=@file` (one name prefix per line) verifies callees whose callers are rewritten (calls from
     rewritten code are never compared on their own). Do not use `KHUX_RW_THREADS=1` for a whole session: it
     parks the network thread and boot hangs on the loading indicator.
+- **Replay sandbox (re-verify without the game)**: a verify session with `KHUX_RW_CAPTURE=*` (or `@file` of names)
+  records calls: registers, the lifted run's imports, the frozen clocks / random state and every guest page the shadow
+  run touched, as it was before the call (`KHUX_RW_CAPTURE_DIR` default `out/rewrite/replay`, `KHUX_RW_CAPTURE_MAX`
+  per function, default 3; `KHUX_RW_CAPTURE_DELAY=150` skips boot - capturing during boot is too slow). Then
+  `python rewrite/tools/replay.py DIR` runs every record through the verifier again (lifted vs rewrite) without the
+  game, and compares with the live outcome; it uses `DIR/only.txt` (the session's `KHUX_RW_ONLY`) so callees run the
+  same way. A corpus of 427 calls replays in ~30 s (its live session: ~10 min). Use it after editing rewrites that
+  have records; new code still needs a live session to reach it once.
 - **A raid on demand** (raids are the server's call): from `server/`,
   `python -c "from sqlalchemy.orm import sessionmaker; from src.models import get_engine; from src import raid as r;
   db = sessionmaker(bind=get_engine('khux.db'))(); r.create(db, 7, 2300, 1000, 1); db.commit()"` spawns a Darkside

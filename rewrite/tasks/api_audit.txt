@@ -1,0 +1,148 @@
+# API actions: server handler / verifyResponse case / seen in native game logs (recomp/out/host/*.log, ">>> api")
+# id  path  handler  verify-case  ok-count  fail-count   (2026-10-21; python recomp/rewrite/tools/api_audit.py)
+  0  /system/status                       - -      0   0
+  1  /user                                H V    273   0
+  2  /user/start                          H -    273   0
+  3  /user/detail                         H V      4   0
+  4  /user/profile                        H V     33   0
+  5  /user/chat                           H V    297   0
+  6  /user/stone                          H V    273   0
+  7  /user/shop                           H V    276   0
+  8  /user/birthday                       H V      0   0
+  9  /user/sphere                         H V    273   0
+ 10  /user/keyblade                       H V    273   0
+ 11  /user/skill                          H V    273   0
+ 12  /user/item                           H -      0   0
+ 13  /user/medal                          H V    273   0
+ 14  /user/material                       H V    273   0
+ 15  /user/album                          H V      8   0
+ 16  /user/title                          H V    273   0
+ 17  /user/support                        H V    273   0
+ 18  /user/present                        H V     30   0
+ 19  /user/avatar                         H V      0   0
+ 20  /user/avatar/all                     H V    273   0
+ 21  /user/avatar/parts                   H V    273   0
+ 22  /payment/info                        H V     82   0
+ 23  /system/need/url                     H V    274   0
+ 24  /system/coppa                        H V    274   0
+ 25  /system/master                       H V      3   0
+ 26  /system/resource                     H V      1   0
+ 27  /system/resourceEv                   H V      0   0
+ 28  /system/information/list             H V      0   0
+ 29  /system/information/list/151203      H V    274   0
+ 30  /system/information/detail           H V      0   0
+ 31  /system/serialcode                   H V      1   1
+ 32  /system/serialcode/campaign          H V      1   0
+ 33  /system/invitecode                   H V      3   0
+ 34  /system/push/regist                  H -      0   0
+ 35  /system/push/help                    H -      0   0
+ 36  /user/update                         H V      2   0
+ 37  /user/gender/update                  H V      0   0
+ 38  /user/playstyle/update               H V      2   0
+ 39  /user/title/update                   H V      5   0
+ 40  /user/birthday/create                H V      0   0
+ 41  /user/avatar/update                  H V      1   0
+ 42  /user/sphere/update                  H V      9   0
+ 43  /user/keyblade/update                H V     18   0
+ 44  /user/medal/lock                     H V      1   0
+ 45  /user/support/update                 H V      2   0
+ 46  /medal/skill/update                  H V      0   0
+ 47  /user/present/receive                H V      2   0
+ 48  /user/material/sell                  H V      2   0
+ 49  /user/medal/sell                     H V      1   0
+ 50  /skill/sell                          H V      0   0
+ 51  /keyblade/burst/max                  H V      1   0
+ 52  /keyblade/enhance                    H V      2   0
+ 53  /user/medal/enhance                  H V     15   0
+ 54  /user/medal/evolve                   H V      1   0
+ 55  /skill/evolve                        H V      0   0
+ 56  /mypage                              H V    505   0
+ 57  /user/sphere/check                   H V    864   0
+ 58  /login/token                         - -      0   0
+ 59  /login                               H V    274   0
+ 60  /login/bonus                         H V     11   0
+ 61  /tutorial/user/create                H V      1   0
+ 62  /tutorial/progress                   H V      7   0
+ 63  /tutorial/clear                      H V      1   0
+ 64  /tutorial/status                     H V    273   0
+ 65  /tutorial/status                     H V     19   0
+ 66  /shop/medal/max                      H V      1   0
+ 67  /shop/ap/recover                     H V      2   0
+ 68  /user/sphere/buy                     H V      3   0
+ 69  /union/change                        H V      1   0
+ 70  /gacha/list                          H V     70   1
+ 71  /gacha/draw                          H V      6   0
+ 72  /purchase/prepare                    H V      2   0
+ 73  /purchase/finish                     H V      2   0
+ 74  /party/create                        H V      1   0
+ 75  /party/update                        H V      1   0
+ 76  /party/notice                        H V    629   0
+ 77  /party/login                         H V    124   0
+ 78  /party                               H V   1158   1
+ 79  /party/leave                         H V      1   0
+ 80  /party/member/list                   H V   1125   0
+ 81  /party/search/active                 H V      2   0
+ 82  /party/application/160310            H V      1   0
+ 83  /party/application/list              H V      6   0
+ 84  /party/application/cancel            H V      3   0
+ 85  /party/applicant/list                H V      7   0
+ 86  /party/applicant/agree               H V      1   0
+ 87  /party/applicant/reject              H V      2   0
+ 88  /party/leader/change                 H V      3   0
+ 89  /party/admin/appoint                 H V      2   0
+ 90  /party/admin/dismiss                 H V      2   0
+ 91  /party/member/expel                  H V      1   0
+ 92  /party/invite/search                 H V     12   0
+ 93  /party/invite/offer/160310           H V      1   0
+ 94  /party/invite/list                   H V      7   0
+ 95  /party/invite/cancel                 H V      2   0
+ 96  /party/offer/list                    H V      6   0
+ 97  /party/offer/agree                   H V      4   0
+ 98  /party/offer/reject                  H V      4   0
+ 99  /stage                               H V      0   0
+100  /stage/160310                        H V    266   0
+101  /stage/event                         H V     18   0
+102  /stage/support/list                  H V    192   0
+103  /stage/start                         H V    139   0
+104  /stage/retire                        H V      7   0
+105  /stage/continue                      H V     37   0
+106  /stage/clear                         H V    120   0
+107  /raid                                H V    266   0
+108  /raid/list                           H V    839   0
+109  /raid/reward                         H V      0   0
+110  /raid/reward/151101                  H V    261   0
+111  /raid/member                         H V     10   0
+112  /raid/start                          H V     30   0
+113  /raid/clear                          H V     30   0
+114  /colosseum                           H V     57   0
+115  /colosseum/reward/list               H V      5   0
+116  /colosseum/start                     H V     25   0
+117  /colosseum/retire                    H V      2   0
+118  /colosseum/clear                     H V     23   0
+119  /ranking/weekly/user                 H V      0   0
+120  /ranking/monthly/user                H V      0   0
+121  /ranking/weekly/user/own             H V      0   0
+122  /ranking/monthly/user/own            H V      0   0
+123  /ranking/lux                         H V     31   0
+124  /ranking/lux/own                     H V     31   0
+125  /ranking/party                       H V     21   0
+126  /ranking/party/own                   H V     21   0
+127  /ranking/colosseum                   H V      7   0
+128  /ranking/colosseum/own               H V      7   0
+129  /ranking/parade                      H V    271   0
+130  /ranking/reward/check                H V     66   0
+131  /campaign                            H V    808   0
+132  /campaign/pincode                    H V      0   0
+133  /campaign/pincode                    H V      0   0
+134  /campaign/pincode                    H -      0   0
+135  /campaign/pincode                    H -      0   0
+136  /campaign/pincode/status             H V      0   0
+137  /user/option                         H V    273   0
+138  /user/option/update                  H V      8   0
+139  /link/members                        H V      0   0
+140  /user/link                           H V    273   0
+141  /user/link                           - V      0   0
+142  /user/link                           - V      0   0
+143  /system/uuid                         H -      0   0
+144  /user/album/challenge/update         H V      0   0
+# handled but never seen succeeding (27): 8 12 19 27 28 30 34 35 37 40 46 50 55 99 109 119 120 121 122 132 133 134 135 136 139 143 144

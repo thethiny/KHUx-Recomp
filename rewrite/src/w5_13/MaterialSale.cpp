@@ -956,4 +956,32 @@ RW_FUNCTION(0x688C2C, "SceneSellOutMaterialItem::backScene lambda __func::operat
 RW_FUNCTION(0x68B318, "SceneSellOutMaterialItem material sort comparator (sub_68B318)",
             SceneSellOutMaterialItem::materialLess);
 RW_FUNCTION(0x68B494, "std::__sort3<material comparator&, ull*> (sub_68B494)", SceneSellOutMaterialItem::sort3);
+
+// std::__sort4 / std::__sort5 of the material sort (sub_68B556 / sub_68B5EE): the swaps made
+static uint32_t materialSort4(uint32_t x1, uint32_t x2, uint32_t x3, uint32_t x4, uint32_t comp) {
+    const Sort8 o{comp};
+    const uint32_t r = call(g::MaterialSort3, {x1, x2, x3, comp});
+    if (!o.less(x4, x3)) return r;
+    Sort8::swap(x3, x4);
+    if (!o.less(x3, x2)) return r + 1;
+    Sort8::swap(x2, x3);
+    if (!o.less(x2, x1)) return r + 2;
+    Sort8::swap(x1, x2);
+    return r + 3;
+}
+static uint32_t materialSort5(uint32_t x1, uint32_t x2, uint32_t x3, uint32_t x4, uint32_t x5, uint32_t comp) {
+    const Sort8 o{comp};
+    const uint32_t r = call(g::MaterialSort4, {x1, x2, x3, x4, comp});
+    if (!o.less(x5, x4)) return r;
+    Sort8::swap(x4, x5);
+    if (!o.less(x4, x3)) return r + 1;
+    Sort8::swap(x3, x4);
+    if (!o.less(x3, x2)) return r + 2;
+    Sort8::swap(x2, x3);
+    if (!o.less(x2, x1)) return r + 3;
+    Sort8::swap(x1, x2);
+    return r + 4;
+}
+RW_FUNCTION(0x68B556, "std::__sort4<material comparator&, ull*> (sub_68B556)", materialSort4);
+RW_FUNCTION(0x68B5EE, "std::__sort5<material comparator&, ull*> (sub_68B5EE)", materialSort5);
 RW_FUNCTION(0x68AED8, "std::__sort<material comparator&, ull*> (sub_68AED8)", SceneSellOutMaterialItem::sort);

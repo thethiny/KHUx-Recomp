@@ -47,7 +47,11 @@ constexpr uint32_t ScenePartyTop_callPartyTopAPI = 0x652595;     // (function<vo
 constexpr uint32_t APIManager_executePartyApplicantList = 0x4CF7AD;   // (api, const function<void(bool)>&)
 constexpr uint32_t APIManager_executePartyInviteList = 0x4D0B99;      // (api, const function<void(bool)>&)
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
-constexpr uint32_t runOutEntryLayout = 0x6E8AF9;           // ScenePartyManagement::runOutEntryLayout(function<void()>)
+constexpr uint32_t PartyScrollView_create = 0x51CB05, PartyScrollView_setEnabledTapItem = 0x51F0C1;
+constexpr uint32_t PartyExVector_copy = 0x51EE91, PartyExVector_dtor = 0x4B3DD1;     // vector<PartyApplicationList::PartyEx>
+constexpr uint32_t IntVector_pushBackSlow = 0x4D6CC1, IntVector_dtor = 0x478961;
+constexpr uint32_t BaseScrollViewInt_setItemIDs = 0x478929;
+constexpr uint32_t Swap_int = 0x5428E1;                    // std::function<void(int)>::swap
 constexpr uint32_t ApplicantLambda_vector = 0x4B4453;
 // GOT: the class vtable, the __func vtable of a std::function<Layer*()> holding a function pointer, the factories
 constexpr uint32_t GOT_VTABLE = 0xFD68CC, GOT_FUNC_LAYER_VT = 0xFD6074;
@@ -72,6 +76,8 @@ constexpr uint32_t VT_OnEnter = 0xF69AC0, VT_OnExit = 0xF69A94, VT_BackKey = 0xF
 constexpr uint32_t VT_SwallowTouch = 0xF69A10;   // init {sprite}: the shade sprite swallows touches
 constexpr uint32_t VT_LeftTab = 0xF699E4, VT_RightTab = 0xF699B8;   // init {this, left, right, panel} (heap 0x14)
 constexpr uint32_t VT_OutButton = 0xF69884;      // runInJoinLayout {this}
+constexpr uint32_t VT_RequestRow = 0xF69514;     // runInEntryLayout $_14 {this, vector<Applicant>} (heap 0x14)
+constexpr uint32_t VT_OfferAccept = 0xF69438, VT_OfferDelete = 0xF6935C;   // $_15 / $_16 {this, vector<Offer>, shared_ptr}
 constexpr uint32_t VT_InviteSelected = 0xF697A8; // {this, vector<Offer>} (heap 0x14)
 constexpr uint32_t VT_ApplicantSelected = 0xF696CC, VT_ApplicantSelected2 = 0xF695F0;   // {this, vector<Applicant>, shared_ptr} (0x1C)
 constexpr uint32_t VT_Back = 0xF691D0;           // backScene {}: sub_6E9850
@@ -102,6 +108,10 @@ constexpr uint32_t API_INVITES = 0x230;       // shared_ptr<PartyInviteList> (of
 constexpr uint32_t API_APPLICANTS = 0x220;    // shared_ptr<PartyApplication> (applicants first, shared_ptr at +0xC)
 constexpr uint32_t API_LAMBDA_PTR = 0x1D4;    // a shared_ptr captured by the applicant lambdas
 constexpr uint32_t API_HOLD = 0x1F8;          // a shared_ptr's control kept alive during runInJoinLayout
+constexpr uint32_t API_APPLICATIONS = 0x218;  // shared_ptr<PartyApplicationList> (the user's requests, PartyEx at +0xC)
+constexpr uint32_t API_OFFERS = 0x238;        // shared_ptr<PartyOfferList> (offers first, PartyEx at +0x14)
+constexpr uint32_t PARTY_EX_SIZE = 0x198;
+constexpr uint32_t LIST_ON_ROW3 = 0x668, LIST_ON_ROW4 = 0x680, LIST_ON_ROW5 = 0x698;   // PartyScrollView callbacks
 constexpr uint32_t SM_FLAG_308 = 0x308, SM_FLAG_4CC = 0x4CC, SM_CALLBACK_548 = 0x548;
 constexpr uint32_t OFFER_SIZE = 0x38;         // PartyInviteList::Offer and PartyApplication::Applicant
 constexpr uint32_t V_deleting = 0x04, V_init = 0x248, V_runInAnimation = 0x300, V_widgetSetTouchEnabled = 0x29C;
@@ -185,6 +195,8 @@ struct ScenePartyManagement {
     static uint32_t destruct(uint32_t self);
     static uint32_t init(uint32_t self);
     static void runInJoinLayout(uint32_t self);
+    static void runInEntryLayout(uint32_t self);
+    static void runOutEntryLayout(uint32_t self, uint32_t done);
     static void runOutAnimationMain(uint32_t self, uint32_t done);
     static void runOutJoinLayout(uint32_t self, uint32_t done);
     static void backScene(uint32_t self);
@@ -536,6 +548,172 @@ void ScenePartyManagement::runInJoinLayout(uint32_t me) {
     releaseIf(holdCtl);
 }
 
+// push_back(value) on a vector<int>
+void pushInt(uint32_t ids, uint32_t valueRef) {
+    const uint32_t end = ld32(ids + 4);
+    if (end == ld32(ids + 8)) {
+        call(g::IntVector_pushBackSlow, {ids, valueRef});
+        return;
+    }
+    uint32_t n = 0;
+    if (end) {
+        st32(end, ld32(valueRef));
+        n = ld32(ids + 4);
+    }
+    st32(ids + 4, n + 4);
+}
+
+// The entry layout (no party taking requests) slides in: two PartyScrollViews in the scroll area - the user's join
+// requests (Withdraw: $_14) and the invitations to him whose party is known (Accept: $_15, Delete: $_16).
+void ScenePartyManagement::runInEntryLayout(uint32_t me) {
+    Frame f;
+    {
+        const uint32_t node = findNode(ld32(me + F_ROOT), S_LeftUI, 6);
+        const uint32_t none = newEmptyFunction(f);
+        call(g::Node_runAction, {node, SceneUtil::createLeftInAnimation(node, 0.0f, 0.0f, none)});
+        functionDestroy(none);
+    }
+    const uint32_t a = api();
+    const uint32_t holdCtl = ld32(a + API_LAMBDA_PTR + 4), holdPtr = ld32(a + API_LAMBDA_PTR);
+    addRefIf(holdCtl);
+    const uint32_t area = findNode(ld32(me + F_ROOT), S_ScrollArea, 0xB);
+    const auto addList = [&](uint32_t field, uint32_t type) {
+        st32(me + field, call(g::PartyScrollView_create, {type}));
+        vcall(area, node::addChild, {area, ld32(me + field)});
+        call(g::IScrollProtocol_setMaxColumn, {ld32(me + field), 1});
+        call(g::PartyScrollView_setEnabledTapItem, {ld32(me + field), 0});
+        const uint32_t view = ld32(me + field);
+        vcall(view, node::setContentSize, {view, vcall(area, node::getContentSize, {area})});
+    };
+    // the user's requests
+    addList(F_LIST_A, 1);
+    const uint32_t a2 = api();
+    const uint32_t appCtl = ld32(a2 + API_APPLICATIONS + 4), app = ld32(a2 + API_APPLICATIONS);
+    addRefIf(appCtl);
+    const uint32_t appParties = f.alloc(12), applications = f.alloc(12);
+    call(g::PartyExVector_copy, {appParties, app + 0xC});
+    call(g::ApplicantVector_copy, {applications, app});
+    {
+        const uint32_t view = ld32(me + F_LIST_A);
+        const uint32_t copy = f.alloc(12);
+        call(g::ApplicantVector_copy, {copy, applications});
+        const uint32_t moved = f.alloc(12);
+        for (uint32_t k = 0; k < 12; k += 4) {
+            st32(moved + k, ld32(copy + k));
+            st32(copy + k, 0);
+        }
+        const uint32_t fo = f.alloc(20);
+        st32(fo + 16, 0);
+        const uint32_t obj = call(fn::operator_new, {0x14});
+        if (obj) {
+            st32(obj, VT_RequestRow);
+            for (uint32_t k = 0; k < 12; k += 4) {
+                st32(obj + 8 + k, ld32(moved + k));
+                st32(moved + k, 0);
+            }
+            st32(obj + 4, me);
+        }
+        st32(fo + 16, obj);
+        call(g::Swap_int, {fo, view + LIST_ON_ROW3});
+        functionDestroy(fo);
+        call(g::ApplicantVector_dtor, {moved});
+        call(g::ApplicantVector_dtor, {copy});
+    }
+    const uint32_t appIds = f.alloc(12), index = f.alloc(4);
+    st32(index, 0);
+    st32(appIds, 0);
+    st32(appIds + 4, 0);
+    st32(appIds + 8, 0);
+    if (ld32(applications + 4) != ld32(applications)) {
+        for (uint32_t i = 1;; i++) {
+            pushInt(appIds, index);
+            st32(index, i);
+            if (i >= (ld32(applications + 4) - ld32(applications)) / OFFER_SIZE) break;
+        }
+    }
+    call(g::BaseScrollViewInt_setItemIDs, {ld32(me + F_LIST_A), appIds});
+    // the invitations
+    addList(F_LIST_B, 2);
+    const uint32_t a3 = api();
+    const uint32_t offCtl = ld32(a3 + API_OFFERS + 4), off = ld32(a3 + API_OFFERS);
+    addRefIf(offCtl);
+    const uint32_t offers = f.alloc(12), offParties = f.alloc(12);
+    call(g::OfferVector_copy, {offers, off});
+    call(g::PartyExVector_copy, {offParties, off + 0x14});
+    const uint32_t offIds = f.alloc(12), row = f.alloc(4);
+    st32(row, 0);
+    st32(offIds, 0);
+    st32(offIds + 4, 0);
+    st32(offIds + 8, 0);
+    for (uint32_t i = 0; i < (ld32(offers + 4) - ld32(offers)) / OFFER_SIZE;) {
+        const uint32_t first = ld32(offParties), count = (ld32(offParties + 4) - first) / PARTY_EX_SIZE;
+        if (count) {
+            const uint32_t offer = ld32(offers) + OFFER_SIZE * i + 8;
+            for (uint32_t k = 0; k < count; k++) {
+                const uint32_t party = first + PARTY_EX_SIZE * k;
+                if (ld32(party) == ld32(offer) && ld32(party + 4) == ld32(offer + 4)) {
+                    pushInt(offIds, row);
+                    break;
+                }
+            }
+        }
+        st32(row, ++i);
+    }
+    call(g::BaseScrollViewInt_setItemIDs, {ld32(me + F_LIST_B), offIds});
+    for (const auto &[member, vt] : {std::pair{LIST_ON_ROW4, VT_OfferAccept}, std::pair{LIST_ON_ROW5, VT_OfferDelete}}) {
+        const uint32_t view = ld32(me + F_LIST_B);
+        Frame l;
+        const uint32_t copy = l.alloc(12);
+        call(g::OfferVector_copy, {copy, offers});
+        addRefIf(holdCtl);
+        const uint32_t moved = l.alloc(12);
+        for (uint32_t k = 0; k < 12; k += 4) {
+            st32(moved + k, ld32(copy + k));
+            st32(copy + k, 0);
+        }
+        const uint32_t fo = l.alloc(20);
+        st32(fo + 16, 0);
+        const uint32_t obj = call(fn::operator_new, {0x1C});
+        uint32_t heldCtl = holdCtl;
+        if (obj) {
+            st32(obj, vt);
+            for (uint32_t k = 0; k < 12; k += 4) {
+                st32(obj + 8 + k, ld32(moved + k));
+                st32(moved + k, 0);
+            }
+            st32(obj + 20, holdPtr);
+            st32(obj + 24, holdCtl);
+            heldCtl = 0;
+            st32(obj + 4, me);
+        }
+        st32(fo + 16, obj);
+        call(g::Swap_int, {fo, view + member});
+        functionDestroy(fo);
+        releaseIf(heldCtl);
+        call(g::OfferVector_dtor, {moved});
+        call(g::OfferVector_dtor, {copy});
+    }
+    call(g::IntVector_dtor, {offIds});
+    call(g::PartyExVector_dtor, {offParties});
+    call(g::OfferVector_dtor, {offers});
+    releaseIf(offCtl);
+    call(g::IntVector_dtor, {appIds});
+    call(g::ApplicantVector_dtor, {applications});
+    call(g::PartyExVector_dtor, {appParties});
+    releaseIf(appCtl);
+    releaseIf(holdCtl);
+}
+
+// The entry layout's left side slides out, then `done`.
+void ScenePartyManagement::runOutEntryLayout(uint32_t me, uint32_t done) {
+    const uint32_t node = findNode(ld32(me + F_ROOT), S_LeftUI, 6);
+    Frame f;
+    const uint32_t copy = f.alloc(20);
+    call(fn::function_vv_copy, {copy, done});
+    call(g::Node_runAction, {node, SceneUtil::createLeftOutAnimation(node, 0.0f, 0.0f, copy)});
+    functionDestroy(copy);
+}
+
 // ------------------------------------------------------------------------------------------------ out / back
 void ScenePartyManagement::runOutAnimationMain(uint32_t me, uint32_t done) {
     call(g::SM_setCanTouchHeader, {sceneManager(), 0});
@@ -543,7 +721,7 @@ void ScenePartyManagement::runOutAnimationMain(uint32_t me, uint32_t done) {
     const uint32_t copy = f.alloc(20);
     call(fn::function_vv_copy, {copy, done});
     if (ld8(me + F_JOIN)) runOutJoinLayout(me, copy);
-    else call(g::runOutEntryLayout, {me, copy});
+    else runOutEntryLayout(me, copy);
     functionDestroy(copy);
 }
 
@@ -707,6 +885,8 @@ RW_FUNCTION(0x657634, "ScenePartyManagement::create", ScenePartyManagement::crea
 RW_FUNCTION(0x6E6578, "ScenePartyManagement::~ScenePartyManagement", ScenePartyManagement::destruct);
 RW_FUNCTION(0x6E6604, "ScenePartyManagement::init", ScenePartyManagement::init);
 RW_FUNCTION(0x6E767C, "ScenePartyManagement::runInJoinLayout", ScenePartyManagement::runInJoinLayout);
+RW_FUNCTION(0x6E80F4, "ScenePartyManagement::runInEntryLayout", ScenePartyManagement::runInEntryLayout);
+RW_FUNCTION(0x6E8AF8, "ScenePartyManagement::runOutEntryLayout", ScenePartyManagement::runOutEntryLayout);
 RW_FUNCTION(0x6E8860, "ScenePartyManagement::runOutAnimationMain", ScenePartyManagement::runOutAnimationMain);
 RW_FUNCTION(0x6E8950, "ScenePartyManagement::runOutJoinLayout", ScenePartyManagement::runOutJoinLayout);
 RW_FUNCTION(0x6E9734, "ScenePartyManagement::backScene", ScenePartyManagement::backScene);

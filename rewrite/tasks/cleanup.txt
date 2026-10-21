@@ -10,6 +10,7 @@
   - Fix libsplit's nearest-name rule for unnamed functions: the SQEX "group" held OpenSSL, libc++ / libc++abi,
     libunwind, compiler-rt and libc code, and the .init_array constructors (0x44F07C-0x459D40) need classifying
     by the symbols they reference (scratchpad classify_ctors.py did this once).
+    Done 2026-10-20 for the boot functions: libsplit.py OVERRIDES (91 library constructors / helpers).
 - Windows build: SQEX becomes its own DLL (exports: the SdSoundSystem_* C API). Before that: a Windows backend for
   CoreAudioOut (OpenSL ES), where libvorbis lives, buffer ownership of akb data / SQEX::File IO across the
   boundary.

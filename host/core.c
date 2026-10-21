@@ -352,6 +352,7 @@ void glog(uint32_t a, uint32_t n) {
  * more imports than were recorded, marks the shadow run as diverged (the verifier then reports a mismatch). */
 typedef struct ImpRec { uint32_t addr, r0, r1, nbytes, args[4], sargs[6]; uint64_t *bytes; } ImpRec;   /* bytes: (addr << 8) | value; sargs: stack arguments (GL) */
 static __declspec(thread) int imp_mode;                 /* 0 off, 1 record, 2 replay */
+static int imp_replay_only;                            /* the replay sandbox (KHUX_RW_REPLAY) */
 static __declspec(thread) ImpRec *imp_recs;
 static __declspec(thread) uint32_t imp_div_got, imp_div_args[6];
 static __declspec(thread) int imp_div_pos, imp_opaque, imp_paused, imp_saved_mode;
@@ -463,12 +464,15 @@ const char *import_shadow_name(int k) { return k < imp_n ? import_name(imp_recs[
  * moves with that argument, which differs when the caller's stack frame does (a rewrite's frame is not the original's
  * layout); any other store (heap blocks, globals) keeps its address. */
 static uint32_t replay_addr(const ImpRec *r, const CPU *c, uint32_t a) {
+    /* r0-r3, then a GL call's stack arguments (sargs[0..4]: glGetActiveUniform's size / type / name buffers are
+     * its 5th-7th arguments - parseUniforms' alloca'd name moved with the frame and was never replayed into it) */
     int best = -1;
-    for (int k = 0; k < 4; k++) {
-        uint32_t p = r->args[k];
-        if (p >= 0x1000u && a >= p && a - p < 0x10000u && (best < 0 || p > r->args[best])) best = k;
+    uint32_t bp = 0;
+    for (int k = 0; k < 9; k++) {
+        uint32_t p = k < 4 ? r->args[k] : r->sargs[k - 4];
+        if (p >= 0x1000u && a >= p && a - p < 0x10000u && (best < 0 || p > bp)) { best = k; bp = p; }
     }
-    return best < 0 ? a : a - r->args[best] + c->r[best];
+    return best < 0 ? a : a - bp + gl_arg(c, best);
 }
 
 /* M3 verifier, a shadow run on another thread than the main one (the sound thread): the main thread parks at its
@@ -523,6 +527,22 @@ void shadow_park_point(void) {
     InterlockedExchange(&main_parked, 0);
 }
 
+/* M3 replay sandbox: while the main thread captures a call (mem_track), the other guest threads park the same way
+ * (sleepers at their sleeps, the audio callback at its entry), so the saved pages are the state the call read and
+ * not the sound thread's. At most 50 ms; when they do not park, the capture goes on (marked by its foreign pages). */
+void shadow_capture_park(int on) {
+    if (!main_tid || GetCurrentThreadId() != main_tid) return;
+    if (on) {
+        EnterCriticalSection(&excl_cs);
+        excl_tid = main_tid;
+        InterlockedExchange(&excl_req, 1);
+        for (int k = 0; k < 50 && (cb_busy - cb_waiting > 0 || sleepers_parked < sleepers); k++) Sleep(1);
+    } else {
+        InterlockedExchange(&excl_req, 0);
+        LeaveCriticalSection(&excl_cs);
+    }
+}
+
 static int shadow_exclusive(int begin) {
     if (!main_tid || GetCurrentThreadId() == main_tid) return 1;
     /* by default other threads do not shadow-run at all (the original runs, not compared): the sound thread's voice
@@ -564,6 +584,55 @@ static int shadow_exclusive(int begin) {
     return 0;
 }
 
+/* M3 replay sandbox: the lifted run's import records as bytes (capture), and loading them back so that both runs of
+ * a replayed call get them (KHUX_RW_REPLAY). Layout per record: addr r0 r1 nbytes args[4] sargs[6], bytes[nbytes]. */
+void libc_shadow_state(double *real, double *mono, uint64_t *rnd);
+void libc_shadow_force(double real, double mono, uint64_t rnd);
+size_t import_shadow_export(uint8_t **out) {
+    size_t n = 32;                                      /* "CLK1", pad, then the frozen clocks and the random state */
+    for (int k = 0; k < imp_n; k++) n += 4u * 14 + 8u * imp_recs[k].nbytes;
+    uint8_t *b = malloc(n), *p = b;
+    {
+        double real, mono; uint64_t rnd;
+        libc_shadow_state(&real, &mono, &rnd);
+        memcpy(p, "CLK1\0\0\0", 8); memcpy(p + 8, &real, 8); memcpy(p + 16, &mono, 8); memcpy(p + 24, &rnd, 8);
+        p += 32;
+    }
+    for (int k = 0; k < imp_n; k++) {
+        const ImpRec *r = &imp_recs[k];
+        uint32_t h[14] = {r->addr, r->r0, r->r1, r->nbytes, r->args[0], r->args[1], r->args[2], r->args[3],
+                          r->sargs[0], r->sargs[1], r->sargs[2], r->sargs[3], r->sargs[4], r->sargs[5]};
+        memcpy(p, h, sizeof h); p += sizeof h;
+        if (r->nbytes) { memcpy(p, r->bytes, 8u * r->nbytes); p += 8u * r->nbytes; }
+    }
+    *out = b;
+    return n;
+}
+int import_shadow_import(const uint8_t *b, size_t n) {
+    for (int k = 0; k < imp_n; k++) free(imp_recs[k].bytes);
+    imp_n = 0;
+    const uint8_t *p = b, *end = b + n;
+    if (n >= 32 && !memcmp(p, "CLK1", 4)) {
+        double real, mono; uint64_t rnd;
+        memcpy(&real, p + 8, 8); memcpy(&mono, p + 16, 8); memcpy(&rnd, p + 24, 8);
+        libc_shadow_force(real, mono, rnd);
+        p += 32;
+    }
+    while (p + 56 <= end) {
+        uint32_t h[14];
+        memcpy(h, p, sizeof h); p += sizeof h;
+        if (imp_n == imp_cap) { imp_cap = imp_cap ? imp_cap * 2 : 64; imp_recs = realloc(imp_recs, sizeof(ImpRec) * (size_t)imp_cap); }
+        ImpRec *r = &imp_recs[imp_n++];
+        r->addr = h[0]; r->r0 = h[1]; r->r1 = h[2]; r->nbytes = h[3];
+        for (int k = 0; k < 4; k++) r->args[k] = h[4 + k];
+        for (int k = 0; k < 6; k++) r->sargs[k] = h[8 + k];
+        r->bytes = NULL;
+        if (r->nbytes) { r->bytes = malloc(8u * r->nbytes); memcpy(r->bytes, p, 8u * r->nbytes); p += 8u * r->nbytes; }
+    }
+    imp_replay_only = 1;
+    return imp_n;
+}
+
 /* phase 0: start recording; 1: replay from the first record; 2: end; 3: query (1 = the replay diverged) */
 int import_shadow(int phase) {
     if (phase == 7) return shadow_exclusive(1);
@@ -577,6 +646,10 @@ int import_shadow(int phase) {
     }
     if (phase == 6) {
         if (imp_paused && --imp_paused == 0) { imp_mode = imp_saved_mode; L.files_allow(0); }
+        return 0;
+    }
+    if (phase == 0 && imp_replay_only) {                 /* replay sandbox: both runs replay the loaded record */
+        imp_opaque = 0; imp_mode = 2; imp_pos = 0; imp_diverged = 0;
         return 0;
     }
     if (phase == 0) {
@@ -601,7 +674,7 @@ void host_emu(CPU *c, uint32_t target) {
         return;
     }
     ImportFn fn = import_fn(a);
-    if (!fn) {
+    if (!fn && !imp_replay_only) {                /* the replay sandbox answers imports from the record */
         const char *name = import_name(a);
         if (name) fatal("unimplemented import %s called from 0x%08X (r0=%08X r1=%08X)", name, lr, c->r[0], c->r[1]);
         fatal("call to 0x%08X from 0x%08X: neither lifted code nor an import", target, lr);

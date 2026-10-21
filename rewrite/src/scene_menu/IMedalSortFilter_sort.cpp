@@ -211,4 +211,55 @@ void sort(uint32_t first, uint32_t last, uint32_t c) {
 RW_FUNCTION(0x67403C, "std::__sort<runSortFilter comparator&, shared_ptr<UserMedalData>*> (sub_67403C)",
             medal_sort::sort);
 
+// std::__insertion_sort_incomplete: sorts short ranges outright; longer ones by insertion, giving up (false)
+// after eight moved elements unless that was the last one
+uint32_t insertionSortIncomplete(uint32_t first, uint32_t last, uint32_t c) {
+    switch (int32_t(last - first) >> 3) {
+    case 0:
+    case 1:
+        return 1;
+    case 2:
+        if (less(c, last - 8, first)) swap8(first, last - 8);
+        return 1;
+    case 3:
+        ::sort3(first, first + 8, last - 8, c);
+        return 1;
+    case 4:
+        call(SORT4, {first, first + 8, first + 16, last - 8, c});
+        return 1;
+    case 5:
+        call(SORT5, {first, first + 8, first + 16, first + 24, last - 8, c});
+        return 1;
+    default:
+        break;
+    }
+    uint32_t j = first + 16;
+    ::sort3(first, first + 8, j, c);
+    uint32_t count = 0;
+    for (uint32_t i = j + 8; i != last; j = i, i += 8) {
+        if (!less(c, i, j)) continue;
+        Frame f;
+        const uint32_t t = f.alloc(8);
+        st32(t, ld32(i));
+        st32(t + 4, ld32(i + 4));
+        st32(i, 0);
+        st32(i + 4, 0);
+        uint32_t hole = i, k = j;
+        while (true) {
+            moveShared(hole, k);
+            hole = k;
+            if (hole == first) break;
+            k -= 8;
+            if (!less(c, t, k)) break;
+        }
+        moveShared(hole, t);
+        const bool done = ++count == 8;
+        if (ld32(t + 4)) call(fn::shared_release, {ld32(t + 4)});
+        if (done) return i + 8 == last ? 1 : 0;
+    }
+    return 1;
+}
+RW_FUNCTION(0x674C44, "std::__insertion_sort_incomplete<runSortFilter comparator&, shared_ptr<UserMedalData>*> (sub_674C44)",
+            medal_sort::insertionSortIncomplete);
+
 }  // namespace medal_sort

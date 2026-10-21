@@ -78,6 +78,28 @@ int main(int argc, char **argv) {
     HThread *mt = thread_main();
     CPU *c = mt->cpu;
 
+    /* M3 replay sandbox: no game, no window - the recorded calls (KHUX_RW_CAPTURE) against their rewrites */
+    const char *replay_dir = getenv("KHUX_RW_REPLAY");
+    if (replay_dir) {
+        int rewrite_replay(CPU *c, const char *dir);
+        /* the same registrations in the same order as a game run: the import slots get the same numbers, and the
+         * recorded pages hold the game's import table with those slot addresses */
+        libc_init();
+        threads_init();
+        fs_init();
+        net_init();
+        jni_init();
+        android_init();
+        sl_init();
+        gl_init_imports();
+        elf_load(so_host_path);
+        imports_bind();
+        webview_init();
+        int bad = rewrite_replay(c, replay_dir);
+        rewrite_report();
+        ExitProcess(bad ? 1 : 0);
+    }
+
     libc_init();
     threads_init();
     fs_init();
