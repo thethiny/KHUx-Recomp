@@ -20,7 +20,12 @@ LIBS = [
     ("cocos2d-x", r"(cocos2d::|cocostudio::|CocosDenshion::|cocosbuilder::|spine::|sp[A-Z]\w*_|"
                   r"flatbuffers::|tinyxml2::|rapidjson::|ClipperLib::|Json::|unz|zip[A-Z]|ConvertUTF|kmMat|kmVec|"
                   r"kmQuaternion|kmPlane|kmGL|ccDrawInit|ccGL|_spAtlas|spAnimation|spSkeleton|spBone|spSlot|"
-                  r"poly2tri|p2t::|Box2D|b2[A-Z]|chipmunk|cp[A-Z]\w+)"),
+                  r"poly2tri|p2t::|Box2D|b2[A-Z]|chipmunk|cp[A-Z]\w+|cpv|"
+                  # the Android glue and helpers bundled with cocos2d (platform/android/jni, etc1, xxhash,
+                  # ConvertUTF, edtaa3func, VideoPlayer-android, the plugin-x wrappers)
+                  r"Java_org_cocos2dx_lib_|Java_org_cocos2dx_plugin_|\w*JNI(::)?$|\w*Jni(::)?$|etc1_|XXH|"
+                  r"getUTF8StringLength|isLegalUTF8|computegradient|edgedf|distaa3|edtaa3|setVideoVisible|"
+                  r"cc_assert)"),
     ("LWF", r"(LWF::|lwf_)"),
     ("libc++ / C++ runtime", r"(std::|__cxa|__cxxabiv1|__gnu_|_Unwind|__aeabi|__udiv|__div|__mod|__umod|"
                              r"operator new|operator delete|__dynamic_cast|__gxx|__cxx|_ZN?St|__clz|__ctz|"
@@ -45,13 +50,15 @@ LIBS = [
     ("zlib", r"(inflate|deflate|crc32|adler32|zcalloc|zcfree|zError|zlib|_tr_|gz[a-z]|compress|uncompress|"
              r"get_crc_table)"),
     ("libjpeg", r"(jpeg_|jinit|jcopy|jdiv|jround|jzero|jsimd|jpeg)"),
-    ("libtiff / webp / xml", r"(TIFF|_TIFF|tiff|WebP|webp|VP8|vp8|xml|XML|html|HTML)"),
-    ("websockets", r"(lws|libwebsocket)"),
+    ("libtiff / webp / xml", r"(TIFF|_TIFF|tiff|WebP|webp|VP8|vp8|xml|XML|html|HTML|LogL16|LogL10|LogLuv|"
+                             r"uv_encode|uv_decode|XYZtoRGB24|libport_|Huffman|EstimateBestFilter|QuantizeLevels)"),
+    ("LZMA SDK", r"(Lzma)"),
+    ("websockets", r"(lws|libwebsocket|_lws|interface_to_sa)"),
     ("libc / math helpers", r"(__sfp|__smakebuf|__swsetup|__sflush|__srefill|__svfscanf|__vfprintf|__dtoa|"
                             r"__hdtoa|__ldtoa|__gdtoa|__mprec|__Balloc|__Bfree|__multadd|__s2b|__hi0bits|"
                             r"__lo0bits|__i2b|__multiply|__pow5mult|__lshift|__cmp|__mdiff|__ulp|__b2d|__d2b|"
                             r"__ratio|__tens|__strtod|_strtod|strtod|__ieee754|__kernel|scalbn|copysign|"
-                            r"frexp|ldexp|modf|fmod|floor|ceil|sqrt|sin|cos|tan|exp|log|pow|atan|asin|acos)"),
+                            r"frexp|ldexp|modf|fmod|floor|ceil|sqrt|sin|cos|tan|exp|log|pow|atan|asin|acos|lfind)"),
 ]
 _LIB_RE = [(name, re.compile(pat)) for name, pat in LIBS]
 

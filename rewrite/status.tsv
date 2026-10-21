@@ -1247,6 +1247,22 @@ addr	name	calls	verified	mismatches	unverifiable
 00561D04	RankingRewardScrollView::setIncentiveItem::$_1 destroy()	48	18	0	0
 00561DD4	RankingRewardScrollView icon touch lambda __func::__clone() (sub_561DD4)	2900	392	0	0
 00561F7C	RankingRewardScrollView icon touch lambda __func::destroy_deallocate() (sub_561F7C)	4790	3	0	0
+00562158	BirthRegisterScrollView::~BirthRegisterScrollView	2	2	0	0
+005622BC	BirthRegisterScrollView::create	4	1	0	0
+00562310	BirthRegisterScrollView::BirthRegisterScrollView	4	1	0	0
+00562470	BirthRegisterScrollView::init	4	1	0	0
+00562584	BirthRegisterScrollView::createRow	20	1	0	0
+005625E0	BirthRegisterScrollView::changeRow	40	1	0	0
+00562990	BirthRegisterScrollView::registItemTouchEvent	60	1	0	0
+005632C8	BirthRegisterScrollView::changeRow::$_0 operator()	20	20	0	0
+00563344	PopupRegister::openBirthRegisterPopup	2	1	0	0
+0056549C	PopupRegister::openNameRegisterPopup	6	3	0	0
+00565D38	PopupRegister::openNameRegisterPopup::$_11 __clone()	6	3	0	0
+00565E38	PopupRegister::openNameRegisterPopup::$_10 operator() (OK)	19	17	0	2
+005662CC	PopupRegister::openNameRegisterPopup::$_11 __clone()	5	3	0	0
+005663C4	PopupRegister::openNameRegisterPopup::$_11 operator() (sent)	3	3	0	0
+00566848	PopupRegister::openBirthRegisterPopup::$_9 operator() (register)	4	3	0	1
+00566B70	PopupRegister::openBirthRegisterPopup::$_8 operator() (sent)	1	1	0	0
 005682A0	FlashMovieView::create	10	1	0	0
 0056832C	FlashMovieView::init	9	1	0	0
 005687D0	FlashMovieView::~FlashMovieView	12	3	0	0
@@ -3060,6 +3076,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0065735C	ScenePartyTop::runInEntryLayout::$_23::lambda() operator()	2	0	0	2
 00657478	ScenePartyTop::runInEntryLayout::$_23::lambda()::lambda(bool) operator()	2	0	0	2
 00657634	ScenePartyManagement::create	3	3	0	0
+00657910	SceneParty: to ScenePartyRequest lambda operator() (sub_657910)	2	0	0	2
 00657A80	ScenePartyRequest::create	1	1	0	0
 00657AD4	ScenePartyRequest::ScenePartyRequest	8	1	0	0
 006580F0	ScenePartyTop::runInJoinLayout $_19 __func::__clone(__base*)	24	10	0	0
@@ -3255,6 +3272,12 @@ addr	name	calls	verified	mismatches	unverifiable
 0067F1AC	SceneTitle (sub_67F1AC): in the tutorial	48	5	0	0
 0067F294	SceneTitle (sub_67F294): must download	70	5	0	0
 0067F540	SceneNotice::create	55	5	0	0
+0067F5C4	SceneTutorialDownload::create	4	4	0	0
+0067F618	SceneInvitation::create	4	3	1	0
+0067F6AC	SceneNameRegister::create	3	3	0	0
+0067F73C	SceneUnionRegister::create	3	2	1	0
+0067F7F4	SceneAgreement::create	9	7	2	0
+0067F86C	SceneTutorialDownload::SceneTutorialDownload	8	4	0	0
 0067F9E8	SceneTitle::init $_7 UlvE0_ __func::__clone(__base*)	156	78	0	0
 0067FA08	SceneTitle::init $_7 UlvE0_ __func::destroy	259	128	0	0
 0067FA12	sub_67FA12	104	49	0	0
@@ -3658,19 +3681,40 @@ addr	name	calls	verified	mismatches	unverifiable
 006D1004	ScenePresentBox::openPresentBoxDialogMain $_12 __func::__clone(__base*)	2	1	0	0
 006D2320	ScenePartyCreate::openPopUpCreateParty()	1	1	0	0
 006D5D1C	ScenePartyRequest::callUserSearchAPI	5	0	0	3
+006D5F0C	ScenePartyRequest::callPartySearchAPI	4	0	0	2
 006D6050	ScenePartyRequest::~ScenePartyRequest	2	2	0	0
 006D6120	ScenePartyRequest::init	8	1	0	0
 006D6A60	ScenePartyRequest::init list loader (sub_6D6A60)	8	1	0	0
 006D6C44	ScenePartyRequest::init search filter button (sub_6D6C44)	32	1	0	0
 006D6FC8	ScenePartyRequest::runInAnimation	8	1	0	0
 006D7190	ScenePartyRequest::runInJoinLayout	12	3	0	0
+006D7450	ScenePartyRequest::runInEntryLayout	3	3	0	0
 006D7584	ScenePartyRequest::runOutAnimationMain	4	2	0	0
+006D7774	ScenePartyRequest::openPopUpPlayStyle	2	2	0	0
+006D7DBC	ScenePartyRequest::openPopUp	10	5	0	0
+006D8538	ScenePartyRequest::openPopUpPlayStyle check (sub_6D8538)	6	4	0	0
+006D85EC	ScenePartyRequest::openPopUpRank	1	1	0	0
+006D8EA8	ScenePartyRequest::openPopUpRank check (sub_6D8EA8)	4	3	0	0
+006D8F9C	ScenePartyRequest::openPopUpJoin	1	1	0	0
+006D94EC	ScenePartyRequest::openPopUpMember	1	1	0	0
+006D9B38	ScenePartyRequest::openPopUpMember check (sub_6D9B38)	4	3	0	0
 006DB8D0	ScenePartyRequest::openPopUpSearchID	2	2	0	0
+006DC0D0	ScenePartyRequest::openPopUpRequest	2	2	0	0
 006DD290	ScenePartyRequest::backScene	2	2	0	0
 006DD3C8	ScenePartyRequest::backScene lambda __func::operator() (sub_6DD3C8)	4	0	0	4
+006DD688	ScenePartyRequest::openPopUp closed operator()	9	5	0	0
+006DD70C	ScenePartyRequest::openPopUp close animation (sub_6DD70C)	10	5	0	0
+006DDA4C	ScenePartyRequest::openPopUp OK operator()	16	16	0	0
+006DDD9C	ScenePartyRequest::openPopUp OK function operator()	4	4	0	0
+006DE004	ScenePartyRequest::openPopUp close with the buttons off (sub_6DE004)	2	2	0	0
+006DE418	ScenePartyRequest create popup OK operator() (sub_6DE418)	4	4	0	0
 006DED2A	ScenePartyRequest ID popup result __func::operator()(bool) (sub_6DED2A)	2	2	0	0
 006DEDA4	ScenePartyRequest ID popup close (sub_6DEDA4)	4	2	0	0
 006DEEE2	ScenePartyRequest ID popup closed __func::operator() (sub_6DEEE2)	2	2	0	0
+006E1408	ScenePartyRequest::openPopUpMember OK (sub_6E1408)	2	1	0	0
+006E17BE	ScenePartyRequest::openPopUpJoin box 2 operator()	4	4	0	0
+006E18DE	ScenePartyRequest::openPopUpJoin box 1 operator()	4	4	0	0
+006E19EC	ScenePartyRequest::openPopUpJoin OK (sub_6E19EC)	2	1	0	0
 006E56F0	ScenePartyRequest::init $_7 __func::operator() (sub_6E56F0)	4	3	0	1
 006E5AB0	ScenePartyRequest::init $_85 UlbE_ __func::operator()(bool) (sub_6E5AB0)	1	1	0	0
 006E6384	ScenePartyManagement::callAPIs	2	0	0	0
@@ -3903,9 +3947,14 @@ addr	name	calls	verified	mismatches	unverifiable
 00707490	SceneAvatarEdit::updateCost	8	8	0	0
 00707B4C	SceneAvatarEdit::genderFiliteringIDs(int)	8	8	0	0
 00708DA0	SceneAvatarEdit::generateAccessories(int, vector<shared_ptr<const AvatarParts>>&, bool)	72	4	0	0
+00709668	SceneAvatarEdit::openCreateCheckPopup	6	6	0	0
 0070A71C	SceneAvatarEdit::finalize(function<void(bool)>)	4	4	0	0
 0070A750	SceneAvatarEdit::backScene	4	4	0	0
 0070A850	SceneAvatarEdit::backScene()::$_40 __func::operator()	4	0	0	4
+0070AF50	SceneAvatarEdit::openCreateCheckPopup OK operator()	11	9	0	2
+0070B114	SceneAvatarEdit::openCreateCheckPopup close (sub_70B114)	8	3	0	0
+0070B290	SceneAvatarEdit::openCreateCheckPopup sent operator()	3	3	0	0
+0070B74A	SceneAvatarEdit::openCreateCheckPopup closed operator()	5	3	0	0
 0070E570	SceneRankingReward::~SceneRankingReward (deleting)	2	2	0	0
 0070E5DC	SceneRankingReward::init	5	0	1	0
 0070F218	SceneRankingReward::initRankingTitle	14	2	0	0
@@ -3920,6 +3969,32 @@ addr	name	calls	verified	mismatches	unverifiable
 0071112C	SceneRankingReward list scroll lambda __func::operator() (sub_71112C)	22	22	0	0
 007113B4	SceneRankingReward::init::$_7 operator() (scroll on)	3	3	0	0
 007116D0	SceneRankingReward page update lambda __func::operator() (sub_7116D0)	20	0	16	0
+00711CD4	SceneBirthRegister::changeSceneLayer	6	3	0	0
+00711DB4	SceneBirthRegister: next scene (invitation / tutorial download)	6	3	0	0
+00711EF0	SceneBirthRegister::create	1	1	0	0
+00711F98	SceneBirthRegister::init	2	1	0	0
+007121FA	SceneBirthRegister::init popup done (sub_7121FA)	1	1	0	0
+00714EEC	SceneAgreement::init	16	7	0	0
+0071581C	SceneAgreement::init::$_7 operator() (agree)	15	15	0	0
+007159AC	SceneAgreement::init::$_6 operator() (disagree closed)	11	8	0	0
+00715C26	SceneAgreement::init::$_3 operator() (page loaded)	9	9	0	0
+00715F88	SceneInvitation::init	7	3	0	0
+007167FC	SceneInvitation::init::$_2 operator() (OK)	15	12	0	3
+00716A08	SceneInvitation::init::$_2 sent operator()	4	4	0	0
+00716E40	SceneNameRegister::init	6	3	0	0
+00717022	SceneNameRegister::editBoxEditingDidEnd (thunk)	3	3	0	0
+007170A8	SceneNameRegister::init popup done (to the avatar)	6	3	0	0
+0071734C	SceneUnionRegister::init	6	2	0	0
+007176EC	SceneUnionRegister::nextState	4	4	0	0
+00717BB0	SceneUnionRegister::runOutAnimation	1	1	0	0
+00717CC8	SceneUnionRegister::openPopUpbeLongToUnion	4	2	0	0
+00719E38	SceneUnionRegister::initUnionButtons	6	3	0	0
+0071A0C4	SceneUnionRegister::initUnionButtons ended assign (sub_71A0C4)	60	3	0	0
+0071A1AC	SceneUnionRegister::initUnionButtons ended operator()	2	2	0	0
+0071A354	SceneUnionRegister::initUnionButtons open join popup operator()	2	2	0	0
+0071A524	SceneUnionRegister::initUnionButtons moved operator()	4	4	0	0
+0071A6A4	SceneUnionRegister::initUnionButtons began operator()	36	36	0	0
+0071B920	SceneUnionRegister::nextState::$_12 operator()	3	3	0	0
 0071D260	SceneAdventureSelect::callAdventureSelectAPI	108	0	0	38
 0071D39C	SceneAdventureSelect::~SceneAdventureSelect	61	0	0	0
 0071D4C4	SceneAdventureSelect::~SceneAdventureSelect (deleting)	61	0	0	59
@@ -4172,6 +4247,19 @@ addr	name	calls	verified	mismatches	unverifiable
 00735910	SceneNotice::callPrepareAPI $_0 __func::__clone(__base*)	228	68	0	0
 0073592C	SceneNotice::callPrepareAPI $_0 __func::destroy	294	134	0	0
 00735938	SceneNotice::callPrepareAPI $_0 operator()	58	8	0	50
+0073A238	SceneTutorialDownload::init	8	4	0	0
+0073A484	SceneTutorialDownload::openDownloadPopup	8	4	0	0
+0073AAB4	SceneTutorialDownload::finalize	95912	47956	0	0
+0073ABBC	SceneTutorialDownload::openJewelPopup	6	3	0	0
+0073B190	SceneTutorialDownload::update	66592	66589	0	3
+0073B650	SceneTutorialDownload::openJewelPopup::$_8 operator()	11	9	0	2
+0073BA00	SceneTutorialDownload::openJewelPopup::$_8 sent operator()	3	3	0	0
+0073BFEC	SceneTutorialDownload::openDownloadPopup::$_6 operator()	15	15	0	0
+0073C204	SceneTutorialDownload::openDownloadPopup::$_6 close end __clone()	6	3	0	0
+0073C3C0	SceneTutorialDownload::finalize::$_4 operator()	3	3	0	0
+0073C4D8	SceneTutorialDownload::finalize::$_9 lambda operator() (to the name)	6	3	0	0
+0073C628	SceneTutorialDownload::init::$_3 operator() (download answer)	3	0	0	3
+0073CAF0	SceneTutorialDownload::init::$_2 operator() (video event)	4	4	0	0
 0073CCF0	SceneMedalList::~SceneMedalList	5	5	0	0
 0073CDA4	SceneMedalList::init	8	4	0	0
 0073D6E4	SceneMedalList::runInAnimation	8	1	0	0
@@ -5820,7 +5908,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00C8F01E	sub_C8F01E	98628	571	0	0
 00C98EF0	operator new(unsigned)	130377517	250792	0	0
 00C98F4C	operator new(unsigned, const std::nothrow_t&)	847267	8032	0	0
-00C98F6E	new[]	1407380	19416	0	0
+00C98F6E	new[]	1546961	158997	0	0
 00C98F9A	delete	113355561	1135633	0	0
 00C98FB2	delete[]	1343593	21827	0	0
 00CA4978	sub_CA4978	2534	145	0	0

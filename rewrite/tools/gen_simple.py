@@ -55,6 +55,11 @@ __aeabi_memcpy __aeabi_memcpy4 __aeabi_memcpy8 __aeabi_memset __aeabi_memset4 __
 __aeabi_memclr4 __aeabi_memclr8 __aeabi_memmove __aeabi_memmove4 __aeabi_memmove8""".split())
 # the host's __cxa_atexit records nothing (the game never exits through libc): no effect outside guest memory
 PURE_IMPORTS |= {"__cxa_atexit", "__aeabi_atexit"}
+# argument words of common imports (libc prototypes): registers past them are scratch the callee ignores
+PLT_ARGS = {"free": 1, "strlen": 1, "malloc": 1, "memcpy": 3, "memmove": 3, "memset": 3, "memcmp": 3, "memchr": 3,
+            "strcmp": 2, "strncmp": 3, "strchr": 2, "strrchr": 2, "strcpy": 2, "strncpy": 3, "strcat": 2,
+            "strstr": 2, "calloc": 2, "realloc": 2, "fopen": 2, "fclose": 1, "remove": 1, "atoi": 1,
+            "pthread_mutex_lock": 1, "pthread_mutex_unlock": 1}
 
 
 class Reject(Exception):
@@ -875,7 +880,7 @@ class Fn:
             ta = target[1] & ~1
             if target[1] in self.names.plt:
                 proto = (None, None, "", "")
-                trusted = 1 if self.names.plt[target[1]] == "free" else None
+                trusted = PLT_ARGS.get(self.names.plt[target[1]])
             else:
                 proto = self.names.proto(ta)
                 trusted = trusted_args(self.names.mangled(ta), proto)
@@ -893,6 +898,10 @@ class Fn:
                 if trusted is not None and r >= trusted:
                     break
                 if named and tw is not None and r >= tw:
+                    break
+                # an unnamed callee (a lambda body, a helper) whose Hex-Rays prototype takes fewer words, and the
+                # register only holds what an earlier call left there: no callee reads that as an argument
+                if tw is not None and r >= tw and has(v, lambda e: e[0] == "clob")                         and not has(v, lambda e: e[0] in ("sp", "lr", "cs")):
                     break
                 raise Reject(f"call arg r{r} unknown")
             args.append(v)
@@ -1447,6 +1456,8 @@ def shape_name(shape, fn, names):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--max-size", type=int, default=32)
+    ap.add_argument("--game-max-size", type=int, default=1 << 20,
+                    help="size limit for the game's own code (not library code, rewrite/tools/libsplit.py)")
     ap.add_argument("--per-file", type=int, default=700)
     ap.add_argument("--stats", action="store_true", help="print rejection reasons")
     ap.add_argument("--only", help="comma-separated hex addresses (print, do not write)")
@@ -1460,11 +1471,16 @@ def main():
     rejects = {}
     results = []
     only = {int(x, 16) for x in args.only.split(",")} if args.only else None
+    is_lib = {}
+    if args.game_max_size > args.max_size:
+        import progress  # noqa: E402  (recomp/progress.py: the game / library split)
+        is_lib = progress.split()
     for key, e in sorted(idx.items()):
         a = int(key, 16)
         if only is not None and a not in only:
             continue
-        if e["size"] > args.max_size or a in done or not e["lifted"]:
+        limit = args.game_max_size if is_lib.get(a) is False else args.max_size
+        if e["size"] > limit or a in done or not e["lifted"]:
             continue
         if re.match(r"__aeabi_c[fd]r?cmp", e["name"]):
             # the ARM EABI float comparisons return their result in the condition flags, which a rewrite does

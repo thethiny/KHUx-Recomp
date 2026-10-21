@@ -79,12 +79,29 @@ def native_share():
     return json.loads(prof.read_text()).get("native_share")
 
 
+def chunks():
+    """{IDA chunk: [parents]} (rewrite/tools/chunks.py): pieces of other functions' bodies, counted with them."""
+    path = HERE / "rewrite" / "tasks" / "chunks.tsv"
+    out = {}
+    if path.exists():
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if line and not line.startswith("#"):
+                a, ps = line.split("	")
+                out[int(a, 16)] = [int(p, 16) for p in ps.split()]
+    return out
+
+
+def with_chunks(addrs):
+    """addrs plus the chunks of any function in it."""
+    return addrs | {a for a, ps in chunks().items() if any(p in addrs for p in ps)}
+
+
 def rewritten_set():
     pat = re.compile(r"^\s*RW_FUNCTION(?:_NOVERIFY)?\(\s*(0x[0-9A-Fa-f]+)", re.M)
     addrs = set()
     for f in (HERE / "rewrite" / "src").rglob("*.cpp"):
         addrs.update(int(a, 16) & ~1 for a in pat.findall(f.read_text(encoding="utf-8", errors="replace")))
-    return addrs
+    return with_chunks(addrs)
 
 
 def verifier_sets():
@@ -93,7 +110,7 @@ def verifier_sets():
            if status.exists() else set())
     ok = ({int(l.split()[0], 16) & ~1 for l in verified.read_text().splitlines() if l.strip()}
           if verified.exists() else set())
-    return ran, ok
+    return with_chunks(ran), with_chunks(ok)
 
 
 def split():

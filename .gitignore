@@ -4,6 +4,7 @@ out/
 # Emulated device filesystem: game data downloaded at runtime, saves, prefs
 fs/
 fs2/
+fs3/
 
 # Third-party binaries copied in locally (ANGLE libEGL / libGLESv2)
 emu/angle/
