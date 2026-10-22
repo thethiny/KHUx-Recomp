@@ -25,7 +25,10 @@ LIBS = [
                   # ConvertUTF, edtaa3func, VideoPlayer-android, the plugin-x wrappers)
                   r"Java_org_cocos2dx_lib_|Java_org_cocos2dx_plugin_|\w*JNI(::)?$|\w*Jni(::)?$|etc1_|XXH|"
                   r"getUTF8StringLength|isLegalUTF8|computegradient|edgedf|distaa3|edtaa3|setVideoVisible|"
-                  r"cc_assert)"),
+                  r"cc_assert|"
+                  # the NDK cpufeatures module and cocos2d's texture decoders (C names); covariant thunks
+                  # (_ZTc...) of cocos2d classes, which outer_name does not unwrap
+                  r"android_getCpu|android_setCpu|atitc_|s3tc_|_ZTc\w*cocos2d)"),
     ("LWF", r"(LWF::|lwf_)"),
     ("libc++ / C++ runtime", r"(std::|__cxa|__cxxabiv1|__gnu_|_Unwind|__aeabi|__udiv|__div|__mod|__umod|"
                              r"operator new|operator delete|__dynamic_cast|__gxx|__cxx|_ZN?St|__clz|__ctz|"
