@@ -4132,6 +4132,14 @@ addr	name	calls	verified	mismatches	unverifiable
 00711EF0	SceneBirthRegister::create	1	1	0	0
 00711F98	SceneBirthRegister::init	2	1	0	0
 007121FA	SceneBirthRegister::init popup done (sub_7121FA)	1	1	0	0
+0071244C	SceneTakeOver::create	2	0	2	0
+00712500	SceneTakeOver::init	6	0	0	0
+00712CEC	SceneTakeOver::openWebViewInfoPopup	2	1	0	0
+00713538	SceneTakeOver::openWebViewInfoPopup closed operator() (sub_713538)	1	1	0	0
+00713AC8	SceneTakeOver::openWebViewInfoPopup opened operator() (sub_713AC8)	1	1	0	0
+00713D74	SceneTakeOver::init Intro operator() (sub_713D74)	4	4	0	0
+00713F28	SceneTakeOver::init Takeover lambda __clone() (sub_713F28)	6	0	0	0
+00713FA4	SceneTakeOver::init Takeover operator() (sub_713FA4)	4	4	0	0
 00714EEC	SceneAgreement::init	16	7	0	0
 0071581C	SceneAgreement::init::$_7 operator() (agree)	15	15	0	0
 007159AC	SceneAgreement::init::$_6 operator() (disagree closed)	11	8	0	0
