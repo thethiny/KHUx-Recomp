@@ -117,7 +117,7 @@ uint32_t initEvent(uint32_t self) {
     } else {
         hide(description);
         st8(self + F_LIMIT_SHOWN, 1);
-        hide(limit);
+        vcall(limit, V_setVisible, {limit, 1});   // r1 still holds the 1 just stored (no argument set)
         call(SAS_updateEventTimeChack, {self, fbits(1.0f)});
     }
     Frame f;

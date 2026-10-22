@@ -39,6 +39,11 @@ void play(uint32_t armature, uint32_t name, uint32_t len) {
     vcall(anim, A_play, {anim, s, 0xFFFFFFFF, 0xFFFFFFFF});
     strFree(s);
 }
+// play an animation by a name string the caller built
+void playStr(uint32_t armature, uint32_t str) {
+    const uint32_t anim = vcall(armature, V_getAnimation, {armature});
+    vcall(anim, A_play, {anim, str, 0xFFFFFFFF, 0xFFFFFFFF});
+}
 void animCall(uint32_t armature, uint32_t slot) {
     const uint32_t anim = vcall(armature, V_getAnimation, {armature});
     vcall(anim, slot, {anim});
@@ -71,6 +76,16 @@ void slowNext(uint32_t self) {
 uint32_t turn(uint32_t self, uint32_t count, uint32_t done, uint32_t first, const Name *firstSet, const Name *pageSet,
               uint32_t last, const Name *lastSet, bool forward, uint32_t vt) {
     if (int32_t(count) < 1 || ld8(self + F_BUSY)) return 0;
+    // the nine names are built up front like the original (left set, right set, then the pages' set; the 11-char
+    // right names live on the heap) and destroyed in reverse at the end, so the heap is used the same way
+    Frame names;
+    uint32_t str[9];
+    for (int k = 0; k < 3; k++) str[k] = newStr(names, LEFT_SET[k].s, LEFT_SET[k].len);
+    for (int k = 0; k < 3; k++) str[3 + k] = newStr(names, RIGHT_SET[k].s, RIGHT_SET[k].len);
+    for (int k = 0; k < 3; k++) str[6 + k] = newStr(names, pageSet[k].s, pageSet[k].len);
+    auto nameOf = [&](const Name *set, int32_t i) {
+        return set == LEFT_SET ? str[i] : str[3 + i];        // the first two arrays (the pages use str[6..8])
+    };
     for (uint32_t k = 0; int32_t(ld32(self + F_PAGES + 4) - ld32(self + F_PAGES)) >= 1 && k < pageCount(self); k++)
         vcall(pageAt(self, k), V_setVisible, {pageAt(self, k), 0});
     st32(self + F_TIME, 0);
@@ -79,16 +94,14 @@ uint32_t turn(uint32_t self, uint32_t count, uint32_t done, uint32_t first, cons
     st32(self + F_RAISE, 0);
     st32(self + F_RAISE_TIME, 0);
     {
-        const Name &n = firstSet[int32_t(ld32(self + F_SET)) % 3];
-        play(ld32(self + first), n.s, n.len);
+        playStr(ld32(self + first), nameOf(firstSet, int32_t(ld32(self + F_SET)) % 3));
         animCall(ld32(self + first), A_resume);
     }
     int32_t z = int32_t(ld32(self + F_PAGES + 4) - ld32(self + F_PAGES)) >> 1;
     for (uint32_t i = 0; i < pageCount(self); i++) {
         const uint32_t page = pageAt(self, i);
         vcall(page, V_setVisible, {page, 1});
-        const Name &n = pageSet[int32_t(ld32(self + F_SET)) % 3];
-        play(page, n.s, n.len);
+        playStr(page, str[6 + int32_t(ld32(self + F_SET)) % 3]);
         animCall(page, A_resume);
         speed(page, 3.0f);
         vcall(page, V_setLocalZOrder, {page, uint32_t(z)});
@@ -117,10 +130,10 @@ uint32_t turn(uint32_t self, uint32_t count, uint32_t done, uint32_t first, cons
     animCall(pageAt(self, 0), A_pause);
     slowNext(self);
     {
-        const Name &n = lastSet[int32_t(ld32(self + F_SET)) % 3];
-        play(ld32(self + last), n.s, n.len);
+        playStr(ld32(self + last), nameOf(lastSet, int32_t(ld32(self + F_SET)) % 3));
         animCall(ld32(self + last), A_resume);
     }
+    for (int k = 8; k >= 0; k--) strFree(str[k]);
     return 1;
 }
 }  // namespace

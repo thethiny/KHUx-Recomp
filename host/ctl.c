@@ -10,6 +10,7 @@
 #include <winsock2.h>
 #include "host.h"
 #include <math.h>
+extern volatile int rewrite_host_call_returns;        /* rewrite.c */
 #include <ctype.h>
 
 #define CONTROL_PORT 8765
@@ -581,7 +582,11 @@ static char *serve_main(Req *r) {
             else hi = mid - 1;
         }
         if (!fn) return _strdup("{\"error\": \"not a lifted function\"}");
+        /* the call returns, so the verifier may shadow-run it like a constructor (a direct test of code the game
+         * never calls; rewrite.c) */
+        rewrite_host_call_returns = 1;
         uint32_t r0 = guest_call(mc, fn, n, a);
+        rewrite_host_call_returns = 0;
         for (int k = 0; k < nt; k++) gfree(tmp[k]);
         SB b = {0};
         sb_fmt(&b, "{\"r0\": \"0x%x\"}", r0);

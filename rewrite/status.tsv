@@ -288,6 +288,8 @@ addr	name	calls	verified	mismatches	unverifiable
 004952F8	GuiltBurstCutInShader::init	71	0	0	0
 00495560	GuiltBurstCutInShader::addShaderParent	71	3	0	0
 00495604	GuiltBurstCutInShader::update	304445	105682	0	0
+00495DF8	GuiltBurstCutInShader::set_spr_color	4	2	0	0
+00495ED8	GuiltBurstCutInShader::set_lwf_color	29278	3813	0	0
 004960E0	GuiltBurstCutInShader::updateInit	304445	105682	0	4
 004966BC	BattleUtil::calcMedalStatus	28221	203	0	0
 00496BD0	BattleUtil::calcMedalExp	26360	203	0	0
@@ -905,6 +907,10 @@ addr	name	calls	verified	mismatches	unverifiable
 00509F40	LoadingIndicator::init::$_0::__clone(dst)	86	0	0	0
 00509F5C	LoadingIndicator::init::$_0::destroy	86	0	0	0
 00509F66	LoadingIndicator::init::$_0::operator()	54	54	0	0
+00509FFC	BookAnimation::init	3	2	0	0
+0050A4F4	BookAnimation::rightAnimation	3	2	0	0
+0050AA84	BookAnimation::leftAnimation	3	2	0	0
+0050B01C	BookAnimation::update	31	27	0	0
 0050B694	AlbumScrollView::~AlbumScrollView	12	6	0	0
 0050B7B8	AlbumScrollView::create	10	2	0	0
 0050B80C	AlbumScrollView::AlbumScrollView	6	2	0	0
@@ -936,6 +942,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0050FED8	PresentBoxScrollView::changeRow $_0 __func::__clone()	83	7	0	0
 00510024	PresentBoxScrollView::changeRow $_0 __func::destroy_deallocate	20	0	0	0
 00510044	PresentBoxScrollView::changeRow::$_0 operator() (Collect)	4	3	0	1
+0051195C	BattleResultScrollView cell touch began operator() (sub_51195C)	21	21	0	0
 00511BB4	BattleResultScrollView::~BattleResultScrollView()	40	0	0	0
 00511D18	BattleResultScrollView::~BattleResultScrollView() (deleting)	40	0	0	0
 00511D4C	BattleResultScrollView::create()	40	0	0	0
@@ -1459,16 +1466,18 @@ addr	name	calls	verified	mismatches	unverifiable
 0057DD4C	BattleResultDialog::update	53941	4400	0	10
 0057DEBC	ResultPointLayer::update	32425	6306	0	0
 0057DF20	BattleResultDialog::updateLuxGauge	116	0	0	0
-0057E04C	BattleResultDialog::openStageResult	43	0	2	2
+0057E04C	BattleResultDialog::openStageResult	13	13	0	0
 0057EB1C	BattleResultDialog::openParentChack	97	0	0	0
 0057EC64	BattleResultDialog::setTitleLayer	97	0	0	0
 0057F06C	BattleResultDialog::setSubMisstonLayer	41	0	0	0
 0057F614	BattleResultDialog::initSkill	57	0	0	0
 0057F860	ResultPointLayer::set	186	0	0	0
 0057F930	ResultPointLayer::updateLabel	1190	905	0	0
-0057FAB4	BattleResultDialog::openRaidResult	6	6	0	0
-00581804	BattleResultDialog::openGettingItem	42	0	2	0
+0057FAB4	BattleResultDialog::openRaidResult	8	8	0	0
+00580D7C	BattleResultDialog::openColosseumResult	3	3	0	0
+00581804	BattleResultDialog::openGettingItem	13	13	0	0
 005820C0	BattleResultDialog::setResultItemLayer	40	0	0	0
+005821DC	BattleResultDialog::openClearRank	7	0	7	0
 00582AAC	BattleResultDialog::close	166	0	0	0
 00582B80	BattleResultDialog::setCloseEvent	97	2	0	0
 00582B90	BattleResultDialog::initResultLwf	198	0	0	0
@@ -1516,7 +1525,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0058573C	BattleResultDialog::openRaidResult $_7 operator()	15	0	0	0
 0058589C	BattleResultDialog::openRaidResult::$_6 __clone(__base*)	48	0	0	0
 005858BC	BattleResultDialog::openRaidResult::$_6 destroy()	76	14	0	0
-005858C8	AdvEventBannerScrollView page sound operator() (sub_5858C8)	6	4	2	0
+005858C8	AdvEventBannerScrollView page sound operator() (sub_5858C8)	8	6	2	0
 005859E0	BattleResultDialog::openRaidResult::$_5 __clone(__base*)	48	0	0	0
 00585A00	BattleResultDialog::openRaidResult::$_5 destroy()	76	14	0	0
 00585A0A	sub_585A0A	15	0	0	0
@@ -2072,6 +2081,7 @@ addr	name	calls	verified	mismatches	unverifiable
 005D0E32	CarouselDeck::onCenterButton	655	261	0	0
 005D0E94	CarouselDeck::actionAttack	26826	12124	0	2
 005D120C	CarouselDeck::removeArmature	5219	1290	0	0
+005D129C	CarouselDeck::playGuiltBonusEffect	15	5	0	0
 005D13E0	CarouselDeck::disableButton	83	0	0	0
 005D1406	CarouselDeck::setBattleState	255	67	0	0
 005D1468	CarouselDeck::addArmature	2086	1119	0	0
@@ -2086,12 +2096,13 @@ addr	name	calls	verified	mismatches	unverifiable
 005D23FC	CarouselDeck::setBurstPower	267	0	0	0
 005D2964	CarouselDeck::initGuiltBonusEffect $_9 __func::__clone(__base*)	134	0	0	0
 005D2980	CarouselDeck::initGuiltBonusEffect $_9 __func::destroy	224	20	0	0
+005D298A	CarouselDeck armature movement end operator() (sub_5D298A)	5	5	0	0
 005D2A2C	CarouselDeck::setAbilityInfo $_8 __func::__clone(__base*)	534	0	0	0
 005D2A4C	CarouselDeck::setAbilityInfo $_8 __func::destroy	957	80	0	0
 005D2A56	sub_5D2A56	14	0	0	0
 005D2AC8	CarouselDeck::createMadalButton $_7 __func::__clone(__base*)	534	0	0	0
 005D2AE8	CarouselDeck::createMadalButton $_7 __func::destroy	957	80	0	0
-005D2AF4	CarouselDeck burst area touch operator() (sub_5D2AF4)	38	38	0	0
+005D2AF4	CarouselDeck burst area touch operator() (sub_5D2AF4)	108	108	0	0
 005D2DEC	sub_5D2DEC	524	524	0	0
 005D2E0C	nullsub_856	819	778	0	0
 005D2ED0	sub_5D2ED0	1380	239	0	0
@@ -2594,6 +2605,7 @@ addr	name	calls	verified	mismatches	unverifiable
 005FB430	StageFieldManager::StageFieldManager	67	0	0	0
 005FB824	StageUI::StageUI	67	0	0	0
 005FB8AC	SceneActionMap::createLayer	46	0	0	0
+005FB8DA	StageSkipActionMap::create	4	4	0	0
 005FB92E	SceneActionMap::create	46	0	0	0
 005FB984	SceneActionMap::~SceneActionMap	50	8	0	0
 005FBA64	SceneActionMap::~SceneActionMap (deleting)	50	8	0	40
@@ -2774,7 +2786,7 @@ addr	name	calls	verified	mismatches	unverifiable
 006099E4	SceneRaidBattle::execRaidAttack	110	14	0	0
 00609B44	SceneRaidBattle::getCameraPosition	621	579	0	0
 00609B4C	SceneRaidBattle::alterCamera	621	579	0	0
-00609B5C	GuiltBurstCutInShader::addRaidBossBg	27	27	0	0
+00609B5C	GuiltBurstCutInShader::addRaidBossBg	33	33	0	0
 00609BC8	SceneRaidBattle::battleTrgUI	4	4	0	0
 00609CA8	SceneRaidBattle::update	93145	93066	21	58
 0060A610	SceneRaidBattle::endEnemyTurn	43	43	0	0
@@ -3443,16 +3455,21 @@ addr	name	calls	verified	mismatches	unverifiable
 00681784	SceneBattleResult (sub_681784): the sphere lock check	24	0	0	0
 006818AC	SceneBattleResult::update	90859	7716	0	0
 006818B0	SceneBattleResult::nextResult()	146	16	0	14
+00681CC4	SceneBattleResult::openNewKeyBladePopup	1	1	0	0
 00681E2C	SceneBattleResult::openLevelUpPopup()	21	0	0	0
 00682AB0	SceneBattleResult::openNewLuxPopup(int)	4	0	0	0
+00682B48	SceneBattleResult::openUserTitlePopup	1	1	0	0
+00682BE0	SceneBattleResult::openGetKeyBladePopup	2	1	0	0
 00683264	SceneBattleResult::startResult()	62	0	0	30
 00683DB8	hole::network::api::StageClear::Property::operator=	57	2	0	0
 00683E64	SceneBattleResult::addResultRewardKeyBlade(int, int)	9	0	0	0
 00684098	SceneBattleResult (sub_684098): add a got item	33	0	0	0
 00684258	SceneBattleResult::openGetKeyBladePopup __clone(__base*)	2	0	0	0
 00684278	SceneBattleResult::openGetKeyBladePopup destroy()	3	1	0	0
+00684284	SceneBattleResult::openGetKeyBladePopup opened operator() (sub_684284)	1	1	0	0
 00684464	SceneBattleResult::openGetKeyBladePopup __clone()	1	0	0	0
 00684520	SceneBattleResult::openGetKeyBladePopup destroy_deallocate()	2	0	0	0
+0068454C	SceneBattleResult::openGetKeyBladePopup OK operator() (sub_68454C)	4	4	0	0
 00684738	SceneBattleResult::openGetKeyBladePopup __clone()	2	1	0	0
 006847F4	SceneBattleResult::openGetKeyBladePopup destroy_deallocate()	2	2	0	0
 00684964	SceneBattleResult::startResult::$_16 __clone(__base*)	32	0	0	0
@@ -4217,11 +4234,14 @@ addr	name	calls	verified	mismatches	unverifiable
 0071FF14	SceneAdventureSelect::initAdvScrollView	169	15	0	0
 00720270	SceneAdventureSelect::initStory	111	0	0	0
 00720A5C	SceneAdventureSelect::initEventBanner	2	0	0	2
+00721838	SceneAdventureSelect::initEvent	28	25	0	0
 00721F50	SceneAdventureSelect::initAdvSelect	39	0	0	0
 00722F58	SceneAdventureSelect::storyInAnimation	111	0	0	0
 00723088	SceneAdventureSelect::changeStageInfo	193	29	0	0
 00723954	AdventurePanel::createWidget	142	0	0	4
+00723994	SceneAdventureSelect::eventBannerDisps	24	24	0	0
 00723D10	AdventurePanel::runLeftOutAnimation	608	142	0	0
+00723EBC	SceneAdventureSelect::eventInAnimation	107	22	0	0
 00723F78	SceneAdventureSelect::initColosseum	11	11	0	0
 00724868	SceneAdventureSelect::colosseumInAnimation	22	11	0	0
 00724908	SceneAdventureSelect::openTutorial25	22	11	0	0
@@ -4248,6 +4268,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00727128	SceneAdventureSelect::openPopupStartDeckEdit	66	0	0	0
 00727288	SceneAdventureSelect::checkApStory	65	2	0	0
 0072763C	SceneAdventureSelect::checkAp	65	2	0	0
+00727C2C	SceneAdventureSelect::openTutorial13	1	1	0	0
 00727E94	SceneAdventureSelect::openTutorial33	10	3	0	0
 00727F70	SceneAdventureSelect::openTutorial34	137	1	0	0
 0072804C	SceneAdventureSelect::openTutorial104	50	4	0	0
@@ -4285,12 +4306,13 @@ addr	name	calls	verified	mismatches	unverifiable
 00729C58	SceneAdventureSelect::raidBossRewardPopup::$_55::{lambda()#1}::{lambda()#1}::operator()	96	1	0	0
 00729DA4	SceneAdventureSelect::raidBossEscapeAnim::$_54 __clone()	7	0	0	0
 00729E5C	SceneAdventureSelect::raidBossEscapeAnim::$_54 destroy_deallocate()	21	7	0	0
-00729E88	SceneAdventureSelect raid boss reward after BGM operator() (sub_729E88)	1	0	1	0
+00729E88	SceneAdventureSelect raid boss reward after BGM operator() (sub_729E88)	4	0	4	0
 00729FE8	SceneAdventureSelect::raidBossAnim::$_53 __clone()	4	0	0	0
 0072A0A0	SceneAdventureSelect::raidBossAnim::$_53 destroy_deallocate()	5	0	0	0
 0072A578	SceneAdventureSelect::initStageRaidChack::$_52 __clone()	519	12	0	0
 0072A61C	SceneAdventureSelect::initStageRaidChack::$_52 destroy_deallocate()	579	12	0	0
 0072A648	sub_72A648	107	1	0	0
+0072A7F0	AdventurePanel node swap then callback operator() (sub_72A7F0)	1	1	0	0
 0072A984	SceneAdventureSelect::storyInAnimation::$_48 __clone()	270	0	0	0
 0072AA28	SceneAdventureSelect::storyInAnimation::$_48 destroy_deallocate()	312	81	0	0
 0072AA54	SceneAdventureSelect::storyInAnimation::$_48 operator()	15	8	0	0
@@ -4302,12 +4324,15 @@ addr	name	calls	verified	mismatches	unverifiable
 0072AD78	nullsub_2030	240	78	0	0
 0072AD84	sub_72AD84	80	39	0	0
 0072AE30	SceneAdventureSelect::changeStageInfo $_46 __func::operator() (sub_72AE30)	11	11	0	0
+0072B148	SceneAdventureSelect event info operator() (sub_72B148)	43	24	0	19
 0072B538	SceneAdventureSelect::changeStageInfo::$_44 __clone(__base*)	248	28	0	0
 0072B55C	SceneAdventureSelect::changeStageInfo::$_44 destroy()	394	117	0	0
 0072B568	SceneAdventureSelect::changeStageInfo::$_44::operator()	84	23	0	4
 0072B7DC	sub_72B7DC	152	30	0	0
 0072B7FC	nullsub_2036	224	58	0	0
 0072B808	SceneAdventureSelect::changeStageInfo::$_44::{lambda()#1}::operator()	80	42	0	0
+0072BB64	SceneAdventureSelect tutorial phase operator() (sub_72BB64)	1	1	0	0
+0072BC90	SceneAdventureSelect filter enabled operator() (sub_72BC90)	2	1	0	0
 0072BE50	nullsub_2039	120	58	0	0
 0072BE5C	SceneAdventureSelect::changeStageInfo::$_44::{lambda()#1}::{lambda()#1}::operator()	84	42	0	0
 0072BF74	SceneAdventureSelect::changeStageInfo::$_43 __clone()	8	1	0	0
@@ -4318,6 +4343,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0072C250	SceneAdventureSelect::changeStageInfo::$_43::{lambda()#1}::operator()	14	7	0	0
 0072C388	SceneAdventureSelect::initAdvScrollView::$_42 __clone(__base*)	131	1	0	0
 0072C3A8	SceneAdventureSelect::initAdvScrollView::$_42 destroy()	205	8	0	0
+0072C3B4	SceneAdventureSelect info swipe operator() (sub_72C3B4)	143	143	0	0
 0072C474	SceneAdventureSelect::initAdvScrollView::$_41 __clone(__base*)	131	1	0	0
 0072C490	SceneAdventureSelect::initAdvScrollView::$_41 destroy()	205	8	0	0
 0072C504	SceneAdventureSelect::initAdvScrollView::$_40 __clone(__base*)	131	1	0	0
@@ -4333,6 +4359,12 @@ addr	name	calls	verified	mismatches	unverifiable
 0072CCC0	SceneAdventureSelect::initColosseum $_36 __func::operator() (sub_72CCC0)	2	2	0	0
 0072CE2C	SceneAdventureSelect::initColosseum $_36 inner __func::operator() (sub_72CE2C)	2	0	0	2
 0072D0B0	SceneAdventureSelect::initColosseum $_33 __func::__clone(p) (sub_72D0B0)	44	11	0	0
+0072D114	SceneAdventureSelect colosseum entry touch operator() (sub_72D114)	22	18	0	4
+0072D1F4	SceneAdventureSelect colosseum board out operator() (sub_72D1F4)	5	5	0	0
+0072D378	SceneAdventureSelect event avatar board (from the event) operator() (sub_72D378)	4	4	0	0
+0072D50C	SceneAdventureSelect event board out operator() (sub_72D50C)	8	8	0	0
+0072D690	SceneAdventureSelect event avatar board operator() (sub_72D690)	6	6	0	0
+0072D818	SceneAdventureSelect event entry touch operator() (sub_72D818)	34	27	0	7
 0072DB80	SceneAdventureSelect::initEventBanner::$_24 __clone(__base*)	1	0	0	0
 0072DBA0	SceneAdventureSelect::initEventBanner::$_24 destroy()	2	0	0	0
 0072E008	SceneAdventureSelect::initEventBanner::$_23 __clone(__base*)	1	0	0	0
@@ -4572,10 +4604,10 @@ addr	name	calls	verified	mismatches	unverifiable
 007425C4	BattleMisc::getEnemyBuffCorrection	916	147	0	0
 00742688	BattleMisc::getRaidBuffCorrection	1264	632	0	0
 00742764	BattleMisc::preparePlayerAttackEnemy	314	131	0	0
-0074344C	BattleMisc burst effects on the player (sub_74344C)	40	20	0	0
-007441F4	BattleMisc::preparePlayerAttackRaid	25	25	0	0
+0074344C	BattleMisc burst effects on the player (sub_74344C)	54	27	0	0
+007441F4	BattleMisc::preparePlayerAttackRaid	32	32	0	0
 007454A0	BattleMisc::prepareEnemyAttack	141	5	0	0
-0074612C	BattleMisc::prepareRaidAttack	4	2	2	0
+0074612C	BattleMisc::prepareRaidAttack	3	3	0	0
 0074718C	BattleMisc::calculatePlayerAttack	763	131	0	0
 00747448	BattleMisc::calculatePlayerAttack_sub	1009	756	0	0
 00747EE4	BattleMisc::calculatePlayerAttack (raid)	625	625	0	0
@@ -4825,7 +4857,13 @@ addr	name	calls	verified	mismatches	unverifiable
 0075C464	StageManager::MarkingMapTransportGate	66730	406	0	0
 0075C4EC	StageManager::changeMode	192	28	0	0
 0075C5C0	StageManager::countOnDeckMedalAttribute	2	1	0	0
+0075C920	StageManager enemy count of a kind operator() (sub_75C920)	36	36	0	0
+0075CA34	StageManager enemy highest kind operator() (sub_75CA34)	6	6	0	0
 0075CB46	StageManager::countOnDeckMedalAttribute::$_0 destroy_deallocate()	3	1	0	0
+0075CB50	StageManager enemy sizes operator() (sub_75CB50)	42	42	0	0
+0075DD90	StageSkipActionMap::init	8	4	0	0
+0075DEC8	StageSkipActionMap::update	30	29	0	1
+0075E37C	StageSkipActionMap::takeTreasureContent	16	8	0	0
 0075E4F4	StageUI::~StageUI	66	8	0	0
 0075E5E0	StageUI::deleteTutorialWidget	66	8	0	0
 0075E620	StageUI::~StageUI (deleting)	74	8	0	0
@@ -4861,9 +4899,14 @@ addr	name	calls	verified	mismatches	unverifiable
 0075FB9C	StageUI::openRetireDialog	2	2	0	0
 0075FDB8	StageUI::openContinueDialog	12	0	0	2
 00760294	StageUI::createBattleMenuPopup	6	3	0	0
-00760814	StageUI::openBattleMenuPopup	3	3	0	0
+00760410	StageUI::createColosseumMenuPopup	13	0	1	0
+00760814	StageUI::openBattleMenuPopup	7	3	4	0
 00760E24	StageUI::set_start_avatar_parameter	66	0	0	0
+00760EC8	StageUI::createTutorialWidget	1	1	0	0
+00761430	StageUI::TutorialWidget::create	5	1	0	0
+007615EC	StageUI::TutorialWidget::onTouchBegan	3	3	0	0
 00761726	StageUI::setBattleTurn	316	154	0	0
+00761740	StageUI::TutorialWidget::~TutorialWidget	2	2	0	0
 007622B0	StageUI::openContinueDialog $_3 __func::destroy_deallocate	60	2	0	0
 007628C8	StageUI::openContinueDialog $_3 UlbE0_ __func::__clone()	5	0	0	0
 00762980	StageUI::openContinueDialog $_3 UlbE0_ __func::destroy_deallocate	6	0	0	0

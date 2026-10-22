@@ -207,17 +207,18 @@ uint32_t takeTreasureContent(uint32_t, uint32_t items) {
 }
 RW_FUNCTION(0x75E37C, "StageSkipActionMap::takeTreasureContent", stage_skip::takeTreasureContent);
 
-// StageManager's enemy-list lambdas, captures by reference {&left, ...}; each takes one enemy row (shared_ptr):
-// how many enemies of a kind (+0x470) are among the first `left`
+// StageManager's sub-mission checks over the deck (MedalDeck::forEachMedal lambdas), captures by reference
+// {&left, ...}; each takes one medal master row (shared_ptr): isFullSetTargetRarity - how many of the first `left`
+// medals have the target rarity (+0x470)
 uint32_t countKind(uint32_t functor, uint32_t rowRef) {
     if (int32_t(ld32(ld32(functor + 4))) >= 1 && sbRead(ld32(rowRef), 0x470) == ld32(ld32(functor + 8)))
         st32(ld32(functor + 0xC), ld32(ld32(functor + 0xC)) + 1);
     st32(ld32(functor + 4), ld32(ld32(functor + 4)) - 1);
     return 1;
 }
-RW_FUNCTION(0x75C920, "StageManager enemy count of a kind operator() (sub_75C920)", stage_skip::countKind);
+RW_FUNCTION(0x75C920, "StageManager::isFullSetTargetRarity medal operator() (sub_75C920)", stage_skip::countKind);
 
-// the highest kind (+0x470) among the first `left`
+// getMostHigherRarity - the highest rarity (+0x470) among the first `left`
 uint32_t maxKind(uint32_t functor, uint32_t rowRef) {
     if (int32_t(ld32(ld32(functor + 4))) >= 1) {
         const int32_t v = int32_t(sbRead(ld32(rowRef), 0x470));
@@ -227,9 +228,9 @@ uint32_t maxKind(uint32_t functor, uint32_t rowRef) {
     st32(ld32(functor + 4), ld32(ld32(functor + 4)) - 1);
     return 1;
 }
-RW_FUNCTION(0x75CA34, "StageManager enemy highest kind operator() (sub_75CA34)", stage_skip::maxKind);
+RW_FUNCTION(0x75CA34, "StageManager::getMostHigherRarity medal operator() (sub_75CA34)", stage_skip::maxKind);
 
-// the first `left` counted by size class (+0x458: 1, 2, 3)
+// countOnDeckMedalAttribute - the first `left` counted by attribute (+0x458: 1 power, 2 speed, 3 magic)
 uint32_t countSizes(uint32_t functor, uint32_t rowRef) {
     if (int32_t(ld32(ld32(functor + 4))) >= 1) {
         const uint32_t v = sbRead(ld32(rowRef), 0x458);
@@ -242,6 +243,6 @@ uint32_t countSizes(uint32_t functor, uint32_t rowRef) {
     st32(ld32(functor + 4), ld32(ld32(functor + 4)) - 1);
     return 1;
 }
-RW_FUNCTION(0x75CB50, "StageManager enemy sizes operator() (sub_75CB50)", stage_skip::countSizes);
+RW_FUNCTION(0x75CB50, "StageManager::countOnDeckMedalAttribute medal operator() (sub_75CB50)", stage_skip::countSizes);
 
 }  // namespace stage_skip

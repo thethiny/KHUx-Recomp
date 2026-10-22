@@ -14,3 +14,15 @@
 - Windows build: SQEX becomes its own DLL (exports: the SdSoundSystem_* C API). Before that: a Windows backend for
   CoreAudioOut (OpenSL ES), where libvorbis lives, buffer ownership of akb data / SQEX::File IO across the
   boundary.
+
+- Exception landing pads / mid-function fragments (decision pending, user asked to note them 2026-10-22): IDA index
+  entries that run on their parent's frame (end in _Unwind_Resume or jump into the parent's epilogue), so they are not
+  rewritable as functions and stay out of the rewrite. Proposal: count them with their parent, like the IDA chunks
+  (rewrite/tools/chunks.py -> progress.py), once the user agrees. Known so far:
+  - Batch #1 (20): APIManager 4C1E2A.. (the 4C1E2A-4C259A run), SceneManager 61C20C.., 4C1616, 4C1A02.
+  - Batch #3 (3): 007453D0, 007470BE (BattleMisc epilogue fragments), 00580986 (BattleResultDialog fragment).
+  - Candidates from the batch #1 scan, not yet checked one by one: 464F8E 465760 4C1E2A 4C1E6C 4C1E9C 4C1F62 4C2174
+    4C2192 4C22DA 4C232E 4C2414 4C2560 4C257C 4C259A 558128 55851C 558524 559FB2 61C20C 61C210 61C234 61C2B0
+    61C2B4 61FAB6 66D6C4 66DC6E 66DCCC 66DCE2 66DCEE.
+  Before counting: confirm each one (no prologue, tail into the parent or _Unwind_Resume) and give chunks.py / libsplit
+  a "pad" kind so progress.py credits it to the parent.

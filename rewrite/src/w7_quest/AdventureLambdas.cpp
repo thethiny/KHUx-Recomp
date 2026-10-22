@@ -32,7 +32,7 @@ constexpr uint32_t F_STAGE_LIST = 0x300, F_TAP_OK = 0x325, F_EVENT_INDEX = 0x328
 constexpr uint32_t F_HEADER = 0x370, F_PANEL = 0x38C, F_INFO = 0x394, F_ENTERED = 0x3FC;
 // APIManager +0x12C: the events (56 bytes each: +0xC the avatar board, +0x14 the banner name)
 constexpr uint32_t API_EVENTS = 0x12C, EVENT_SIZE = 56;
-constexpr uint32_t SCM_FILTER_SEEN = 0x30A, SCM_BOARD_FROM = 0x28C, SCM_BOARD_ID = 0xBC;
+constexpr uint32_t SCM_FILTER_SEEN = 0x30A, SCM_BOARD_FROM = 0x28C, SCM_BOARD_ID = 0x2F0;
 
 // the chosen event's entry (the original throws out_of_range past the end)
 uint32_t eventEntry(uint32_t scene, uint32_t &base) {

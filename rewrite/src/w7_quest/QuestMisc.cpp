@@ -388,7 +388,7 @@ uint32_t resultCellTouchBegan(uint32_t functor, uint32_t touchRef) {
     call(Vec2_dtor, {local});
     return r;
 }
-RW_FUNCTION(0x51195C, "BattleResultScrollView cell touch began operator() (sub_51195C)", quest_misc::resultCellTouchBegan);
+RW_FUNCTION(0x51195C, "AvatarTitleScrollView item touch began operator() (sub_51195C)", quest_misc::resultCellTouchBegan);
 
 // an event banner page turned: the previous sound stopped, the page sound played
 uint32_t bannerSound(uint32_t functor) {

@@ -53,9 +53,10 @@ void loadScreen(BattleResultDialog *self, uint32_t json, uint32_t len) {
         TempStr s(STR_BattleWinBG_CenterUI, 0x14);
         vcall(root, Node_removeChildByName, {root, s, 1});
     }
-    uint32_t parent = self->parent;
-    uint32_t z = vcall(parent, Node_getLocalZOrder, {parent});
-    vcall(parent, node::addChildZ, {parent, self->root, z + 1});
+    // the screen goes onto the modal shadow (this +0x274), one above its z order
+    uint32_t shadow = self->shadow;
+    uint32_t z = vcall(shadow, Node_getLocalZOrder, {shadow});
+    vcall(shadow, node::addChildZ, {shadow, self->root, z + 1});
 }
 
 // The stage being finished (by battle kind: story, event, raid): its master::Stage row (shared_ptr kept in

@@ -46,9 +46,9 @@ constexpr uint32_t V_getAnimation = 0x298, V_setTouchEnabled = 0x29C, V_getLayou
 constexpr uint32_t V_getVirtualRenderer = 0x2D8, V_playAnimation = 0x68, V_isFileExist = 0x58;
 // StageUI: +0x70 menu open (byte), +0x90 the tutorial widget
 constexpr uint32_t F_MENU_FLAG = 0x70, F_TUTORIAL = 0x90;
-// TutorialWidget: +0x14C the touch layout, +0x500 GestureRecognizer, +0x528 / +0x538 the hit test callback
+// TutorialWidget: +0x530 the touch layout, +0x500 GestureRecognizer, +0x528 / +0x538 the hit test callback
 // (function<bool(Rect&, Touch*)>), +0x528 blocked flag (+0x528 = word 330), +0x534 the action, +0x550 the hole
-constexpr uint32_t TW_LAYOUT = 0x14C, TW_GESTURE = 0x500, TW_BLOCKED = 0x528, TW_ACTION = 0x534, TW_HIT = 0x538;
+constexpr uint32_t TW_LAYOUT = 0x530, TW_GESTURE = 0x500, TW_BLOCKED = 0x528, TW_ACTION = 0x534, TW_HIT = 0x538;
 constexpr uint32_t TW_HOLE = 0x550, TW_SIZE = 0x560;
 // APIManager: +0x13C StageStart (+0x30 the stage, +0x4C the sub missions), +0x260 ColosseumStart (+0x28 course),
 // +0x64 TutorialStatus (+0x10 finished), +0x94 UserDetail (+0x40 the retire allowance)
