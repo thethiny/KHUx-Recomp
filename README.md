@@ -120,7 +120,7 @@ Updated by `python recomp/progress.py`.
 - **Decompiled**: 56,014 of 56,604 functions have Hex-Rays pseudocode (590 failed). Reference only.
 - **Lifted**: 56,381 of 56,381 analysed functions translate to C (machine-generated, one C function per guest function, 65 instructions left to the emulator). 14,189 of them run and are checked against the emulator in game.
 - **Rewritten**: Readable, maintainable source (named types and variables, no register-level code). 33,610 functions.
-- **Run in game**: Rewritten functions the game has called while the M3 verifier compared them with the lifted original (6,809).
+- **Run in game**: Rewritten functions the game has called while the M3 verifier compared them with the lifted original (6,814).
 - **Verified**: Rewritten functions whose every checked call matched the lifted original (5,283); normal play installs only these.
 - **Game: rewritten**: The game's own code (19,342 functions, including Square Enix's sound engine): 18,357 rewritten.
 - **Game: verified**: Game functions verified: 3,570.

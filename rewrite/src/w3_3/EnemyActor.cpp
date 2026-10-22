@@ -881,7 +881,12 @@ bool EnemyActor::addDamage(EnemyActor *self, uint32_t damage, const bt::SharedPt
     int32_t dealt = int32_t(uint32_t(hp) - uint32_t(left));
     bool killed = false;
     uint8_t counted = 0;
-    if (left == floor) SafeBuffer::read(&self->property, &counted, self->property.data.get() + P_DEFEATED, 1, P_DEFEATED);
+    if (left == floor) {                                 // read() stores into guest memory: a frame byte
+        guest::Frame f(8);
+        SafeBuffer::read(&self->property, rw::host_ptr<uint8_t>(f.addr()), self->property.data.get() + P_DEFEATED, 1,
+                         P_DEFEATED);
+        counted = rw::load<uint8_t>(f.addr());
+    }
     if (left == floor && !counted) {
         uint8_t one = 1;
         SafeBuffer::write(&self->property, self->property.data.get() + P_DEFEATED, &one, 1, P_DEFEATED);

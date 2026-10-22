@@ -44,8 +44,10 @@ Open issues:
      20 ms for them to stop, else the call runs unverified (78,338 held, 7 gave up in a full session).
   2. A rewrite whose run faults (wrong state, or imports diverged from the recording) killed the session. A fault in
      the rewrite side is now a mismatch ("RW FAULT", the original's result is kept). Seen: sub_68524A, SceneLight::update,
-     cocos2d::CallFunc::update, CarouselDeck::addMedalOntoDeck (host-side fault at its first compared call; not in
-     verified.txt, so normal play does not run it - to fix).
+     cocos2d::CallFunc::update, CarouselDeck::addMedalOntoDeck (a host address outside guest memory; did not come
+     back in 3 one-quest sessions, verified by a direct call), EnemyActor::addDamage (fixed 2026-10-23: it decoded the
+     defeated flag into a host local - SafeBuffer::read stores into guest memory). The RW FAULT line now names the
+     host frames (module+offset; rewrite/tools/mapaddr.py resolves rewrite.dll offsets).
   The older bad_alloc (cocostudio DataReaderHelper::addDataFromFile builds a string from getFileData's size, unchecked)
   and LWFNode::create null crashes did not come back in three full sessions; if they do, the fopen-failure line in
   the crash report names the file.

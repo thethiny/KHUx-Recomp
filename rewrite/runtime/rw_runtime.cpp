@@ -349,12 +349,48 @@ static void run_rewrite(CPU *c, int i) {
 // original's result, the chain depth and the current CPU here. The heap lock is not touched: a fault inside the
 // heap code itself would leave it held (none seen).
 static thread_local uint32_t fault_addr, fault_lpc;
+static thread_local char fault_where[512];   // the host frames of the fault: module+offset (map them with the .map / .pdb)
+
+static void host_frame_name(uintptr_t pc, char *out, size_t cap) {
+    HMODULE m = nullptr;
+    char path[MAX_PATH] = "?";
+    if (GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                           reinterpret_cast<LPCSTR>(pc), &m) && m) {
+        GetModuleFileNameA(m, path, MAX_PATH);
+        const char *base = strrchr(path, '\\');
+        snprintf(out, cap, "%s+%llX", base ? base + 1 : path, (unsigned long long)(pc - reinterpret_cast<uintptr_t>(m)));
+    } else snprintf(out, cap, "%llX", (unsigned long long)pc);
+}
+
+// the faulting instruction and up to 7 callers (unwound from the exception's context)
+static void record_fault_frames(EXCEPTION_POINTERS *ep) {
+    CONTEXT ctx = *ep->ContextRecord;
+    size_t n = 0;
+    fault_where[0] = 0;
+    for (int k = 0; k < 8 && ctx.Rip; k++) {
+        char name[160];
+        host_frame_name(ctx.Rip, name, sizeof name);
+        n += snprintf(fault_where + n, sizeof fault_where - n, "%s%s", k ? " < " : "", name);
+        if (n >= sizeof fault_where) break;
+        DWORD64 image = 0;
+        PRUNTIME_FUNCTION rf = RtlLookupFunctionEntry(ctx.Rip, &image, nullptr);
+        if (!rf) {                                       // a leaf: the return address is on top of the stack
+            ctx.Rip = *reinterpret_cast<DWORD64 *>(ctx.Rsp);
+            ctx.Rsp += 8;
+            continue;
+        }
+        void *handler_data = nullptr;
+        DWORD64 frame = 0;
+        RtlVirtualUnwind(UNW_FLAG_NHANDLER, image, ctx.Rip, rf, &ctx, &handler_data, &frame, nullptr);
+    }
+}
 static int rewrite_fault_filter(EXCEPTION_POINTERS *ep, CPU *c) {
     if (ep->ExceptionRecord->ExceptionCode != EXCEPTION_ACCESS_VIOLATION) return EXCEPTION_CONTINUE_SEARCH;
     const uintptr_t at = ep->ExceptionRecord->NumberParameters >= 2 ? ep->ExceptionRecord->ExceptionInformation[1] : 0;
     const uintptr_t base = reinterpret_cast<uintptr_t>(c->mem);
     fault_addr = at >= base && at - base < (uintptr_t(1) << 32) ? uint32_t(at - base) : 0xFFFFFFFFu;
     fault_lpc = c->lpc;
+    record_fault_frames(ep);
     return EXCEPTION_EXECUTE_HANDLER;
 }
 static bool run_rewrite_guarded(CPU *c, int i) {
@@ -713,7 +749,7 @@ static void verify(CPU *c, int i) {
     phase = Phase::Off;
     if (faulted)
         logf("RW FAULT %s @%08X: the rewrite side faulted (guest address %08X, guest pc %08X, %u stores logged); "
-             "a mismatch: the original's result is kept", e.name, e.addr, fault_addr, fault_lpc, c->wn);
+             "a mismatch: the original's result is kept; host %s", e.name, e.addr, fault_addr, fault_lpc, c->wn, fault_where);
     if (rt_gtrack) rt_gtrack->on = 0;
     const bool effects_ok = !effect_diverged && effect_pos == effect_calls.size() && !H->shadow(3);
     const uint32_t heap_r = *reinterpret_cast<const uint32_t *>(c->mem + 0x20000010);
