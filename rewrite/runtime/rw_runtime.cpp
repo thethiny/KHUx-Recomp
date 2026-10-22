@@ -1036,6 +1036,8 @@ static void capture_init() {
     else capture_names.emplace_back(v);
     const char *d = getenv("KHUX_RW_CAPTURE_DIR");
     capture_dir = d ? d : "out/rewrite/replay";
+    for (size_t k = 0; (k = capture_dir.find_first_of("/\\", k + 1)) != std::string::npos;)   // each parent, then the folder
+        CreateDirectoryA(capture_dir.substr(0, k).c_str(), nullptr);
     CreateDirectoryA(capture_dir.c_str(), nullptr);
     if (getenv("KHUX_RW_CAPTURE_MAX")) capture_max = uint32_t(strtoul(getenv("KHUX_RW_CAPTURE_MAX"), nullptr, 10));
     capture_from = GetTickCount64() + 1000ull * strtoull(getenv("KHUX_RW_CAPTURE_DELAY") ? getenv("KHUX_RW_CAPTURE_DELAY") : "0", nullptr, 10);

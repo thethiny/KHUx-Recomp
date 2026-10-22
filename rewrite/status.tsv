@@ -1725,8 +1725,11 @@ addr	name	calls	verified	mismatches	unverifiable
 005A35E8	OtherMenuDialog::~OtherMenuDialog [deleting destructor]	2	1	0	0
 005A6688	OtherMenuDialog serial popup result __func::operator()(bool) (sub_5A6688)	1	1	0	0
 005A69A8	OtherMenuDialog serial popup closed __func::operator() (sub_5A69A8)	1	1	0	0
+005A71C8	OtherMenuDialog profile edit answer operator()(bool) (sub_5A71C8)	1	1	0	0
 005A76C4	OtherMenuDialog legal popup result __func::operator()(bool) (sub_5A76C4)	1	1	0	0
 005A79D4	OtherMenuDialog legal popup closed __func::operator() (sub_5A79D4)	1	1	0	0
+005A7BC0	OtherMenuDialog contact page touch operator() (sub_5A7BC0)	4	4	0	0
+005A7E00	OtherMenuDialog help page touch operator() (sub_5A7E00)	8	8	0	0
 005A80BC	OtherMenuDialog::close $_22 __func::__clone(__base*)	22	5	0	0
 005A80DC	OtherMenuDialog::close $_22 __func::destroy	29	11	0	0
 005A80E6	SceneSelectUnion lambda: remove two children (sub_5A80E6)	6	6	0	0
@@ -1753,6 +1756,7 @@ addr	name	calls	verified	mismatches	unverifiable
 005AC164	OtherMenuDialog::open $_7 __func::destroy	14	8	0	0
 005AC26C	OtherMenuDialog::open $_6 __func::__clone(__base*)	4	0	0	0
 005AC28C	OtherMenuDialog::open $_6 __func::destroy	14	8	0	0
+005AC5D0	SceneSelectUnion::create	9	9	0	0
 005AC690	OtherMenuDialog::open $_5 __func::__clone(__base*)	4	0	0	0
 005AC6B4	OtherMenuDialog::open $_5 __func::destroy	14	8	0	0
 005AC6C0	side menu party button lambda __func::operator() (sub_5AC6C0)	4	3	0	1
@@ -3825,6 +3829,22 @@ addr	name	calls	verified	mismatches	unverifiable
 006C7F60	SceneDownload::init	2	0	0	0
 006C8220	SceneDownload::finalize	98	49	0	0
 006C83B4	SceneDownload::update	11678	11676	0	2
+006C8E08	SceneSelectUnion::init	18	9	0	0
+006C94DC	SceneSelectUnion::init ended assign (sub_6C94DC)	180	9	0	0
+006C9554	SceneSelectUnion::runInAnimation	18	9	0	0
+006C960C	SceneSelectUnion::runOutAnimation	14	7	0	0
+006C9740	SceneSelectUnion::openPopUpDescriptionUnion	11	11	0	0
+006CA060	SceneSelectUnion::openPopUpUnion	8	8	0	0
+006CAB10	SceneSelectUnion::backScene	3	3	0	0
+006CAC0C	SceneSelectUnion::backScene $_16 operator() (sub_6CAC0C)	3	0	0	3
+006CADCC	SceneSelectUnion::openPopUpUnion closed operator() (sub_6CADCC)	12	4	0	0
+006CB0B6	SceneSelectUnion::openPopUpUnion Cancel operator() (sub_6CB0B6)	8	8	0	0
+006CB198	SceneSelectUnion::openPopUpUnion OK operator() (sub_6CB198)	24	20	0	4
+006CB4D8	SceneSelectUnion::openPopUpUnion buy jewels operator() (sub_6CB4D8)	2	1	0	1
+006CB5F8	SceneSelectUnion::openPopUpUnion change answer operator() (sub_6CB5F8)	4	4	0	0
+006CB804	SceneSelectUnion::openPopUpUnion transferred operator() (sub_6CB804)	4	4	0	0
+006CB91C	SceneSelectUnion::openPopUpUnion transferred out operator() (sub_6CB91C)	4	0	0	4
+006CBE9C	SceneSelectUnion::openPopUpDescriptionUnion closed lambda operator()(bool) (sub_6CBE9C)	11	11	0	0
 006CCD24	SceneAlbum::~SceneAlbum (deleting)	6	6	0	0
 006CCD90	SceneAlbum::init	7	2	1	0
 006CDD40	SceneAlbum::runInAnimation	10	2	0	0
@@ -4103,15 +4123,26 @@ addr	name	calls	verified	mismatches	unverifiable
 0070715C	SceneAvatarEdit::getEquipKeybladeID(bool)	8	8	0	0
 00707228	SceneAvatarEdit::updateGenderPanel	8	8	0	0
 00707490	SceneAvatarEdit::updateCost	8	8	0	0
+007076B0	SceneAvatarEdit::updateTabNew	4	4	0	0
+00707950	SceneAvatarEdit::createFilterdAccessoryIDs	13	9	0	0
 00707B4C	SceneAvatarEdit::genderFiliteringIDs(int)	8	8	0	0
+00707C60	SceneAvatarEdit::createAccessoryIDs	10	10	0	0
+00707CF8	SceneAvatarEdit::changeGender	1	1	0	0
+00707E40	SceneAvatarEdit::openAccessoriesFilterPopup	2	2	0	0
 00708DA0	SceneAvatarEdit::generateAccessories(int, vector<shared_ptr<const AvatarParts>>&, bool)	72	4	0	0
+00708FE8	SceneAvatarEdit::setAccessory	6	6	0	0
 00709668	SceneAvatarEdit::openCreateCheckPopup	6	6	0	0
+00709DF0	SceneAvatarEdit::openSavePopup	2	1	0	0
+0070A504	SceneAvatarEdit::saveMyCoordinate	1	0	0	1
 0070A71C	SceneAvatarEdit::finalize(function<void(bool)>)	4	4	0	0
 0070A750	SceneAvatarEdit::backScene	4	4	0	0
 0070A850	SceneAvatarEdit::backScene()::$_40 __func::operator()	4	0	0	4
+0070AAF0	SceneAvatarEdit::saveMyCoordinate answer operator()(bool) (sub_70AAF0)	1	1	0	0
+0070AD04	SceneAvatarEdit::openSavePopup touch operator() (sub_70AD04)	4	4	0	0
 0070AF50	SceneAvatarEdit::openCreateCheckPopup OK operator()	11	9	0	2
 0070B114	SceneAvatarEdit::openCreateCheckPopup close (sub_70B114)	8	3	0	0
 0070B290	SceneAvatarEdit::openCreateCheckPopup sent operator()	3	3	0	0
+0070B3D8	SceneAvatarEdit user get operator()(bool) (sub_70B3D8)	1	0	0	1
 0070B74A	SceneAvatarEdit::openCreateCheckPopup closed operator()	5	3	0	0
 0070E570	SceneRankingReward::~SceneRankingReward (deleting)	2	2	0	0
 0070E5DC	SceneRankingReward::init	5	0	1	0
@@ -4154,12 +4185,18 @@ addr	name	calls	verified	mismatches	unverifiable
 007176EC	SceneUnionRegister::nextState	4	4	0	0
 00717BB0	SceneUnionRegister::runOutAnimation	1	1	0	0
 00717CC8	SceneUnionRegister::openPopUpbeLongToUnion	4	2	0	0
+00718740	SceneUnionRegister::openInvitationResultPop	1	1	0	0
+00719370	SceneUnionRegister::openInvitationJewelPop	2	1	0	0
+007198D4	SceneUnionRegister::openPartyJewelPop	2	0	0	0
 00719E38	SceneUnionRegister::initUnionButtons	6	3	0	0
 0071A0C4	SceneUnionRegister::initUnionButtons ended assign (sub_71A0C4)	60	3	0	0
 0071A1AC	SceneUnionRegister::initUnionButtons ended operator()	2	2	0	0
 0071A354	SceneUnionRegister::initUnionButtons open join popup operator()	2	2	0	0
 0071A524	SceneUnionRegister::initUnionButtons moved operator()	4	4	0	0
 0071A6A4	SceneUnionRegister::initUnionButtons began operator()	36	36	0	0
+0071A928	SceneUnionRegister::openPartyJewelPop OK operator() (sub_71A928)	4	4	0	0
+0071AC84	SceneUnionRegister::openInvitationJewelPop OK operator() (sub_71AC84)	4	3	1	0
+0071B33C	SceneUnionRegister::openInvitationResultPop OK operator() (sub_71B33C)	4	4	0	0
 0071B920	SceneUnionRegister::nextState::$_12 operator()	3	3	0	0
 0071D260	SceneAdventureSelect::callAdventureSelectAPI	108	0	0	38
 0071D39C	SceneAdventureSelect::~SceneAdventureSelect	61	0	0	0
