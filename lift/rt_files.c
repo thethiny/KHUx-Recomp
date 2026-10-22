@@ -4,6 +4,7 @@
  * declined and handled by the host. Declined too inside logged runs: file positions cannot be rolled back.
  * Included by the generated lift_table.c. */
 #include <stdio.h>
+#include <errno.h>
 #include <direct.h>
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
@@ -14,6 +15,8 @@ EXPORT char rt_fs_root[1024];              /* host folder for the device file sy
 EXPORT char rt_so_guest[256];              /* the library's device path ... */
 EXPORT char rt_so_host[1024];              /* ... and its host path */
 EXPORT uint32_t rt_file_opens;             /* streams opened here (diagnostics) */
+EXPORT uint32_t rt_file_closes, rt_fopen_fails;    /* diagnostics: closed here, opens that failed ... */
+EXPORT char rt_fopen_fail_path[260];              /* ... and the last failed path */
 
 /* M3 verifier: the host's import recording runs a stream call once for real inside a shadow run (its guest stores
  * logged, the later runs replay them), or an OpenGL ES call (the shadow run then stops being compared and is kept),
@@ -65,6 +68,9 @@ static int native_fopen(CPU *c) {
     if (!host_path(path, host, sizeof(host), writing)) return 0;
     FILE *f = fopen(host, m);
     if (!f) {
+        rt_fopen_fails++;
+        snprintf(rt_fopen_fail_path, sizeof(rt_fopen_fail_path), "%s (errno %d, %d streams open here)", path, errno,
+                 (int)(rt_file_opens - rt_file_closes));
         uint32_t ep = rt_errno_fn ? rt_errno_fn() : rt_errno_ptr;
         if (ep) W32(c, ep, 2);                               /* ENOENT */
         c->r[0] = 0;
@@ -96,6 +102,7 @@ static int native_fclose(CPU *c) {
     ReleaseSRWLockExclusive(&files_lock);
     fclose(f);
     rt_heap_free(c, g);
+    rt_file_closes++;
     c->r[0] = 0;
     return 1;
 }

@@ -186,6 +186,7 @@ int main(int argc, char **argv) {
             QueryPerformanceCounter(&t1);
             double dt = (double)(t1.QuadPart - t0.QuadPart) / (double)freq.QuadPart;
             hlog("-- frame %d: %.1f fps, %u draws", frame, 600 / dt, *L.gl_draws);
+            diag_log("  ");
             t0 = t1;
         }
         if (frame % 1200 == 0) { rewrite_report(); coverage_report(); }

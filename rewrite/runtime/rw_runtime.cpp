@@ -342,6 +342,35 @@ static void run_rewrite(CPU *c, int i) {
     c->pc = c->r[14];                                      // returned to the caller, like a lifted function
 }
 
+// The rewrite side of a shadow run faults (an access violation in rewritten code, or in guest code it called on
+// state it got wrong - e.g. after its imports diverged from the recording): the run is logged, so it becomes a
+// mismatch - undone, and the original's result put back - instead of the end of the session. Unwinding skips the
+// destructors of the C++ frames in between (rw::Frame's sp, Chain): sp and the registers come back with the
+// original's result, the chain depth and the current CPU here. The heap lock is not touched: a fault inside the
+// heap code itself would leave it held (none seen).
+static thread_local uint32_t fault_addr, fault_lpc;
+static int rewrite_fault_filter(EXCEPTION_POINTERS *ep, CPU *c) {
+    if (ep->ExceptionRecord->ExceptionCode != EXCEPTION_ACCESS_VIOLATION) return EXCEPTION_CONTINUE_SEARCH;
+    const uintptr_t at = ep->ExceptionRecord->NumberParameters >= 2 ? ep->ExceptionRecord->ExceptionInformation[1] : 0;
+    const uintptr_t base = reinterpret_cast<uintptr_t>(c->mem);
+    fault_addr = at >= base && at - base < (uintptr_t(1) << 32) ? uint32_t(at - base) : 0xFFFFFFFFu;
+    fault_lpc = c->lpc;
+    return EXCEPTION_EXECUTE_HANDLER;
+}
+static bool run_rewrite_guarded(CPU *c, int i) {
+    CPU *outer = cpu;
+    const int chain0 = chain_n;
+    __try {
+        run_rewrite(c, i);
+        return true;
+    } __except (rewrite_fault_filter(GetExceptionInformation(), c)) {
+        cpu = outer;
+        chain_n = chain0;
+        from_rewrite = false;
+        return false;
+    }
+}
+
 // the store log of this thread's shadow runs (1 GB committed): released when the thread ends - the network code
 // starts a thread per request, and the logs of finished threads used up the commit limit ("cannot start a host
 // thread")
@@ -678,9 +707,13 @@ static void verify(CPU *c, int i) {
     // KHUX_RW_SELFTEST=1: the lifted code against itself - any mismatch is the verifier's (nondeterminism)
     static const bool selftest = getenv("KHUX_RW_SELFTEST") != nullptr;
     where_side = "rewrite";
+    bool faulted = false;
     if (selftest) { lifted_run = true; run_lifted(c, i); lifted_run = false; }
-    else run_rewrite(c, i);
+    else faulted = !run_rewrite_guarded(c, i);
     phase = Phase::Off;
+    if (faulted)
+        logf("RW FAULT %s @%08X: the rewrite side faulted (guest address %08X, guest pc %08X, %u stores logged); "
+             "a mismatch: the original's result is kept", e.name, e.addr, fault_addr, fault_lpc, c->wn);
     if (rt_gtrack) rt_gtrack->on = 0;
     const bool effects_ok = !effect_diverged && effect_pos == effect_calls.size() && !H->shadow(3);
     const uint32_t heap_r = *reinterpret_cast<const uint32_t *>(c->mem + 0x20000010);
@@ -706,6 +739,7 @@ static void verify(CPU *c, int i) {
     const char *why = "";
     uint32_t fail_at = 0;                                 // the first byte that failed the comparison (reports)
     bool same = !full_l && !full_r;
+    if (same && faulted) { same = false; why = "rewrite faulted"; }
     if (same && !effects_ok) { same = false; why = "effect calls"; }
     if (same && pc_l != pc_r) { same = false; why = "return address"; }
     if (same && out_r.r[13] != out_l.r[13]) { same = false; why = "sp"; }

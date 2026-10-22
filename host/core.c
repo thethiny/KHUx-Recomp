@@ -73,8 +73,38 @@ void fatal(const char *fmt, ...) {
     va_end(ap);
     hlog("!! FATAL [%s]: %s", thread_label(), buf);
     if (cur && cur->cpu) dump_cpu(cur->cpu);
+    diag_log("   diag:");
     ctl_event("crash", NULL);
     ExitProcess(1);
+}
+
+/* heap and stream diagnostics from lift.dll (optional exports): the guest heap's bump pointer, failed allocations
+ * (the last request size: a huge one is a garbage length, a normal one an exhausted heap) and failed fopens */
+static volatile LONG main_excl_runs, main_excl_fallbacks;
+void diag_log(const char *tag) {
+    static uint32_t *fails, *fail_req, *fail_ptr, *opens, *closes, *ofails;
+    static char *opath;
+    static int init;
+    if (!L.dll) return;
+    if (!init) {
+        init = 1;
+        fails = (uint32_t *)GetProcAddress(L.dll, "rt_heap_fails");
+        fail_req = (uint32_t *)GetProcAddress(L.dll, "rt_heap_fail_req");
+        fail_ptr = (uint32_t *)GetProcAddress(L.dll, "rt_heap_fail_ptr");
+        opens = (uint32_t *)GetProcAddress(L.dll, "rt_file_opens");
+        closes = (uint32_t *)GetProcAddress(L.dll, "rt_file_closes");
+        ofails = (uint32_t *)GetProcAddress(L.dll, "rt_fopen_fails");
+        opath = (char *)GetProcAddress(L.dll, "rt_fopen_fail_path");
+    }
+    uint32_t ctl = L.heap_ctl ? *L.heap_ctl : 0;
+    uint32_t ptr = ctl ? g32(ctl) : 0;
+    hlog("%s heap %u MB used (bump 0x%08X), malloc fails %u (last request 0x%X at bump 0x%08X); streams opened %u "
+         "closed %u, fopen fails %u (last %s)", tag, ptr ? (ptr - HEAP_BASE) >> 20 : 0, ptr, fails ? *fails : 0,
+         fail_req ? *fail_req : 0, fail_ptr ? *fail_ptr : 0, opens ? *opens : 0, closes ? *closes : 0,
+         ofails ? *ofails : 0, opath && *opath ? opath : "-");
+    if (main_excl_runs || main_excl_fallbacks)
+        hlog("%s verifier: %ld main-thread shadow runs with the sound threads held, %ld gave up after 20 ms", tag,
+             main_excl_runs, main_excl_fallbacks);
 }
 
 static LONG WINAPI on_crash(EXCEPTION_POINTERS *ep) {
@@ -92,6 +122,7 @@ static LONG WINAPI on_crash(EXCEPTION_POINTERS *ep) {
          strrchr(mod_name, 92) ? strrchr(mod_name, 92) + 1 : mod_name,
          (unsigned long long)((uintptr_t)er->ExceptionAddress - (uintptr_t)mod), (void *)at, where);
     if (cur && cur->cpu) dump_cpu(cur->cpu);
+    diag_log("   diag:");
     ctl_event("crash", NULL);
     ExitProcess(2);
 }
@@ -505,16 +536,46 @@ void shadow_main_thread(void) { main_tid = GetCurrentThreadId(); InitializeCriti
 static volatile LONG sleepers, sleepers_parked;
 static __declspec(thread) int sleeper;
 static volatile DWORD excl_tid;
+/* a sleeper between its wake-up and its next sleep runs guest code (the SQEX sound thread's frame): counted, so a
+ * shadow run on the main thread can wait until none is running (shadow_exclusive) */
+static volatile LONG sleepers_active;
+static __declspec(thread) int awake;
 void shadow_sleep_point(void) {
     if (!main_tid || GetCurrentThreadId() == main_tid) return;
     if (!sleeper) { sleeper = 1; InterlockedIncrement(&sleepers); }
+    if (awake) { awake = 0; InterlockedDecrement(&sleepers_active); }
     if (!excl_req || excl_tid == GetCurrentThreadId()) return;
     InterlockedIncrement(&sleepers_parked);
     while (excl_req) SwitchToThread();
     InterlockedDecrement(&sleepers_parked);
 }
+/* a sleeper woke up: it waits while another thread's shadow run is in progress, then counts as running */
+void shadow_wake_point(void) {
+    if (!main_tid || !sleeper || GetCurrentThreadId() == main_tid) return;
+    for (;;) {
+        while (excl_req && excl_tid != GetCurrentThreadId()) SwitchToThread();
+        InterlockedIncrement(&sleepers_active);
+        if (!excl_req || excl_tid == GetCurrentThreadId()) { awake = 1; return; }
+        InterlockedDecrement(&sleepers_active);
+    }
+}
+/* a sleeper blocked on a mutex or condition variable runs no guest code: not counted while it waits (it may wait for
+ * the main thread). It counts again once it has the lock, without the wake-up gate: it holds the mutex then, and
+ * waiting for a main-thread shadow run that needs the same mutex would deadlock. */
+static __declspec(thread) int idle_was_awake;
+void shadow_idle(int on) {
+    if (on) {
+        idle_was_awake = awake;
+        if (awake) { awake = 0; InterlockedDecrement(&sleepers_active); }
+    } else if (idle_was_awake) {
+        idle_was_awake = 0;
+        awake = 1;
+        InterlockedIncrement(&sleepers_active);
+    }
+}
 /* a thread that slept ends: no longer waited for */
 void shadow_thread_exit(void) {
+    if (awake) { awake = 0; InterlockedDecrement(&sleepers_active); }
     if (sleeper) { sleeper = 0; InterlockedDecrement(&sleepers); }
 }
 
@@ -530,8 +591,10 @@ void shadow_park_point(void) {
 /* M3 replay sandbox: while the main thread captures a call (mem_track), the other guest threads park the same way
  * (sleepers at their sleeps, the audio callback at its entry), so the saved pages are the state the call read and
  * not the sound thread's. At most 50 ms; when they do not park, the capture goes on (marked by its foreign pages). */
+/* main_excl_runs / main_excl_fallbacks (declared above diag_log): main-thread shadow runs held exclusive / given up */
+static int main_excl;                 /* the main thread's shadow run holds the other threads off (shadow_exclusive) */
 void shadow_capture_park(int on) {
-    if (!main_tid || GetCurrentThreadId() != main_tid) return;
+    if (!main_tid || GetCurrentThreadId() != main_tid || main_excl) return;
     if (on) {
         EnterCriticalSection(&excl_cs);
         excl_tid = main_tid;
@@ -543,8 +606,47 @@ void shadow_capture_park(int on) {
     }
 }
 
+/* A shadow run on the main thread: the sound thread (a sleeper) and the audio callback must not run guest code
+ * between its lifted run and the undo - they would read the lifted run's stores, or store into bytes the undo then
+ * puts back (a sound object freed or rebuilt under the sound thread: SQEX::SoundManager::Update called through a
+ * garbage vtable, 2026-10-22). The run waits until neither is running (at most 20 ms) and they wait for its end;
+ * when they do not stop in time (one may wait on a lock the main thread holds) the original runs, not compared. */
+static int main_exclusive(int begin) {
+    static int depth;
+    if (!begin) {
+        if (--depth) return 0;
+        main_excl = 0;
+        InterlockedExchange(&excl_req, 0);
+        LeaveCriticalSection(&excl_cs);
+        return 0;
+    }
+    if (depth++) return 1;
+    EnterCriticalSection(&excl_cs);
+    excl_tid = main_tid;
+    InterlockedExchange(&excl_req, 1);
+    main_excl = 1;
+    DWORD t0 = GetTickCount();
+    while (sleepers_active > 0 || cb_busy - cb_waiting > 0) {
+        if (GetTickCount() - t0 > 20) {
+            static int told;
+            if (told++ < 5) hlog("verifier: the sound threads did not stop in 20 ms (running %ld, callbacks %ld): "
+                                 "the original runs, not compared", sleepers_active, cb_busy - cb_waiting);
+            main_excl = 0;
+            InterlockedExchange(&excl_req, 0);
+            LeaveCriticalSection(&excl_cs);
+            depth--;
+            InterlockedIncrement(&main_excl_fallbacks);
+            return 0;
+        }
+        SwitchToThread();
+    }
+    InterlockedIncrement(&main_excl_runs);
+    return 1;
+}
+
 static int shadow_exclusive(int begin) {
-    if (!main_tid || GetCurrentThreadId() == main_tid) return 1;
+    if (!main_tid) return 1;
+    if (GetCurrentThreadId() == main_tid) return main_exclusive(begin);
     /* by default other threads do not shadow-run at all (the original runs, not compared): the sound thread's voice
      * start-up raced with the undo even with the main and audio threads parked. KHUX_RW_THREADS=1 tries parking. */
     static int threads = -1;

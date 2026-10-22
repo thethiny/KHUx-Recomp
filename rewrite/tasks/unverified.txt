@@ -35,11 +35,20 @@ Set aside (not functions; like batch #1's exception pads):
 frame; proposal: count them with their parents (needs the user's OK).
 
 Open issues:
-- Raid / quest-load crash, intermittent: Avatar::changeMotion -> changeLWF -> LWFNode::create returns null ->
-  Node::addChild (guest 0x178); once a std::bad_alloc while loading a raid. Only seen with rewrites active (verify
-  sessions). Hypothesis: guest heap pressure in verify sessions - the heap bump pointer grows ~80 MB per quest
-  (0x26ADDB20 -> 0x2BBD5510 over one quest in session b3t9). Next: log the bump pointer through a long session with
-  and without KHUX_RW_VERIFY, and check that the shadow runs' undo returns their allocations.
+- Verify-session crashes (investigated 2026-10-22 late night). Not heap pressure: the host now logs the guest heap,
+  failed mallocs and failed fopens every 600 frames and in crash / throw reports - a full session (7 quests + a raid)
+  ends at 274 MB with 0 failed mallocs and a steady 50 open streams. Two causes found and fixed:
+  1. The SQEX sound thread ran while the main thread shadow-ran a call (it saw the lifted run's stores before the undo,
+     or the undo put back bytes it had changed): SQEX::SoundManager::Update called through a garbage vtable. Main-thread
+     shadow runs now hold the sound thread (at its wake-up from usleep) and the audio callback off; they wait up to
+     20 ms for them to stop, else the call runs unverified (78,338 held, 7 gave up in a full session).
+  2. A rewrite whose run faults (wrong state, or imports diverged from the recording) killed the session. A fault in
+     the rewrite side is now a mismatch ("RW FAULT", the original's result is kept). Seen: sub_68524A, SceneLight::update,
+     cocos2d::CallFunc::update, CarouselDeck::addMedalOntoDeck (host-side fault at its first compared call; not in
+     verified.txt, so normal play does not run it - to fix).
+  The older bad_alloc (cocostudio DataReaderHelper::addDataFromFile builds a string from getFileData's size, unchecked)
+  and LWFNode::create null crashes did not come back in three full sessions; if they do, the fopen-failure line in
+  the crash report names the file.
 - Server data (not rewrite): medal 90136 (Christmas Event Expert sub-mission reward, stage 60540) is missing from the
   served medal master -> the client crashes in SceneUtil::setItemImageData when that grade is shown. Proud Quest
   stage 79010 crashes at load (stageFirstSetup -> getDataFromFile null): a stage resource other than the map file

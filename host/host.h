@@ -98,6 +98,7 @@ typedef struct HThread {
 extern __declspec(thread) HThread *cur;     /* this host thread's guest thread */
 HThread *thread_main(void);
 void dump_cpu(CPU *c);
+void diag_log(const char *tag);   /* guest heap / stream diagnostics (core.c) */
 void dump_threads(void);   /* every guest thread's registers and call chain, to the log (ctl /threads) */
 HThread *thread_host(const char *name);   /* adopt the calling host thread as a guest thread */
 CPU *cpu_new(uint32_t sp);
@@ -142,6 +143,8 @@ void shadow_park_point(void);
 void shadow_guest_enter(void);
 void shadow_thread_exit(void);   /* a guest thread ends (thread.c) */
 void shadow_sleep_point(void);  /* a guest thread about to sleep: parks during another thread's shadow run */
+void shadow_idle(int on);       /* around a blocking mutex / condition wait (thread.c) */
+void shadow_wake_point(void);   /* a sleeper woke: waits out a main-thread shadow run, then counts as running */
 void shadow_guest_leave(void);
 void import_shadow_opaque(void);
 void shadow_wait_begin(void);   /* around a blocking wait (libc.c) */

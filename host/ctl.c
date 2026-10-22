@@ -821,6 +821,7 @@ static void on_hook(CPU *c, uint32_t target) {
         }
         esc[e] = 0;
         hlog("!! C++ throw %s (\"%s\") from lr=0x%08X", type, esc, c->r[14]);
+        diag_log("   diag:");
         snprintf(fields, sizeof(fields), "\"type\": \"%s\", \"what\": \"%s\", \"lr\": %u", type, esc, c->r[14]);
         event_full("throw", fields, NULL);
         /* likely return addresses (Thumb, inside .text) on the guest stack: the real thrower is among the first */

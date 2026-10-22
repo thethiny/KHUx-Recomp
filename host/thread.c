@@ -153,7 +153,9 @@ static void i_mutex_lock(CPU *c) {
     Sync *s = sync_get(c->r[0]);
     if (!TryEnterCriticalSection(&s->cs)) {
         shadow_wait_begin();                              /* M3 verifier: do not wait holding the heap */
+        shadow_idle(1);
         EnterCriticalSection(&s->cs);
+        shadow_idle(0);
         shadow_wait_end();
     }
     RET(c, 0);
@@ -179,7 +181,9 @@ static int cond_wait(uint32_t cond, uint32_t mutex, DWORD ms) {
     }
     for (LONG k = 1; k < depth; k++) LeaveCriticalSection(&m->cs);
     shadow_wait_begin();
+    shadow_idle(1);
     BOOL ok = SleepConditionVariableCS(&cv->cv, &m->cs, ms);
+    shadow_idle(0);
     shadow_wait_end();
     for (LONG k = 1; k < depth; k++) EnterCriticalSection(&m->cs);
     return ok ? 0 : G_ETIMEDOUT;
@@ -234,6 +238,7 @@ static void sleep_us(uint64_t us) {
     shadow_sleep_point();
     if (us >= 1000) { shadow_wait_begin(); Sleep((DWORD)(us / 1000)); shadow_wait_end(); }
     else SwitchToThread();
+    shadow_wake_point();
 }
 static void i_usleep(CPU *c) { sleep_us(c->r[0]); RET(c, 0); }
 static void i_nanosleep(CPU *c) {

@@ -53,9 +53,18 @@ static uint32_t heap_usable(CPU *c, uint32_t p) {
     return HDR_SIZE(c, p);
 }
 
+/* diagnostics (the host prints them in crash / throw reports): failed allocations and the last failed request */
+EXPORT uint32_t rt_heap_fails, rt_heap_fail_req, rt_heap_fail_ptr;
+static uint32_t heap_failed(CPU *c, uint32_t req) {
+    rt_heap_fails++;
+    rt_heap_fail_req = req;
+    rt_heap_fail_ptr = R32(rt_heap_ctl + HC_PTR);
+    return 0;
+}
+
 static uint32_t heap_malloc(CPU *c, uint32_t req) {
     uint32_t ctl = rt_heap_ctl, n = heap_size(req), p;
-    if (req > 0xF0000000u) return 0;
+    if (req > 0xF0000000u) return heap_failed(c, req);
     if (n <= HEAP_SMALL_MAX) {
         uint32_t slot = ctl + HC_SMALL + 4u * (n / 16u);
         p = R32(slot);
@@ -78,7 +87,7 @@ static uint32_t heap_malloc(CPU *c, uint32_t req) {
         }
     }
     uint32_t ptr = R32(ctl + HC_PTR);
-    if ((uint64_t)ptr + 16u + n > R32(ctl + HC_END)) return 0;     /* exhausted */
+    if ((uint64_t)ptr + 16u + n > R32(ctl + HC_END)) return heap_failed(c, req);     /* exhausted */
     p = ptr + 16u;
     W32(c, ctl + HC_PTR, p + n);
     W32(c, p - 16u, n);
