@@ -47,3 +47,27 @@ Open issues:
 - Kit: 164 medals over its box (users.max_medal 105) blocks Begin (storage-full popup); quest sessions set
   batch_run "medal_box": 500 (restored afterwards). Drivers must Begin on the default (newest) panel. Raid rows are
   not part of kit_state: drop raids a session spawns (raid_cleanup.py or by id).
+
+## Batch #9: rankings, Coliseum list, Union ranking (2026-10-22) - 44 written, 43 verified, 0 mismatches
+
+Not verified (1):
+0064890C  My Page Facebook-logout flow lambda (sub_64890C, back to My Page) - OPAQUE: SceneUtil::callPrepareMypageAPIs
+          sends the My Page requests on another thread. Ran once by direct call (it changes the scene to My Page).
+
+Reached only by a direct call (no game path on the private server):
+0054D740..0054EFF4  ColosseumScrollView (all 16): no code in 1.0.1 creates it. Built on the Coliseum screen with
+          operator new + ctor + init, touches on (+0x654), a size, setItemIDs({0}), added to the scene; then its row was
+          tapped (began / moved / ended / tap-done / select ran from the game's touch dispatch). create() alone: it is
+          autoreleased, so nothing may be called on its result in a later request (that crashed session b9a).
+RankingScrollView setSelectItem / updateSelectItems / searchSelect, RankingRewardScrollView setSelectItem /
+          searchSelect - no caller selects ranking rows; called on the live lists.
+RankingRewardScrollView row touch lambdas (561334 / 561674 / 5618A0 / 5619B0 / 561B54) - the list's touch flag
+          (+0x658) is off in 1.0.1; poked on, registItemTouchEvent called for two rows, rows tapped.
+006FBD5C / 0070E4E6 / 00737CFC  SceneRanking / SceneRankingReward / SceneUnionRanking::createScene (no callers).
+00648AC0  My Page Facebook logout lambda (no Facebook on the private server).
+006FB25C  SceneLoginBonus memory-bonus lambda: needs a special login bonus; the server now sends the specials active
+          at its clock (none in 2026); verified with KHUX_EVENT_NOW="2016-06-17 12:00" (special 312) and the day's
+          bonus made due.
+
+Test data used (put back afterwards with kit_state.py restore): user 7's parade_seen removed (the Union parade
+shows at boot), two pending category-5 ranking results (two reward popups chained), loginbonus.last_day = yesterday.

@@ -1217,6 +1217,22 @@ addr	name	calls	verified	mismatches	unverifiable
 0054CA3C	AvatarInfoDialog::createLayout::$_2 __clone()	2	2	0	0
 0054CACA	AvatarInfoDialog::createLayout::$_2 destroy_deallocate()	4	4	0	0
 0054CAD4	AvatarInfoDialog::createLayout::$_2 operator() (button A)	12	12	0	0
+0054D740	ColosseumScrollView::~ColosseumScrollView	2	2	0	0
+0054D858	ColosseumScrollView::create	1	1	0	0
+0054D8AC	ColosseumScrollView::ColosseumScrollView	2	2	0	0
+0054DA1C	ColosseumScrollView::init	3	2	0	0
+0054DA94	ColosseumScrollView::getLayoutPanel	2	1	0	0
+0054DB5C	ColosseumScrollView::createRow	1	1	0	0
+0054DBB4	ColosseumScrollView::changeRow	3	2	0	0
+0054E4F8	ColosseumScrollView::updateSelectItems	16	8	0	0
+0054E678	ColosseumScrollView::registItemTouchEvent	7	7	0	0
+0054E7C0	ColosseumScrollView ended lambda function::operator= (sub_54E7C0)	28	7	0	0
+0054E860	ColosseumScrollView::setSelectItem	11	7	0	0
+0054EA18	ColosseumScrollView::searchSelect	2	2	0	0
+0054EB18	ColosseumScrollView ended lambda body (sub_54EB18)	4	4	0	0
+0054ED40	ColosseumScrollView tap-done lambda __func::operator() (sub_54ED40)	4	4	0	0
+0054EE50	ColosseumScrollView moved lambda __func::operator() (sub_54EE50)	8	8	0	0
+0054EFF4	ColosseumScrollView began lambda __func::operator() (sub_54EFF4)	21	21	0	0
 0054F260	RankingScrollView::~RankingScrollView()	1	0	0	0
 0054F3C8	RankingScrollView::~RankingScrollView [deleting destructor]	1	0	0	0
 0054F3FC	RankingScrollView::create(RankingScrollViewType)	2	0	0	1
@@ -1232,7 +1248,11 @@ addr	name	calls	verified	mismatches	unverifiable
 005520D0	RankingScrollView::initAvatarLayer	4	2	0	0
 0055262E	RankingScrollView::registItemTouchEvent	77	0	0	0
 00552630	RankingScrollView::setEnabledTapItem	2	0	0	0
+0055263C	RankingScrollView::setSelectItem	3	3	0	0
+005527E0	RankingScrollView::updateSelectItems	7	4	0	0
+00552960	RankingScrollView::searchSelect	2	2	0	0
 005529AC	RankingScrollView::setRankingData(RankingSeason, std::vector<int>)	20	4	0	0
+00552F00	RankingScrollView avatar touch lambda __func::operator() (sub_552F00)	4	3	0	1
 005531C4	RankingScrollView::initPartyLayer::$_0 __clone()	21	11	0	0
 005532B2	RankingScrollView::initPartyLayer::$_0 destroy_deallocate()	29	19	0	0
 005567B4	ChatScrollView::~ChatScrollView	16	6	0	1
@@ -1261,12 +1281,21 @@ addr	name	calls	verified	mismatches	unverifiable
 0055E3AC	RankingRewardScrollView::getLayoutPanel	96	12	0	0
 0055E478	RankingRewardScrollView::createRow	84	12	0	0
 0055E4D0	RankingRewardScrollView::setIncentiveItem	2395	1	0	0
+0055EEA8	RankingRewardScrollView::setIncentiveItemBalloon	30	30	0	0
+0055FD18	RankingRewardScrollView::setIncentiveItemBalloonUpdate	60	60	0	0
 0055FE3C	RankingRewardScrollView::setIncentiveItemBalloonRemove	48	48	0	0
 0055FEE0	RankingRewardScrollView::changeRow	470	7	31	0
 00560018	RankingRewardScrollView::initColosseumRewardLayout	36	36	0	0
 00560888	RankingRewardScrollView::updateSelectItems	479	1	0	0
 00560A08	RankingRewardScrollView::initLayout	687	1	16	0
 005611EC	RankingRewardScrollView::registItemTouchEvent	189	27	0	0
+00561334	RankingRewardScrollView ended lambda function::operator= (sub_561334)	4	4	0	0
+005613D0	RankingRewardScrollView::setSelectItem	8	5	0	0
+00561574	RankingRewardScrollView::searchSelect	2	2	0	0
+00561674	RankingRewardScrollView ended lambda body (sub_561674)	3	3	0	0
+005618A0	RankingRewardScrollView tap-done lambda __func::operator() (sub_5618A0)	3	3	0	0
+005619B0	RankingRewardScrollView moved lambda __func::operator() (sub_5619B0)	6	6	0	0
+00561B54	RankingRewardScrollView began lambda __func::operator() (sub_561B54)	6	6	0	0
 00561CE4	RankingRewardScrollView::setIncentiveItem::$_1 __clone(__base*)	54	9	0	0
 00561D04	RankingRewardScrollView::setIncentiveItem::$_1 destroy()	48	18	0	0
 00561DD4	RankingRewardScrollView icon touch lambda __func::__clone() (sub_561DD4)	2900	392	0	0
@@ -3010,6 +3039,8 @@ addr	name	calls	verified	mismatches	unverifiable
 006428FC	SceneMyPage::updateStyle	56	4	0	0
 00642C38	SceneMyPage::updateFukidashi	41	3	0	0
 006462F8	SceneMyPage::updatePresentBoxIcon	45	0	0	0
+0064890C	SceneRanking back to My Page lambda __func::operator() (sub_64890C)	1	0	0	1
+00648AC0	SceneRanking Facebook logout lambda __func::operator() (sub_648AC0)	1	1	0	0
 00648DE0	SceneMyPage::initRightButtons::$_51 __clone(__base*)	92	0	0	0
 00648E00	SceneMyPage::initRightButtons::$_51 destroy()	143	20	0	0
 00649148	SceneMyPage::initRightButtons::$_50 __clone(__base*)	92	0	0	0
@@ -4050,12 +4081,14 @@ addr	name	calls	verified	mismatches	unverifiable
 006FACC0	SceneLoginBonus::skipEvent::$_7 __clone(__base*)	16	0	0	0
 006FACE0	SceneLoginBonus::skipEvent::$_7 destroy()	20	2	0	0
 006FACEC	SceneLoginBonus::skipEvent $_7 __func::operator() (sub_6FACEC)	1	0	0	1
+006FAE08	SceneUnionRanking::create	2	2	0	0
 006FAF30	SceneLoginBonus::runOutAnimationMain::$_6 __clone()	4	0	0	0
 006FAFD4	SceneLoginBonus::runOutAnimationMain::$_6 destroy_deallocate()	8	2	0	0
 006FB000	sub_6FB000	2	0	0	0
 006FB118	SceneLoginBonus::runInAnimation::$_4 __clone(__base*)	4	0	0	0
 006FB138	SceneLoginBonus::runInAnimation::$_4 destroy()	8	2	0	0
 006FB144	SceneLoginBonus::runInAnimation $_4 __func::operator() (sub_6FB144)	1	1	0	0
+006FB25C	SceneLoginBonus openMemoryBonus lambda __func::operator() (sub_6FB25C)	1	1	0	0
 006FB5C0	SceneLoginBonus::init::$_2 __clone(__base*)	4	0	0	0
 006FB5E0	SceneLoginBonus::init::$_2 destroy()	6	0	0	0
 006FB5EC	sub_6FB5EC	30	14	0	0
@@ -4070,6 +4103,7 @@ addr	name	calls	verified	mismatches	unverifiable
 006FB8E8	SceneRanking::callLuxRankingAPI(function<void(bool)>)	2	0	0	0
 006FBA64	SceneRanking::callPartyRankingAPI	1	0	0	0
 006FBBE0	SceneRanking::callColosseumRankingAPI	1	0	0	1
+006FBD5C	SceneRanking::createScene	1	1	0	0
 006FBE1C	SceneRanking::~SceneRanking() (deleting)	1	0	0	1
 006FBE80	SceneRanking::init()	2	0	0	1
 006FC928	SceneRanking::initScene(SceneManager::SelectRanking)	2	0	0	1
@@ -4091,6 +4125,9 @@ addr	name	calls	verified	mismatches	unverifiable
 00701194	SceneRanking::backScene $_21 __func::__clone()	11	2	0	0
 0070124C	SceneRanking::backScene $_21 __func::destroy_deallocate	10	2	0	0
 00701278	SceneRanking::backScene $_21 __func::operator()()	6	6	0	0
+00701344	SceneRanking reward popup effect lambda __func::operator() (sub_701344)	2	2	0	0
+00701684	SceneRanking reward popup close button lambda __func::operator() (sub_701684)	8	8	0	0
+00701A7C	SceneRanking reward popup closed lambda __func::operator() (sub_701A7C)	2	2	0	0
 00701C48	SceneRanking::runOutAnimationMain $_17 __func::__clone()	1	0	0	0
 00701CEC	SceneRanking::runOutAnimationMain $_17 __func::destroy_deallocate	5	2	0	0
 00701D84	SceneRanking::runInAnimation $_16 __func::__clone(__base*)	6	1	0	0
@@ -4165,6 +4202,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0070B290	SceneAvatarEdit::openCreateCheckPopup sent operator()	3	3	0	0
 0070B3D8	SceneAvatarEdit user get operator()(bool) (sub_70B3D8)	1	0	0	1
 0070B74A	SceneAvatarEdit::openCreateCheckPopup closed operator()	5	3	0	0
+0070E4E6	SceneRankingReward::createScene	1	1	0	0
 0070E570	SceneRankingReward::~SceneRankingReward (deleting)	2	2	0	0
 0070E5DC	SceneRankingReward::init	5	0	1	0
 0070F218	SceneRankingReward::initRankingTitle	14	2	0	0
@@ -4487,6 +4525,12 @@ addr	name	calls	verified	mismatches	unverifiable
 00735910	SceneNotice::callPrepareAPI $_0 __func::__clone(__base*)	228	68	0	0
 0073592C	SceneNotice::callPrepareAPI $_0 __func::destroy	294	134	0	0
 00735938	SceneNotice::callPrepareAPI $_0 operator()	58	8	0	50
+00737CFC	SceneUnionRanking::createScene	1	1	0	0
+00737DD0	SceneUnionRanking::settingUnionRankingLwf	1	1	0	0
+00738508	SceneUnionRanking::init	2	2	0	0
+0073888C	SceneUnionRanking::stopSelfRoll	3	3	0	0
+00738A68	SceneUnionRanking::init $_7 __func::operator() (sub_738A68)	1	1	0	0
+00738BF8	SceneUnionRanking::init $_7 inner lambda __func::operator() (sub_738BF8)	1	1	0	0
 0073A238	SceneTutorialDownload::init	8	4	0	0
 0073A484	SceneTutorialDownload::openDownloadPopup	8	4	0	0
 0073AAB4	SceneTutorialDownload::finalize	95912	47956	0	0
