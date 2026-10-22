@@ -1,0 +1,83 @@
+# Rewritten but not verified, and open issues - per batch (tracker artifact VrHUdXwE3d5JY2vhoXerDi).
+# One line per function: address, name, why it is not verified, what would reach it.
+# Batches #1, #2, #7 and the signup / party batches list theirs in recomp/JOURNAL.md (2026-10-21 .. 2026-10-22).
+
+## Batch #3: quests, quest select, raid battle and result (2026-10-22) - 53 written, 10 verified
+
+Verified live (9): 0075FB9C openRetireDialog, 00760294 createBattleMenuPopup, 00760814 openBattleMenuPopup,
+0074344C burst effects on the player, 007441F4 preparePlayerAttackRaid, 005D2AF4 CarouselDeck burst area touch,
+00609B5C addRaidBossBg, 005858C8 event banner page sound (+ accepted.txt), 0057FAB4 openRaidResult.
+
+Verified offline only (1):
+0074612C  BattleMisc::prepareRaidAttack - live 2 verified / 2 mismatched (wrong r0) before the fix; the fixed
+          build replays both captured calls equal (capture b3r4b, b3r4c). Not in verified.txt yet: confirm in the
+          next live raid session (raid_drive3.py, x50 HP so the boss attacks).
+
+Accepted, not verified (1):
+00729E88  SceneAdventureSelect raid boss reward after BGM - 1 call, differs only on the audio thread's guest stack
+          (accepted.txt); a second clean call would verify it (raid panel boss icon -> reward list).
+
+Not reachable on this server / kit:
+00721838  SceneAdventureSelect::initEvent                    events: the server sends no evStage (held back empty)
+00723994  SceneAdventureSelect::eventBannerDisps             events
+00723EBC  SceneAdventureSelect::eventInAnimation             events
+0072B148  event info operator()                              events
+0072D378  event avatar board (from the event) operator()     events
+0072D50C  event board out operator()                         events
+0072D690  event avatar board operator()                      events
+0072D818  event entry touch operator()                       events
+00760410  StageUI::createColosseumMenuPopup                  colosseum stage (pause menu inside a colosseum fight)
+0072D114  colosseum entry touch operator()                   colosseum entry on the quest select
+0072D1F4  colosseum board out operator()                     colosseum
+005FB8DA  StageSkipActionMap::create                         stage skip: no path found that starts it
+0075DD90  StageSkipActionMap::init                           stage skip
+0075DEC8  StageSkipActionMap::update                         stage skip
+0075E37C  StageSkipActionMap::takeTreasureContent            stage skip
+0075C920  StageManager enemy count of a kind operator()      stage skip (StageManager lambdas it uses)
+0075CA34  StageManager enemy highest kind operator()         stage skip
+0075CB50  StageManager enemy sizes operator()                stage skip
+00509FFC  BookAnimation::init                                no callers in the binary (dead code)
+0050A4F4  BookAnimation::rightAnimation                      no callers
+0050AA84  BookAnimation::leftAnimation                       no callers
+0050B01C  BookAnimation::update                              no callers
+00760EC8  StageUI::createTutorialWidget                      in-battle tutorial only (finished on the kit)
+00761430  StageUI::TutorialWidget::create                    in-battle tutorial
+007615EC  StageUI::TutorialWidget::onTouchBegan              in-battle tutorial
+00761740  StageUI::TutorialWidget::~TutorialWidget           in-battle tutorial
+00727C2C  SceneAdventureSelect::openTutorial13               tutorial phase 13 (finished on the kit)
+0072BB64  tutorial phase operator()                          tutorial phase on the quest select
+
+Reachable with setup (not driven yet):
+00681CC4  SceneBattleResult::openNewKeyBladePopup            a quest result that rewards a new keyblade
+00682BE0  SceneBattleResult::openGetKeyBladePopup            same
+00684284  openGetKeyBladePopup opened operator()             same
+0068454C  openGetKeyBladePopup OK operator()                 same
+00682B48  SceneBattleResult::openUserTitlePopup              a result that grants a title
+00681440  SceneBattleResult::createScene                     the quest result path in this build goes through
+                                                             BattleResultDialog; find what still creates the scene
+005D129C  CarouselDeck::playGuiltBonusEffect                 a guilt bonus in battle (guilt-matching medal / deck)
+005D298A  CarouselDeck armature movement end operator()      same
+00495DF8  GuiltBurstCutInShader::set_spr_color               guilt burst cut-in (burst with guilt colour)
+00495ED8  GuiltBurstCutInShader::set_lwf_color               same
+0051195C  BattleResultScrollView cell touch began            touch a row of the battle result list
+0072A7F0  AdventurePanel node swap then callback             quest panel swap animation (not hit by the drivers)
+0072BC90  filter enabled operator()                          quest select filter: raid_drive2 tapped
+                                                             Button_Filter, the lambda did not run - check the name
+0072C3B4  info swipe operator()                              quest select info swipe: the drive's swipe did not
+                                                             trigger it - find the swipe area
+
+Set aside (not functions; like batch #1's exception pads):
+007453D0, 007470BE (BattleMisc epilogue fragments), 00580986 (BattleResultDialog fragment) - run on the parent's
+frame; proposal: count them with their parents (needs the user's OK).
+
+Open issues:
+- Raid crash, intermittent, cause unknown: x50-HP Darkside raid, Avatar::changeMotion -> changeLWF ->
+  LWFNode::create returns null -> Node::addChild (guest 0x178). 2 of 4 runs with rewrites active, 0 of 3 clean
+  runs, 2 reruns of the same rewrite set clean, every active rewrite verified (one crash with the burst lambda
+  excluded). Next: more clean runs to see if it is the original's own (an LWF load race), then bisect the
+  active set with the replay sandbox.
+- openStageResult / openGettingItem (battleui, not batch #3) mismatch on one pointer word stored by 0x5CA41E
+  (differs by 4); never verified before. Look at the store at 0x5CA41E and what both rewrites pass to it.
+- Kit: 164 medals over its box (users.max_medal 105) blocks Begin (storage-full popup); every quest session must set
+  batch_run "medal_box": 500 (restored afterwards). Drivers must Begin on the default (newest) panel: the raid
+  panel's boss icon takes the tap on the one before.

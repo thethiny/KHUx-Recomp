@@ -1459,14 +1459,15 @@ addr	name	calls	verified	mismatches	unverifiable
 0057DD4C	BattleResultDialog::update	53941	4400	0	10
 0057DEBC	ResultPointLayer::update	32425	6306	0	0
 0057DF20	BattleResultDialog::updateLuxGauge	116	0	0	0
-0057E04C	BattleResultDialog::openStageResult	41	0	0	2
+0057E04C	BattleResultDialog::openStageResult	43	0	2	2
 0057EB1C	BattleResultDialog::openParentChack	97	0	0	0
 0057EC64	BattleResultDialog::setTitleLayer	97	0	0	0
 0057F06C	BattleResultDialog::setSubMisstonLayer	41	0	0	0
 0057F614	BattleResultDialog::initSkill	57	0	0	0
 0057F860	ResultPointLayer::set	186	0	0	0
 0057F930	ResultPointLayer::updateLabel	1190	905	0	0
-00581804	BattleResultDialog::openGettingItem	40	0	0	0
+0057FAB4	BattleResultDialog::openRaidResult	6	6	0	0
+00581804	BattleResultDialog::openGettingItem	42	0	2	0
 005820C0	BattleResultDialog::setResultItemLayer	40	0	0	0
 00582AAC	BattleResultDialog::close	166	0	0	0
 00582B80	BattleResultDialog::setCloseEvent	97	2	0	0
@@ -1515,6 +1516,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0058573C	BattleResultDialog::openRaidResult $_7 operator()	15	0	0	0
 0058589C	BattleResultDialog::openRaidResult::$_6 __clone(__base*)	48	0	0	0
 005858BC	BattleResultDialog::openRaidResult::$_6 destroy()	76	14	0	0
+005858C8	AdvEventBannerScrollView page sound operator() (sub_5858C8)	6	4	2	0
 005859E0	BattleResultDialog::openRaidResult::$_5 __clone(__base*)	48	0	0	0
 00585A00	BattleResultDialog::openRaidResult::$_5 destroy()	76	14	0	0
 00585A0A	sub_585A0A	15	0	0	0
@@ -2089,6 +2091,7 @@ addr	name	calls	verified	mismatches	unverifiable
 005D2A56	sub_5D2A56	14	0	0	0
 005D2AC8	CarouselDeck::createMadalButton $_7 __func::__clone(__base*)	534	0	0	0
 005D2AE8	CarouselDeck::createMadalButton $_7 __func::destroy	957	80	0	0
+005D2AF4	CarouselDeck burst area touch operator() (sub_5D2AF4)	38	38	0	0
 005D2DEC	sub_5D2DEC	524	524	0	0
 005D2E0C	nullsub_856	819	778	0	0
 005D2ED0	sub_5D2ED0	1380	239	0	0
@@ -2771,6 +2774,7 @@ addr	name	calls	verified	mismatches	unverifiable
 006099E4	SceneRaidBattle::execRaidAttack	110	14	0	0
 00609B44	SceneRaidBattle::getCameraPosition	621	579	0	0
 00609B4C	SceneRaidBattle::alterCamera	621	579	0	0
+00609B5C	GuiltBurstCutInShader::addRaidBossBg	27	27	0	0
 00609BC8	SceneRaidBattle::battleTrgUI	4	4	0	0
 00609CA8	SceneRaidBattle::update	93145	93066	21	58
 0060A610	SceneRaidBattle::endEnemyTurn	43	43	0	0
@@ -4281,6 +4285,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00729C58	SceneAdventureSelect::raidBossRewardPopup::$_55::{lambda()#1}::{lambda()#1}::operator()	96	1	0	0
 00729DA4	SceneAdventureSelect::raidBossEscapeAnim::$_54 __clone()	7	0	0	0
 00729E5C	SceneAdventureSelect::raidBossEscapeAnim::$_54 destroy_deallocate()	21	7	0	0
+00729E88	SceneAdventureSelect raid boss reward after BGM operator() (sub_729E88)	1	0	1	0
 00729FE8	SceneAdventureSelect::raidBossAnim::$_53 __clone()	4	0	0	0
 0072A0A0	SceneAdventureSelect::raidBossAnim::$_53 destroy_deallocate()	5	0	0	0
 0072A578	SceneAdventureSelect::initStageRaidChack::$_52 __clone()	519	12	0	0
@@ -4567,7 +4572,10 @@ addr	name	calls	verified	mismatches	unverifiable
 007425C4	BattleMisc::getEnemyBuffCorrection	916	147	0	0
 00742688	BattleMisc::getRaidBuffCorrection	1264	632	0	0
 00742764	BattleMisc::preparePlayerAttackEnemy	314	131	0	0
+0074344C	BattleMisc burst effects on the player (sub_74344C)	40	20	0	0
+007441F4	BattleMisc::preparePlayerAttackRaid	25	25	0	0
 007454A0	BattleMisc::prepareEnemyAttack	141	5	0	0
+0074612C	BattleMisc::prepareRaidAttack	4	2	2	0
 0074718C	BattleMisc::calculatePlayerAttack	763	131	0	0
 00747448	BattleMisc::calculatePlayerAttack_sub	1009	756	0	0
 00747EE4	BattleMisc::calculatePlayerAttack (raid)	625	625	0	0
@@ -4850,7 +4858,10 @@ addr	name	calls	verified	mismatches	unverifiable
 0075F7F8	StageUI::getLastShowHeading	47	21	0	0
 0075F814	StageUI::isPlayingHeading	27513	12845	0	0
 0075F840	StageUI::updateDispUI	173120	10768	27	3
+0075FB9C	StageUI::openRetireDialog	2	2	0	0
 0075FDB8	StageUI::openContinueDialog	12	0	0	2
+00760294	StageUI::createBattleMenuPopup	6	3	0	0
+00760814	StageUI::openBattleMenuPopup	3	3	0	0
 00760E24	StageUI::set_start_avatar_parameter	66	0	0	0
 00761726	StageUI::setBattleTurn	316	154	0	0
 007622B0	StageUI::openContinueDialog $_3 __func::destroy_deallocate	60	2	0	0

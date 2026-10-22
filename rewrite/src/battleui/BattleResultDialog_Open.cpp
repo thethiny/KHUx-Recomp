@@ -485,3 +485,187 @@ bool BattleResultDialog::openColosseumResult(BattleResultDialog *self, uint32_t 
     return true;
 }
 RW_FUNCTION(0x580D7C, "BattleResultDialog::openColosseumResult", BattleResultDialog::openColosseumResult);
+
+// ------------------------------------------------------------------------------------------- raid result
+namespace {
+constexpr uint32_t VT_RaidDamageDone = 0xF5A1F8;     // openRaidResult $_5: the damage count ended
+constexpr uint32_t VT_RaidMoneyDone = 0xF5A1CC;      // openRaidResult $_6: the munny count ended
+constexpr uint32_t VT_RaidLuxDone = 0xF5A1A0;        // openRaidResult $_7: the Lux count ended
+constexpr uint32_t VT_RaidTap = 0xF5A174;            // openRaidResult $_8: centre button touch
+constexpr uint32_t VT_RaidOpened = 0xF5A11C;         // openRaidResult $_9 [this, lwf kind]: popup animation ended
+constexpr uint32_t STR_RaidWinSceneJson = 0xDFFB95;  // "cocostudio/publish/BattleResultReidScene.json"
+constexpr uint32_t STR_RaidLoseSceneJson = 0xDFFB4D; // "cocostudio/publish/BattleResultDefeatedScene.json"
+constexpr uint32_t STR_BattleLoseBG_CenterUI = 0xDFFB7F;
+constexpr uint32_t STR_Line = 0xDFFBC3, STR_Txt_Wording_Top = 0xDFFBC8, STR_Txt_StageTitle_Label = 0xDFFBD8;
+constexpr uint32_t STR_Txt_Wording = 0xDF862F, STR_Txt_Damage = 0xDFFBED, STR_Txt_Damage_Label = 0xDFFBF8;
+constexpr uint32_t API_RAID_CLEAR = 0x180;           // raid clear result: +4 the boss was beaten by this user (byte),
+                                                     // +0x20 Property (Lux SafeBuffer), +0x28 rank SafeBuffer
+constexpr uint32_t API_USER_ID = 0x74;               // SafeBuffer: the user id (uint64 at 0)
+// the raid start (a SafeBuffer at its head, 0xA8 bytes): +0x2C stage id (decoded), +0x40 deck id,
+// +0x60 the user id of the one who found the boss, +0x68 campaign ids
+constexpr uint32_t RAID_START_SIZE = 0xA8;
+}  // namespace
+
+// The raid result: won (the boss beaten, the "Reid" scene) or not (the defeated scene), titled by the raid time
+// status (1 beaten, 2 escaped, 3 none, 4 and 5 time over); damage dealt, munny and Lux (both with the campaign
+// bonus of the raid stage) counted up, skill level ups.
+bool BattleResultDialog::openRaidResult(BattleResultDialog *self, uint32_t parent, uint32_t timeStatus) {
+    if (!openParentChack(self, parent)) return false;
+    Frame f;
+    uint32_t buf = f.alloc(8), start = f.alloc(RAID_START_SIZE), levelUpPos = f.alloc(8), tapPos = f.alloc(8);
+    sbRead(ld32(appState() + APPSTATE_USER), buf, 8, 4);
+    const uint32_t won = ld32(buf);
+    uint32_t kind;
+    if (won) {
+        {
+            TempStr s(STR_RaidWinSceneJson, 0x2D);
+            self->root = SceneUtil::createNodeWithSceneFile(s);
+        }
+        uint32_t root = self->root;
+        TempStr s(STR_BattleWinBG_CenterUI, 0x14);
+        vcall(root, Node_removeChildByName, {root, s, 1});
+        kind = LWF_RAID_CLEAR;
+    } else {
+        {
+            TempStr s(STR_RaidLoseSceneJson, 0x31);
+            self->root = SceneUtil::createNodeWithSceneFile(s);
+        }
+        uint32_t root = self->root;
+        TempStr s(STR_BattleLoseBG_CenterUI, 0x15);
+        vcall(root, Node_removeChildByName, {root, s, 1});
+        kind = LWF_RAID_DEFEATED;
+    }
+    {
+        uint32_t root = self->root, shadow = self->shadow;
+        uint32_t z = vcall(shadow, Node_getLocalZOrder, {shadow});
+        vcall(shadow, node::addChildZ, {shadow, root, z + 1});
+    }
+    // Lux rank and Lux before the battle (the raid clear result)
+    const uint32_t clear = ld32(api() + API_RAID_CLEAR);
+    sbRead(ld32(clear + 40), buf, 8, 4);
+    self->luxRank = int32_t(ld32(buf));
+    sbRead(ld32(clear + 32), buf, 8, 8);
+    self->luxHi = ld32(buf + 4);
+    self->luxLo = ld32(buf);
+    setTitleLayer(self, 0);
+    const uint32_t raidStart = ld32(api() + API_RAID_START);
+    call(g::SafeBuffer_read, {raidStart, start, ld32(raidStart + 12), RAID_START_SIZE, 0});
+    const uint32_t stageId = ld32(start + 0x2C);
+    // the title: the "Txt_Wording_Top" line on a win (the separator "Line" hidden), else the stage title
+    uint32_t line = 0, title;
+    if (won) {
+        line = find(self->root, STR_Line, 4);
+        if (line) setVisible(line, 0);
+        title = find(self->root, STR_Txt_Wording_Top, 0xF);
+        setVisible(title, 1);
+    } else {
+        title = find(self->root, STR_Txt_StageTitle_Label, 0x14);
+    }
+    const uint32_t wording = find(self->root, STR_Txt_Wording, 0xB);
+    SceneUtil::setShadow(wording);
+    setVisible(wording, 1);
+    switch (timeStatus) {
+    case 1: {
+        setTextId(title, 103200016);
+        // the finder line when the finder is this user and the boss was beaten by them
+        const uint32_t rs = ld32(api() + API_RAID_START);
+        const uint32_t lo = ld32(rs + 96), hi = ld32(rs + 100);
+        sbRead(ld32(api() + API_USER_ID), buf, 0, 8);
+        if (ld32(buf) != lo || ld32(buf + 4) != hi || !ld8(ld32(api() + API_RAID_CLEAR) + 4)) {
+            setVisible(wording, 0);
+            break;
+        }
+        setTextId(wording, 103200019);
+        setVisible(wording, 1);
+        break;
+    }
+    case 2:
+        setTextId(title, 103200011);
+        setVisible(wording, 0);
+        break;
+    case 3:
+        if (line) setVisible(line, 1);
+        setVisible(title, 0);
+        setVisible(wording, 0);
+        break;
+    case 4:
+        setTextId(title, 103200010);
+        setTextId(wording, 103200031);
+        break;
+    case 5:
+        setTextId(title, 103200032);
+        setTextId(wording, 103200031);
+        break;
+    default:
+        break;
+    }
+    {
+        const uint32_t rs = ld32(api() + API_RAID_START);
+        initSkill(self, clear + 32, uint64_t(ld32(rs + 0x44)) << 32 | ld32(rs + 0x40));
+    }
+    buildLevelUpParts(self, levelUpPos, tapPos);
+    audioLoad(509000130);
+    audioLoad(509100420);
+    audioLoad(509000450);
+    titleLabel(self->root, STR_Txt_Damage, 0xA, 103200017);
+    titleLabel(self->root, STR_Txt_Money, 9, 100300001);
+    titleLabel(self->root, STR_Txt_LUX, 7, 103100040);
+    const uint32_t damageLabel = find(self->root, STR_Txt_Damage_Label, 0x10);
+    SceneUtil::setShadow(damageLabel);
+    const uint32_t moneyLabel = find(self->root, STR_Txt_Money_Label, 0xF);
+    SceneUtil::setShadow(moneyLabel);
+    const uint32_t luxLabel = find(self->root, STR_Txt_LUX_Label, 0xD);
+    SceneUtil::setShadow(luxLabel);
+    const uint32_t campaigns = ld32(api() + API_RAID_START) + 0x68;
+    // damage dealt (user +0x30)
+    {
+        sbRead(ld32(appState() + APPSTATE_USER), buf, 0x30, 4);
+        Frame g2;
+        uint32_t done = newFunction(g2, VT_RaidDamageDone, {addr(self)});
+        ResultPointLayer::set(&self->points2, damageLabel, uint64_t(ld32(buf)), 2.0f, done);
+        functionDestroy(done);
+    }
+    // munny (user +0x1C) with the campaign bonus
+    {
+        sbRead(ld32(appState() + APPSTATE_USER), buf, 0x1C, 4);
+        int32_t money = int32_t(call(SceneUtil_getCampaignPoint, {ld32(buf), 4, stageId, campaigns, 5, 1}));
+        Frame g2;
+        uint32_t done = newFunction(g2, VT_RaidMoneyDone, {addr(self)});
+        ResultPointLayer::set(&self->points3, moneyLabel, uint64_t(int64_t(money)), 2.0f, done);
+        functionDestroy(done);
+    }
+    // an unlabelled counter over the user value +0x18
+    {
+        sbRead(ld32(appState() + APPSTATE_USER), buf, 0x18, 4);
+        Frame g2;
+        uint32_t none = newEmptyFunction(g2);
+        ResultPointLayer::set(&self->points0, 0, uint64_t(ld32(buf)), 2.0f, none);
+        functionDestroy(none);
+    }
+    // Lux (user +0x10) with the campaign bonus
+    {
+        sbRead(ld32(appState() + APPSTATE_USER), buf, 0x10, 4);
+        int32_t lux = int32_t(call(SceneUtil_getCampaignPoint, {ld32(buf), 4, stageId, campaigns, 10, 1}));
+        Frame g2;
+        uint32_t done = newFunction(g2, VT_RaidLuxDone, {addr(self)});
+        ResultPointLayer::set(&self->luxPoints, luxLabel, uint64_t(int64_t(lux)), 2.0f, done);
+        functionDestroy(done);
+    }
+    ResultPointLayer::updateLabel(&self->points2, 1);
+    ResultPointLayer::updateLabel(&self->points3, 1);
+    ResultPointLayer::updateLabel(&self->luxPoints, 1);
+    updateLuxGauge(self);
+    addCenterButton(self, VT_RaidTap);
+    {
+        uint32_t root = self->root;
+        Frame g2;
+        uint32_t fn = newFunction(g2, VT_RaidOpened, {addr(self), kind});
+        uint32_t anim = call(SceneUtil_createOpenPopupAnimation, {root, fn});
+        call(g::Node_runAction, {root, call(g::EaseSineOut_create, {anim})});
+        functionDestroy(fn);
+    }
+    call(g::Vec2_dtor, {tapPos});
+    call(g::Vec2_dtor, {levelUpPos});
+    return true;
+}
+RW_FUNCTION(0x57FAB4, "BattleResultDialog::openRaidResult", BattleResultDialog::openRaidResult);
