@@ -13,3 +13,4 @@
 624C6C 624D48 SceneManager::openPartyNewPopup $_106 (the OK button lambda) __clone() / __clone(__base*): copies the same {popup, shadow, opacity} block with its unset bytes
 50544C 505490 SupportCharacterScrollView::changeRow $_0 __clone(): copies the medal lambda whole; changeRow never sets its word +4 (heap) and builds +0xC from an unset stack word in front of the SupportUser copy
 50405C 504060 SupportCharacterScrollView::changeRow: the memcpy of the medal lambda's captures into its heap __func; the first word (+0xC) is an unset stack word in front of the SupportUser copy
+5BF952 5BF9A0 map<int, audio::Manager::StartParameter>::__insert_unique (Layer::playSE / Manager::enqueue): copies the 16-byte StartParameter whole; its 3 padding bytes after the paused flag are never set (stale stack bytes, e.g. a return address 0x5BF3xx)

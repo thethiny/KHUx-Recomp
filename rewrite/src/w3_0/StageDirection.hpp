@@ -112,7 +112,7 @@ constexpr uint32_t master_Enemy_create = 0x77F7DD, master_Stage_create = 0x78E4E
 constexpr uint32_t master_Colosseum_create = 0x77C4E9, master_ColosseumStage_create = 0x77CF95;
 constexpr uint32_t Enemy_create = 0x5CBE25;               // Enemy::create(int model id)
 
-constexpr uint32_t COLOR4B_BLACK = 0x1007DBC;             // cocos2d::Color4B::BLACK
+constexpr uint32_t COLOR4B_BLACK = 0x1007EBC;             // cocos2d::Color4B::BLACK
 constexpr uint32_t COLOR3B_WHITE = 0x1007E88;             // cocos2d::Color3B::WHITE
 constexpr uint32_t BLENDFUNC_ADDITIVE = 0xEBBD8C;         // cocos2d::BlendFunc::ADDITIVE
 

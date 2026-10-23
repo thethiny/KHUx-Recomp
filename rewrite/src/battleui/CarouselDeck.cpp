@@ -485,7 +485,7 @@ void CarouselDeck::addMedalOntoDeck(CarouselDeck *self, uint32_t medalIds, int32
                     if (slot >= 0) {
                         uint32_t at = 72u * uint32_t(slot);
                         call(SafeBuffer_read, {box, medal, ld32(box + 12) + at, 72, at});
-                        medalId = int32_t(ld32(medal + 0x10));
+                        medalId = int32_t(ld32(medal + 0x08));   // UserMedal record: the master medal id
                     }
                 }
             }

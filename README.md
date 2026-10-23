@@ -131,6 +131,10 @@ out/              build and analysis output (generated, ignored)
 
 ## Progress
 
+![Game code by class: verified / rewritten / not rewritten](docs/progress/game-map.svg)
+
+![Open-source libraries by library: verified / rewritten / not rewritten](docs/progress/libraries-map.svg)
+
 ```
 Translation
   Decompiled              ████████████████████   99.0%  56,014 / 56,604
@@ -139,18 +143,18 @@ Translation
 
 Rewrite: game code
   Rewritten               ████████████████████  100.0%  18,828 / 18,828
-  Run under the verifier  █████░░░░░░░░░░░░░░░   26.9%   5,064 / 18,828
-  Verified                ████░░░░░░░░░░░░░░░░   20.5%   3,865 / 18,828
+  Run under the verifier  █████░░░░░░░░░░░░░░░   26.9%   5,065 / 18,828
+  Verified                ████░░░░░░░░░░░░░░░░   20.8%   3,919 / 18,828
 
 Rewrite: open-source libraries
   Rewritten               ████████░░░░░░░░░░░░   41.1%  15,449 / 37,547
-  Run under the verifier  █░░░░░░░░░░░░░░░░░░░    5.6%   2,103 / 37,547
-  Verified                █░░░░░░░░░░░░░░░░░░░    4.6%   1,736 / 37,547
+  Run under the verifier  █░░░░░░░░░░░░░░░░░░░    5.6%   2,105 / 37,547
+  Verified                █░░░░░░░░░░░░░░░░░░░    4.6%   1,738 / 37,547
 
 Rewrite: all functions
   Rewritten               ████████████░░░░░░░░   60.8%  34,277 / 56,381
-  Run under the verifier  ███░░░░░░░░░░░░░░░░░   12.7%   7,167 / 56,381
-  Verified                ██░░░░░░░░░░░░░░░░░░    9.9%   5,601 / 56,381
+  Run under the verifier  ███░░░░░░░░░░░░░░░░░   12.7%   7,170 / 56,381
+  Verified                ██░░░░░░░░░░░░░░░░░░   10.0%   5,657 / 56,381
 
 Binary match
   1:1 binary match        ░░░░░░░░░░░░░░░░░░░░    0.0%       0 / 56,381

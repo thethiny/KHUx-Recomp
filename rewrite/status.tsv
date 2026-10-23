@@ -1,6 +1,6 @@
 addr	name	calls	verified	mismatches	unverifiable
-0044F6D8	FreeType TT_Hint_Glyph (sub_44F6D8)	1061	376	0	0
-0044FF84	FreeType tt_size_run_prep (sub_44FF84)	97	31	0	0
+0044F6D8	FreeType TT_Hint_Glyph (sub_44F6D8)	1160	376	0	0
+0044FF84	FreeType tt_size_run_prep (sub_44FF84)	106	31	0	0
 00453224	png_colorspace_endpoints_match, green and blue (sub_453224)	8	8	0	0
 00453280	bg::MemoryStream static constructor (sub_453280)	18	18	0	0
 00453324	RemoteNotification.cpp static constructor (sub_453324)	18	18	0	0
@@ -36,70 +36,70 @@ addr	name	calls	verified	mismatches	unverifiable
 0045992C	OpenSL ES interface table static constructor (sub_45992C)	24	24	0	0
 00459D40	SQEX::DelegateManager static constructor (sub_459D40)	24	24	0	0
 00459E30	cocos_android_app_init	64	64	0	0
-00459E60	SafeBuffer::initialize	48595	7262	0	0
-00459EFA	SafeBuffer::deinitialize	47552	10274	0	0
-00459F20	SafeBuffer::SafeBuffer(unsigned int, bool)	58606	7002	0	0
-00459FA0	SafeBuffer::write	8779145	91663	0	0
-00459FFC	SafeBuffer update list static init (sub_459FFC)	159340	12228	0	0
-0045A13C	SafeBuffer::~SafeBuffer	67990	10417	0	0
+00459E60	SafeBuffer::initialize	48606	7263	0	0
+00459EFA	SafeBuffer::deinitialize	47563	10275	0	0
+00459F20	SafeBuffer::SafeBuffer(unsigned int, bool)	58626	7003	0	0
+00459FA0	SafeBuffer::write	8779547	91664	0	0
+00459FFC	SafeBuffer update list static init (sub_459FFC)	159380	12229	0	0
+0045A13C	SafeBuffer::~SafeBuffer	68010	10418	0	0
 0045A1D4	SafeBuffer::copy	5689	414	0	0
-0045A268	SafeBuffer::read	8535004	122589	0	0
+0045A268	SafeBuffer::read	8536272	122592	0	0
 0045A29C	SafeBuffer::SafeBuffer(const SafeBuffer&)	11027	474	0	0
-0045A318	SafeBuffer::SafeBuffer(SafeBuffer&&)	872	53	0	0
+0045A318	SafeBuffer::SafeBuffer(SafeBuffer&&)	881	53	0	0
 0045A354	SafeBuffer::operator=(SafeBuffer&&)	409	4	0	0
 0045A394	SafeBuffer::update	1062937	222196	0	0
-0045A420	SafeBuffer::SafeBuffer(const shared_ptr<bg::Data>&)	15590	333	0	0
+0045A420	SafeBuffer::SafeBuffer(const shared_ptr<bg::Data>&)	15621	333	0	0
 0045A554	SafeBuffer::serialize	340	204	0	0
-0045A604	SafeBuffer::zerofill	1964	11	0	0
+0045A604	SafeBuffer::zerofill	1973	11	0	0
 0045A7E8	std::__shared_ptr_emplace<bg::MemoryStream>::__on_zero_shared	604	252	0	0
 0045A7F4	std::__shared_ptr_emplace<bg::MemoryStream>::__on_zero_shared_weak	604	252	0	0
 0045A924	sub_45A924	192	2	0	0
 0045A944	nullsub_6	194	2	0	0
 0045A950	Scheduler::scheduleUpdate<Guardian> lambda(float) operator()	547167	6600	0	0
-0045A9F4	SceneUtil::searchNodeByName	391671	15273	0	0
-0045AA48	SceneUtil::createNodeWithSceneFile	821	55	0	6
-0045ABFC	SceneUtil::leftAdsorptionNode	777	45	0	0
-0045AC84	SceneUtil::rightAdsorptionNode	757	52	0	0
+0045A9F4	SceneUtil::searchNodeByName	392344	15300	0	0
+0045AA48	SceneUtil::createNodeWithSceneFile	824	57	0	6
+0045ABFC	SceneUtil::leftAdsorptionNode	778	45	0	0
+0045AC84	SceneUtil::rightAdsorptionNode	758	52	0	0
 0045AD0C	SceneUtil::getSideMargin	381	18	0	0
-0045AD68	SceneUtil::createShadowSprite	650	19	0	3
+0045AD68	SceneUtil::createShadowSprite	661	25	0	3
 0045AF58	SceneUtil::getSideHeightMargin	627	44	0	0
 0045AFB4	SceneUtil::backBtnSetPosY	134	9	0	0
 0045B03C	SceneUtil::createTopInAnimation	510	129	0	0
-0045B16C	SceneUtil::setCascadeOpacityEnabled	7828	493	0	0
+0045B16C	SceneUtil::setCascadeOpacityEnabled	7852	503	0	0
 0045B1DC	SceneUtil::createTopOutAnimation	1677	130	0	0
 0045B2F8	SceneUtil::createBottomInAnimation	1177	112	0	0
 0045B468	SceneUtil::createBottomOutAnimation	2367	144	0	0
 0045B5C4	SceneUtil::createLeftInAnimation	359	11	0	0
-0045B734	SceneUtil::createLeftOutAnimation	1149	151	0	0
-0045B8BC	SceneUtil::createRightInAnimation	837	72	0	0
-0045BA3C	SceneUtil::createRightOutAnimation	488	101	0	0
-0045BBA8	SceneUtil::createTapAnimation	340	158	0	0
-0045BC04	SceneUtil::createOpenPopupAnimation	548	9	0	0
+0045B734	SceneUtil::createLeftOutAnimation	1153	155	0	0
+0045B8BC	SceneUtil::createRightInAnimation	841	72	0	0
+0045BA3C	SceneUtil::createRightOutAnimation	492	105	0	0
+0045BBA8	SceneUtil::createTapAnimation	342	159	0	0
+0045BC04	SceneUtil::createOpenPopupAnimation	557	9	0	0
 0045BC60	SceneUtil::createClosePopupAnimation	744	17	0	0
-0045BD14	SceneUtil::setShadow	178636	10805	3	0
-0045BD94	SceneUtil::setUserTitleOutline	55	30	0	0
+0045BD14	SceneUtil::setShadow	2238	980	0	0
+0045BD94	SceneUtil::setUserTitleOutline	60	30	0	0
 0045BE94	SceneUtil::setBlackOutline	52	0	0	0
 0045BF14	SceneUtil::textToCustomTextView	270	23	0	0
 0045C950	SceneUtil::openOkCancelDialog4Line	8	7	0	0
-0045D8D0	SceneUtil::settingTitleLabel	3896	587	3	8
+0045D8D0	SceneUtil::settingTitleLabel	138	54	0	0
 0045DDE0	SceneUtil::openContinuPopup	15	0	0	2
 0045E798	SceneUtil::openMedalMaxUpDialog(function<void(bool,bool)>)	1	1	0	0
 00460250	SceneUtil::openMedalOverDialog	2	0	0	0
-004619F4	SceneUtil::updateMedalRarePanel	28	0	0	0
-00461DC4	SceneUtil::getMoneyStr	1116	329	0	0
-00461FCC	std::operator+(const char*, const std::string&) (sub_461FCC)	3955	747	0	0
-00462048	SceneUtil::getMedalMaxRare	8	0	0	0
-00462194	SceneUtil::updateMedalInfo	31	10	0	0
-004658D4	SceneUtil shadow text from TextData (sub_4658D4)	644	31	0	0
+004619F4	SceneUtil::updateMedalRarePanel	50	0	0	0
+00461DC4	SceneUtil::getMoneyStr	1122	329	0	0
+00461FCC	std::operator+(const char*, const std::string&) (sub_461FCC)	3967	747	0	0
+00462048	SceneUtil::getMedalMaxRare	10	0	0	0
+00462194	SceneUtil::updateMedalInfo	33	10	0	0
+004658D4	SceneUtil shadow text from TextData (sub_4658D4)	672	31	0	0
 004659F0	SceneUtil::setStatusChangeColor	2152	1	0	0
-00465AB8	SceneUtil::runTicker	8	0	0	0
-00465C84	SceneUtil::updateMixCircle(Widget*, Widget*, Widget*, shared_ptr<UserMedalData>, bool, int, bool, bool, bool, bool, bool)	919	63	0	0
+00465AB8	SceneUtil::runTicker	10	0	0	0
+00465C84	SceneUtil::updateMixCircle(Widget*, Widget*, Widget*, shared_ptr<UserMedalData>, bool, int, bool, bool, bool, bool, bool)	921	63	0	0
 0046695C	SceneUtil::showSupportMedalEffect	251	0	0	0
-00466B08	SceneUtil::hideSupportMedalEffect	630	1	0	0
-00466BA8	SceneUtil::setAdditionalKerningForAtlasLabel	774	16	0	0
-00466C40	SceneUtil::numberToAtlasString	1601	145	0	0
-00466EF4	SceneUtil::openMedalInfoPopup	33	14	0	0
-004684C8	SceneUtil::openTutorialPopup	1085	254	0	0
+00466B08	SceneUtil::hideSupportMedalEffect	632	1	0	0
+00466BA8	SceneUtil::setAdditionalKerningForAtlasLabel	776	16	0	0
+00466C40	SceneUtil::numberToAtlasString	1612	145	0	0
+00466EF4	SceneUtil::openMedalInfoPopup	35	15	0	0
+004684C8	SceneUtil::openTutorialPopup	1087	254	0	0
 00468624	SceneUtil::setButtonEnabled	1042	19	0	0
 00468668	SceneUtil::setNormalColor	42	1	0	0
 0046874C	SceneUtil::setMyPageTeamStatus	35	25	0	10
@@ -114,16 +114,16 @@ addr	name	calls	verified	mismatches	unverifiable
 0046B15C	SceneUtil::changePartnerAvatarPanel(Widget*, StageSupportList::SupportUser, AvatarIconCache*)	134	3	0	7
 0046BE74	SceneUtil::changePartnerPanel(Widget*, int, int)	908	63	0	0
 0046C4C4	SceneUtil::setBossTypeImage	14595	3472	0	0
-0046C71C	SceneUtil::setItemImageData(string&, string&, int, int, bool)	750	43	0	0
+0046C71C	SceneUtil::setItemImageData(string&, string&, int, int, bool)	774	43	0	0
 0046D19C	SceneUtil::openOptionPopup	1	1	0	0
 0046E6C8	SceneUtil::openOptionPopup ON label (sub_46E6C8)	6	1	0	0
 0046E7D0	SceneUtil::openOptionPopup OFF label (sub_46E7D0)	6	1	0	0
 0046E8D8	SceneUtil::settingTitleLabel(Node*, string, string)	858	49	0	0
-0046E9E4	SceneUtil::updateUserTitlePanel(Node*, int, int, int)	61	30	0	0
-0046ED84	SceneUtil::updateUserTitlePanel(Node*, SupportUser)	51	6	0	0
-0046ED98	SceneUtil::createUserTitleImagePath	27	6	0	0
+0046E9E4	SceneUtil::updateUserTitlePanel(Node*, int, int, int)	66	30	0	0
+0046ED84	SceneUtil::updateUserTitlePanel(Node*, SupportUser)	60	6	0	0
+0046ED98	SceneUtil::createUserTitleImagePath	32	6	0	0
 0046EE0C	SceneUtil::calcLuxGaugePer	637	143	0	0
-0046F08C	SceneUtil::createPartyRankImagePath	33	13	0	0
+0046F08C	SceneUtil::createPartyRankImagePath	39	13	0	0
 0046F100	SceneUtil::getStageResumptionStatus	52	0	0	0
 0046F160	SceneUtil::moveToMyPageOrResumeStage	56	1	0	0
 0046F37C	SceneUtil::callPrepareMypageAPIs	52	0	0	0
@@ -134,46 +134,46 @@ addr	name	calls	verified	mismatches	unverifiable
 0047250C	SceneUtil::freeTutorialConvertData	80	21	0	29
 004727CC	SceneUtil::updateTutorialStatus	64	62	0	0
 00472A74	SceneUtil::CompleteTutorialPhase	125	62	0	0
-00472B30	SceneUtil::getNexTutorialphase	9958	3440	0	0
+00472B30	SceneUtil::getNexTutorialphase	9977	3444	0	0
 00472BA0	SceneUtil::updateTutorialPhase	64	62	0	0
-00472D74	SceneUtil::dispTutorialCheck	2329	258	0	0
+00472D74	SceneUtil::dispTutorialCheck	2335	258	0	0
 004733C4	SceneUtil::isBenefits	125	61	0	0
-00473688	SceneUtil::numberToPlaceString	21	6	0	0
+00473688	SceneUtil::numberToPlaceString	24	6	0	0
 00473A18	SceneUtil::updateMedalPossessionLabel	2	0	0	0
 00473CAC	SceneUtil count label helper (sub_473CAC)	24	1	0	0
 00473DF4	SceneUtil::callUpdateLockMedalAPI	617	549	0	0
 004741BC	SceneUtil::getCampaignPoint	495	28	0	0
-004744F4	SceneUtil (sub_4744F4): a text's on / off look	659	1	0	0
+004744F4	SceneUtil (sub_4744F4): a text's on / off look	667	1	0	0
 00474700	SceneUtil::openWebViewInfoPopup(Layer*, ...)	3	2	0	0
 00474DCC	SceneUtil::openSellOkPopup(int, bool)	4	2	0	0
-0047546C	SceneUtil::openAvatarBoardFilterPopup(function<void()>)	28	8	8	0
+0047546C	SceneUtil::openAvatarBoardFilterPopup(function<void()>)	2	1	0	0
 00476E80	SceneUtil::openAdventureSelectFilterPopup(function<void(bool)>)	1	1	0	0
-00478928	BaseScrollView<int>::setItemIDs(const vector<int>&)	19	5	0	1
+00478928	BaseScrollView<int>::setItemIDs(const vector<int>&)	21	5	0	1
 00478BA8	SceneUtil::addBackKeyCallback	119	22	0	0
 00478EDC	SceneUtil::openPurchaseSucceededPopup(Node*, int, int, function<void(bool)>)	2	1	0	0
 0047AAB4	cocos2d::Node::setZOrder	3788686	59116	0	0
-0047AABE	cocos2d::Node::getLocalZOrder	202647572	11730099	0	0
+0047AABE	cocos2d::Node::getLocalZOrder	202650522	11730108	0	0
 0047AAC6	cocos2d::Node::getZOrder	1111	22	0	0
 0047AAD0	cocos2d::Node::getGlobalZOrder	48961	21331	0	0
-0047AB1E	cocos2d::Node::getChildren	148885341	5353425	0	0
+0047AB1E	cocos2d::Node::getChildren	148950665	5353469	0	0
 0047AB26	cocos2d::Node::getChildren	5543749	0	0	0
-0047AB2E	cocos2d::Node::getParent	79791188	2795039	0	0
+0047AB2E	cocos2d::Node::getParent	79793503	2795056	0	0
 0047AB3E	cocos2d::Node::getUserData	61474	13034	0	0
 0047AB4E	cocos2d::Node::getUserObject	371	72	0	0
 0047AB5E	cocos2d::Node::boundingBox	36	7	0	0
 0047AB6C	cocos2d::Node::getEventDispatcher	1003	0	0	0
-0047ABD6	cocos2d::Node::updateColor	19417227	239065	0	0
-0047ABDA	cocos2d::ui::Widget::isFlippedX	195399	331	0	0
-0047ABE4	cocos2d::ui::Widget::isFlippedY	195399	331	0	0
-0047ABF4	cocos2d::ui::Widget::updateFlippedX	84312	826	0	0
-0047ABF6	cocos2d::ui::Widget::updateFlippedY	84312	826	0	0
+0047ABD6	cocos2d::Node::updateColor	19473776	239083	0	0
+0047ABDA	cocos2d::ui::Widget::isFlippedX	195606	331	0	0
+0047ABE4	cocos2d::ui::Widget::isFlippedY	195606	331	0	0
+0047ABF4	cocos2d::ui::Widget::updateFlippedX	84578	838	0	0
+0047ABF6	cocos2d::ui::Widget::updateFlippedY	84578	838	0	0
 0047ABF8	cocos2d::ui::Widget::adaptRenderers	56307258	2934814	0	0
 0047CB90	sub_47CB90	9	4	4	1
-0047F970	sub_47F970	24	0	0	0
-0047F990	nullsub_217	24	0	0	0
-0047FA66	sub_47FA66	24	0	0	0
-0047FCA4	sub_47FCA4	48	0	0	0
-0047FCC0	nullsub_220	48	0	0	0
+0047F970	sub_47F970	32	0	0	0
+0047F990	nullsub_217	32	0	0	0
+0047FA66	sub_47FA66	32	0	0	0
+0047FCA4	sub_47FCA4	64	0	0	0
+0047FCC0	nullsub_220	64	0	0	0
 00484298	SceneUtil::callPrepareMypageAPIs::$_66 __clone()	76	42	0	0
 004843DC	SceneUtil::callPrepareMypageAPIs::$_66 destroy_deallocate()	113	79	0	0
 00484424	sub_484424	57	0	0	57
@@ -198,13 +198,13 @@ addr	name	calls	verified	mismatches	unverifiable
 00487512	sub_487512	232	4	0	0
 00487D40	nullsub_51	2067	94	0	0
 00487D4A	sub_487D4A	2067	94	0	0
-00488580	sub_488580	11	3	0	0
-004885A0	nullsub_252	20	8	0	0
+00488580	sub_488580	13	3	0	0
+004885A0	nullsub_252	22	8	0	0
 004885AA	sub_4885AA	6	2	0	0
-0048861C	sub_48861C	22	6	0	0
-0048863C	nullsub_253	31	12	0	0
-00488BE8	sub_488BE8	28	3	0	0
-00488C04	nullsub_254	37	12	0	0
+0048861C	sub_48861C	26	6	0	0
+0048863C	nullsub_253	35	12	0	0
+00488BE8	sub_488BE8	32	3	0	0
+00488C04	nullsub_254	41	12	0	0
 00488C0E	sub_488C0E	4	3	1	0
 0048A0EC	SceneSaleMedal::create	2	2	0	0
 0048A438	SceneUtil::openMedalOverDialog $_20 __func::__clone()	3	0	0	0
@@ -229,8 +229,8 @@ addr	name	calls	verified	mismatches	unverifiable
 0048B6D8	SceneUtil::openContinuPopup $_10 __func::__clone(__base*)	30	0	0	0
 0048B6F4	SceneUtil::openContinuPopup $_10 __func::destroy	45	0	0	0
 0048B6FE	sub_48B6FE	56	42	0	14
-0048D688	SceneUtil::createShadowSprite $_0 __func::__clone(__base*)	707	19	0	0
-0048D6A8	SceneUtil::createShadowSprite $_0 __func::destroy	1395	221	0	0
+0048D688	SceneUtil::createShadowSprite $_0 __func::__clone(__base*)	719	25	0	0
+0048D6A8	SceneUtil::createShadowSprite $_0 __func::destroy	1407	227	0	0
 0048D6B2	sub_48D6B2	1507	1507	0	0
 0048D9E0	SceneUtil::callPrepareMypageAPIs (sub_48D9E0): the party notice	27	0	0	0
 0048DC44	SceneUtil::callPrepareMypageAPIs $_64 __func::__clone()	118	73	0	0
@@ -254,28 +254,28 @@ addr	name	calls	verified	mismatches	unverifiable
 00490080	SceneUtil::callPrepareMypageAPIs::$_65 destroy_deallocate()	116	91	0	0
 004900C8	sub_4900C8	58	0	0	58
 00491360	LWFUtil::preloadResources	37322	2007	1151	0
-0049140C	StringBuffer::StringBuffer(const char*, ...)	651203	24426	0	0
-00491480	StringBuffer::vfset	2909	34	0	0
-004914A6	StringBuffer::set	2715	1	0	0
-004914C4	StringBuffer::concat	5327	71	0	0
-00491500	StringBuffer::fset	62253	2653	0	0
-00491570	StringBuffer::fconcat	13873	338	0	0
-00491608	StringBuffer::replace	2715	1	0	0
+0049140C	StringBuffer::StringBuffer(const char*, ...)	651753	24444	0	0
+00491480	StringBuffer::vfset	2948	34	0	0
+004914A6	StringBuffer::set	2832	1	0	0
+004914C4	StringBuffer::concat	5413	71	0	0
+00491500	StringBuffer::fset	62619	2654	0	0
+00491570	StringBuffer::fconcat	13990	338	0	0
+00491608	StringBuffer::replace	2832	1	0	0
 0049160E	sub_49160E (malloc thunk)	24732	1665	0	0
 00491638	sub_491638	29984	436	0	0
 00491664	bg::MemoryStream::MemoryStream	24124	2403	0	0
 00491928	bg::MemoryStream::~MemoryStream	24124	2355	0	0
 00491A78	bg::MemoryStream::write	60616	2528	0	0
 00491AF4	bg::MemoryStream::move	24124	2355	0	0
-00491C70	std::__shared_ptr_emplace<bg::Data>::__on_zero_shared	1730970	26786	1	0
-00491C7C	std::__shared_ptr_emplace<bg::Data>::__on_zero_shared_weak	1325738	22325	0	0
-00491C84	bg::Data::~Data	1240329	19824	0	0
-00491D44	std::__function::__func<void (*)(void *),std::allocator<void (*)(void *)>,void ()(void *)>::__clone	1514668	30735	0	0
-00491D64	std::__function::__func<void (*)(void *),std::allocator<void (*)(void *)>,void ()(void *)>::destroy	1522919	29489	0	0
-00491D6E	std::__function::__func<void (*)(void *),std::allocator<void (*)(void *)>,void ()(void *)>::operator()	1839816	29064	0	0
+00491C70	std::__shared_ptr_emplace<bg::Data>::__on_zero_shared	1732017	26816	1	0
+00491C7C	std::__shared_ptr_emplace<bg::Data>::__on_zero_shared_weak	1326785	22355	0	0
+00491C84	bg::Data::~Data	1241376	19854	0	0
+00491D44	std::__function::__func<void (*)(void *),std::allocator<void (*)(void *)>,void ()(void *)>::__clone	1516339	30765	0	0
+00491D64	std::__function::__func<void (*)(void *),std::allocator<void (*)(void *)>,void ()(void *)>::destroy	1524588	29519	0	0
+00491D6E	std::__function::__func<void (*)(void *),std::allocator<void (*)(void *)>,void ()(void *)>::operator()	1842339	29094	0	0
 00491DEC	std::__function::__func<void * (*)(unsigned int),std::allocator<void * (*)(unsigned int)>,void * ()(unsigned int)>::__clone	51510	6419	0	0
 00491E0C	std::__function::__func<void * (*)(unsigned int),std::allocator<void * (*)(unsigned int)>,void * ()(unsigned int)>::destroy	51474	6413	0	0
-00491E16	std::__function::__func<void * (*)(unsigned int),std::allocator<void * (*)(unsigned int)>,void * ()(unsigned int)>::operator()	1481697	30085	0	0
+00491E16	std::__function::__func<void * (*)(unsigned int),std::allocator<void * (*)(unsigned int)>,void * ()(unsigned int)>::operator()	1483176	30115	0	0
 00492054	Random::getInstance	333549	9814	0	0
 004920EC	Random::Random	82	57	0	0
 00492184	Random::getMaxInt	1332	888	0	0
@@ -283,23 +283,23 @@ addr	name	calls	verified	mismatches	unverifiable
 00492224	Random::generateUniformInt	307664	3704	0	0
 00492260	Random::generateUniformFloat	25885	6456	0	0
 004922AC	hole::time::setReferenceDate	3734	3734	0	0
-004922D4	Date::calculateIntervalSinceNow	519132	19655	0	0
-004924F0	Date::init	56184	4845	0	0
+004922D4	Date::calculateIntervalSinceNow	519141	19655	0	0
+004924F0	Date::init	56190	4846	0	0
 00492664	Date::setIntervalFrom1970	456	0	0	0
 004926D0	Date::setIntervalFromNow	458	0	0	0
 00492738	Date::setNow	504	5	0	0
-00492744	Date::calculateIntervalSince1970	73678	19728	0	0
-004927CC	Date::makeLocalDate	75	6	0	0
+00492744	Date::calculateIntervalSince1970	73704	19728	0	0
+004927CC	Date::makeLocalDate	108	6	0	0
 0049283C	Date::makeUTCDate	81	81	0	0
-004928AC	TextData::get	100962	8019	0	0
-00492928	TextData::format	2525	26	72	0
+004928AC	TextData::get	101292	8036	0	0
+00492928	TextData::format	2564	26	72	0
 004929F4	SpeechDisp::toEndSpeech	24	0	0	0
 00492A4C	SpeechDisp::runSpeechSet	8	0	0	0
 00492B74	hole::text::createTimeLeftString	14	0	0	0
-00492BE8	hole::text::createTimeAgoString	63	18	0	0
+00492BE8	hole::text::createTimeAgoString	72	18	0	0
 00492C5C	TextFormat::execute(const char*, ...)	321	6	0	0
-00492CAC	TextFormat::execute(const char*, va_list)	489	11	0	0
-00493E04	TextFormat element vector ~__vector_base (sub_493E04)	448	25	0	0
+00492CAC	TextFormat::execute(const char*, va_list)	528	11	0	0
+00493E04	TextFormat element vector ~__vector_base (sub_493E04)	487	25	0	0
 004948EC	shader::set_guilt_shader	93	0	0	0
 00494B14	shader::set_concentration_shader	93	0	0	0
 00494CC8	shader::set_guilt_shader_param	384	38	0	24
@@ -313,12 +313,12 @@ addr	name	calls	verified	mismatches	unverifiable
 004961F0	GuiltBurstCutInShader::setShaderCutinEnd	2	1	0	0
 00496214	GuiltBurstCutInShader::setShaderConcentrationStart	1	1	0	0
 00496270	GuiltBurstCutInShader::setShaderEnd	1	1	0	0
-004966BC	BattleUtil::calcMedalStatus	31419	247	0	0
-00496BD0	BattleUtil::calcMedalExp	28244	245	0	0
-00496C98	BattleUtil::calcNeedExp	30452	245	0	0
+004966BC	BattleUtil::calcMedalStatus	31470	248	0	0
+00496BD0	BattleUtil::calcMedalExp	28295	246	0	0
+00496C98	BattleUtil::calcNeedExp	30504	246	0	0
 00496F4C	BattleUtil::getCurrentKeybladeIndex	1	0	0	0
 00497010	BattleUtil::getSupportMedal	89	1	0	0
-00497104	AvatarUtil::makeStyle	680	44	0	0
+00497104	AvatarUtil::makeStyle	689	44	0	0
 004976FC	AvatarUtil::getCurrentKeyblade	203	12	0	0
 004977AC	AvatarUtil::getCurrentStyle	116	4	0	0
 0049794C	AvatarUtil::getSupportUserStyle	93	4	0	0
@@ -330,11 +330,11 @@ addr	name	calls	verified	mismatches	unverifiable
 0049977C	hole::network::FindSubstringInsensitive	4133	401	0	0
 00499920	sub_499920	7562	3936	0	0
 00499940	nullsub_269	11341	7589	0	0
-0049A418	sub_49A418	1202529	29023	0	0
+0049A418	sub_49A418	1202663	29025	0	0
 0049A5EC	std::__shared_ptr_emplace<hole::network::RESTClient::Result>::__on_zero_shared	3782	3781	0	0
 0049A5F6	std::__shared_ptr_emplace<hole::network::RESTClient::Result>::__on_zero_shared_weak	3782	3781	0	0
-0049A5FE	rapidjson::internal::Stack<rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>>::~Stack [base destructor]	55729	6213	0	0
-0049A618	rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>::~MemoryPoolAllocator [base destructor]	57283	5918	0	0
+0049A5FE	rapidjson::internal::Stack<rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>>::~Stack [base destructor]	55851	6225	0	0
+0049A618	rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>::~MemoryPoolAllocator [base destructor]	57405	5930	0	0
 0049B418	sub_49B418	15138	9484	0	0
 0049B580	std::__function::__func<std::__bind<void (hole::network::RESTClient::*)(cocos2d::network::HttpClient *,cocos2d::network::HttpResponse *),hole::network::RESTClient*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>,std::allocator<std::__bind<void (hole::network::RESTClient::*)(cocos2d::network::HttpClient *,cocos2d::network::HttpResponse *),hole::network::RESTClient*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>>,void ()(cocos2d::network::HttpClient *,cocos2d::network::HttpResponse *)>::destroy	15138	9484	0	0
 0049B6A4	std::__shared_ptr_emplace<hole::network::RESTClient::Connection>::__on_zero_shared	3782	3781	0	0
@@ -404,12 +404,12 @@ addr	name	calls	verified	mismatches	unverifiable
 004A6910	hole::network::api::SystemNeedUrl::~SystemNeedUrl	86	57	0	0
 004A69FC	hole::network::api::SystemCoppa::parse	99	86	0	0
 004A6DBC	hole::network::api::SystemInformationList151203::parse	93	80	0	0
-004A723C	hole::network::api::Party::init	600	399	0	0
-004A7584	hole::network::api::UserParty::parse	754	468	0	0
+004A723C	hole::network::api::Party::init	601	400	0	0
+004A7584	hole::network::api::UserParty::parse	756	469	0	0
 004A7AC8	hole::network::api::PartyNotice::parse	92	65	0	0
 004A7EC8	hole::network::api::PartyMemberList::Detail::init	690	0	0	0
 004A7FD8	hole::network::api::Ranking::init	578	6	0	0
-004A8040	hole::network::api::PartyMemberList::parse	553	0	187	0
+004A8040	hole::network::api::PartyMemberList::parse	571	0	187	0
 004A97E0	hole::network::api::UserShop::Benefit::init	83	55	0	0
 004A9844	hole::network::api::UserShop::parse	98	85	0	0
 004AAD00	hole::network::api::TutorialStatus::parse	97	84	0	0
@@ -429,8 +429,8 @@ addr	name	calls	verified	mismatches	unverifiable
 004AF0C4	std::__shared_ptr_pointer<hole::network::api::PartyMemberList  *>::__on_zero_shared_weak	288	108	0	0
 004AF124	std::__shared_ptr_pointer<hole::network::api::PartyNotice  *>::__on_zero_shared	5	5	0	0
 004AF164	std::__shared_ptr_pointer<hole::network::api::PartyNotice  *>::__on_zero_shared_weak	5	5	0	0
-004AF1C4	std::__shared_ptr_pointer<hole::network::api::UserParty  *>::__on_zero_shared	660	396	0	0
-004AF1FC	std::__shared_ptr_pointer<hole::network::api::UserParty  *>::__on_zero_shared_weak	660	396	0	0
+004AF1C4	std::__shared_ptr_pointer<hole::network::api::UserParty  *>::__on_zero_shared	662	397	0	0
+004AF1FC	std::__shared_ptr_pointer<hole::network::api::UserParty  *>::__on_zero_shared_weak	662	397	0	0
 004AF3B4	std::__shared_ptr_pointer<hole::network::api::SystemNeedUrl  *>::__on_zero_shared	70	70	0	0
 004AF3F0	std::__shared_ptr_pointer<hole::network::api::SystemNeedUrl  *>::__on_zero_shared_weak	70	70	0	0
 004AFA70	std::__shared_ptr_pointer<hole::network::api::UserSphere  *>::__on_zero_shared_weak	184	143	0	0
@@ -497,11 +497,11 @@ addr	name	calls	verified	mismatches	unverifiable
 004B1B18	std::__shared_ptr_pointer<hole::network::api::Login  *>::__on_zero_shared	116	46	0	0
 004B1B50	std::__shared_ptr_pointer<hole::network::api::Login  *>::__on_zero_shared_weak	116	46	0	0
 004B1DB6	std::__shared_ptr_emplace<hole::network::api::Ret>::__on_zero_shared_weak	3393	3393	0	0
-004B2E62	hole::network::api::Party::Party(const Party&)	91	7	0	0
+004B2E62	hole::network::api::Party::Party(const Party&)	103	7	0	0
 004B37E4	hole::network::api::GachaList::Gacha::Gacha(const Gacha&)	12	0	0	0
 004B49E4	hole::network::api::PartyMemberList::~PartyMemberList (deleting)	372	97	0	0
 004B4AC8	hole::network::api::StageSupportList::~StageSupportList (deleting)	290	85	0	0
-004B4E54	hole::network::api::UserParty::~UserParty (deleting)	962	375	0	0
+004B4E54	hole::network::api::UserParty::~UserParty (deleting)	964	376	0	0
 004B56D4	hole::network::api::RaidStart::~RaidStart (deleting)	6	3	0	0
 004B5778	hole::network::api::StageClear::~StageClear	47	14	0	0
 004B5810	hole::network::api::StageClear::~StageClear (deleting)	78	14	0	0
@@ -526,13 +526,13 @@ addr	name	calls	verified	mismatches	unverifiable
 004B9484	std::__shared_ptr_pointer<rapidjson::GenericDocument<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>> *>::__on_zero_shared_weak	71	71	0	0
 004B98AA	std::__function::__func<std::__bind<void (hole::network::api::Client::*)(hole::network::api::Action,std::shared_ptr<hole::network::RESTClient::Result> const&),hole::network::api::Client*,hole::network::api::Action const&,std::placeholders::__ph<1> &>,std::allocator<std::__bind<void (hole::network::api::Client::*)(hole::network::api::Action,std::shared_ptr<hole::network::RESTClient::Result> const&),hole::network::api::Client*,hole::network::api::Action const&,std::placeholders::__ph<1> &>>,void ()(std::shared_ptr<hole::network::RESTClient::Result> const&)>::destroy_deallocate	10394	6102	0	0
 004BA10C	APIManager::APIManager	102	6	0	0
-004BB4C4	APIManager::verifyResponse	2032	1759	273	0
+004BB4C4	APIManager::verifyResponse	2108	1829	279	0
 004C399C	APIManager::reallocate	766	542	0	0
 004C42F4	APIManager::updateMedal	71	20	0	0
 004C4670	APIManager::updateMaterial	3300	1032	0	0
 004C4A20	APIManager::updateTitle	5	5	0	0
 004C4BAC	APIManager::updateFavoriteKeyblade	133	67	0	0
-004C51E8	APIManager::findMedalSetKeybladeIndex	28244	245	0	0
+004C51E8	APIManager::findMedalSetKeybladeIndex	28295	246	0	0
 004C678C	APIManager.cpp encryptToBase64(std::string*, Cipher&, const void*, size_t)	207	207	0	0
 004D5C82	std::__function::__func<std::__bind<hole::network::api::Client::StatusCode (APIManager::*)(hole::network::api::Action,hole::network::api::Client::StatusCode,std::shared_ptr<hole::network::api::Ret> const&,rapidjson::GenericDocument<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>> const&),APIManager*,hole::network::api::Action&,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &,std::placeholders::__ph<3> &>,std::allocator<std::__bind<hole::network::api::Client::StatusCode (APIManager::*)(hole::network::api::Action,hole::network::api::Client::StatusCode,std::shared_ptr<hole::network::api::Ret> const&,rapidjson::GenericDocument<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>> const&),APIManager*,hole::network::api::Action&,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &,std::placeholders::__ph<3> &>>,hole::network::api::Client::StatusCode ()(hole::network::api::Client::StatusCode,std::shared_ptr<hole::network::api::Ret> const&,rapidjson::GenericDocument<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>> const&)>::destroy_deallocate	11048	7595	0	0
 004D5EA0	std::__shared_ptr_emplace<hole::network::api::StageStart>::__on_zero_shared	353	31	0	0
@@ -569,7 +569,7 @@ addr	name	calls	verified	mismatches	unverifiable
 004DB0E4	ChatManager::getInstance	91	41	0	0
 004DB18E	ChatManager::ChatManager	58	4	0	0
 004DB224	ChatManager::updateInterval	137	94	0	0
-004DB270	ChatManager::getUser	109	0	1	73
+004DB270	ChatManager::getUser	111	0	1	75
 004DB698	createHeaders(bool)	93	18	0	0
 004DB7E0	ChatManager::getMessage	10	0	0	10
 004DBC88	ChatManager::update	1	0	0	1
@@ -595,7 +595,7 @@ addr	name	calls	verified	mismatches	unverifiable
 004DF670	std::__hash_table<std::__hash_value_type<unsigned int,std::string>,std::__unordered_map_hasher<unsigned int,std::__hash_value_type<unsigned int,std::string>,std::hash<unsigned int>,true>,std::__unordered_map_equal<unsigned int,std::__hash_value_type<unsigned int,std::string>,std::equal_to<unsigned int>,true>,std::allocator<std::__hash_value_type<unsigned int,std::string>>>::__erase_unique<unsigned int>	48	16	0	0
 004E00FC	SaveBin::set<unsigned char>	1415	273	0	0
 004E0334	SaveBin::get<unsigned char>	1110	0	0	0
-004E04E4	TrackingSDKUtil::sendEventOnlyOnce	735	447	2	0
+004E04E4	TrackingSDKUtil::sendEventOnlyOnce	737	448	2	0
 004E0520	Cipher::crypt	1750	1031	0	0
 004E0670	Cipher::Cipher(const std::array<unsigned char, 32>&)	244	244	0	0
 004E06D8	Cipher::encrypt	1864	1177	0	0
@@ -654,17 +654,17 @@ addr	name	calls	verified	mismatches	unverifiable
 004EAE90	AppState::needsUpdateApp	3730	3730	0	0
 004EAEDC	AppState::Version::operator>	7436	3087	0	0
 004EB0F4	AppState::getMedalListSortFilterState	6	0	0	0
-004EB188	AppState::getAvatarBoardFilterState	24	0	0	0
+004EB188	AppState::getAvatarBoardFilterState	32	0	0	0
 004EB1A0	AppState::getAdventureSelectFilterState	374	14	0	0
-004EB1BC	AppState::getNewUserMedalIDs	5989	235	0	0
+004EB1BC	AppState::getNewUserMedalIDs	6031	236	0	0
 004EB258	AppState::addNewUserMedalID	91	19	0	0
-004EB346	AppState::getWillLockUserMedalIDs	3326	599	0	0
+004EB346	AppState::getWillLockUserMedalIDs	3328	599	0	0
 004EB506	AppState::getWillUnLockUserMedalIDs	1462	561	0	0
-004EB814	AppState::isClearTutorialPopupIDs	2315	254	0	0
+004EB814	AppState::isClearTutorialPopupIDs	2321	254	0	0
 004EB8B4	AppState::resetClearTutorialPopupIDs	204	67	0	0
 004EBA3C	AppState::getTutorialCloseFunc	632	76	0	0
 004EBE3A	AppState::getNewAvatarBoardIDs	52	0	0	0
-004EBFE4	AppState::checkTrackingEvent	1112	408	0	0
+004EBFE4	AppState::checkTrackingEvent	1114	409	0	0
 004EC09C	AppState::Version::Version(const char*)	7536	3096	0	0
 004EC120	AppState::MedalSortFilterState::MedalSortFilterState(const char*)	500	45	0	0
 004EC1D8	SaveBin::get<signed char>	14430	0	0	0
@@ -727,11 +727,11 @@ addr	name	calls	verified	mismatches	unverifiable
 004F0CD8	std::__shared_ptr_emplace<StageState>::__on_zero_shared_weak	41	1	0	0
 004F0CE0	SaveBin::set	14375	1677	0	0
 004F0D74	SaveBin::remove	14346	1665	0	0
-004F0DEC	SaveBin::get	16030	556	0	0
+004F0DEC	SaveBin::get	16032	557	0	0
 004F0E94	SaveBin::serialize	366	177	0	0
 004F0FE8	SaveBin::deserialize	297	24	0	0
-004F12C8	std::__shared_ptr_emplace<bg::MemoryInputStream>::__on_zero_shared	21564	360	0	0
-004F12D4	std::__shared_ptr_emplace<bg::MemoryInputStream>::__on_zero_shared_weak	21564	360	0	0
+004F12C8	std::__shared_ptr_emplace<bg::MemoryInputStream>::__on_zero_shared	21620	360	0	0
+004F12D4	std::__shared_ptr_emplace<bg::MemoryInputStream>::__on_zero_shared_weak	21620	360	0	0
 004F1314	std::__hash_table<std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>>>::__erase_unique<std::string>	25558	4033	0	0
 004F1D14	StatusChange::clear	1487	383	0	0
 004F1D20	IStatusProtocol::addCondition_common	2	0	0	0
@@ -750,7 +750,7 @@ addr	name	calls	verified	mismatches	unverifiable
 004F256E	IBuffProtocol::buff_add	1001	1	0	0
 004F25CC	IBuffProtocol::buff_add_main	993	1	0	0
 004F27E8	IBuffProtocol::buff_clear	2280	63	0	0
-004F28F8	CommandParser::parse(const std::string&, LWF::Movie*, LWF::Button*)	27381	7532	0	0
+004F28F8	CommandParser::parse(const std::string&, LWF::Movie*, LWF::Button*)	27399	7532	0	0
 004F348C	GestureRecognizer::GestureRecognizer	196	6	0	0
 004F3620	GestureRecognizer::~GestureRecognizer	208	13	0	0
 004F37CC	GestureRecognizer $_3 __func::__clone(__base*)	188	0	0	0
@@ -781,46 +781,46 @@ addr	name	calls	verified	mismatches	unverifiable
 004F49B4	PopupDialog::init::$_0 destroy()	45	14	0	0
 004F49BE	PopupDialog::init::$_0 operator() (OK touched)	4	3	0	1
 004F4A60	PopupDialog::~PopupDialog (deleting)	8	7	0	1
-004F5024	ScrollBar::create(IScrollProtocol*)	236	3	0	0
-004F50B0	ScrollBar::init(IScrollProtocol*)	191	3	0	0
-004F5220	ScrollBar::setPixel(float)	191	3	0	0
-004F53F8	ScrollBar::updateLayout()	1128	11	0	0
-004F56A4	ScrollBar::setScrollPosition(float)	8701	829	0	0
-004F57C0	ScrollBar::setBackgroundVisible(bool)	236	3	0	0
+004F5024	ScrollBar::create(IScrollProtocol*)	248	9	0	0
+004F50B0	ScrollBar::init(IScrollProtocol*)	197	9	0	0
+004F5220	ScrollBar::setPixel(float)	197	9	0	0
+004F53F8	ScrollBar::updateLayout()	1134	11	0	0
+004F56A4	ScrollBar::setScrollPosition(float)	8708	829	0	0
+004F57C0	ScrollBar::setBackgroundVisible(bool)	248	9	0	0
 004F57D2	ScrollBar::~ScrollBar (deleting)	190	4	0	0
 004F57E0	IScrollProtocol::~IScrollProtocol()	189	22	0	0
-004F5A7C	IScrollProtocol::init()	194	2	0	0
-004F5C80	std::function<void(Touch*,Event*)>::operator=(IScrollProtocol::init()::$_2)	388	2	0	0
+004F5A7C	IScrollProtocol::init()	200	2	0	0
+004F5C80	std::function<void(Touch*,Event*)>::operator=(IScrollProtocol::init()::$_2)	400	2	0	0
 004F5CFC	IScrollProtocol::update(float)	130092	9882	0	0
-004F6510	IScrollProtocol::getMaxPosition()	28463	11156	0	0
-004F66F4	IScrollProtocol::getBouncePixel()	1306	919	0	0
-004F6750	IScrollProtocol::getItemPixel()	1118	678	0	0
-004F6778	IScrollProtocol::setContentSize(const Size&)	867	49	0	0
-004F6BC8	IScrollProtocol::setItemIDSize(int)	349	7	0	1
-004F6CF4	IScrollProtocol::updateLayout(bool)	904	74	6	0
-004F6EE0	IScrollProtocol::updateRow(int, int)	6032	59	0	0
-004F6FE8	IScrollProtocol::setEnabledScrollBar(bool)	265	14	0	2
+004F6510	IScrollProtocol::getMaxPosition()	28484	11156	0	0
+004F66F4	IScrollProtocol::getBouncePixel()	1308	919	0	0
+004F6750	IScrollProtocol::getItemPixel()	1120	678	0	0
+004F6778	IScrollProtocol::setContentSize(const Size&)	870	49	0	0
+004F6BC8	IScrollProtocol::setItemIDSize(int)	351	7	0	1
+004F6CF4	IScrollProtocol::updateLayout(bool)	43	19	0	0
+004F6EE0	IScrollProtocol::updateRow(int, int)	6080	59	0	0
+004F6FE8	IScrollProtocol::setEnabledScrollBar(bool)	271	20	0	2
 004F70B4	IScrollProtocol::setScrollType(ScrollType)	204	3	0	0
 004F7168	IScrollProtocol::getMinPosition()	2036	797	0	0
 004F719C	IScrollProtocol::setMaxColumn(int)	105	3	0	0
-004F71A4	IScrollProtocol::setIndex(int)	145	2	0	0
+004F71A4	IScrollProtocol::setIndex(int)	148	2	0	0
 004F73C8	IScrollProtocol::setEnabledScroll(bool)	162	61	0	0
-004F7408	IScrollProtocol::updateScroll(float)	904	628	2	0
+004F7408	IScrollProtocol::updateScroll(float)	9	3	0	0
 004F7F40	IScrollProtocol::getLayoutPanel()	8	1	0	0
-004F8574	IScrollProtocol::init::$_4 __clone(__base*)	478	2	0	0
-004F8594	IScrollProtocol::init::$_4 destroy()	668	24	0	0
+004F8574	IScrollProtocol::init::$_4 __clone(__base*)	502	2	0	0
+004F8594	IScrollProtocol::init::$_4 destroy()	692	24	0	0
 004F859E	IScrollProtocol::init()::$_4 __func::operator()	267	95	0	0
-004F8610	IScrollProtocol::init::$_3 __clone(__base*)	478	2	0	0
-004F8630	IScrollProtocol::init::$_3 destroy()	668	24	0	0
+004F8610	IScrollProtocol::init::$_3 __clone(__base*)	502	2	0	0
+004F8630	IScrollProtocol::init::$_3 destroy()	692	24	0	0
 004F863A	IScrollProtocol::init()::$_3 __func::operator()	267	10	0	0
-004F86B0	IScrollProtocol::init::$_2 __clone(__base*)	478	2	0	0
-004F86D4	IScrollProtocol::init::$_2 destroy()	858	24	0	0
+004F86B0	IScrollProtocol::init::$_2 __clone(__base*)	502	2	0	0
+004F86D4	IScrollProtocol::init::$_2 destroy()	882	24	0	0
 004F86E0	IScrollProtocol::init()::$_2 __func::operator()	96	96	0	0
-004F8A30	IScrollProtocol::init::$_1 __clone(__base*)	239	2	0	0
-004F8A54	IScrollProtocol::init::$_1 destroy()	429	24	0	0
+004F8A30	IScrollProtocol::init::$_1 __clone(__base*)	251	2	0	0
+004F8A54	IScrollProtocol::init::$_1 destroy()	441	24	0	0
 004F8A60	IScrollProtocol::init()::$_1 __func::operator()	823	422	0	0
-004F8F3C	IScrollProtocol::init::$_0 __clone(__base*)	239	2	0	0
-004F8F5C	IScrollProtocol::init::$_0 destroy()	429	24	0	0
+004F8F3C	IScrollProtocol::init::$_0 __clone(__base*)	251	2	0	0
+004F8F5C	IScrollProtocol::init::$_0 destroy()	441	24	0	0
 004F8F68	IScrollProtocol::init()::$_0 __func::operator()	118	118	0	0
 004F9164	CustomTextView::create	327	23	0	0
 004F92D4	CustomTextView::init	327	23	0	0
@@ -842,7 +842,7 @@ addr	name	calls	verified	mismatches	unverifiable
 004FA568	MagicStoneScrollView::create()	2	2	0	0
 004FA5BC	MagicStoneScrollView::MagicStoneScrollView()	10	4	0	0
 004FA730	MagicStoneScrollView::init()	13	2	0	2
-004FA8A0	BaseScrollView<int>::init()	106	2	0	1
+004FA8A0	BaseScrollView<int>::init()	112	2	0	1
 004FA8DC	MagicStoneScrollView::createRow(int, int)	35	15	0	10
 004FA934	MagicStoneScrollView::changeRow(Widget*, int, int)	237	68	0	124
 004FB758	MagicStoneScrollView::registItemTouchEvent(Widget*, int)	93	71	0	0
@@ -990,10 +990,10 @@ addr	name	calls	verified	mismatches	unverifiable
 0050CC14	PresentBoxScrollView::create	6	6	0	0
 0050CC68	PresentBoxScrollView::PresentBoxScrollView	15	11	0	0
 0050CDD8	PresentBoxScrollView::init	26	10	0	2
-0050CECC	PresentBoxScrollView::getLayoutPanel	57	5	0	4
-0050CF94	PresentBoxScrollView::createRow	52	4	0	0
-0050CFEC	PresentBoxScrollView::changeRow	141	21	0	0
-0050DD00	PresentBoxScrollView::registItemTouchEvent	124	65	0	0
+0050CECC	PresentBoxScrollView::getLayoutPanel	65	5	0	4
+0050CF94	PresentBoxScrollView::createRow	64	4	0	0
+0050CFEC	PresentBoxScrollView::changeRow	165	21	0	0
+0050DD00	PresentBoxScrollView::registItemTouchEvent	136	65	0	0
 0050DEE8	PresentBoxScrollView::popUpGetPresent	1	1	0	0
 0050E3C4	PresentBoxScrollView::popUpAllGetPresent	1	0	0	1
 0050E664	PresentBoxScrollView::removeItem	1	1	0	0
@@ -1001,8 +1001,8 @@ addr	name	calls	verified	mismatches	unverifiable
 0050EBFC	PresentBoxScrollView::popUpAllGetPresent $_5 __func::operator()(bool) (sub_50EBFC)	1	1	0	0
 0050F1D4	PresentBoxScrollView::popUpAllGetPresent $_5 UlbE1_ __func::operator()(bool) (sub_50F1D4)	1	1	0	0
 0050F6C0	PresentBoxScrollView::popUpGetPresent::$_4 operator()	1	1	0	0
-0050FED8	PresentBoxScrollView::changeRow $_0 __func::__clone()	83	7	0	0
-00510024	PresentBoxScrollView::changeRow $_0 __func::destroy_deallocate	20	0	0	0
+0050FED8	PresentBoxScrollView::changeRow $_0 __func::__clone()	95	7	0	0
+00510024	PresentBoxScrollView::changeRow $_0 __func::destroy_deallocate	32	0	0	0
 00510044	PresentBoxScrollView::changeRow::$_0 operator() (Collect)	4	3	0	1
 0051195C	BattleResultScrollView cell touch began operator() (sub_51195C)	21	21	0	0
 00511BB4	BattleResultScrollView::~BattleResultScrollView()	58	18	0	0
@@ -1017,7 +1017,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00512910	BattleResultScrollView::setEnabledTapItem(bool)	97	0	0	0
 00512918	BattleResultScrollView::pushFrontItem(int)	127	49	0	0
 00512BAC	BattleResultScrollView::pushFrontItem add the item (outlined)	172	0	0	0
-00513334	BattleResultScrollView::updateResultAnimetion(float, bool)	6995	5943	19	35
+00513334	BattleResultScrollView::updateResultAnimetion(float, bool)	530	530	0	0
 005133E0	BattleResultScrollView::setRareDropSpeed(float)	179	17	0	0
 005133E8	BattleResultScrollView::setAddRightInTime(float)	179	17	0	0
 005133F4	BattleResultScrollView::setDelayTime(float)	179	17	0	0
@@ -1105,26 +1105,26 @@ addr	name	calls	verified	mismatches	unverifiable
 00520AF4	MemberScrollView::init	24	1	0	0
 00520CF8	MemberScrollView::getLayoutPanel	24	1	0	0
 00520DC4	MemberScrollView::createRow	14	0	1	0
-00520EB4	MemberScrollView::changeRow(ui::Widget*, int, int)	136	44	8	0
+00520EB4	MemberScrollView::changeRow(ui::Widget*, int, int)	8	8	0	0
 00523378	MemberScrollView::registItemTouchEvent	163	6	0	0
-00523C7C	MemberScrollView::changeRow::$_6 __clone()	51	6	0	0
-00523CDE	MemberScrollView::changeRow::$_6 destroy_deallocate()	81	9	0	0
+00523C7C	MemberScrollView::changeRow::$_6 __clone()	60	6	0	0
+00523CDE	MemberScrollView::changeRow::$_6 destroy_deallocate()	90	9	0	0
 00523CE8	MemberScrollView::changeRow::$_6 operator()	4	4	0	0
-00523F30	MemberScrollView::changeRow::$_5 __clone()	51	6	0	0
-00523F92	MemberScrollView::changeRow::$_5 destroy_deallocate()	81	9	0	0
+00523F30	MemberScrollView::changeRow::$_5 __clone()	60	6	0	0
+00523F92	MemberScrollView::changeRow::$_5 destroy_deallocate()	90	9	0	0
 00523F9C	MemberScrollView member button (sub_523F9C)	8	8	0	0
-005241E4	MemberScrollView::changeRow::$_4 __clone()	51	6	0	0
-00524246	MemberScrollView::changeRow::$_4 destroy_deallocate()	81	9	0	0
+005241E4	MemberScrollView::changeRow::$_4 __clone()	60	6	0	0
+00524246	MemberScrollView::changeRow::$_4 destroy_deallocate()	90	9	0	0
 00524250	MemberScrollView::changeRow::$_4 operator()	16	16	0	0
-00524498	MemberScrollView::changeRow::$_3 __clone()	51	6	0	0
-005244FA	MemberScrollView::changeRow::$_3 destroy_deallocate()	81	9	0	0
+00524498	MemberScrollView::changeRow::$_3 __clone()	60	6	0	0
+005244FA	MemberScrollView::changeRow::$_3 destroy_deallocate()	90	9	0	0
 00524504	MemberScrollView::changeRow::$_3 operator() (profile button)	24	24	0	0
-0052474C	MemberScrollView::changeRow::$_2 __clone()	51	6	0	0
-005247AE	MemberScrollView::changeRow::$_2 destroy_deallocate()	81	9	0	0
-00524A00	MemberScrollView row lambda (0x130 captures) __func::__clone() (sub_524A00)	41	1	0	0
-00524A7A	sub_524A7A	81	9	0	0
-00525034	MemberScrollView row lambda (0x138 captures) __func::__clone() (sub_525034)	41	1	0	0
-005250AE	sub_5250AE	81	9	0	0
+0052474C	MemberScrollView::changeRow::$_2 __clone()	60	6	0	0
+005247AE	MemberScrollView::changeRow::$_2 destroy_deallocate()	90	9	0	0
+00524A00	MemberScrollView row lambda (0x130 captures) __func::__clone() (sub_524A00)	50	1	0	0
+00524A7A	sub_524A7A	90	9	0	0
+00525034	MemberScrollView row lambda (0x138 captures) __func::__clone() (sub_525034)	50	1	0	0
+005250AE	sub_5250AE	90	9	0	0
 005250B8	MemberScrollView::changeRow::$_0 operator() (avatar)	8	8	0	0
 00525320	MemberScrollView::changeRow::$_0::lambda()#2 operator() (avatar info)	2	0	0	2
 00525638	BaseSlideView::~BaseSlideView	234	44	0	0
@@ -1201,27 +1201,27 @@ addr	name	calls	verified	mismatches	unverifiable
 00531032	DeckMedalView::updateLayout::$_0::{lambda()#1} __func::destroy_deallocate	238	73	0	0
 0053103C	DeckMedalView::updateLayout::$_0::operator()::{lambda()#1}::operator()	6	6	0	0
 0053112C	DeckMedalView::~DeckMedalView (deleting)	1667	4	0	0
-00531238	ImageButton::create(std::string, bool)	2266	70	0	0
-00531300	ImageButton::ImageButton()	1822	62	0	0
-00531414	ImageButton::init(std::string, bool)	1822	62	0	0
-005315B0	ImageButton::addTouchEventListener(std::function)	2970	128	0	0
-00531630	ImageButton::setTargetImageView(ui::ImageView*)	547	43	0	0
-00531640	ImageButton::updateImage()	928	48	0	0
-005318C0	ImageButton::setTargetView(Node*, float)	1748	65	0	0
+00531238	ImageButton::create(std::string, bool)	2351	70	0	0
+00531300	ImageButton::ImageButton()	1871	62	0	0
+00531414	ImageButton::init(std::string, bool)	1871	62	0	0
+005315B0	ImageButton::addTouchEventListener(std::function)	3055	128	0	0
+00531630	ImageButton::setTargetImageView(ui::ImageView*)	606	43	0	0
+00531640	ImageButton::updateImage()	963	48	0	0
+005318C0	ImageButton::setTargetView(Node*, float)	1774	65	0	0
 005318CE	ImageButton::setTargetAnchorPoint(const Vec2&)	502	4	0	0
-005318F0	ImageButton::setSelectEnabled(bool)	10	3	0	0
-005318FC	ImageButton::setIsSelected(bool)	10	3	0	0
+005318F0	ImageButton::setSelectEnabled(bool)	12	3	0	0
+005318FC	ImageButton::setIsSelected(bool)	12	3	0	0
 005319DC	ImageButton::~ImageButton (deleting)	1790	110	0	0
-00531BCC	ImageButton::init::$_3 __clone(__base*)	2315	62	0	0
-00531BEC	ImageButton::init::$_3 destroy()	4133	172	0	0
-00531D14	ImageButton::init::$_2 __clone(__base*)	2315	62	0	0
-00531D34	ImageButton::init::$_2 destroy()	4133	172	0	0
+00531BCC	ImageButton::init::$_3 __clone(__base*)	2400	62	0	0
+00531BEC	ImageButton::init::$_3 destroy()	4218	172	0	0
+00531D14	ImageButton::init::$_2 __clone(__base*)	2400	62	0	0
+00531D34	ImageButton::init::$_2 destroy()	4218	172	0	0
 00531D3E	ImageButton::init::$_2 operator() (onTouchEnded)	401	40	156	205
-00531DF4	ImageButton::init::$_1 __clone(__base*)	2315	62	0	0
-00531E1C	ImageButton::init::$_1 destroy()	4133	172	0	0
+00531DF4	ImageButton::init::$_1 __clone(__base*)	2400	62	0	0
+00531E1C	ImageButton::init::$_1 destroy()	4218	172	0	0
 00531E28	ImageButton::init::$_1 operator() (onTouchMoved)	786	786	0	0
-0053212C	ImageButton::init::$_0 __clone(__base*)	1770	56	0	0
-00532154	nullsub_423	4406	200	0	0
+0053212C	ImageButton::init::$_0 __clone(__base*)	1855	56	0	0
+00532154	nullsub_423	4491	200	0	0
 00532160	ImageButton::init::$_0::operator()	1419	1363	0	56
 0053259C	AvatarInfoDialog::~AvatarInfoDialog	17	6	0	3
 00532A10	AvatarInfoDialog::~AvatarInfoDialog [deleting destructor]	8	6	0	2
@@ -1244,7 +1244,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0053A18C	AvatarInfoDialog::openPopUpSubLeaderDismiss(function<void(bool)>)	1	1	0	0
 0053A3E4	AvatarInfoDialog::openPopUpMemberExpel(function<void(bool)>)	2	2	0	0
 0053C6CC	AvatarInfoDialog::setTouchEnabledUnderUIButtons	5	5	0	0
-0053E30C	ScenePartyTop::create	32	9	2	0
+0053E30C	ScenePartyTop::create	2	2	0	0
 00540890	AvatarInfoDialog expel lambda __func::destroy_deallocate (sub_540890)	10	4	0	0
 005408D8	AvatarInfoDialog expel answered (sub_5408D8)	2	1	0	1
 00540B9C	AvatarInfoDialog expel done (sub_540B9C)	1	1	0	0
@@ -1310,23 +1310,23 @@ addr	name	calls	verified	mismatches	unverifiable
 0054F3FC	RankingScrollView::create(RankingScrollViewType)	2	0	0	1
 0054F458	RankingScrollView::RankingScrollView()	6	5	0	0
 0054F5D4	RankingScrollView::init(RankingScrollViewType)	2	0	0	1
-0054F614	RankingScrollView::changeRankingScrollViewType(RankingScrollViewType)	13	0	0	5
-0054FAA0	RankingScrollView::getLayoutPanel	14	1	0	0
-0054FB68	RankingScrollView::createRow	13	1	0	0
-0054FC6C	RankingScrollView::changeRow	40	3	0	0
-0054FDF4	RankingScrollView::initPartyLayer	14	8	0	0
+0054F614	RankingScrollView::changeRankingScrollViewType(RankingScrollViewType)	16	0	0	5
+0054FAA0	RankingScrollView::getLayoutPanel	17	1	0	0
+0054FB68	RankingScrollView::createRow	16	1	0	0
+0054FC6C	RankingScrollView::changeRow	49	3	0	0
+0054FDF4	RankingScrollView::initPartyLayer	20	8	0	0
 00550B20	RankingScrollView::initLuxLayer	4	4	0	0
 0055149C	RankingScrollView::initColosseumLayer	4	2	0	0
 005520D0	RankingScrollView::initAvatarLayer	4	2	0	0
-0055262E	RankingScrollView::registItemTouchEvent	77	0	0	0
+0055262E	RankingScrollView::registItemTouchEvent	116	0	0	0
 00552630	RankingScrollView::setEnabledTapItem	2	0	0	0
 0055263C	RankingScrollView::setSelectItem	3	3	0	0
 005527E0	RankingScrollView::updateSelectItems	7	4	0	0
 00552960	RankingScrollView::searchSelect	2	2	0	0
-005529AC	RankingScrollView::setRankingData(RankingSeason, std::vector<int>)	20	4	0	0
+005529AC	RankingScrollView::setRankingData(RankingSeason, std::vector<int>)	23	4	0	0
 00552F00	RankingScrollView avatar touch lambda __func::operator() (sub_552F00)	4	3	0	1
-005531C4	RankingScrollView::initPartyLayer::$_0 __clone()	21	11	0	0
-005532B2	RankingScrollView::initPartyLayer::$_0 destroy_deallocate()	29	19	0	0
+005531C4	RankingScrollView::initPartyLayer::$_0 __clone()	27	11	0	0
+005532B2	RankingScrollView::initPartyLayer::$_0 destroy_deallocate()	35	19	0	0
 00555A34	SerialCodeScrollView::~SerialCodeScrollView()	1	1	0	0
 00555B94	SerialCodeScrollView::create()	1	0	0	0
 00555BE8	SerialCodeScrollView::SerialCodeScrollView()	1	0	0	0
@@ -1342,8 +1342,8 @@ addr	name	calls	verified	mismatches	unverifiable
 0055852C	ChatScrollView::getTextLineCount	250	13	0	0
 00558710	ChatScrollView::setMessages	23	3	0	3
 00558A94	ChatScrollDelView::~ChatScrollDelView	6	6	0	0
-00558BE0	ChatScrollDelView::create	8	7	1	0
-00558C74	ChatScrollDelView::init	9	7	0	0
+00558BE0	ChatScrollDelView::create	14	13	1	0
+00558C74	ChatScrollDelView::init	15	13	0	0
 00558ECC	ChatScrollDelView::createRow	16	8	0	0
 00558F28	ChatScrollDelView::changeRow	32	8	0	0
 00559FE4	ChatScrollDelView::setMessages	8	8	0	0
@@ -1364,6 +1364,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0055C6E8	ChatEditBoxMessageSend::create	8	8	0	0
 0055C75E	ChatEditBoxMessageSend::editBoxEditingDidEnd	2	2	0	0
 0055DAE4	BaseStageScrollView::BaseStageScrollView()	203	2	0	0
+0055DBF4	BaseScrollView<int>::BaseScrollView()	6	6	0	0
 0055DD24	RankingRewardScrollView::~RankingRewardScrollView	12	2	0	0
 0055DEA8	RankingRewardScrollView::create	21	3	0	0
 0055DF04	RankingRewardScrollView::RankingRewardScrollView	12	3	0	0
@@ -1557,7 +1558,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0057CA88	nullsub_607	319	4	0	0
 0057CCF4	StartDeckEditDialog::initLayout::$_7 __clone(__base*)	156	0	0	0
 0057CD18	nullsub_609	319	4	0	0
-0057CD24	StartDeckEditDialog::initLayout::$_7::operator()	672	503	21	148
+0057CD24	StartDeckEditDialog::initLayout::$_7::operator()	24	21	0	3
 0057D368	sub_57D368	268	5	0	0
 0057D388	nullsub_613	337	2	0	0
 0057D394	StartDeckEditDialog::initLayout::$_6::operator()	87	0	0	0
@@ -1571,7 +1572,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0057D5DA	StartDeckEditDialog::initLayout::$_3::operator()	173	81	0	0
 0057D668	sub_57D668	255	85	0	0
 0057D688	nullsub_617	340	170	0	0
-0057D694	StartDeckEditDialog::open::$_2::operator()	89	3	21	65
+0057D694	StartDeckEditDialog::open::$_2::operator()	3	3	0	0
 0057D858	sub_57D858	176	0	0	0
 0057D878	nullsub_619	338	82	0	0
 0057D882	sub_57D882	166	82	0	0
@@ -1603,7 +1604,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00582B90	BattleResultDialog::initResultLwf	370	0	0	0
 00582EF8	BattleResultDialog::initSubMissionLwf	334	6	0	0
 00583234	BattleResultDialog::popUpSkillLevelUp	99	0	0	0
-0058362C	BattleResultDialog::playLevelUpAnimation	51	0	2	0
+0058362C	BattleResultDialog::playLevelUpAnimation	2	2	0	0
 0058379C	BattleResultDialog::updateLuxLvNext	118	1	0	0
 0058390C	BattleResultDialog::updateLuxLvNext::$_24 destroy()	119	1	0	0
 00583918	BattleResultDialog::updateLuxLvNext::$_24::operator()	95	1	0	0
@@ -1651,7 +1652,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00585A0A	sub_585A0A	18	0	0	0
 00585A80	BattleResultDialog::openStageResult::$_4 __clone(__base*)	202	0	0	0
 00585AA0	BattleResultDialog::openStageResult::$_4 destroy()	292	59	0	0
-00585AAC	BattleResultDialog::openStageResult::$_4::operator()	109	0	5	0
+00585AAC	BattleResultDialog::openStageResult::$_4::operator()	3	3	0	0
 00585C10	BattleResultDialog::openStageResult::$_4::(inner) __clone(__base*)	292	0	0	0
 00585C30	BattleResultDialog::openStageResult::$_4::(inner) destroy()	360	59	0	0
 00585C3C	BattleResultDialog::openStageResult::$_4::{lambda()#1}::operator()	109	1	5	0
@@ -1815,9 +1816,9 @@ addr	name	calls	verified	mismatches	unverifiable
 0059AE3C	MedalListScrollView::setSelectedMedal(unsigned long long, bool)	6	6	0	0
 0059B2AC	MedalListScrollView::setMedalShowType	11	0	0	0
 0059B336	MedalListScrollView::registItemTouchEvent::$_2 destroy_deallocate()	168	1	0	0
-0059B380	MedalListScrollView release lambda (sub_59B380)	18	14	4	0
-0059B5A4	MedalListScrollView::registItemTouchEvent::$_3 __clone(__base*)	4	0	0	0
-0059B5C8	MedalListScrollView::registItemTouchEvent::$_3 destroy()	4	0	0	0
+0059B380	MedalListScrollView release lambda (sub_59B380)	1	1	0	0
+0059B5A4	MedalListScrollView::registItemTouchEvent::$_3 __clone(__base*)	8	1	0	0
+0059B5C8	MedalListScrollView::registItemTouchEvent::$_3 destroy()	8	1	0	0
 0059B692	MedalListScrollView::registItemTouchEvent::$_1 destroy_deallocate()	84	1	0	0
 0059B69C	MedalListScrollView move lambda __func::operator() (sub_59B69C)	1104	1104	0	0
 0059B8C8	MedalListScrollView::registItemTouchEvent $_0 __func::__clone(__base*) (sub_59B8C8)	996	333	0	0
@@ -1951,7 +1952,7 @@ addr	name	calls	verified	mismatches	unverifiable
 005B1430	DrawScrollView::openCheckbondsPopup $_20 __func::__clone()	6	0	0	0
 005B1CA4	DrawScrollView::openCheckRaisePopup $_15 __func::__clone()	3	0	0	0
 005B1D60	DrawScrollView::openCheckRaisePopup $_15 __func::destroy_deallocate	3	0	0	0
-005B1D8C	DrawScrollView::openCheckRaisePopup $_15 __func::operator() (sub_5B1D8C)	11	10	1	0
+005B1D8C	DrawScrollView::openCheckRaisePopup $_15 __func::operator() (sub_5B1D8C)	12	11	1	0
 005B1E5C	DrawScrollView::openCheckRaisePopup close lambda (sub_5B1E5C)	5	2	0	0
 005B2030	DrawScrollView popup closed lambda __func::__clone() (sub_5B2030)	7	2	0	0
 005B20F4	DrawScrollView popup closed lambda __func::destroy_deallocate() (sub_5B20F4)	11	5	0	0
@@ -2007,22 +2008,22 @@ addr	name	calls	verified	mismatches	unverifiable
 005BCFA8	ImageDownloader::~ImageDownloader	177	39	0	0
 005BD06C	ImageDownloader::cancelAllImageHandle	138	39	0	0
 005BD4D8	ImageDownloader::update	448131	17662	0	0
-005BECFC	audio::Manager::getInstance	908975	43272	0	0
+005BECFC	audio::Manager::getInstance	908991	43279	0	0
 005BEDE8	audio::Manager::create	90	0	0	0
-005BEEF4	audio::Manager::load	16552	1237	0	1
+005BEEF4	audio::Manager::load	16560	1244	0	1
 005BF028	audio::Manager::removeBank	3353	315	0	0
 005BF0A0	audio::Manager::unload	81	61	20	0
 005BF138	audio::Manager::unloadAll	625	473	53	4
 005BF18C	audio::Manager::lock	1098	32	0	0
 005BF1EC	audio::Manager::unlock	618	1	0	0
 005BF24C	audio::Manager::addLayer	270	0	0	0
-005BF33C	audio::Manager::getLayer	15418	2296	0	0
+005BF33C	audio::Manager::getLayer	15434	2303	0	0
 005BF3AC	audio::Manager::stop	1314	3	1	0
 005BF424	audio::Manager::pause	16	3	1	0
 005BF4FC	audio::Manager::update	908558	20889	0	0
 005BF5BC	audio::Layer::removeFinishedSound	428	4	0	0
 005BF66C	audio::Manager::updateQueue	895773	54842	188	0
-005BF784	audio::Layer::playSE	14991	1218	1657	4
+005BF784	audio::Layer::playSE	15007	1225	1657	4
 005BF810	audio::Layer::playBGM	767	1	0	0
 005BF824	audio::Layer::setVolume	270	0	0	0
 005BFE38	std::__hash_table<int,std::hash<int>,std::equal_to<int>,std::allocator<int>>::__erase_unique<int>	705	3	0	0
@@ -2030,9 +2031,9 @@ addr	name	calls	verified	mismatches	unverifiable
 005C0A04	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<audio::Manager>(audio::Manager *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<audio::Manager>(audio::Manager *,int,bool)::{lambda(float)#1}>,void ()(float)>::destroy	180	2	0	0
 005C0A0E	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<audio::Manager>(audio::Manager *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<audio::Manager>(audio::Manager *,int,bool)::{lambda(float)#1}>,void ()(float)>::operator()	875938	41796	0	1
 005C0BA0	AudioSystemInit()	90	0	0	0
-005C0CF8	AudioPlaySystemSEDecide	899	46	56	0
+005C0CF8	AudioPlaySystemSEDecide	901	47	56	0
 005C0D80	AudioPlaySystemSECancel()	151	8	0	0
-005C0E08	AudioPlaySystemSEPopUp	197	13	17	0
+005C0E08	AudioPlaySystemSEPopUp	209	19	17	0
 005C0E90	AudioPlayGameMainBGM(audio::ResourceID, int)	642	42	14	0
 005C0F58	AudioStopGameMainBGM(int)	695	6	7	0
 005C0FA0	AudioReplaceGameMainBGM(audio::ResourceID, int)	789	60	44	3
@@ -2047,9 +2048,9 @@ addr	name	calls	verified	mismatches	unverifiable
 005C2BF4	FlashNode::set_node_color_add	4205	1877	0	0
 005C2D60	FlashNode::set_bad_status	7701	1876	0	0
 005C2E84	FlashNode::set_loops	1106	146	0	0
-005C2F48	FlashNode::change_sub	14443	389	0	0
+005C2F48	FlashNode::change_sub	14461	389	0	0
 005C3170	FlashNode::reflection_status	2219	417	0	0
-005C32F4	FlashNode::FlashNode(bool)	2219	203	0	0
+005C32F4	FlashNode::FlashNode(bool)	2228	203	0	0
 005C3830	CommandParser::~CommandParser	3046	578	0	0
 005C3AF6	FlashNode::update	1613950	16920	0	0
 005C3B04	FlashNode::updateSound	2658288	25252	0	0
@@ -2088,11 +2089,11 @@ addr	name	calls	verified	mismatches	unverifiable
 005C5698	FlashNode::reflection_status $_0 __func::__clone(__base*)	4	0	0	0
 005C56B8	FlashNode::reflection_status $_0 __func::destroy	5	1	0	0
 005C56C2	FlashNode::reflection_status $_0 (effect done: set_loops)	2	1	0	0
-005C5882	Avatar::create(const Avatar::Style&, bool)	771	55	0	3
-005C58C8	Avatar::Avatar(bool)	709	17	0	0
-005C5D9C	Avatar::InstanceInfo::InstanceInfo()	836	9	0	0
-005C5EDC	Avatar::Avatar(const Avatar::Style&, bool)	826	17	0	0
-005C5F14	Avatar::changeStyle	721	17	0	0
+005C5882	Avatar::create(const Avatar::Style&, bool)	780	55	0	3
+005C58C8	Avatar::Avatar(bool)	714	17	0	0
+005C5D9C	Avatar::InstanceInfo::InstanceInfo()	845	9	0	0
+005C5EDC	Avatar::Avatar(const Avatar::Style&, bool)	835	17	0	0
+005C5F14	Avatar::changeStyle	726	17	0	0
 005C6068	Avatar::~Avatar	1098	379	0	0
 005C616C	Avatar::removeDetachHandlers	2810	1876	0	0
 005C61C8	Avatar::clearMovieEventHandlers	2810	1876	0	0
@@ -2100,50 +2101,50 @@ addr	name	calls	verified	mismatches	unverifiable
 005C6288	Avatar::addBurst	457	4	0	0
 005C62D4	Avatar::activeBurst	387	178	0	0
 005C62DC	Avatar::update	315103	14969	26	23
-005C63C4	Avatar::changeMotion	3607	1518	55	101
+005C63C4	Avatar::changeMotion	3616	1518	55	101
 005C64B4	Avatar::changeExpression	99	9	0	0
-005C64F8	Avatar::makeLWFPath	26607	32	0	0
-005C6688	Avatar::gotoAndStopMovie	146027	5881	0	0
-005C670C	Avatar::verifyGrandparent	339748	17060	0	0
-005C67FC	Avatar::updateNode	17106	1601	0	0
-005C6BD0	Avatar::updateLWFPath	5263	32	0	0
+005C64F8	Avatar::makeLWFPath	26792	32	0	0
+005C6688	Avatar::gotoAndStopMovie	146417	5881	0	0
+005C670C	Avatar::verifyGrandparent	340188	17060	0	0
+005C67FC	Avatar::updateNode	17136	1601	0	0
+005C6BD0	Avatar::updateLWFPath	5302	32	0	0
 005C6CA4	Avatar::removeLWFPath	2	1	0	0
-005C6CF0	Avatar::changeCostume	716	17	0	0
-005C6D84	Avatar::changeFace	716	17	0	0
-005C6E18	Avatar::changeBody	716	17	0	0
-005C6EAC	Avatar::changeHair	716	17	0	0
-005C6F3C	Avatar::changeHairColor	716	17	0	0
-005C6FCC	Avatar::changeKeyblade(int, int)	716	17	0	0
-005C70C0	Avatar::forEachAccessory	1738	19	0	0
-005C7210	Avatar::changeAccessories	716	17	0	0
+005C6CF0	Avatar::changeCostume	721	17	0	0
+005C6D84	Avatar::changeFace	721	17	0	0
+005C6E18	Avatar::changeBody	721	17	0	0
+005C6EAC	Avatar::changeHair	721	17	0	0
+005C6F3C	Avatar::changeHairColor	721	17	0	0
+005C6FCC	Avatar::changeKeyblade(int, int)	721	17	0	0
+005C70C0	Avatar::forEachAccessory	1748	19	0	0
+005C7210	Avatar::changeAccessories	721	17	0	0
 005C7358	Avatar::setInstanceName	10	0	0	0
-005C7574	Avatar::changeLWF	2776	1516	0	0
-005C7744	Avatar::addEventListeners	4806	1586	0	0
-005C7D90	Avatar::getWaistPosition	2775	23	0	0
+005C7574	Avatar::changeLWF	2781	1516	0	0
+005C7744	Avatar::addEventListeners	4815	1586	0	0
+005C7D90	Avatar::getWaistPosition	2780	23	0	0
 005C7DFC	Avatar::preloadPartResource	1855	2	0	0
 005C7ED0	Avatar::preloadResources	308	17	0	0
 005C815C	Avatar::getHitEffectID	537	249	0	0
 005C829C	std::__function::__func<std::__bind<void (Avatar::*)(Avatar::InstanceInfo const&,int,int,char const*),Avatar*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &,std::placeholders::__ph<3> &,std::placeholders::__ph<4> &>,std::allocator<std::__bind<void (Avatar::*)(Avatar::InstanceInfo const&,int,int,char const*),Avatar*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &,std::placeholders::__ph<3> &,std::placeholders::__ph<4> &>>,void ()(Avatar::InstanceInfo&,int,int,char const*)>::destroy	306	2	0	0
-005C8340	Avatar::addEventListeners $_12 __func::__clone(__base*)	12184	204	0	0
-005C8360	Avatar::addEventListeners $_12 __func::destroy	17146	1079	0	0
+005C8340	Avatar::addEventListeners $_12 __func::__clone(__base*)	12193	204	0	0
+005C8360	Avatar::addEventListeners $_12 __func::destroy	17164	1079	0	0
 005C836C	Avatar::addEventListeners::$_12::operator()	92720	7194	0	0
-005C84AC	Avatar::addEventListeners $_11 __func::__clone(__base*)	12184	204	0	0
-005C84CC	Avatar::addEventListeners $_11 __func::destroy	17146	1079	0	0
+005C84AC	Avatar::addEventListeners $_11 __func::__clone(__base*)	12193	204	0	0
+005C84CC	Avatar::addEventListeners $_11 __func::destroy	17164	1079	0	0
 005C84D8	Avatar::addEventListeners::$_11::operator()	2348	19	0	0
-005C8568	Avatar::addEventListeners $_10 __func::__clone(__base*)	20125	703	0	0
-005C8588	Avatar::addEventListeners $_10 __func::destroy	25496	2279	0	0
+005C8568	Avatar::addEventListeners $_10 __func::__clone(__base*)	20161	703	0	0
+005C8588	Avatar::addEventListeners $_10 __func::destroy	25523	2279	0	0
 005C8594	sub_5C8594	323	323	0	0
-005C8614	Avatar::addEventListeners $_9 __func::__clone(__base*)	20125	703	0	0
-005C8634	Avatar::addEventListeners $_9 __func::destroy	25496	2279	0	0
-005C8640	Avatar::addEventListeners::$_9::operator()	5083	586	0	0
-005C8710	std::__function::__func<std::__bind<void (CommandParser::*)(std::string const&,LWF::Movie *,LWF::Button *),CommandParser*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &,std::placeholders::__ph<3> &>,std::allocator<std::__bind<void (CommandParser::*)(std::string const&,LWF::Movie *,LWF::Button *),CommandParser*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &,std::placeholders::__ph<3> &>>,void ()(std::string const&,LWF::Movie *,LWF::Button *)>::destroy	31836	3859	0	0
-005C87D8	std::__function::__func<std::__bind<void (Avatar::*)(Avatar::InstanceInfo &,int,int,char const*),Avatar*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &,std::placeholders::__ph<3> &,std::placeholders::__ph<4> &>,std::allocator<std::__bind<void (Avatar::*)(Avatar::InstanceInfo &,int,int,char const*),Avatar*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &,std::placeholders::__ph<3> &,std::placeholders::__ph<4> &>>,void ()(Avatar::InstanceInfo &,int,int,char const*)>::destroy	1560	74	0	0
-005C8850	Avatar::updateNode $_8 __func::__clone()	671629	8558	0	0
-005C88B2	Avatar::updateNode $_8 __func::destroy_deallocate	915933	6709	0	0
-005C88BC	Avatar::updateNode::$_8::operator()	6499423	11699	0	0
-005C8B50	Avatar::updateNode $_7 __func::__clone()	671629	8558	0	0
-005C8BB2	Avatar::updateNode $_7 __func::destroy_deallocate	915933	6709	0	0
-005C8BBC	Avatar::updateNode::$_7::operator()	223111	6278	0	0
+005C8614	Avatar::addEventListeners $_9 __func::__clone(__base*)	20161	703	0	0
+005C8634	Avatar::addEventListeners $_9 __func::destroy	25523	2279	0	0
+005C8640	Avatar::addEventListeners::$_9::operator()	5092	586	0	0
+005C8710	std::__function::__func<std::__bind<void (CommandParser::*)(std::string const&,LWF::Movie *,LWF::Button *),CommandParser*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &,std::placeholders::__ph<3> &>,std::allocator<std::__bind<void (CommandParser::*)(std::string const&,LWF::Movie *,LWF::Button *),CommandParser*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &,std::placeholders::__ph<3> &>>,void ()(std::string const&,LWF::Movie *,LWF::Button *)>::destroy	31870	3860	0	0
+005C87D8	std::__function::__func<std::__bind<void (Avatar::*)(Avatar::InstanceInfo &,int,int,char const*),Avatar*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &,std::placeholders::__ph<3> &,std::placeholders::__ph<4> &>,std::allocator<std::__bind<void (Avatar::*)(Avatar::InstanceInfo &,int,int,char const*),Avatar*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &,std::placeholders::__ph<3> &,std::placeholders::__ph<4> &>>,void ()(Avatar::InstanceInfo &,int,int,char const*)>::destroy	1578	74	0	0
+005C8850	Avatar::updateNode $_8 __func::__clone()	672826	8558	0	0
+005C88B2	Avatar::updateNode $_8 __func::destroy_deallocate	916743	6709	0	0
+005C88BC	Avatar::updateNode::$_8::operator()	6499819	11699	0	0
+005C8B50	Avatar::updateNode $_7 __func::__clone()	672826	8558	0	0
+005C8BB2	Avatar::updateNode $_7 __func::destroy_deallocate	916743	6709	0	0
+005C8BBC	Avatar::updateNode::$_7::operator()	223507	6278	0	0
 005C8EA4	Avatar $_6 __func::__clone(__base*)	596	38	0	0
 005C8EC4	Avatar $_6 __func::destroy	1393	269	0	0
 005C8F44	Avatar $_5 __func::__clone(__base*)	596	38	0	0
@@ -2159,28 +2160,28 @@ addr	name	calls	verified	mismatches	unverifiable
 005C92CC	Avatar $_1 __func::__clone(__base*)	596	38	0	0
 005C92EC	Avatar $_1 __func::destroy	1393	269	0	0
 005C92F8	sub_5C92F8	3351	1502	0	0
-005C9B74	(anonymous namespace)::$_0 __func::__clone(__base*)	809336	11882	0	0
-005C9B90	(anonymous namespace)::$_0 __func::destroy	815896	13438	0	0
+005C9B74	(anonymous namespace)::$_0 __func::__clone(__base*)	811784	11882	0	0
+005C9B90	(anonymous namespace)::$_0 __func::destroy	818038	13438	0	0
 005C9B9A	(anonymous namespace)::$_0 __func::operator()	11103	3789	0	0
 005C9DB4	AvatarIcon::create(const Avatar::Style&, Texture2D*, const Vec2&, float, float, const vector<Expression>&)	279	21	0	0
-005C9E8C	AvatarIcon::init	450	29	0	0
-005CA184	AvatarIcon::create(Avatar*, Texture2D*, const Vec2&, float, float, const vector<Expression>&)	169	3	0	0
-005CA234	AvatarIcon::createNode	562	29	0	0
+005C9E8C	AvatarIcon::init	459	29	0	0
+005CA184	AvatarIcon::create(Avatar*, Texture2D*, const Vec2&, float, float, const vector<Expression>&)	178	3	0	0
+005CA234	AvatarIcon::createNode	571	29	0	0
 005CA458	AvatarIcon::changeExpression(Avatar::Expression, float)	2745	1084	0	0
-005CA740	AvatarIconCache::AvatarIconCache(Texture2D*, const Vec2&, float, float, const vector<Avatar::Expression>&)	280	4	0	0
-005CA864	AvatarIconCache::setLimit(unsigned int)	229	2	0	0
+005CA740	AvatarIconCache::AvatarIconCache(Texture2D*, const Vec2&, float, float, const vector<Avatar::Expression>&)	292	4	0	0
+005CA864	AvatarIconCache::setLimit(unsigned int)	235	2	0	0
 005CA8FC	AvatarIconCache::~AvatarIconCache()	235	25	0	0
-005CA9A8	AvatarIconCache::find(unsigned long long)	183	3	0	0
-005CAA04	LRUCache<unsigned long long, shared_ptr<AvatarIcon>>::find	185	1	0	0
-005CAA56	AvatarIconCache::add(unsigned long long, const Avatar::Style&)	169	3	0	2
-005CAA90	AvatarIconCache::add(unsigned long long, Avatar*)	132	3	0	0
-005CAB74	LRUCache<unsigned long long, shared_ptr<AvatarIcon>>::insert	169	3	0	0
+005CA9A8	AvatarIconCache::find(unsigned long long)	192	3	0	0
+005CAA04	LRUCache<unsigned long long, shared_ptr<AvatarIcon>>::find	194	1	0	0
+005CAA56	AvatarIconCache::add(unsigned long long, const Avatar::Style&)	178	3	0	2
+005CAA90	AvatarIconCache::add(unsigned long long, Avatar*)	137	3	0	0
+005CAB74	LRUCache<unsigned long long, shared_ptr<AvatarIcon>>::insert	178	3	0	0
 005CAD6C	LRUCache<unsigned long long, shared_ptr<AvatarIcon>>::update	8	1	0	0
 005CB5B8	shared_ptr<AvatarIcon> control block (AvatarIconCache::add $_2) __on_zero_shared	138	1	0	0
 005CB5F0	AvatarIconCache::add $_2 __shared_ptr_pointer::__on_zero_shared_weak	138	1	0	0
-005CB628	AvatarIconCache::setLimit $_1 __func::__clone(__base*)	566	2	0	0
-005CB644	AvatarIconCache::setLimit $_1 __func::destroy	803	25	0	0
-005CB64E	AvatarIconCache::setLimit $_1 (cost of an icon: 1)	169	3	0	0
+005CB628	AvatarIconCache::setLimit $_1 __func::__clone(__base*)	590	2	0	0
+005CB644	AvatarIconCache::setLimit $_1 __func::destroy	827	25	0	0
+005CB64E	AvatarIconCache::setLimit $_1 (cost of an icon: 1)	178	3	0	0
 005CBD24	std::__hash_table<std::__hash_value_type<unsigned long long,std::shared_ptr<AvatarIcon>>,std::__unordered_map_hasher<unsigned long long,std::__hash_value_type<unsigned long long,std::shared_ptr<AvatarIcon>>,std::hash<unsigned long long>,true>,std::__unordered_map_equal<unsigned long long,std::__hash_value_type<unsigned long long,std::shared_ptr<AvatarIcon>>,std::equal_to<unsigned long long>,true>,std::allocator<std::__hash_value_type<unsigned long long,std::shared_ptr<AvatarIcon>>>>::~__hash_table [base destructor]	239	23	0	0
 005CBDE0	AvatarIcon::~AvatarIcon (deleting)	375	47	0	0
 005CBE24	Enemy::create	1242	2	0	0
@@ -2218,8 +2219,8 @@ addr	name	calls	verified	mismatches	unverifiable
 005CF268	CarouselDeck::trackingNodePosition	178	0	0	0
 005CF2D8	CarouselDeck::setTutorialAction	89	0	0	0
 005CF520	CarouselDeck::changeDeckStyle	89	1	0	0
-005CF80C	CarouselDeck::addMedalOntoDeck	90	1	1	0
-005CF9A0	CarouselDeck::createMadalButton	405	2	0	0
+005CF80C	CarouselDeck::addMedalOntoDeck	1	1	0	0
+005CF9A0	CarouselDeck::createMadalButton	6	2	0	0
 005CFB8C	CarouselDeck::setAbilityInfo	405	2	0	0
 005D017C	CarouselDeck::setDeckMedalInfoPanel(Widget*, int, bool, int)	445	14	0	2
 005D073C	CarouselDeck::addFriendMedalOntoDeck	92	1	0	3
@@ -2230,14 +2231,14 @@ addr	name	calls	verified	mismatches	unverifiable
 005D0BC4	CarouselDeck::reflashDeck	399	51	0	0
 005D0C10	CarouselDeck::setPossibleBurst	5727	1386	0	0
 005D0C90	CarouselDeck::advanceDeck	319	124	0	0
-005D0DE0	CarouselDeck::setBurstEncourage	219	218	0	0
+005D0DE0	CarouselDeck::setBurstEncourage	229	223	0	0
 005D0E32	CarouselDeck::onCenterButton	715	281	0	0
 005D0E94	CarouselDeck::actionAttack	26829	12124	0	2
 005D120C	CarouselDeck::removeArmature	6044	1334	0	0
 005D129C	CarouselDeck::playGuiltBonusEffect	15	5	0	0
 005D13E0	CarouselDeck::disableButton	123	0	0	0
 005D1406	CarouselDeck::setBattleState	357	107	0	0
-005D1468	CarouselDeck::addArmature	2096	1124	0	0
+005D1468	CarouselDeck::addArmature	2101	1129	0	0
 005D14C4	CarouselDeck::isVisibleDeckInfoWindow	82789	4472	0	0
 005D14E8	CarouselDeck::setVisibleDeckInfoWindow	545	281	0	0
 005D17A0	CarouselDeck::setDeckMedal	716	472	0	0
@@ -2255,9 +2256,9 @@ addr	name	calls	verified	mismatches	unverifiable
 005D2A56	sub_5D2A56	14	0	0	0
 005D2AC8	CarouselDeck::createMadalButton $_7 __func::__clone(__base*)	820	2	0	0
 005D2AE8	CarouselDeck::createMadalButton $_7 __func::destroy	1505	82	0	0
-005D2AF4	CarouselDeck burst area touch operator() (sub_5D2AF4)	118	117	1	0
-005D2DEC	sub_5D2DEC	528	525	0	0
-005D2E0C	nullsub_856	824	780	0	0
+005D2AF4	CarouselDeck burst area touch operator() (sub_5D2AF4)	133	132	1	0
+005D2DEC	sub_5D2DEC	548	530	0	0
+005D2E0C	nullsub_856	844	785	0	0
 005D2E18	LuxBoard sprite lambda (sub_5D2E18)	2	1	0	0
 005D2ED0	sub_5D2ED0	1380	239	0	0
 005D2EF0	nullsub_857	2037	246	0	0
@@ -2506,7 +2507,7 @@ addr	name	calls	verified	mismatches	unverifiable
 005DEBA4	MapPrizes::isFinishEruption	85788	17871	0	0
 005DECA4	MapPrizes::createArmature $_1 __func::__clone(__base*)	19942	0	0	0
 005DECC0	MapPrizes::createArmature $_1 __func::destroy	30334	1274	0	0
-005DECCC	MapPrizes::createArmature::$_1::operator()	36023	6488	2	0
+005DECCC	MapPrizes::createArmature::$_1::operator()	1472	1470	0	0
 005DEE04	MapPrizes::createArmature $_0 __func::__clone(__base*)	19942	0	0	0
 005DEE20	MapPrizes::createArmature $_0 __func::destroy	30334	1274	0	0
 005DEE2A	MapPrizes::createArmature $_0 (movement event, empty)	3166	3071	0	0
@@ -2631,28 +2632,28 @@ addr	name	calls	verified	mismatches	unverifiable
 005EB658	DamageNumber::init::$_0::destroy	3119	750	0	0
 005EB662	DamageNumber::init::$_0::operator()	1246	681	0	0
 005EB6A8	DamageNumber::~DamageNumber (deleting)	788	681	0	0
-005EB6B4	AudioLWFNode::create(const char*, void*)	599	198	0	0
-005EB800	AudioLWFNode::init(const char*, void*)	355	198	0	0
+005EB6B4	AudioLWFNode::create(const char*, void*)	607	199	0	0
+005EB800	AudioLWFNode::init(const char*, void*)	359	199	0	0
 005EBA80	AudioLWFNode::~AudioLWFNode	346	157	0	0
 005EBB00	AudioLWFNode::stopAllSEs	377	158	0	0
 005EBB38	AudioLWFNode::~AudioLWFNode (deleting)	546	157	2	0
-005EBB58	AudioLWFNode::update(float)	232702	7031	1	116
-005EBC8A	cocos2d::Sprite::isDirty	845090	13464	0	0
-005EBC92	cocos2d::Sprite::setDirty	16926177	101624	0	0
-005EBC9A	cocos2d::Sprite::setBlendFunc	14935891	460739	0	0
-005EBCB4	thunk to cocos2d::Sprite::setBlendFunc	47625939	868102	0	0
-005EBCF8	sub_5EBCF8	1250	198	0	0
-005EBD18	nullsub_915	1830	242	0	0
+005EBB58	AudioLWFNode::update(float)	1005	1005	0	0
+005EBC8A	cocos2d::Sprite::isDirty	849671	13481	0	0
+005EBC92	cocos2d::Sprite::setDirty	16980696	101654	0	0
+005EBC9A	cocos2d::Sprite::setBlendFunc	14935918	460739	0	0
+005EBCB4	thunk to cocos2d::Sprite::setBlendFunc	47626227	868102	0	0
+005EBCF8	sub_5EBCF8	1266	199	0	0
+005EBD18	nullsub_915	1846	243	0	0
 005EBD22	sub_5EBD22	573	241	0	0
-005EBD94	sub_5EBD94	1250	198	0	0
-005EBDB4	nullsub_916	1830	242	0	0
-005EBDBE	sub_5EBDBE	624	199	0	0
-005EBE30	sub_5EBE30	625	198	0	0
-005EBE50	nullsub_917	1205	242	0	0
-005EBEE8	AudioLWFNode::init $_1 __func::__clone(__base*)	617	198	0	0
-005EBF08	AudioLWFNode::init $_1 __func::destroy	1182	236	0	0
-005EBFA4	AudioLWFNode::init $_0 __func::__clone(__base*)	617	198	0	0
-005EBFC4	AudioLWFNode::init $_0 __func::destroy	1182	236	0	0
+005EBD94	sub_5EBD94	1266	199	0	0
+005EBDB4	nullsub_916	1846	243	0	0
+005EBDBE	sub_5EBDBE	632	200	0	0
+005EBE30	sub_5EBE30	633	199	0	0
+005EBE50	nullsub_917	1213	243	0	0
+005EBEE8	AudioLWFNode::init $_1 __func::__clone(__base*)	625	199	0	0
+005EBF08	AudioLWFNode::init $_1 __func::destroy	1190	237	0	0
+005EBFA4	AudioLWFNode::init $_0 __func::__clone(__base*)	625	199	0	0
+005EBFC4	AudioLWFNode::init $_0 __func::destroy	1190	237	0	0
 005EBFCE	sub_5EBFCE	174	100	0	0
 005EDE44	RaidBattle::RaidBattle	3	3	0	0
 005EDF50	RaidBattle::start	10	10	0	0
@@ -2807,7 +2808,7 @@ addr	name	calls	verified	mismatches	unverifiable
 005FB984	SceneActionMap::~SceneActionMap	70	28	0	0
 005FBA64	SceneActionMap::~SceneActionMap (deleting)	70	28	0	40
 005FBA70	SceneActionMap::init()	69	0	0	4
-005FC7E0	StageManager::create	67	0	1	0
+005FC7E0	StageManager::create	3	3	0	0
 005FC830	StageBattleManager::create	67	1	0	0
 005FC87E	StageExploreManager::create	66	1	0	0
 005FC8CC	StageDirection::create	66	1	0	0
@@ -2838,7 +2839,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0060097C	SceneActionMap::onBurstButton	164	0	16	0
 00600A58	SceneActionMap::setEnemyPoisonEffect	61	33	0	0
 00600DA4	SceneActionMap::revivePlayer	14	0	0	0
-00600EF0	SceneActionMap::stageFinishNotification	62	0	20	0
+00600EF0	SceneActionMap::stageFinishNotification	65	0	23	0
 00601074	SceneActionMap::updateAimTarget	6867	562	0	0
 00601140	SceneActionMap::toLoadingModeSetup	6	0	0	2
 00601290	SceneActionMap::toBattleModeSetup	12	0	0	5
@@ -2846,7 +2847,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0060136C	SceneActionMap::makeTalkWindow	12	4	0	0
 00601A14	SceneActionMap::setTalkText	12	4	0	0
 00601C20	SpeechDisp::create	30	0	0	0
-00601CD0	std::string::find(char, size_t) (sub_601CD0)	6828	619	0	0
+00601CD0	std::string::find(char, size_t) (sub_601CD0)	6864	619	0	0
 00601E3C	SceneActionMap::toIntrludeModeSetup	62	59	0	0
 00601EEC	SceneActionMap::changedMapTutorial	12	6	0	0
 006022F8	SceneActionMap::enemy_state_update_turn_attack	74	34	0	0
@@ -2963,13 +2964,13 @@ addr	name	calls	verified	mismatches	unverifiable
 006072A8	SceneActionMap::init::$_0 destroy()	248	42	0	0
 006072B2	sub_6072B2	113	16	0	0
 006073C4	SpeechDisp::~SpeechDisp (deleting)	30	2	0	0
-006073D0	cocos2d::Label::getTTFConfig	72693	977	0	0
-006073E8	cocos2d::Label::getString	286984	55821	0	0
+006073D0	cocos2d::Label::getTTFConfig	73049	977	0	0
+006073E8	cocos2d::Label::getString	287092	55821	0	0
 00607C60	AimTarget::AimTarget	67	1	0	0
 00607CE0	StageExploreManager::StageExploreManager	66	1	0	0
 00607D3C	StageManager::StageManager	67	0	0	0
 00607E60	StageManager::StageMapInfo::StageMapInfo	67	0	0	0
-006080B8	SceneActionMap::SceneActionMap	67	0	3	0
+006080B8	SceneActionMap::SceneActionMap	6	6	0	0
 006081A8	SceneRaidBattle::~SceneRaidBattle	17	1	0	0
 00608220	SceneRaidBattle::~SceneRaidBattle(deleting)	17	1	0	16
 0060822C	SceneRaidBattle::init	22	0	0	0
@@ -3032,7 +3033,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0060BC0E	SceneRaidBattle::setRaidStage::$_7::operator()	2374	814	0	0
 0060BC80	SceneRaidBattle::setRaidStage::$_6::__clone(__base*)	44	0	0	0
 0060BCA0	SceneRaidBattle::setRaidStage::$_6::destroy	62	0	0	0
-0060BCAC	SceneRaidBattle::setRaidStage::$_6::operator()	589	376	0	0
+0060BCAC	SceneRaidBattle::setRaidStage::$_6::operator()	599	381	0	0
 0060BD20	SceneRaidBattle::setRaidStage::$_5::__clone(__base*)	44	0	0	0
 0060BD40	SceneRaidBattle::setRaidStage::$_5::destroy	62	0	0	0
 0060BD4A	SceneRaidBattle::setRaidStage::$_5::operator()	130	0	87	40
@@ -3052,11 +3053,11 @@ addr	name	calls	verified	mismatches	unverifiable
 0060C0B0	SceneRaidBattle::init::$_0::destroy	62	0	0	0
 0060C0BA	SceneRaidBattle::init::$_0::operator()	27	5	0	0
 0060C248	SceneManager::createScene	103	0	0	1
-0060C26C	SceneManager::getInstance	136441	22672	0	0
+0060C26C	SceneManager::getInstance	136504	22682	0	0
 0060C2BC	SceneManager::create	80	0	0	0
 0060C310	SceneManager::SceneManager	80	0	0	0
 0060CB00	SceneManager::init	103	0	0	0
-0060CED8	createSceneLayer<SceneSplash>()	84	0	6	0
+0060CED8	createSceneLayer<SceneSplash>()	2	2	0	0
 0060CEE0	LoadingIndicator::create	104	0	0	1
 0060CF64	SceneManager::setEnabledTouchEffect	209	54	0	0
 0060D168	SceneManager::enableLoadingIndicator	34591	12272	0	0
@@ -3064,9 +3065,9 @@ addr	name	calls	verified	mismatches	unverifiable
 0060D9CC	SceneManager::updateHeaderAp	1097890	59631	0	0
 0060E110	SceneManager::chatDataUpdate	1097890	59630	0	1
 0060E78C	SceneManager::callPrevChangeNextSceneAPIs	397	361	0	0
-0060E86C	SceneManager::setCanTouchHeader	788	113	0	0
+0060E86C	SceneManager::setCanTouchHeader	804	117	0	0
 0060E894	SceneManager::createNextScene	779	59	28	238
-0060EA64	SceneManager::createHeader	130	15	19	88
+0060EA64	SceneManager::createHeader	7	7	0	0
 006102D4	SceneManager::initGlobalMenu	79	53	0	19
 00610B38	SceneManager::changeTickerMessage	455	46	0	88
 00611168	SceneManager::updateHeader	763	480	0	43
@@ -3087,14 +3088,14 @@ addr	name	calls	verified	mismatches	unverifiable
 00613E26	SceneManager::setBackButtonType	167	10	0	0
 00613E3E	SceneManager::setFinishSceneCallback	76	5	0	0
 00613E5A	SceneManager::setOnBackKeyCallback	379	28	0	0
-00613E68	SceneManager::getPopupLayer	422	17	0	0
-00613E70	SceneManager::getPopupLayer2	187	27	0	0
+00613E68	SceneManager::getPopupLayer	432	22	0	0
+00613E70	SceneManager::getPopupLayer2	189	28	0	0
 0061507C	SceneManager::openChatPopup $_43::operator() (sub_61507C)	10	0	0	10
-0061524C	SceneManager::openPopup	392	14	0	0
+0061524C	SceneManager::openPopup	402	14	0	0
 0061FB24	SceneManager::openNoTapScreen	35	6	0	0
 0061FC20	SceneManager::openPartyNewPopup(std::function<void()>)	143	62	0	0
 00620DE4	SceneManager::openPartyBecomePopup	10	5	0	0
-00621518	SceneManager::isOpenedPopup	61	21	0	0
+00621518	SceneManager::isOpenedPopup	77	25	0	0
 0062158C	SceneManager::isOpenedPopupOnly	2	2	0	0
 0062160E	SceneManager::setOnChangeProfile	52	0	0	0
 006216A0	SceneManager::closeCurrentPopup	258	24	0	14
@@ -3149,7 +3150,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00637EC0	SceneTitle::create	83	0	0	1
 00637F8C	SceneManager::init::$_5 __clone(__base*)	270	0	0	0
 00637FAC	SceneManager::init::$_5 destroy()	270	0	0	0
-00637FB8	SceneManager back key lambda (sub_637FB8)	30	27	2	1
+00637FB8	SceneManager back key lambda (sub_637FB8)	55	55	0	0
 006380CC	SceneManager::init::$_4 __clone(__base*)	180	0	0	0
 006380EC	SceneManager::init::$_4 destroy()	180	0	0	0
 00638168	SceneManager::init::$_3 __clone(__base*)	180	0	0	0
@@ -3351,7 +3352,7 @@ addr	name	calls	verified	mismatches	unverifiable
 006590C0	ScenePartyTop::runInJoinLayout $_15 __func::destroy	51	21	0	0
 00659144	ScenePartyTop::runInJoinLayout $_14 __func::__clone(__base*)	28	14	0	0
 00659164	ScenePartyTop::runInJoinLayout $_14 __func::destroy	51	21	0	0
-00659170	ScenePartyTop ranking button lambda __func::operator() (sub_659170)	11	10	1	0
+00659170	ScenePartyTop ranking button lambda __func::operator() (sub_659170)	12	11	1	0
 006592A0	ScenePartyTop ranking run-out lambda __func::operator() (sub_6592A0)	1	0	0	1
 006594B8	ScenePartyTop::runInJoinLayout $_13 __func::__clone(__base*)	28	14	0	0
 006594DC	ScenePartyTop::runInJoinLayout $_13 __func::destroy	51	21	0	0
@@ -3359,7 +3360,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00659630	ScenePartyTop management run-out lambda __func::operator() (sub_659630)	2	0	0	2
 0065998C	ScenePartyTop::runInJoinLayout $_12 __func::__clone(__base*)	28	14	0	0
 006599AC	ScenePartyTop::runInJoinLayout $_12 __func::destroy	51	21	0	0
-006599B8	ScenePartyTop member-check button lambda __func::operator() (sub_6599B8)	32	28	4	0
+006599B8	ScenePartyTop member-check button lambda __func::operator() (sub_6599B8)	4	4	0	0
 00659AE8	ScenePartyTop member-check run-out lambda __func::operator() (sub_659AE8)	4	0	0	4
 00659C60	ScenePartyTop member list callback __func::operator() (sub_659C60)	5	5	0	0
 00659E6C	ScenePartyMember::create	4	3	0	1
@@ -3637,7 +3638,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00680402	sub_680402	73	58	0	0
 00680474	SceneTitle::init $_1 __func::__clone(__base*)	146	0	0	0
 00680494	SceneTitle::init $_1 __func::destroy	218	5	0	0
-006804A0	sub_6804A0	73	0	6	0
+006804A0	sub_6804A0	2	2	0	0
 00680520	SceneTitle::init $_0 __func::__clone(__base*)	212	70	0	0
 00680540	SceneTitle::init $_0 __func::destroy	282	140	0	0
 0068054C	SceneTitle::init::$_0::operator()	36	0	0	36
@@ -3716,7 +3717,7 @@ addr	name	calls	verified	mismatches	unverifiable
 006850EC	SceneBattleResult::nextResult::$_9 destroy()	30	15	0	0
 00685220	SceneBattleResult::nextResult::$_8 __clone(__base*)	114	0	0	0
 00685240	SceneBattleResult::nextResult::$_8 destroy()	171	54	0	0
-0068524A	sub_68524A	58	0	18	37
+0068524A	sub_68524A	6	6	0	0
 006852C4	SceneBattleResult::nextResult::$_7 __clone(__base*)	170	56	0	0
 006852E8	SceneBattleResult::nextResult::$_7 destroy()	226	112	0	0
 006852F4	SceneBattleResult::nextResult::$_7::operator()	43	0	0	43
@@ -3742,7 +3743,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00685BC0	SceneBattleResult (sub_685BC0): the result screen starts	89	0	0	0
 00685FC0	SceneBattleResult::init::$_3::lambda(bool) __clone(__base*)	234	78	0	0
 00685FE0	SceneBattleResult::init::$_3::lambda(bool) destroy()	312	156	0	0
-00685FEC	SceneBattleResult::init::$_3::{lambda(bool)#1}::operator()	53	0	21	32
+00685FEC	SceneBattleResult::init::$_3::{lambda(bool)#1}::operator()	6	6	0	0
 006861AC	SceneSellOutMaterialItem::create	1	1	0	0
 00686240	SceneSellOutMaterialItem::~SceneSellOutMaterialItem (deleting)	4	4	0	0
 00686264	SceneSellOutMaterialItem::init	5	1	0	0
@@ -3800,29 +3801,29 @@ addr	name	calls	verified	mismatches	unverifiable
 0068E01C	SceneShopTop::runInAnimation::$_5 destroy()	2	1	0	0
 0068E390	SceneShopTop::runInAnimation::$_5::{lambda()#2}::operator()	2	1	0	0
 0068E7EC	DrawScrollView::DrawScrollView	16	11	0	0
-00690658	SceneDrawRaise::openDrawResultsPopup(const vector<unsigned long long>&)	6	1	5	0
-006914CC	SceneDrawRaise::createDrawMedal	20	0	0	0
-00692660	SceneDrawRaise::dropAnimation	3	0	0	0
-00692950	SceneDrawRaise::dropAnimation::$_17 __clone()	3	0	0	0
-00692A08	SceneDrawRaise::dropAnimation::$_17 destroy_deallocate()	3	0	0	0
-0069344C	SceneDrawRaise::openDrawResultsPopup $_12 __func::__clone() (sub_69344C)	9	1	0	0
-006934AA	sub_6934AA	2	0	0	0
-006934B4	SceneDrawRaise::openDrawResultsPopup $_12 __func::operator() (sub_6934B4)	5	1	4	0
-0069368C	SceneDrawRaise::openDrawResultsPopup $_12 UlvE_ __func::__clone(__base*) (sub_69368C)	149	94	0	0
-006936B4	nullsub_1474	12	0	0	0
+00690658	SceneDrawRaise::openDrawResultsPopup(const vector<unsigned long long>&)	7	2	5	0
+006914CC	SceneDrawRaise::createDrawMedal	40	0	0	0
+00692660	SceneDrawRaise::dropAnimation	5	1	0	0
+00692950	SceneDrawRaise::dropAnimation::$_17 __clone()	5	1	0	0
+00692A08	SceneDrawRaise::dropAnimation::$_17 destroy_deallocate()	5	1	0	0
+0069344C	SceneDrawRaise::openDrawResultsPopup $_12 __func::__clone() (sub_69344C)	11	1	0	0
+006934AA	sub_6934AA	4	0	0	0
+006934B4	SceneDrawRaise::openDrawResultsPopup $_12 __func::operator() (sub_6934B4)	6	2	4	0
+0069368C	SceneDrawRaise::openDrawResultsPopup $_12 UlvE_ __func::__clone(__base*) (sub_69368C)	157	95	0	0
+006936B4	nullsub_1474	20	1	0	0
 006936BE	SceneDrawRaise::openDrawResultsPopup $_12 UlvE_ __func::operator() (sub_6936BE)	5	5	0	0
-00693760	SceneDrawRaise::openDrawResultsPopup $_11 __func::__clone(__base*) (sub_693760)	18	2	0	0
-00693784	nullsub_1475	4	0	0	0
-00693A54	SceneDrawRaise::openDrawResultsPopup $_10 __func::__clone() (sub_693A54)	9	1	0	0
-00693ABA	sub_693ABA	2	0	0	0
-00693AC4	SceneDrawRaise::openDrawResultsPopup $_10 __func::operator() (sub_693AC4)	11	10	1	0
+00693760	SceneDrawRaise::openDrawResultsPopup $_11 __func::__clone(__base*) (sub_693760)	22	2	0	0
+00693784	nullsub_1475	8	0	0	0
+00693A54	SceneDrawRaise::openDrawResultsPopup $_10 __func::__clone() (sub_693A54)	11	1	0	0
+00693ABA	sub_693ABA	4	0	0	0
+00693AC4	SceneDrawRaise::openDrawResultsPopup $_10 __func::operator() (sub_693AC4)	12	11	1	0
 00693C54	SceneDrawRaise::openDrawResultsPopup $_10 UlvE0_ __func::__clone() (sub_693C54)	5	1	0	0
 00693CC0	SceneDrawRaise::openDrawResultsPopup $_10 UlvE0_ __func::operator() (sub_693CC0)	1	0	0	1
 006940F0	SceneDrawRaise::openDrawResultsPopup $_18 UlvE_ __func::__clone(__base*) (sub_6940F0)	10	1	0	0
-006941A0	sub_6941A0	4	0	0	0
-006941C0	nullsub_1484	4	0	0	0
-0069421C	std::vector<SceneDrawRaise::DropMedalLayer>::__push_back_slow_path	10	0	0	0
-00694330	std::__split_buffer<SceneDrawRaise::DropMedalLayer>::~__split_buffer	5	0	0	0
+006941A0	sub_6941A0	8	0	0	0
+006941C0	nullsub_1484	8	0	0	0
+0069421C	std::vector<SceneDrawRaise::DropMedalLayer>::__push_back_slow_path	20	0	0	0
+00694330	std::__split_buffer<SceneDrawRaise::DropMedalLayer>::~__split_buffer	10	0	0	0
 00699988	thunk to SceneMixedMedal::runOutAnimationMain	2	0	0	0
 00699998	SceneMixedMedal touch lambda std::function::operator=(&&) (sub_699998)	14	14	0	0
 0069BE84	SceneMixedMedal::openRareWarnPopup	14	13	0	0
@@ -3943,7 +3944,7 @@ addr	name	calls	verified	mismatches	unverifiable
 006B72C8	SceneSphereBoardSelect::initSphereBoardList	2	0	0	2
 006B84C4	SphereScrollView::create	3	0	0	3
 006B8974	SceneSphereBoardSelect::setSphereBoardList	4	2	2	0
-006B9550	SceneSphereBoardSelect::update	24822	24806	4	12
+006B9550	SceneSphereBoardSelect::update	5067	5067	0	0
 006BA138	SceneSphereBoardSelect::openBoardBuyDialog	2	1	1	0
 006BB958	SceneSphereBoardSelect::backScene $_14 __func::operator()	2	0	0	2
 006BBC74	SceneSphereBoardSelect::initSphereBoardList $_10 __func::__clone(__base*)	4	0	0	0
@@ -3960,9 +3961,9 @@ addr	name	calls	verified	mismatches	unverifiable
 006BC810	SceneSphereBoardSelect::initSphereBoardList::$_4 __clone(__base*)	2	0	0	0
 006BC830	SceneSphereBoardSelect::initSphereBoardList::$_4 destroy()	4	0	0	0
 006BCE78	SceneSphereBoard::create	8	0	0	5
-006BCF7C	SceneSphereBoardSelect::init $_2 __func::operator() (sub_6BCF7C)	20	16	4	0
-006BD0A0	SceneSphereBoardSelect::init::$_2 UlvE_ __clone(__base*)	96	0	0	0
-006BD0C0	SceneSphereBoardSelect::init::$_2 UlvE_ destroy()	72	0	0	0
+006BCF7C	SceneSphereBoardSelect::init $_2 __func::operator() (sub_6BCF7C)	4	4	0	0
+006BD0A0	SceneSphereBoardSelect::init::$_2 UlvE_ __clone(__base*)	128	0	0	0
+006BD0C0	SceneSphereBoardSelect::init::$_2 UlvE_ destroy()	96	0	0	0
 006BD58C	SceneSphereBoardSelect::openBoardBuyDialog popup on-close operator() (sub_6BD58C)	2	0	0	0
 006BD72E	SceneSphereBoardSelect::openBoardBuyDialog close-animation end operator() (sub_6BD72E)	2	2	0	0
 006BDA34	SceneSphereBoardSelect::openBoardBuyDialog::$_12::lambda(Ref*, TouchEventType) operator() (OK)	8	6	0	2
@@ -4215,17 +4216,17 @@ addr	name	calls	verified	mismatches	unverifiable
 006F1208	ScenePartyMember::initMemberLayer select callback assign (sub_6F1208)	40	2	0	0
 006F127C	ScenePartyMember::initMemberLayer load members lambda (sub_6F127C)	8	0	1	0
 006F16E0	ScenePartyMember::runInAnimation	5	0	1	0
-006F188C	ScenePartyMember::runOutAnimationMain	10	5	0	0
-006F1A40	thunk to ScenePartyMember::runOutAnimationMain	2	1	0	0
-006F1A50	ScenePartyMember::backScene	9	5	0	0
-006F1B54	ScenePartyMember::backScene $_6 __func::__clone(__base*)	8	1	0	0
-006F1B70	ScenePartyMember::backScene $_6 __func::destroy	8	1	0	0
+006F188C	ScenePartyMember::runOutAnimationMain	18	9	0	0
+006F1A40	thunk to ScenePartyMember::runOutAnimationMain	10	5	0	0
+006F1A50	ScenePartyMember::backScene	17	9	0	0
+006F1B54	ScenePartyMember::backScene $_6 __func::__clone(__base*)	40	5	0	0
+006F1B70	ScenePartyMember::backScene $_6 __func::destroy	40	5	0	0
 006F1B7C	ScenePartyMember::backScene lambda __func::operator() (sub_6F1B7C)	1	0	0	1
 006F1D30	ScenePartyMember::initMemberLayer::$_4 operator()(unsigned long long)	6	0	0	6
 006F1F54	ScenePartyMember::initMemberLayer::$_4::lambda(bool) operator()	6	3	0	3
 006F20A4	ScenePartyMember::initMemberLayer::$_4::lambda(bool)::lambda(bool) operator()	3	3	0	0
-006F233E	sub_6F233E	2	1	0	0
-006F24B4	IInOutAnimation::runOutAnimation	114	31	0	0
+006F233E	sub_6F233E	10	5	0	0
+006F24B4	IInOutAnimation::runOutAnimation	122	35	0	0
 006F2564	FlashDrama::FlashDrama()	9	0	0	0
 006F2838	FlashDrama::FlashDrama(const char*)	10	0	0	0
 006F2884	FlashDrama::~FlashDrama	8	3	0	0
@@ -4320,15 +4321,15 @@ addr	name	calls	verified	mismatches	unverifiable
 006FBE1C	SceneRanking::~SceneRanking() (deleting)	1	0	0	1
 006FBE80	SceneRanking::init()	2	0	0	1
 006FC928	SceneRanking::initScene(SceneManager::SelectRanking)	2	0	0	1
-006FCA7C	SceneRanking::initRankingTitle()	17	0	4	6
+006FCA7C	SceneRanking::initRankingTitle()	19	0	4	6
 006FD858	SceneRanking::initMyRanking()	6	5	0	0
 006FD9FC	SceneRanking::initRankingScrollView()	2	0	0	1
 006FDCF0	SceneRanking::init $_11::operator()(int, bool)	4	0	0	3
 006FDE40	SceneRanking::init $_14::operator()(SelectRanking, bool, int)	6	0	0	5
 006FE004	SceneRanking::update	9864	8489	0	0
 006FE008	SceneRanking::changeTickerMessage(SceneManager::SelectRanking)	2	0	0	1
-006FE0E4	SceneRanking::changeScrollView(bool)	12	5	4	1
-006FE270	SceneRanking::changeScrollView $_15::operator()()	10	0	0	7
+006FE0E4	SceneRanking::changeScrollView(bool)	13	5	5	1
+006FE270	SceneRanking::changeScrollView $_15::operator()()	12	0	0	7
 006FEEE8	SceneRanking::runInAnimation()	6	5	0	0
 006FF0A4	SceneRanking::runOutAnimationMain(std::function<void()>)	3	1	0	0
 006FF348	SceneRanking::openRankingRewardPopup(int, std::function<void()>)	6	6	0	0
@@ -4380,17 +4381,17 @@ addr	name	calls	verified	mismatches	unverifiable
 007038C0	SceneRanking::callLuxRankingAPI::$_1::lambda(bool) operator()	2	0	0	2
 00703A90	SceneRanking::callLuxRankingAPI::$_1::lambda(bool)::lambda(bool) __clone()	5	3	0	0
 00703B34	SceneRanking::callLuxRankingAPI::$_1::lambda(bool)::lambda(bool) destroy_deallocate()	8	6	0	0
-00703BDC	sub_703BDC	6	0	0	0
-00703BFC	nullsub_1883	6	0	0	0
+00703BDC	sub_703BDC	12	0	0	0
+00703BFC	nullsub_1883	12	0	0	0
 00703C80	SceneRanking::init::$_14::lambda(bool) __clone(__base*)	71	30	0	0
 00703CB0	SceneRanking::init::$_14::lambda(bool) operator()	6	6	0	0
 007051F8	SceneAvatarEdit::initAvatarPartsList	5	5	0	0
 007054AC	SceneAvatarEdit::initTabButton	4	4	0	0
-007058C8	SceneAvatarEdit::initMyCordinateButton	4	2	2	0
+007058C8	SceneAvatarEdit::initMyCordinateButton	5	3	2	0
 00705C24	SceneAvatarEdit::changeMyCordinate(int)	8	8	0	0
 00705CF4	SceneAvatarEdit::changeTab(int)	7	7	0	0
 00706610	SceneAvatarEdit::initAvatarPartsList lambda body (sub_706610)	350	5	0	0
-00707050	SceneAvatarEdit::initMyCordinateButton slot number plate (sub_707050)	14	6	0	0
+00707050	SceneAvatarEdit::initMyCordinateButton slot number plate (sub_707050)	16	7	0	0
 0070715C	SceneAvatarEdit::getEquipKeybladeID(bool)	8	8	0	0
 00707228	SceneAvatarEdit::updateGenderPanel	8	8	0	0
 00707490	SceneAvatarEdit::updateCost	8	8	0	0
@@ -4415,6 +4416,8 @@ addr	name	calls	verified	mismatches	unverifiable
 0070B290	SceneAvatarEdit::openCreateCheckPopup sent operator()	3	3	0	0
 0070B3D8	SceneAvatarEdit user get operator()(bool) (sub_70B3D8)	1	0	0	1
 0070B74A	SceneAvatarEdit::openCreateCheckPopup closed operator()	5	3	0	0
+0070CA14	SceneAvatarEdit::initMyCordinateButton()::$_15 __func::__clone(__base*)	4	1	0	0
+0070CA38	SceneAvatarEdit::initMyCordinateButton()::$_15 __func::destroy	4	1	0	0
 0070E4E6	SceneRankingReward::createScene	1	1	0	0
 0070E570	SceneRankingReward::~SceneRankingReward (deleting)	2	2	0	0
 0070E5DC	SceneRankingReward::init	5	0	1	0
@@ -4790,12 +4793,12 @@ addr	name	calls	verified	mismatches	unverifiable
 0073EBCE	sub_73EBCE	1	1	0	0
 0073EC4C	sub_73EC4C	8	0	0	0
 0073EC6C	nullsub_2163	16	4	0	0
-0073EC78	SceneMedalList::init $_3 __func::operator() (sub_73EC78)	12	2	0	0
-0073EF54	sub_73EF54	12	1	0	0
-0073EF74	nullsub_2164	10	0	0	0
+0073EC78	SceneMedalList::init $_3 __func::operator() (sub_73EC78)	14	3	0	0
+0073EF54	sub_73EF54	22	1	0	0
+0073EF74	nullsub_2164	20	0	0	0
 0073EF7E	SceneMedalList::init $_3 close lambda __func::operator() (sub_73EF7E)	4	3	0	0
-0073EFEC	SceneMedalList::init $_3 button lambda __func::__clone() (sub_73EFEC)	112	2	0	0
-0073F04E	sub_73F04E	14	0	0	0
+0073EFEC	SceneMedalList::init $_3 button lambda __func::__clone() (sub_73EFEC)	134	2	0	0
+0073F04E	sub_73F04E	28	0	0	0
 0073F056	SceneMedalList::init $_3 button lambda __func::operator() (sub_73F056)	1	1	0	0
 0073F0E4	sub_73F0E4	50	12	0	0
 0073F104	nullsub_2166	62	10	0	0
@@ -4827,7 +4830,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0073FCB0	AimTarget::AimMarker::init::$_0 __clone(__base*)	134	0	0	0
 0073FCD0	AimTarget::AimMarker::init::$_0 destroy()	248	20	0	0
 0073FCDA	AimTarget::AimMarker::init::$_0 operator()()	106	0	0	0
-0073FD20	AvatarActor::create(const Avatar::Style*)	248	1	1	0
+0073FD20	AvatarActor::create(const Avatar::Style*)	28	16	0	0
 0073FE4C	AvatarActor::~AvatarActor()	234	43	0	0
 0073FFAC	AvatarActor::~AvatarActor() (deleting)	314	43	0	0
 0073FFB8	AvatarActor::init(const Avatar::Style*)	247	1	0	0
@@ -4948,8 +4951,8 @@ addr	name	calls	verified	mismatches	unverifiable
 0074E608	nullsub_2178	2628	146	0	0
 0074E614	EnemyActor::EnemyActor::$_0::operator()	7719	6828	325	0
 0074E758	BaseActorManager::~BaseActorManager	116	29	0	0
-0074E7C4	BaseActorManager::setupAvatarActorPlayable	88	0	1	0
-0074E81A	BaseActorManager::setupAvatarActorFriend	88	0	1	0
+0074E7C4	BaseActorManager::setupAvatarActorPlayable	6	6	0	0
+0074E81A	BaseActorManager::setupAvatarActorFriend	6	6	0	0
 0074E870	BaseActorManager::update_burst_enable	277740	131227	0	0
 0074E8AC	BaseActorManager::isPlayerAttackSkipStatus	410	255	0	0
 0074E9A0	StageActorManager::StageActorManager	89	1	0	0
@@ -5139,7 +5142,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0075E7A8	StageUI::getCommonTreasureTarget	73	0	0	0
 0075E848	StageUI::createMedalField	89	1	0	0
 0075E8D4	MedalDeck::create	96	8	0	0
-0075E928	StageUI::createCarouselDeck	89	0	1	0
+0075E928	StageUI::createCarouselDeck	6	6	0	0
 0075E948	CarouselDeck::create	90	0	0	0
 0075EA44	StageUI::createStatusField	89	1	0	0
 0075EF24	StageUI::createAttributeField	89	1	0	0
@@ -5149,7 +5152,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0075F210	StageUI::shake_Item	1	0	0	0
 0075F27C	StageUI::shake_Manny	2	0	0	0
 0075F2E8	StageUI::shake_Lux	209	0	0	0
-0075F354	StageUI::createHeading	117	0	1	0
+0075F354	StageUI::createHeading	6	6	0	0
 0075F4F8	LuxBoard::create	123	3	0	0
 0075F54C	StageUI::showHeading	247	158	0	0
 0075F708	StageUI::garbageCollectHeading	23	10	0	0
@@ -5209,7 +5212,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0076669C	CommonDirection::to_start	126	70	0	0
 0076675C	CommonDirection::calc_warning	193126	10710	0	0
 00766DAC	CommonDirection::HideBossMarkerAll	6	0	0	0
-007670CE	cocostudio::Armature::getArmatureData	2328476	23955	0	0
+007670CE	cocostudio::Armature::getArmatureData	2328485	23955	0	0
 0076732C	CommonDirection::hide_boss_marker::$_9 __func::__clone(dst)	616	340	0	0
 0076734C	CommonDirection::hide_boss_marker::$_9 __func::destroy	976	594	0	0
 00767356	CommonDirection::hide_boss_marker::$_9::operator()	508	254	0	0
@@ -5232,8 +5235,8 @@ addr	name	calls	verified	mismatches	unverifiable
 00767A80	StageDirection::~StageDirection (deleting)	98	8	0	0
 00767A8C	StageDirection::init	67	1	0	0
 00767B78	StageDirection::preloadResources	66	1	0	0
-00767C78	StageDirection::exec_stage_title	66	0	1	0
-00767C80	StageDirection::stage_start	67	0	0	0
+00767C78	StageDirection::exec_stage_title	1	1	0	0
+00767C80	StageDirection::stage_start	1	1	0	0
 00768200	StageDirection::cocos_sub_start	256	51	0	0
 007682D0	StageDirection::cocos_start	108	20	0	0
 007691BC	StageDirection::cocos_finish	103	32	0	0
@@ -5248,7 +5251,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0076A4C2	StageDirection::cocos_finish $_10 __func::operator()	121	60	0	0
 0076A530	StageDirection::cocos_finish $_9 __func::__clone(__base*)	270	0	0	0
 0076A54C	StageDirection::cocos_finish $_9 __func::destroy	339	59	0	0
-0076A558	StageDirection::cocos_finish $_9 __func::operator()	141	0	5	0
+0076A558	StageDirection::cocos_finish $_9 __func::operator()	6	6	0	0
 0076A91C	StageDirection::cocos_start $_5 __func::__clone(__base*)	218	0	0	0
 0076A93C	StageDirection::cocos_start $_5 __func::destroy	310	63	0	0
 0076A946	StageDirection::cocos_start $_5 __func::operator()	85	20	0	2
@@ -5267,42 +5270,42 @@ addr	name	calls	verified	mismatches	unverifiable
 0076AD00	StageDirection::init $_0 __func::__clone(__base*)	136	1	0	0
 0076AD20	StageDirection::init $_0 __func::destroy	250	21	0	0
 0076AD2A	StageDirection::init $_0 __func::operator()	101	34	0	0
-0076AD68	MedalDataManager::getInstance	32953	325	0	0
-0076ADB4	MedalDataManager::getMedalData	28104	279	0	0
-0076B17C	MedalDataManager::getMedalSmallImagePath	1382	95	0	0
-0076B1E4	MedalDataManager::getMedalLargeImagePath	1141	18	0	0
+0076AD68	MedalDataManager::getInstance	33035	326	0	0
+0076ADB4	MedalDataManager::getMedalData	28155	280	0	0
+0076B17C	MedalDataManager::getMedalSmallImagePath	1391	95	0	0
+0076B1E4	MedalDataManager::getMedalLargeImagePath	1163	18	0	0
 0076B248	MedalDataManager::isFavoriteMedal	1437	1	0	0
-0076B380	MedalDataManager::getMedalData::$_1 __func::destroy	28244	245	0	0
-0076B3A8	MedalDataManager::getMedalData::$_1 __func::operator()	28244	245	0	0
-0076B4BC	MedalDataManager::getMedalData::$_0 __func::destroy	28244	245	0	0
-0076B4E4	MedalDataManager::getMedalData::$_0 __func::operator()	28244	245	0	0
-0076B5F4	std::__shared_ptr_emplace<MedalDataManager::UserMedalData>::__on_zero_shared	38070	1864	0	0
-0076B602	std::__shared_ptr_emplace<MedalDataManager::UserMedalData>::__on_zero_shared_weak	38070	1864	0	0
+0076B380	MedalDataManager::getMedalData::$_1 __func::destroy	28295	246	0	0
+0076B3A8	MedalDataManager::getMedalData::$_1 __func::operator()	28295	246	0	0
+0076B4BC	MedalDataManager::getMedalData::$_0 __func::destroy	28295	246	0	0
+0076B4E4	MedalDataManager::getMedalData::$_0 __func::operator()	28295	246	0	0
+0076B5F4	std::__shared_ptr_emplace<MedalDataManager::UserMedalData>::__on_zero_shared	38119	1864	0	0
+0076B602	std::__shared_ptr_emplace<MedalDataManager::UserMedalData>::__on_zero_shared_weak	38119	1864	0	0
 0076B60C	KeyBladeDataManager::getInstance	2922	167	0	0
 0076B658	KeyBladeDataManager::getKeyBladeData	2414	161	0	0
 0076B808	KeyBladeDataManager::getKeyBladeImagePath	508	92	0	0
 0076B98C	std::__shared_ptr_emplace<KeyBladeDataManager::UserKeyBladeData>::__on_zero_shared	2506	171	0	0
 0076B998	std::__shared_ptr_emplace<KeyBladeDataManager::UserKeyBladeData>::__on_zero_shared_weak	2506	171	0	0
 0076B9A0	KeyBladeDataManager::UserKeyBladeData::~UserKeyBladeData	2442	140	0	0
-0076C090	MasterDataManager::getInstance	407591	29028	0	0
+0076C090	MasterDataManager::getInstance	407865	29029	0	0
 0076C320	MasterDataManager::TableFile::init	4067	0	0	0
 0076C69C	MasterDataManager::TableFile::clear	4067	0	0	0
-0076C71C	MasterDataManager::TableFile::getIDs	999	150	0	0
-0076C798	MasterDataManager::TableFile::getData	14628	269	0	0
+0076C71C	MasterDataManager::TableFile::getIDs	1004	150	0	0
+0076C798	MasterDataManager::TableFile::getData	14664	269	0	0
 0076C8F4	MasterDataManager::MasterDataManager	92	0	0	0
 0076CBBC	MasterDataManager table file path (sub_76CBBC)	3577	0	0	0
-0076CE04	MasterDataManager::find	398565	25795	0	0
-0076CE54	LRUCache<unsigned long long, shared_ptr<const SafeBuffer>>::find	398684	25691	0	0
-0076CEA8	MasterDataManager::insert	20307	288	0	0
-0076CF34	LRUCache<unsigned long long, shared_ptr<const SafeBuffer>>::insert	20340	262	0	0
-0076D090	MasterDataManager::getIDs	1176	211	0	0
-0076D0A0	MasterDataManager::getData	20671	295	0	0
+0076CE04	MasterDataManager::find	398830	25796	0	0
+0076CE54	LRUCache<unsigned long long, shared_ptr<const SafeBuffer>>::find	398949	25692	0	0
+0076CEA8	MasterDataManager::insert	20363	288	0	0
+0076CF34	LRUCache<unsigned long long, shared_ptr<const SafeBuffer>>::insert	20396	262	0	0
+0076D090	MasterDataManager::getIDs	1185	211	0	0
+0076D0A0	MasterDataManager::getData	20736	295	0	0
 0076D0B4	MasterDataManager::reset	1	1	0	0
-0076E704	LRUCache<unsigned long long, shared_ptr<const SafeBuffer>>::update	170190	25560	0	0
+0076E704	LRUCache<unsigned long long, shared_ptr<const SafeBuffer>>::update	170292	25561	0	0
 0076E798	LRUCache<unsigned long long, shared_ptr<const SafeBuffer>>::removeData	1932	3	0	0
 0076EFD4	MasterDataManager $_0 __func::__clone(__base*)	144	0	0	0
 0076EFF0	MasterDataManager $_0 __func::destroy	144	0	0	0
-0076EFFA	MasterDataManager::MasterDataManager $_0 operator()(const shared_ptr<const SafeBuffer>&)	23719	262	0	0
+0076EFFA	MasterDataManager::MasterDataManager $_0 operator()(const shared_ptr<const SafeBuffer>&)	23775	262	0	0
 00772302	std::__function::__func<char const* (*)(void),std::allocator<char const* (*)(void)>,char const* ()(void)>::operator()	3577	0	0	0
 007728AC	ResourceDataManager::getInstance()	7236	3117	0	0
 00772960	ResourceDataManager::ResourceDataManager()	66	0	0	0
@@ -5321,7 +5324,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00774724	ResourceDataManager: append cached pieces to a file (sub_774724)	4	0	0	0
 00776488	std::set<shared_ptr<const master::EvResource>>::destroy (ResourceDataManager::mount)	58	5	0	0
 00777A54	master::World::getHash	93	7	0	0
-00777BB4	master::TutorialMisc::create	2909	370	0	0
+00777BB4	master::TutorialMisc::create	2917	370	0	0
 00778034	master::TutorialMisc::getHash	93	7	0	0
 007787B4	master::AlbumChallenge::getHash	93	7	0	0
 00778C80	master::AvatarCombination::getHash	93	7	0	0
@@ -5332,7 +5335,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00779F00	master::Buff::getBuffIds	48	22	0	0
 00779F1C	master::Buff::create	11320	802	0	0
 0077A330	master::Buff::getHash	93	7	0	0
-0077A490	master::Burst::create	18273	3478	0	0
+0077A490	master::Burst::create	18277	3478	0	0
 0077BF14	master::Burst::getHash	93	7	0	0
 0077C388	master::Chapter::getHash	93	7	0	0
 0077CE34	master::Colosseum::getHash	93	7	0	0
@@ -5350,7 +5353,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00782D2C	master::EvStage::create	42	7	0	0
 007838A0	master::EvStage::getHash	93	7	0	0
 00783E3C	master::InitItem::getHash	93	7	0	0
-00783F9C	master::Keyblade::create	9835	789	0	0
+00783F9C	master::Keyblade::create	9844	789	0	0
 00784918	master::Keyblade::getHash	93	7	0	0
 00784A5C	master::LoginBonus::getLoginBonusIds	2	0	0	0
 00784A78	master::LoginBonus::create	206	0	0	0
@@ -5359,9 +5362,9 @@ addr	name	calls	verified	mismatches	unverifiable
 0078525C	master::LoginBonus::create(int) __shared_ptr_emplace<impl>::__on_zero_shared_weak	40	2	0	0
 007852E4	master::Material::create	268	17	0	0
 00785710	master::Material::getHash	93	7	0	0
-00785870	master::Medal::create	30328	339	0	0
+00785870	master::Medal::create	30383	340	0	0
 00786768	master::Medal::getHash	93	7	0	0
-007868C8	master::MedalMisc::create	87907	247	0	0
+007868C8	master::MedalMisc::create	88060	248	0	0
 00786BFC	master::MedalMisc::getHash	93	7	0	0
 00786D5C	master::Misc::create	8710	3134	0	0
 00787048	master::Misc::getHash	93	7	0	0
@@ -5387,13 +5390,13 @@ addr	name	calls	verified	mismatches	unverifiable
 0078E388	master::SphereMasu::getHash	93	7	0	0
 0078E4E8	master::Stage::create	9606	146	0	0
 0078F92C	master::Stage::getHash	93	7	0	0
-0078FA8C	master::Title::create	183	30	0	0
+0078FA8C	master::Title::create	216	30	0	0
 0078FF0C	master::Title::getHash	93	7	0	0
 007907F0	master::SerialcodeReward::getHash	93	7	0	0
 00790934	master::Shop::getShopIds	126	60	0	0
 00790950	master::Shop::create	2394	60	0	0
 0079116C	master::Shop::getHash	93	7	0	0
-007912CC	master::Ranking::create	3	0	0	0
+007912CC	master::Ranking::create	6	0	0	0
 00791884	master::Ranking::getHash	93	7	0	0
 00791E64	master::Stamp::getHash	93	7	0	0
 00792380	master::GuiltProb::getHash	93	7	0	0
@@ -5448,7 +5451,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0079A03C	AppConfig::get (read one config file, sub_79A03C)	62	46	0	0
 0079A19C	AppSetTextureCacheLimit::$_0 __func::__clone(__base*)	208	0	0	0
 0079A1B8	AppSetTextureCacheLimit::$_0 __func::destroy	208	0	0	0
-0079A1C2	AppSetTextureCacheLimit::$_0 (texture pixel count)	88769	7523	0	0
+0079A1C2	AppSetTextureCacheLimit::$_0 (texture pixel count)	89149	7529	0	0
 0079A210	AppDelegate::AppDelegate	145	87	0	0
 0079A358	AppDelegate::applicationDidFinishLaunching	104	0	0	15
 0079A6D4	cocostudio::ActionFrame::setFrameIndex	6300	0	0	0
@@ -5469,38 +5472,38 @@ addr	name	calls	verified	mismatches	unverifiable
 0079E9F6	cocostudio::ActionObject::getName	90	0	0	0
 0079EA0E	cocostudio::ActionObject::setLoop	90	0	0	0
 0079F700	cocostudio::Armature::~Armature [deleting destructor]	30435	1986	0	0
-007A03F4	cocostudio::Armature::getBone	993303	6075	0	0
-007A059A	cocostudio::Armature::getBoneDic	43321	8176	0	0
-007A05A2	cocostudio::Armature::getNodeToParentTransform	2152551	132849	0	0
-007A07BC	cocostudio::Armature::getAnimation	1021644	42991	0	0
-007A07C4	cocostudio::Armature::getArmatureTransformDirty	476856518	4690242	0	0
+007A03F4	cocostudio::Armature::getBone	993306	6075	0	0
+007A059A	cocostudio::Armature::getBoneDic	43324	8176	0	0
+007A05A2	cocostudio::Armature::getNodeToParentTransform	2152554	132849	0	0
+007A07BC	cocostudio::Armature::getAnimation	1021660	42996	0	0
+007A07C4	cocostudio::Armature::getArmatureTransformDirty	476856548	4690247	0	0
 007A0998	cocostudio::Armature::onExit	30113	9261	0	0
-007A0D56	cocostudio::Armature::getParentBone	639282	4171	0	0
+007A0D56	cocostudio::Armature::getParentBone	639285	4171	0	0
 007A1956	std::__hash_table<std::__hash_value_type<std::string,cocostudio::Bone *>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,cocostudio::Bone *>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,cocostudio::Bone *>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,cocostudio::Bone *>>>::~__hash_table [base destructor]	32688	1986	0	0
 007A1BE4	cocostudio::Bone::~Bone [deleting destructor]	689967	1986	0	0
-007A1DE6	cocostudio::Bone::getBoneData	944942	17532	0	0
-007A1E40	cocostudio::Bone::getArmature	3712060	30161	0	0
-007A221C	cocostudio::Bone::updateDisplayedOpacity	2479433	22673	0	0
-007A2576	cocostudio::Bone::getChildArmature	7297891	303502	0	0
-007A257E	cocostudio::Bone::getTween	1331892	67615	0	0
-007A2586	cocostudio::Bone::setLocalZOrder	6992231	298585	0	0
-007A2598	cocostudio::Bone::getNodeToArmatureTransform	20354195	481678	0	0
-007A262C	cocostudio::Bone::getDisplayRenderNode	576445957	6517860	0	0
-007A263A	cocostudio::Bone::getDisplayRenderNodeType	93760767	1791210	0	0
+007A1DE6	cocostudio::Bone::getBoneData	944948	17532	0	0
+007A1E40	cocostudio::Bone::getArmature	3712072	30161	0	0
+007A221C	cocostudio::Bone::updateDisplayedOpacity	2479599	22678	0	0
+007A2576	cocostudio::Bone::getChildArmature	7297950	303507	0	0
+007A257E	cocostudio::Bone::getTween	1331895	67615	0	0
+007A2586	cocostudio::Bone::setLocalZOrder	6992287	298590	0	0
+007A2598	cocostudio::Bone::getNodeToArmatureTransform	20354234	481683	0	0
+007A262C	cocostudio::Bone::getDisplayRenderNode	576446043	6517865	0	0
+007A263A	cocostudio::Bone::getDisplayRenderNodeType	93760803	1791215	0	0
 007A2656	cocostudio::Bone::addDisplay	172	0	0	0
 007A2664	cocostudio::Bone::removeDisplay	50	0	0	0
-007A2680	cocostudio::Bone::changeDisplayWithIndex	284460	3453	0	0
-007A26CA	cocostudio::Bone::setTransformDirty	22074795	529167	0	0
+007A2680	cocostudio::Bone::changeDisplayWithIndex	284463	3453	0	0
+007A26CA	cocostudio::Bone::setTransformDirty	22074851	529172	0	0
 007A26D2	cocostudio::Bone::isTransformDirty	169079019	1484897	0	0
-007A26DA	cocostudio::Bone::getDisplayManager	26863354	791655	0	0
+007A26DA	cocostudio::Bone::getDisplayManager	26863452	791660	0	0
 007A26EA	cocostudio::Bone::isIgnoreMovementBoneData	1026229	62569	0	0
 007A2700	cocostudio::Bone::getBlendFunc	29620156	908262	0	0
-007A2722	cocostudio::Bone::getTweenData	904304	6085	0	0
+007A2722	cocostudio::Bone::getTweenData	904310	6085	0	0
 007A2A70	cocostudio::ArmatureAnimation::~ArmatureAnimation [deleting destructor]	32688	1986	0	0
-007A2A7C	cocostudio::ArmatureAnimation::init	30497	1536	0	0
+007A2A7C	cocostudio::ArmatureAnimation::init	30500	1536	0	0
 007A3C68	cocostudio::ArmatureAnimation::setMovementEventCallFunc	16079	179	0	0
 007A3CE4	cocostudio::ArmatureAnimation::setFrameEventCallFunc	14392	108	0	0
-007A3E34	cocostudio::ProcessBase::setProcessScale	305663	14230	0	0
+007A3E34	cocostudio::ProcessBase::setProcessScale	305666	14230	0	0
 007A3E40	cocostudio::ProcessBase::isPause	8027	70	0	0
 007A3E48	cocostudio::ProcessBase::isComplete	251704	18180	0	0
 007A3E50	cocostudio::ProcessBase::isPlaying	63880	16571	0	0
@@ -5509,28 +5512,28 @@ addr	name	calls	verified	mismatches	unverifiable
 007A5698	cocostudio::ProcessBase::pause	272166	4659	0	0
 007A56A2	cocostudio::ProcessBase::resume	120618	826	0	0
 007A56AC	cocostudio::ProcessBase::stop	1026229	62569	0	0
-007A56B6	cocostudio::ProcessBase::play	348981	15547	0	0
+007A56B6	cocostudio::ProcessBase::play	348987	15547	0	0
 007A58B8	cocostudio::Tween::~Tween [deleting destructor]	701724	1986	0	0
-007A64CC	cocostudio::Tween::setMovementBoneData	305663	14230	0	0
+007A64CC	cocostudio::Tween::setMovementBoneData	305666	14230	0	0
 007A6524	cocostudio::BaseData::~BaseData [base destructor]	1441040	11628	0	0
 007A652C	cocostudio::BaseData::~BaseData [deleting destructor]	701724	1985	0	0
-007A6CAC	cocostudio::BoneData::~BoneData [deleting destructor]	708674	6428	0	0
+007A6CAC	cocostudio::BoneData::~BoneData [deleting destructor]	708677	6428	0	0
 007A6CB8	cocostudio::BoneData::init	42096	117	0	0
 007A6CBC	cocostudio::BoneData::addDisplayData	111453	395	0	0
 007A6DF0	cocostudio::ArmatureData::~ArmatureData [deleting destructor]	2715	2260	0	0
 007A6DFC	cocostudio::ArmatureData::init	3788	44	0	0
 007A6E00	cocostudio::ArmatureData::addBoneData	42096	117	0	0
-007A6ECC	cocostudio::ArmatureData::getBoneData	639282	4171	0	0
+007A6ECC	cocostudio::ArmatureData::getBoneData	639285	4171	0	0
 007A7094	cocostudio::FrameData::~FrameData [deleting destructor]	2747820	4241	0	0
 007A7238	cocostudio::MovementBoneData::~MovementBoneData [deleting destructor]	143889	2260	0	0
 007A7244	cocostudio::MovementBoneData::init	88821	263	0	0
 007A7248	cocostudio::MovementBoneData::addFrameData	405516	1117	0	0
-007A72BC	cocostudio::MovementBoneData::getFrameData	570685	16679	0	0
+007A72BC	cocostudio::MovementBoneData::getFrameData	570691	16679	0	0
 007A73B0	cocostudio::MovementData::~MovementData [deleting destructor]	27594	2260	0	0
 007A73BC	cocostudio::MovementData::addMovementBoneData	88821	263	0	0
-007A7488	cocostudio::MovementData::getMovementBoneData	639282	4171	0	0
+007A7488	cocostudio::MovementData::getMovementBoneData	639285	4171	0	0
 007A755C	cocostudio::AnimationData::~AnimationData [deleting destructor]	2715	2260	0	0
-007A767C	cocostudio::AnimationData::getMovement	683822	11761	0	0
+007A767C	cocostudio::AnimationData::getMovement	683828	11761	0	0
 007A7830	cocostudio::TextureData::~TextureData [deleting destructor]	37533	10589	0	0
 007A783C	cocostudio::TextureData::init	46040	346	0	0
 007A78BE	cocostudio::DisplayData::~DisplayData [deleting destructor]	176652	1314	0	0
@@ -5538,55 +5541,55 @@ addr	name	calls	verified	mismatches	unverifiable
 007A8A82	std::__hash_table<std::__hash_value_type<std::string,cocostudio::MovementBoneData *>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,cocostudio::MovementBoneData *>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,cocostudio::MovementBoneData *>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,cocostudio::MovementBoneData *>>>::~__hash_table [base destructor]	27594	2264	0	0
 007A948E	std::__hash_table<std::__hash_value_type<std::string,cocostudio::BoneData *>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,cocostudio::BoneData *>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,cocostudio::BoneData *>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,cocostudio::BoneData *>>>::~__hash_table [base destructor]	4932	2262	0	0
 007A9BEC	cocostudio::DecorativeDisplay::~DecorativeDisplay [deleting destructor]	1617534	11639	0	0
-007A9C26	cocostudio::DecorativeDisplay::getDisplay	1067178	104075	0	0
-007A9C54	cocostudio::DecorativeDisplay::getDisplayData	3834296	116087	0	0
-007A9C82	cocostudio::DecorativeDisplay::getColliderDetector	19288949	635876	0	0
+007A9C26	cocostudio::DecorativeDisplay::getDisplay	1067181	104075	0	0
+007A9C54	cocostudio::DecorativeDisplay::getDisplayData	3834305	116087	0	0
+007A9C82	cocostudio::DecorativeDisplay::getColliderDetector	19288988	635881	0	0
 007AA93C	cocostudio::DisplayManager::~DisplayManager [deleting destructor]	701724	1985	0	0
-007AB0DC	cocostudio::DisplayManager::getDisplayRenderNode	597869967	1694646	0	0
-007AB0E0	cocostudio::DisplayManager::getDisplayRenderNodeType	95520047	827275	0	0
+007AB0DC	cocostudio::DisplayManager::getDisplayRenderNode	597870431	1694651	0	0
+007AB0E0	cocostudio::DisplayManager::getDisplayRenderNodeType	95520083	827280	0	0
 007AB0E4	cocostudio::DisplayManager::getCurrentDisplayIndex	104	0	0	0
-007AB0E8	cocostudio::DisplayManager::getCurrentDecorativeDisplay	17397107	453085	0	0
-007AB378	cocostudio::DisplayManager::isForceChangeDisplay	6992231	298585	0	0
+007AB0E8	cocostudio::DisplayManager::getCurrentDecorativeDisplay	17397143	453090	0	0
+007AB378	cocostudio::DisplayManager::isForceChangeDisplay	6992287	298590	0	0
 007AC060	cocostudio::Skin::getDisplayName	50	0	0	0
-007AD4A4	cocostudio::ArmatureDataManager::getArmatureData	30497	1536	0	0
-007AD610	cocostudio::ArmatureDataManager::getAnimationData	30497	1536	0	0
-007AD77C	cocostudio::ArmatureDataManager::getTextureData	1383587	8239	0	0
+007AD4A4	cocostudio::ArmatureDataManager::getArmatureData	30500	1536	0	0
+007AD610	cocostudio::ArmatureDataManager::getAnimationData	30500	1536	0	0
+007AD77C	cocostudio::ArmatureDataManager::getTextureData	1383590	8239	0	0
 007ADBF0	cocostudio::ArmatureDataManager::isAutoLoadSpriteFile	3788	44	0	0
 007B91CC	cocostudio::SpriteFrameCacheHelper::addSpriteFrameFromFile	4231	182	0	2
-007BB40E	cocostudio::ComAudio::createInstance	1006	77	0	0
+007BB40E	cocostudio::ComAudio::createInstance	1010	79	0	0
 007BB52C	cocostudio::ComAudio::~ComAudio [deleting destructor]	907	719	0	0
-007BB538	cocostudio::ComAudio::init	1021	77	0	0
-007BBDF8	cocostudio::ComRender::createInstance	12653	123	0	0
+007BB538	cocostudio::ComAudio::init	1025	79	0	0
+007BBDF8	cocostudio::ComRender::createInstance	12669	125	0	0
 007BBF5C	cocostudio::ComRender::~ComRender [deleting destructor]	10463	2455	0	128
-007BBF68	cocostudio::ComRender::onEnter	10128	117	0	0
+007BBF68	cocostudio::ComRender::onEnter	10144	118	0	0
 007BBF80	cocostudio::ComRender::onExit	8606	967	0	0
-007BE118	cocostudio::DictionaryHelper::getSubDictionary_json	980042	4860	0	0
-007BE128	cocostudio::DictionaryHelper::getSubDictionary_json	743101	1806	0	0
+007BE118	cocostudio::DictionaryHelper::getSubDictionary_json	983127	4872	0	0
+007BE128	cocostudio::DictionaryHelper::getSubDictionary_json	743141	1808	0	0
 007BE142	cocostudio::DictionaryHelper::getSubDictionary_json	111453	395	0	0
-007BE454	cocostudio::DictionaryHelper::getDictionaryFromArray_json	197198	2075	0	0
-007BE46E	cocostudio::DictionaryHelper::checkObjectExist_json	40977	290	0	0
-007C5A9C	cocostudio::WidgetPropertiesReader0300::setPropsForAllWidgetFromJsonDictionary	258321	5393	18	191
+007BE454	cocostudio::DictionaryHelper::getDictionaryFromArray_json	198082	2087	0	0
+007BE46E	cocostudio::DictionaryHelper::checkObjectExist_json	41037	292	0	0
+007C5A9C	cocostudio::WidgetPropertiesReader0300::setPropsForAllWidgetFromJsonDictionary	259262	5405	18	191
 007C9444	cocostudio sendEvent(unsigned int)	4	4	0	0
-007CF490	sub_7CF490	501	36	0	0
-007CF4AC	nullsub_178	503	36	0	0
-007CF638	sub_7CF638	501	36	0	0
-007CF658	nullsub_176	503	36	0	0
-007CF7DC	sub_7CF7DC	501	36	0	0
-007CF7F8	nullsub_174	503	36	0	0
-007CF84C	cocostudio::ButtonReader::createInstance	5880	103	0	0
-007D0DEC	thunk to cocostudio::ButtonReader::setPropsFromJsonDictionary	6328	167	0	0
-007D0DF6	cocostudio::CheckBoxReader::createInstance	297	76	0	0
-007D2060	thunk to cocostudio::CheckBoxReader::setPropsFromJsonDictionary	370	76	0	0
-007D206A	cocostudio::ImageViewReader::createInstance	121620	1016	0	0
-007D2F8C	thunk to cocostudio::ImageViewReader::setPropsFromJsonDictionary	122484	888	0	0
-007D2F96	cocostudio::LayoutReader::createInstance	30566	562	0	0
-007D48B4	thunk to cocostudio::LayoutReader::setPropsFromJsonDictionary	31041	482	0	0
-007D4BF2	cocostudio::LoadingBarReader::createInstance	1405	73	0	0
-007D5B3C	thunk to cocostudio::LoadingBarReader::setPropsFromJsonDictionary	1422	73	0	0
-007D7446	cocostudio::TextAtlasReader::createInstance	6322	78	0	0
-007D83A8	thunk to cocostudio::TextAtlasReader::setPropsFromJsonDictionary	7325	181	0	0
-007DA106	cocostudio::TextReader::createInstance	40746	637	0	0
-007DB154	thunk to cocostudio::TextReader::setPropsFromJsonDictionary	44771	716	0	0
+007CF490	sub_7CF490	509	36	0	0
+007CF4AC	nullsub_178	511	36	0	0
+007CF638	sub_7CF638	509	36	0	0
+007CF658	nullsub_176	511	36	0	0
+007CF7DC	sub_7CF7DC	509	36	0	0
+007CF7F8	nullsub_174	511	36	0	0
+007CF84C	cocostudio::ButtonReader::createInstance	5920	104	0	0
+007D0DEC	thunk to cocostudio::ButtonReader::setPropsFromJsonDictionary	6368	168	0	0
+007D0DF6	cocostudio::CheckBoxReader::createInstance	371	76	0	0
+007D2060	thunk to cocostudio::CheckBoxReader::setPropsFromJsonDictionary	444	76	0	0
+007D206A	cocostudio::ImageViewReader::createInstance	121951	1028	0	0
+007D2F8C	thunk to cocostudio::ImageViewReader::setPropsFromJsonDictionary	122815	900	0	0
+007D2F96	cocostudio::LayoutReader::createInstance	30810	574	0	0
+007D48B4	thunk to cocostudio::LayoutReader::setPropsFromJsonDictionary	31285	494	0	0
+007D4BF2	cocostudio::LoadingBarReader::createInstance	1407	73	0	0
+007D5B3C	thunk to cocostudio::LoadingBarReader::setPropsFromJsonDictionary	1424	73	0	0
+007D7446	cocostudio::TextAtlasReader::createInstance	6324	78	0	0
+007D83A8	thunk to cocostudio::TextAtlasReader::setPropsFromJsonDictionary	7327	181	0	0
+007DA106	cocostudio::TextReader::createInstance	40994	637	0	0
+007DB154	thunk to cocostudio::TextReader::setPropsFromJsonDictionary	45019	716	0	0
 007E4A28	std::__function::__func<std::__bind<void (cocos2d::network::HttpClient::*)(void),cocos2d::network::HttpClient*>,std::allocator<std::__bind<void (cocos2d::network::HttpClient::*)(void),cocos2d::network::HttpClient*>>,void ()(void)>::destroy	11493	7822	0	0
 007E4A32	std::__function::__func<std::__bind<void (cocos2d::network::HttpClient::*)(void),cocos2d::network::HttpClient*>,std::allocator<std::__bind<void (cocos2d::network::HttpClient::*)(void),cocos2d::network::HttpClient*>>,void ()(void)>::operator()	3833	3830	0	3
 007E4E94	cocos2d::network::CURLRaii::~CURLRaii [base destructor]	768	0	0	0
@@ -5594,8 +5597,8 @@ addr	name	calls	verified	mismatches	unverifiable
 007EC890	LWF::LWFBitmapRenderer::Destruct	746613	72327	0	0
 007EC8A6	LWF::LWFBitmapRenderer::Bind	14670	3553	0	0
 007ECCEC	LWF::Renderer::~Renderer [base destructor]	814720	64435	0	0
-007ED198	LWF::LWFRendererFactory::Init	201767	9548	0	0
-007ED19A	LWF::LWFRendererFactory::BeginRender	17313017	200508	0	0
+007ED198	LWF::LWFRendererFactory::Init	202396	9549	0	0
+007ED19A	LWF::LWFRendererFactory::BeginRender	17313341	200508	0	0
 007ED834	LWF::LWFRendererFactory::SetBlendMode	7055149	202153	0	0
 007ED838	LWF::LWFRendererFactory::SetMaskMode	1469446	45650	0	0
 007EDD2C	std::__shared_ptr_emplace<LWF::LWFTextTTFRenderer>::__on_zero_shared	1	0	0	0
@@ -5603,13 +5606,13 @@ addr	name	calls	verified	mismatches	unverifiable
 007EDE94	std::__shared_ptr_emplace<LWF::LWFBitmapRenderer>::__on_zero_shared	746618	72327	0	0
 007EDEA0	std::__shared_ptr_emplace<LWF::LWFBitmapRenderer>::__on_zero_shared_weak	746618	72327	0	0
 007EE410	cocos2d::LWFNode::~LWFNode [deleting destructor]	13196	3573	0	0
-007EE7A4	cocos2d::LWFNode::draw	2405506	42851	0	0
-007EF0AC	std::__shared_ptr_emplace<LWF::LWF>::__on_zero_shared	211716	7514	0	0
-007EF0B6	std::__shared_ptr_emplace<LWF::LWF>::__on_zero_shared_weak	211716	7511	0	0
-007EF870	std::__shared_ptr_emplace<LWF::LWFRendererFactory>::__on_zero_shared	215495	7296	0	0
-007EF87C	std::__shared_ptr_emplace<LWF::LWFRendererFactory>::__on_zero_shared_weak	215495	7296	0	0
-007F02C8	LRUCache<unsigned, shared_ptr<LWF::Data>>::find	231778	7945	0	0
-007F031C	LRUCache<unsigned, shared_ptr<LWF::Data>>::insert	25236	37	0	0
+007EE7A4	cocos2d::LWFNode::draw	2405515	42851	0	0
+007EF0AC	std::__shared_ptr_emplace<LWF::LWF>::__on_zero_shared	212022	7514	0	0
+007EF0B6	std::__shared_ptr_emplace<LWF::LWF>::__on_zero_shared_weak	212022	7511	0	0
+007EF870	std::__shared_ptr_emplace<LWF::LWFRendererFactory>::__on_zero_shared	215801	7296	0	0
+007EF87C	std::__shared_ptr_emplace<LWF::LWFRendererFactory>::__on_zero_shared_weak	215801	7296	0	0
+007F02C8	LRUCache<unsigned, shared_ptr<LWF::Data>>::find	232407	7946	0	0
+007F031C	LRUCache<unsigned, shared_ptr<LWF::Data>>::insert	25528	38	0	0
 007F0452	cocos2d::LWFResourceCache::unloadLWFData	14796	3693	0	0
 007F0D3C	LRUCache<string, shared_ptr<LWFTextRendererContext>>::find	1	1	0	0
 007F0D90	LRUCache<string, shared_ptr<LWFTextRendererContext>>::insert	1	1	0	0
@@ -5628,23 +5631,23 @@ addr	name	calls	verified	mismatches	unverifiable
 007FBFE6	LWF::LWFTextTTFRenderer::Destruct	1	0	0	0
 007FC550	LWF::LWFTextTTF::~LWFTextTTF [deleting destructor]	1	0	0	0
 007FC650	LWF::LWFTextTTF::getNodeToParentTransform	24	24	0	0
-007FD994	LWF::LWF::ClearRenderOffset	75303447	997886	0	0
-007FD99E	LWF::LWF::RenderObject	114021315	2049363	0	0
-007FDB08	LWF::LWF::SetAttachVisible	13985510	139260	0	0
-007FDB0E	LWF::LWF::ClearFocus	25768	3642	0	0
-007FDB1A	LWF::LWF::ClearPressed	25768	3642	0	0
-007FE14A	LWF::LWF::Destroy	120419	6750	0	0
-007FE5D4	LWF::LWF::GetInstance	1226805	21281	0	0
-007FE5E2	LWF::LWF::SetInstance	1216561	21236	0	0
-007FF5F8	LWF::LWF::GetTextureLoadHandler	712532	72424	0	0
-008001F8	std::__shared_ptr_emplace<LWF::Movie>::__on_zero_shared	950132	27892	0	0
-00800204	std::__shared_ptr_emplace<LWF::Movie>::__on_zero_shared_weak	950132	27892	0	0
-0080084C	std::__shared_ptr_emplace<LWF::Property>::__on_zero_shared	1165627	30386	0	0
-0080084E	std::__shared_ptr_emplace<LWF::Property>::__on_zero_shared_weak	1165627	30386	0	0
-008047E4	LWF::Data::Check	25784	71	0	0
+007FD994	LWF::LWF::ClearRenderOffset	75304419	997886	0	0
+007FD99E	LWF::LWF::RenderObject	114022575	2049363	0	0
+007FDB08	LWF::LWF::SetAttachVisible	13985816	139260	0	0
+007FDB0E	LWF::LWF::ClearFocus	26074	3642	0	0
+007FDB1A	LWF::LWF::ClearPressed	26074	3642	0	0
+007FE14A	LWF::LWF::Destroy	120725	6750	0	0
+007FE5D4	LWF::LWF::GetInstance	1228361	21282	0	0
+007FE5E2	LWF::LWF::SetInstance	1218117	21237	0	0
+007FF5F8	LWF::LWF::GetTextureLoadHandler	712856	72424	0	0
+008001F8	std::__shared_ptr_emplace<LWF::Movie>::__on_zero_shared	950438	27892	0	0
+00800204	std::__shared_ptr_emplace<LWF::Movie>::__on_zero_shared_weak	950438	27892	0	0
+0080084C	std::__shared_ptr_emplace<LWF::Property>::__on_zero_shared	1166239	30386	0	0
+0080084E	std::__shared_ptr_emplace<LWF::Property>::__on_zero_shared_weak	1166239	30386	0	0
+008047E4	LWF::Data::Check	26076	72	0	0
 0080DB12	std::__function::__func<LWF::SetColorTransformWrapper,std::allocator<LWF::SetColorTransformWrapper>,void ()(LWF::Movie *)>::destroy_deallocate	8396	1878	0	0
 0080DB1A	std::__function::__func<LWF::SetColorTransformWrapper,std::allocator<LWF::SetColorTransformWrapper>,void ()(LWF::Movie *)>::operator()	8396	1878	0	0
-0080F280	LWF::Format::Texture::GetFilename	716825	73568	0	0
+0080F280	LWF::Format::Texture::GetFilename	717158	73568	0	0
 0080F824	std::__shared_ptr_emplace<LWF::Text>::__on_zero_shared	1	0	0	0
 0080F830	std::__shared_ptr_emplace<LWF::Text>::__on_zero_shared_weak	1	0	0	0
 0080F9DC	std::__shared_ptr_emplace<LWF::BitmapEx>::__on_zero_shared	526	51	0	0
@@ -5652,28 +5655,28 @@ addr	name	calls	verified	mismatches	unverifiable
 0080FAE8	std::__shared_ptr_emplace<LWF::Bitmap>::__on_zero_shared	746092	72327	0	0
 0080FAF4	std::__shared_ptr_emplace<LWF::Bitmap>::__on_zero_shared_weak	746092	72327	0	0
 00810804	LWF::Movie::AddHandlers	2338	423	0	0
-00810D18	LWF::Movie::Exec	17536361	1395987	0	0
+00810D18	LWF::Movie::Exec	17537324	1395987	0	0
 00812A5A	LWF::Movie::ClearMovieEventHandler	4966	1845	0	0
 00813AE8	std::__shared_ptr_emplace<LWF::Graphic>::__on_zero_shared	2143	1427	0	0
 00813AF4	std::__shared_ptr_emplace<LWF::Graphic>::__on_zero_shared_weak	2143	1427	0	0
-008153CC	std::__shared_ptr_emplace<LWF::LWFContainer>::__on_zero_shared	208777	7498	0	0
-008153D8	std::__shared_ptr_emplace<LWF::LWFContainer>::__on_zero_shared_weak	208777	7498	0	0
+008153CC	std::__shared_ptr_emplace<LWF::LWFContainer>::__on_zero_shared	209083	7498	0	0
+008153D8	std::__shared_ptr_emplace<LWF::LWFContainer>::__on_zero_shared_weak	209083	7498	0	0
 00815C2A	LWF::Movie::Play	17828	8716	0	0
-00815C32	LWF::Movie::Stop	19373	5023	0	0
+00815C32	LWF::Movie::Stop	19391	5023	0	0
 00815C3A	LWF::Movie::NextFrame	10464	5535	0	0
 00815C5A	LWF::Movie::PrevFrame	399	319	0	0
 00815C78	LWF::Movie::GotoFrame	16769	8654	0	0
 00815C94	LWF::Movie::GotoFrameInternal	996	856	0	0
 00815CB0	LWF::Movie::SetVisible	288388	3826	0	0
-00815D74	LWF::Movie::GotoAndStop	19745	2847	0	0
-00815DCE	LWF::Movie::GotoAndPlay	6905	961	0	0
+00815D74	LWF::Movie::GotoAndStop	19799	2847	0	0
+00815DCE	LWF::Movie::GotoAndPlay	6914	961	0	0
 00815F52	LWF::Movie::SetMatrix	2347	2	0	0
 00815FA4	LWF::Movie::SetColorTransform	8396	1878	0	0
-00815FCC	LWF::Movie::GetX	2341471	12991	0	0
-00816016	LWF::Movie::GetY	2346821	13187	0	0
+00815FCC	LWF::Movie::GetX	2341480	12991	0	0
+00816016	LWF::Movie::GetY	2346848	13187	0	0
 00816060	LWF::Movie::GetScaleX	2347	9	0	0
 008160AA	LWF::Movie::GetScaleY	2347	9	0	0
-008162E8	LWF::Object::Exec	29078942	2100429	0	0
+008162E8	LWF::Object::Exec	29080229	2100429	0	0
 0081644C	LWF::Object::Bind	27676	4184	0	0
 0081645C	LWF::Object::Unbind	30793	3552	0	0
 008167AE	LWF::Property::MoveTo	97377	8599	0	0
@@ -5689,92 +5692,92 @@ addr	name	calls	verified	mismatches	unverifiable
 0081B1F4	cocos2d::PluginJniHelper::setJavaVM	136	78	0	0
 00825854	cocos2d::ui::Widget::~Widget [deleting destructor]	5612	1605	0	0
 00825BCC	cocos2d::ui::Widget::onExit	206256	5316	0	0
-00825C68	cocos2d::ui::Widget::setEnabled	205294	387	0	0
-00825C70	cocos2d::ui::Widget::initRenderer	79814	922	0	0
+00825C68	cocos2d::ui::Widget::setEnabled	205501	387	0	0
+00825C70	cocos2d::ui::Widget::initRenderer	80139	934	0	0
 00825DF0	cocos2d::ui::Widget::setSize	1887	94	0	0
-00826208	cocos2d::ui::Widget::setSizeType	208920	2008	0	0
+00826208	cocos2d::ui::Widget::setSizeType	209861	2020	0	0
 008262D0	cocos2d::ui::Widget::getCustomSize	6862	78	0	0
-00826428	cocos2d::ui::Widget::getVirtualRendererSize	166983	2128	0	0
+00826428	cocos2d::ui::Widget::getVirtualRendererSize	167660	2140	0	0
 00826664	cocos2d::ui::Widget::isTouchEnabled	1059957	29	0	0
-008266FA	cocos2d::ui::Widget::onPressStateChangedToNormal	524174	2234	0	0
+008266FA	cocos2d::ui::Widget::onPressStateChangedToNormal	525016	2246	0	0
 008266FC	cocos2d::ui::Widget::onPressStateChangedToPressed	104	104	0	0
 008267DA	cocos2d::ui::Widget::isEnabled	1194997	0	0	0
-00826CCE	cocos2d::ui::Widget::addTouchEventListener	4693	163	0	0
-00826F94	cocos2d::ui::Widget::setPositionType	208920	2008	0	0
-00826F9C	cocos2d::ui::Widget::getPositionType	134435	1218	0	0
+00826CCE	cocos2d::ui::Widget::addTouchEventListener	4793	164	0	0
+00826F94	cocos2d::ui::Widget::setPositionType	209861	2020	0	0
+00826F9C	cocos2d::ui::Widget::getPositionType	134760	1218	0	0
 008270A0	cocos2d::ui::Widget::getTouchBeganPosition	265	262	0	0
 008270B0	cocos2d::ui::Widget::getTouchEndPosition	265	262	0	0
 00827640	cocos2d::ui::Widget::createCloneInstance	268	1	0	0
 008276E8	cocos2d::ui::Widget::copySpecialProperties	268	1	0	0
-008276EA	cocos2d::ui::Widget::setActionTag	208920	2008	0	0
+008276EA	cocos2d::ui::Widget::setActionTag	209861	2020	0	0
 008276F2	cocos2d::ui::Widget::getActionTag	8550	0	0	0
-008276FA	cocos2d::ui::Widget::setFlippedX	413514	2144	0	0
-00827710	cocos2d::ui::Widget::setFlippedY	413514	2144	0	0
-008281D4	std::__function::__func<std::__bind<void (cocos2d::ui::Widget::*)(cocos2d::Touch *,cocos2d::Event *),cocos2d::ui::Widget*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>,std::allocator<std::__bind<void (cocos2d::ui::Widget::*)(cocos2d::Touch *,cocos2d::Event *),cocos2d::ui::Widget*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>>,void ()(cocos2d::Touch *,cocos2d::Event *)>::destroy	150321	9674	0	0
-00828298	std::__function::__func<std::__bind<bool (cocos2d::ui::Widget::*)(cocos2d::Touch *,cocos2d::Event *),cocos2d::ui::Widget*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>,std::allocator<std::__bind<bool (cocos2d::ui::Widget::*)(cocos2d::Touch *,cocos2d::Event *),cocos2d::ui::Widget*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>>,bool ()(cocos2d::Touch *,cocos2d::Event *)>::destroy	50107	9245	0	0
-0082845C	std::__function::__func<std::__bind<void (cocos2d::ui::Widget::*)(cocos2d::ui::Widget*,cocos2d::ui::Widget*),cocos2d::ui::Widget*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>,std::allocator<std::__bind<void (cocos2d::ui::Widget::*)(cocos2d::ui::Widget*,cocos2d::ui::Widget*),cocos2d::ui::Widget*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>>,void ()(cocos2d::ui::Widget*,cocos2d::ui::Widget*)>::destroy	848228	19195	0	0
-00828614	cocos2d::ui::Layout::createInstance	30566	562	0	0
+008276FA	cocos2d::ui::Widget::setFlippedX	414662	2156	0	0
+00827710	cocos2d::ui::Widget::setFlippedY	414662	2156	0	0
+008281D4	std::__function::__func<std::__bind<void (cocos2d::ui::Widget::*)(cocos2d::Touch *,cocos2d::Event *),cocos2d::ui::Widget*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>,std::allocator<std::__bind<void (cocos2d::ui::Widget::*)(cocos2d::Touch *,cocos2d::Event *),cocos2d::ui::Widget*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>>,void ()(cocos2d::Touch *,cocos2d::Event *)>::destroy	150723	9675	0	0
+00828298	std::__function::__func<std::__bind<bool (cocos2d::ui::Widget::*)(cocos2d::Touch *,cocos2d::Event *),cocos2d::ui::Widget*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>,std::allocator<std::__bind<bool (cocos2d::ui::Widget::*)(cocos2d::Touch *,cocos2d::Event *),cocos2d::ui::Widget*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>>,bool ()(cocos2d::Touch *,cocos2d::Event *)>::destroy	50241	9246	0	0
+0082845C	std::__function::__func<std::__bind<void (cocos2d::ui::Widget::*)(cocos2d::ui::Widget*,cocos2d::ui::Widget*),cocos2d::ui::Widget*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>,std::allocator<std::__bind<void (cocos2d::ui::Widget::*)(cocos2d::ui::Widget*,cocos2d::ui::Widget*),cocos2d::ui::Widget*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>>,void ()(cocos2d::ui::Widget*,cocos2d::ui::Widget*)>::destroy	849441	19207	0	0
+00828614	cocos2d::ui::Layout::createInstance	30810	574	0	0
 00828B74	cocos2d::ui::Layout::~Layout [deleting destructor]	30383	2568	9	105
 00829134	cocos2d::ui::Layout::removeChild	14127	2303	0	0
-00829148	cocos2d::ui::Layout::removeAllChildren	5030	1158	0	0
-0082915C	cocos2d::ui::Layout::removeAllChildrenWithCleanup	5367	1094	0	0
+00829148	cocos2d::ui::Layout::removeAllChildren	5054	1158	0	0
+0082915C	cocos2d::ui::Layout::removeAllChildrenWithCleanup	5391	1094	0	0
 00829170	cocos2d::ui::Layout::isClippingEnabled	1777	1777	0	0
-0082A838	cocos2d::ui::Layout::setBackGroundImageOpacity	31042	482	0	0
-0082AA54	cocos2d::ui::Layout::createCloneInstance	39092	278	0	0
-0082AA5C	cocos2d::ui::Layout::copyClonedWidgetChildren	16348	166	0	0
+0082A838	cocos2d::ui::Layout::setBackGroundImageOpacity	31286	494	0	0
+0082AA54	cocos2d::ui::Layout::createCloneInstance	39110	278	0	0
+0082AA5C	cocos2d::ui::Layout::copyClonedWidgetChildren	16364	166	0	0
 0082C284	std::__function::__func<std::__bind<void (cocos2d::ui::Layout::*)(void),cocos2d::ui::Layout*>,std::allocator<std::__bind<void (cocos2d::ui::Layout::*)(void),cocos2d::ui::Layout*>>,void ()(void)>::destroy	8976660	397178	0	0
 0082C28E	std::__function::__func<std::__bind<void (cocos2d::ui::Layout::*)(void),cocos2d::ui::Layout*>,std::allocator<std::__bind<void (cocos2d::ui::Layout::*)(void),cocos2d::ui::Layout*>>,void ()(void)>::operator()	2040888	95001	0	0
-0082C444	std::__function::__func<std::__bind<int (cocos2d::ui::Layout::*)(cocos2d::ui::Widget::FocusDirection,cocos2d::ui::Widget*),cocos2d::ui::Layout*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>,std::allocator<std::__bind<int (cocos2d::ui::Layout::*)(cocos2d::ui::Widget::FocusDirection,cocos2d::ui::Widget*),cocos2d::ui::Layout*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>>,int ()(cocos2d::ui::Widget::FocusDirection,cocos2d::ui::Widget*)>::destroy	147335	3327	0	0
+0082C444	std::__function::__func<std::__bind<int (cocos2d::ui::Layout::*)(cocos2d::ui::Widget::FocusDirection,cocos2d::ui::Widget*),cocos2d::ui::Layout*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>,std::allocator<std::__bind<int (cocos2d::ui::Layout::*)(cocos2d::ui::Widget::FocusDirection,cocos2d::ui::Widget*),cocos2d::ui::Layout*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>>,int ()(cocos2d::ui::Widget::FocusDirection,cocos2d::ui::Widget*)>::destroy	147597	3339	0	0
 0082C4BE	cocos2d::ui::Margin::Margin [base constructor]	76	76	0	0
-0083627C	cocos2d::ui::Button::createInstance	5880	103	0	0
+0083627C	cocos2d::ui::Button::createInstance	5920	104	0	0
 008365F4	cocos2d::ui::Button::~Button [deleting destructor]	6362	218	0	0
-0083671C	cocos2d::ui::Button::init	5993	97	0	0
-00837A48	cocos2d::ui::Button::getVirtualRendererSize	107707	5509	0	0
-00837A8C	cocos2d::ui::Button::setTitleText	6396	149	0	0
+0083671C	cocos2d::ui::Button::init	6033	98	0	0
+00837A48	cocos2d::ui::Button::getVirtualRendererSize	108007	5510	0	0
+00837A8C	cocos2d::ui::Button::setTitleText	6436	149	0	0
 00837AA0	cocos2d::ui::Button::getTitleText	46180	0	0	0
-00837AB4	cocos2d::ui::Button::setTitleColor	6396	149	0	0
+00837AB4	cocos2d::ui::Button::setTitleColor	6436	149	0	0
 00837D6C	cocos2d::ui::Button::createCloneInstance	10	0	0	0
-00837EA4	cocos2d::ui::CheckBox::createInstance	297	76	0	0
+00837EA4	cocos2d::ui::CheckBox::createInstance	371	76	0	0
 008381D4	cocos2d::ui::CheckBox::~CheckBox [deleting destructor]	134	2	0	0
-008382E6	cocos2d::ui::CheckBox::setSelectedState	406	182	0	0
-008389AA	cocos2d::ui::CheckBox::addEventListener	51	43	0	0
-00839258	cocos2d::ui::CheckBox::getVirtualRendererSize	6820	169	0	0
-008394B8	cocos2d::ui::ImageView::createInstance	121620	1016	0	0
+008382E6	cocos2d::ui::CheckBox::setSelectedState	480	182	0	0
+008389AA	cocos2d::ui::CheckBox::addEventListener	53	43	0	0
+00839258	cocos2d::ui::CheckBox::getVirtualRendererSize	8924	169	0	0
+008394B8	cocos2d::ui::ImageView::createInstance	121951	1028	0	0
 0083965C	cocos2d::ui::ImageView::~ImageView [deleting destructor]	146773	12379	0	0
-008396E0	cocos2d::ui::ImageView::init	255122	1099	0	0
+008396E0	cocos2d::ui::ImageView::init	255536	1111	0	0
 00839BAC	cocos2d::ui::ImageView::getCapInsets	2121	93	0	0
-00839BB4	cocos2d::ui::ImageView::onSizeChanged	22470461	704388	0	0
+00839BB4	cocos2d::ui::ImageView::onSizeChanged	22477187	704401	0	0
 00839BC8	cocos2d::ui::ImageView::adaptRenderers	48622236	2513863	0	0
-00839D38	cocos2d::ui::ImageView::getVirtualRendererSize	40557955	702012	0	0
-00839D40	cocos2d::ui::ImageView::getVirtualRenderer	524	13	0	0
-00839D64	cocos2d::ui::ImageView::createCloneInstance	128124	167	0	0
-00839DE4	cocos2d::ui::Text::createInstance	40746	637	0	0
+00839D38	cocos2d::ui::ImageView::getVirtualRendererSize	40562573	702025	0	0
+00839D40	cocos2d::ui::ImageView::getVirtualRenderer	536	13	0	0
+00839D64	cocos2d::ui::ImageView::createCloneInstance	128205	167	0	0
+00839DE4	cocos2d::ui::Text::createInstance	40994	637	0	0
 00839F3C	cocos2d::ui::Text::~Text [deleting destructor]	69117	609	0	332
-00839F5C	cocos2d::ui::Text::init	68986	761	0	0
+00839F5C	cocos2d::ui::Text::init	69342	761	0	0
 0083A33A	cocos2d::ui::Text::getString	205317	0	0	0
 0083A490	cocos2d::ui::Text::getFontSize	350	36	0	0
 0083A5F4	cocos2d::ui::Text::getFontName	350	36	0	0
-0083A6EA	cocos2d::ui::Text::setTouchScaleChangeEnabled	44997	716	0	0
-0083A7C8	cocos2d::ui::Text::onSizeChanged	29899052	280437	0	0
+0083A6EA	cocos2d::ui::Text::setTouchScaleChangeEnabled	45245	716	0	0
+0083A7C8	cocos2d::ui::Text::onSizeChanged	29907650	280454	0	0
 0083A7DC	cocos2d::ui::Text::adaptRenderers	20542725	1037079	0	0
-0083A978	cocos2d::ui::Text::getVirtualRendererSize	11865636	157059	0	0
-0083A98A	cocos2d::ui::Text::getVirtualRenderer	162	38	0	0
-0083A9B0	cocos2d::ui::Text::enableShadow	183385	10276	0	0
-0083A9C4	cocos2d::ui::Text::enableOutline	162	38	0	0
-0083AA0A	cocos2d::ui::Text::createCloneInstance	26071	227	0	0
-0083AB7C	cocos2d::ui::TextAtlas::createInstance	6322	78	0	0
+0083A978	cocos2d::ui::Text::getVirtualRendererSize	11866692	157059	0	0
+0083A98A	cocos2d::ui::Text::getVirtualRenderer	171	38	0	0
+0083A9B0	cocos2d::ui::Text::enableShadow	183864	10311	0	0
+0083A9C4	cocos2d::ui::Text::enableOutline	171	38	0	0
+0083AA0A	cocos2d::ui::Text::createCloneInstance	26179	227	0	0
+0083AB7C	cocos2d::ui::TextAtlas::createInstance	6324	78	0	0
 0083AD48	cocos2d::ui::TextAtlas::~TextAtlas [deleting destructor]	8125	218	0	37
 0083AF7E	cocos2d::ui::TextAtlas::getString	61258	0	0	0
-0083AFA0	cocos2d::ui::TextAtlas::onSizeChanged	449299	14470	0	0
+0083AFA0	cocos2d::ui::TextAtlas::onSizeChanged	449395	14470	0	0
 0083AFB4	cocos2d::ui::TextAtlas::adaptRenderers	4839267	173285	0	0
-0083B0F4	cocos2d::ui::TextAtlas::getVirtualRendererSize	332852	14379	0	0
-0083B106	cocos2d::ui::TextAtlas::getVirtualRenderer	2975	214	0	0
+0083B0F4	cocos2d::ui::TextAtlas::getVirtualRendererSize	332935	14379	0	0
+0083B106	cocos2d::ui::TextAtlas::getVirtualRenderer	2977	214	0	0
 0083B12C	cocos2d::ui::TextAtlas::createCloneInstance	1102	4	0	0
-0083B690	cocos2d::ui::LoadingBar::createInstance	1405	73	0	0
+0083B690	cocos2d::ui::LoadingBar::createInstance	1407	73	0	0
 0083B83C	cocos2d::ui::LoadingBar::~LoadingBar [deleting destructor]	3811	186	0	0
-0083C24C	cocos2d::ui::LoadingBar::onSizeChanged	79401	184	0	0
+0083C24C	cocos2d::ui::LoadingBar::onSizeChanged	79477	184	0	0
 0083C260	cocos2d::ui::LoadingBar::adaptRenderers	970047	28299	0	0
-0083C2AC	cocos2d::ui::LoadingBar::getVirtualRendererSize	10980	232	0	0
+0083C2AC	cocos2d::ui::LoadingBar::getVirtualRendererSize	11054	232	0	0
 0083C2D8	cocos2d::ui::LoadingBar::createCloneInstance	2008	0	0	0
 0084048C	cocos2d::ui::RichText::~RichText [deleting destructor]	546	77	0	0
 0084064C	cocos2d::ui::RichText::pushBackElement	716	77	0	0
@@ -5790,11 +5793,11 @@ addr	name	calls	verified	mismatches	unverifiable
 008441F4	cocos2d::experimental::ui::VideoPlayer::addEventListener	155	48	0	0
 00844530	std::__hash_table<std::__hash_value_type<int,cocos2d::experimental::ui::VideoPlayer *>,std::__unordered_map_hasher<int,std::__hash_value_type<int,cocos2d::experimental::ui::VideoPlayer *>,std::hash<int>,true>,std::__unordered_map_equal<int,std::__hash_value_type<int,cocos2d::experimental::ui::VideoPlayer *>,std::equal_to<int>,true>,std::allocator<std::__hash_value_type<int,cocos2d::experimental::ui::VideoPlayer *>>>::__erase_unique<int>	120	48	0	0
 0085304C	cocos2d::extension::Scale9Sprite::~Scale9Sprite [deleting destructor]	23234	262	0	0
-00853E04	cocos2d::extension::Scale9Sprite::setContentSize	170377	8131	0	0
-00854454	cocos2d::extension::Scale9Sprite::initWithFile	24998	679	0	0
-00854568	cocos2d::extension::Scale9Sprite::initWithFile	24711	679	0	70
+00853E04	cocos2d::extension::Scale9Sprite::setContentSize	171927	8138	0	0
+00854454	cocos2d::extension::Scale9Sprite::initWithFile	25259	685	0	0
+00854568	cocos2d::extension::Scale9Sprite::initWithFile	24972	685	0	70
 0085D7A8	cocos2d::cocos2dVersion	76	76	0	0
-0085D8BC	cocos2d::Action::startWithTarget	514460	37041	0	0
+0085D8BC	cocos2d::Action::startWithTarget	514524	37056	0	0
 0085D8C2	cocos2d::Action::stop	347188	20128	0	0
 00860506	cocos2d::ActionEase::stop	67182	9066	0	0
 00862972	cocos2d::EaseIn::~EaseIn [deleting destructor]	7635	3806	0	0
@@ -5817,7 +5820,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0086743C	cocos2d::Place::~Place [deleting destructor]	26	10	0	0
 00867774	cocos2d::ExtraAction::update	15641	3352	0	0
 008677A8	cocos2d::ActionInterval::isDone	4741124	21345	0	0
-008678A6	cocos2d::ActionInterval::startWithTarget	103250	10934	0	0
+008678A6	cocos2d::ActionInterval::startWithTarget	103256	10934	0	0
 00867B96	cocos2d::Sequence::~Sequence [deleting destructor]	94455	12828	0	0
 00868142	cocos2d::RepeatForever::~RepeatForever [deleting destructor]	5394	2508	0	0
 008682E0	cocos2d::RepeatForever::isDone	292755	12492	0	0
@@ -5846,117 +5849,117 @@ addr	name	calls	verified	mismatches	unverifiable
 00875012	cocos2d::ClippingNode::setInverted	186	0	0	0
 0087507C	std::__function::__func<std::__bind<void (cocos2d::ClippingNode::*)(void),cocos2d::ClippingNode*>,std::allocator<std::__bind<void (cocos2d::ClippingNode::*)(void),cocos2d::ClippingNode*>>,void ()(void)>::destroy	5392875	46189	0	0
 00875086	std::__function::__func<std::__bind<void (cocos2d::ClippingNode::*)(void),cocos2d::ClippingNode*>,std::allocator<std::__bind<void (cocos2d::ClippingNode::*)(void),cocos2d::ClippingNode*>>,void ()(void)>::operator()	1489641	4070	0	0
-0087516C	cocos2d::Component::init	11278	179	0	0
-00875262	cocos2d::Component::getName	18187	303	0	0
-00875266	cocos2d::Component::setName	9611	179	0	0
-00875274	cocos2d::Component::setOwner	17726	1148	0	0
-00875284	cocos2d::ComponentContainer::ComponentContainer [base constructor]	9095	156	0	0
+0087516C	cocos2d::Component::init	11294	181	0	0
+00875262	cocos2d::Component::getName	18219	304	0	0
+00875266	cocos2d::Component::setName	9627	181	0	0
+00875274	cocos2d::Component::setOwner	17742	1149	0	0
+00875284	cocos2d::ComponentContainer::ComponentContainer [base constructor]	9111	157	0	0
 008752E8	cocos2d::ComponentContainer::~ComponentContainer [deleting destructor]	8631	898	0	0
 00875E6C	cocos2d::DrawNode::~DrawNode [deleting destructor]	1791	214	0	182
-00878784	cocos2d::DrawNode::clear	16915	294	0	0
+00878784	cocos2d::DrawNode::clear	16929	294	0	0
 0087891E	std::__function::__func<std::__bind<void (cocos2d::DrawNode::*)(cocos2d::Mat4 const&,unsigned int),cocos2d::DrawNode*,cocos2d::Mat4 const&,unsigned int &>,std::allocator<std::__bind<void (cocos2d::DrawNode::*)(cocos2d::Mat4 const&,unsigned int),cocos2d::DrawNode*,cocos2d::Mat4 const&,unsigned int &>>,void ()(void)>::destroy_deallocate	748451	42702	0	0
-008789C8	sub_8789C8	3453	46	0	0
-008789E8	nullsub_2271	5122	194	0	0
+008789C8	sub_8789C8	3481	46	0	0
+008789E8	nullsub_2271	5150	194	0	0
 0087A4DE	cocos2d::FontAtlas::~FontAtlas [deleting destructor]	4984	291	0	0
 0087A6A0	cocos2d::FontAtlas::addLetterDefinition	14824	64	0	0
-0087AE80	cocos2d::FontAtlas::getCommonLineHeight	81800	1116	0	0
+0087AE80	cocos2d::FontAtlas::getCommonLineHeight	82167	1116	0	0
 0087AE84	cocos2d::FontAtlas::setCommonLineHeight	1449	64	0	0
-0087AE88	cocos2d::FontAtlas::getFont	138573	7566	0	0
-0087B860	std::__function::__func<std::__bind<void (cocos2d::FontAtlas::*)(cocos2d::EventCustom *),cocos2d::FontAtlas*,std::placeholders::__ph<1> &>,std::allocator<std::__bind<void (cocos2d::FontAtlas::*)(cocos2d::EventCustom *),cocos2d::FontAtlas*,std::placeholders::__ph<1> &>>,void ()(cocos2d::EventCustom *)>::destroy	12206	349	0	0
+0087AE88	cocos2d::FontAtlas::getFont	139344	7583	0	0
+0087B860	std::__function::__func<std::__bind<void (cocos2d::FontAtlas::*)(cocos2d::EventCustom *),cocos2d::FontAtlas*,std::placeholders::__ph<1> &>,std::allocator<std::__bind<void (cocos2d::FontAtlas::*)(cocos2d::EventCustom *),cocos2d::FontAtlas*,std::placeholders::__ph<1> &>>,void ()(cocos2d::EventCustom *)>::destroy	12260	349	0	0
 0087C44C	std::__hash_table<std::__hash_value_type<std::string,cocos2d::FontAtlas *>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,cocos2d::FontAtlas *>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,cocos2d::FontAtlas *>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,cocos2d::FontAtlas *>>>::__erase_unique<std::string>	4984	291	0	0
 0087D024	cocos2d::FontCharMap::~FontCharMap [deleting destructor]	1243	148	0	0
 00880D44	cocos2d::FontFreeType::~FontFreeType [deleting destructor]	3637	240	0	0
-00880F5C	cocos2d::FontFreeType::getFontMaxHeight	4491	150	0	0
-00880F66	cocos2d::FontFreeType::getFontAscender	4491	150	0	0
+00880F5C	cocos2d::FontFreeType::getFontMaxHeight	4518	150	0	0
+00880F66	cocos2d::FontFreeType::getFontAscender	4518	150	0	0
 00881980	std::__hash_table<std::__hash_value_type<std::string,cocos2d::_DataRef>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,cocos2d::_DataRef>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,cocos2d::_DataRef>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,cocos2d::_DataRef>>>::__erase_unique<std::string>	606	40	0	0
 00884614	cocos2d::Label::~Label [deleting destructor]	79987	622	0	1
-00884DF8	cocos2d::Label::getScaleX	5366	58	0	0
-008869A4	cocos2d::Label::getAdditionalKerning	946	24	0	0
-008869AC	cocos2d::Label::getStringLength	133476	7422	0	0
+00884DF8	cocos2d::Label::getScaleX	5407	69	0	0
+008869A4	cocos2d::Label::getAdditionalKerning	948	24	0	0
+008869AC	cocos2d::Label::getStringLength	134126	7439	0	0
 00886F00	thunk to cocos2d::Label::setBlendFunc	327	200	0	0
 0088707E	std::__function::__func<std::__bind<void (cocos2d::Label::*)(cocos2d::Mat4 const&,bool),cocos2d::Label*,cocos2d::Mat4 const&,unsigned int &>,std::allocator<std::__bind<void (cocos2d::Label::*)(cocos2d::Mat4 const&,bool),cocos2d::Label*,cocos2d::Mat4 const&,unsigned int &>>,void ()(void)>::destroy_deallocate	16031013	780209	0	0
-008876DC	sub_8876DC	166280	940	0	0
-008876FC	nullsub_2272	246357	1561	0	0
+008876DC	sub_8876DC	167076	941	0	0
+008876FC	nullsub_2272	247153	1562	0	0
 008884D0	cocos2d::LabelAtlas::~LabelAtlas [deleting destructor]	276	51	0	3
 0088A88C	cocos2d::Layer::~Layer [base destructor]	985	325	0	1
 0088A894	cocos2d::Layer::~Layer [deleting destructor]	410	108	0	0
 0088B314	cocos2d::LayerColor::~LayerColor [deleting destructor]	1828	254	0	0
 0088CEDE	std::__function::__func<std::__bind<void (cocos2d::LayerColor::*)(cocos2d::Mat4 const&,unsigned int),cocos2d::LayerColor*,cocos2d::Mat4 const&,unsigned int &>,std::allocator<std::__bind<void (cocos2d::LayerColor::*)(cocos2d::Mat4 const&,unsigned int),cocos2d::LayerColor*,cocos2d::Mat4 const&,unsigned int &>>,void ()(void)>::destroy_deallocate	976579	65607	0	0
 00892B5C	cocos2d::Node::~Node [deleting destructor]	178767	6314	1	262
-00892B68	cocos2d::Node::init	4091966	84869	0	0
-00892BDC	cocos2d::Node::_setLocalZOrder	5981242	353565	0	0
-00892C50	cocos2d::Node::getRotation	195399	331	0	0
-00892CB8	cocos2d::Node::getRotationSkewX	221385	4833	0	0
-00892D78	cocos2d::Node::getRotationSkewY	221385	4833	0	0
-00892DB0	cocos2d::Node::getScale	221503	17051	0	0
-00892E9A	cocos2d::Node::getScaleX	364490	51913	0	0
-00892FB4	cocos2d::Node::getScaleY	242878	9945	0	0
+00892B68	cocos2d::Node::init	4102344	84882	0	0
+00892BDC	cocos2d::Node::_setLocalZOrder	5993082	353583	0	0
+00892C50	cocos2d::Node::getRotation	195606	331	0	0
+00892CB8	cocos2d::Node::getRotationSkewX	221592	4833	0	0
+00892D78	cocos2d::Node::getRotationSkewY	221592	4833	0	0
+00892DB0	cocos2d::Node::getScale	221519	17052	0	0
+00892E9A	cocos2d::Node::getScaleX	364697	51913	0	0
+00892FB4	cocos2d::Node::getScaleY	243085	9945	0	0
 00892FEC	cocos2d::Node::getScaleZ	37236	9610	0	0
-0089306C	cocos2d::Node::getPosition	49647551	929374	0	0
+0089306C	cocos2d::Node::getPosition	49654551	929378	0	0
 008930DC	cocos2d::Node::getPosition	15	8	0	0
-008931C8	cocos2d::Node::getPositionX	195542	6381	0	0
-00893230	cocos2d::Node::getPositionY	298688	22449	0	0
-00893320	cocos2d::Node::getChildrenCount	415685	1479	0	0
-00893334	cocos2d::Node::isVisible	220915044	1137934	0	0
-0089336C	cocos2d::Node::getAnchorPointInPoints	268867	2277	0	0
-00893370	cocos2d::Node::getAnchorPoint	218828	689	0	0
-0089343C	cocos2d::Node::getContentSize	61579813	869906	0	0
-008934EC	cocos2d::Node::isRunning	119241	6973	0	0
-008934F4	cocos2d::Node::setParent	4770084	178920	0	0
-0089353C	cocos2d::Node::getTag	48098601	873276	0	0
-00893544	cocos2d::Node::setTag	1060860	9424	0	0
+008931C8	cocos2d::Node::getPositionX	195930	6381	0	0
+00893230	cocos2d::Node::getPositionY	299013	22449	0	0
+00893320	cocos2d::Node::getChildrenCount	416049	1489	0	0
+00893334	cocos2d::Node::isVisible	220915567	1137939	0	0
+0089336C	cocos2d::Node::getAnchorPointInPoints	269517	2277	0	0
+00893370	cocos2d::Node::getAnchorPoint	219037	689	0	0
+0089343C	cocos2d::Node::getContentSize	61590288	869923	0	0
+008934EC	cocos2d::Node::isRunning	119516	6974	0	0
+008934F4	cocos2d::Node::setParent	4787955	178938	0	0
+0089353C	cocos2d::Node::getTag	48099950	873290	0	0
+00893544	cocos2d::Node::setTag	1064400	9442	0	0
 008935D4	cocos2d::Node::setUserData	39232	335	0	0
-008935DC	cocos2d::Node::setOrderOfArrival	388973	2207	0	0
-0089360E	cocos2d::Node::getGLProgramState	131384111	5393764	0	0
-00893674	cocos2d::Node::getGLProgram	28380633	786523	0	0
-00893814	cocos2d::Node::stopAllActions	117233	8034	0	0
-008941C8	cocos2d::Node::addChild	867647	4467	104	1
-008941DA	cocos2d::Node::addChild	1873383	94580	0	0
-008941F2	cocos2d::Node::removeFromParent	583738	84542	0	0
-00894358	cocos2d::Node::removeAllChildren	39263	3355	0	2
-008944C4	cocos2d::Node::draw	166066216	7486814	0	0
+008935DC	cocos2d::Node::setOrderOfArrival	390491	2219	0	0
+0089360E	cocos2d::Node::getGLProgramState	131384228	5393764	0	0
+00893674	cocos2d::Node::getGLProgram	28381027	786523	0	0
+00893814	cocos2d::Node::stopAllActions	117275	8035	0	0
+008941C8	cocos2d::Node::addChild	875074	4479	104	1
+008941DA	cocos2d::Node::addChild	1875002	94592	0	0
+008941F2	cocos2d::Node::removeFromParent	583747	84542	0	0
+00894358	cocos2d::Node::removeAllChildren	39290	3355	0	2
+008944C4	cocos2d::Node::draw	166066225	7486814	0	0
 00894B1C	cocos2d::Node::stopAction	4669	251	0	0
 00894B4E	cocos2d::Node::getNumberOfRunningActions	533512	60402	0	0
-00894E9C	cocos2d::Node::getNodeToParentAffineTransform	163310	1336	0	0
-00895D90	cocos2d::Node::removeAllComponents	4648965	120855	0	0
-008960C2	cocos2d::Node::getPhysicsBody	24799	591	0	0
-008960CC	cocos2d::Node::getOpacity	348515	11788	0	0
-008960D8	cocos2d::Node::getDisplayedOpacity	50808793	824507	0	0
-008960E0	cocos2d::Node::setOpacity	61799054	1379334	0	0
-00896168	cocos2d::Node::isCascadeOpacityEnabled	51099058	744717	0	0
-0089621C	cocos2d::Node::getColor	317018	3505	0	0
-00896228	cocos2d::Node::getDisplayedColor	69165468	1446498	0	0
-00896344	cocos2d::Node::isCascadeColorEnabled	69179489	1418777	0	0
-00896AB0	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<cocos2d::Node>(cocos2d::Node *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<cocos2d::Node>(cocos2d::Node *,int,bool)::{lambda(float)#1}>,void ()(float)>::__clone	95097	3917	0	0
-00896AD0	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<cocos2d::Node>(cocos2d::Node *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<cocos2d::Node>(cocos2d::Node *,int,bool)::{lambda(float)#1}>,void ()(float)>::destroy	168253	20429	0	0
+00894E9C	cocos2d::Node::getNodeToParentAffineTransform	163313	1336	0	0
+00895D90	cocos2d::Node::removeAllComponents	4649001	120855	0	0
+008960C2	cocos2d::Node::getPhysicsBody	25013	597	0	0
+008960CC	cocos2d::Node::getOpacity	349782	11800	0	0
+008960D8	cocos2d::Node::getDisplayedOpacity	50816299	824520	0	0
+008960E0	cocos2d::Node::setOpacity	61801335	1379351	0	0
+00896168	cocos2d::Node::isCascadeOpacityEnabled	51106852	744730	0	0
+0089621C	cocos2d::Node::getColor	318265	3517	0	0
+00896228	cocos2d::Node::getDisplayedColor	69172871	1446505	0	0
+00896344	cocos2d::Node::isCascadeColorEnabled	69187177	1418784	0	0
+00896AB0	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<cocos2d::Node>(cocos2d::Node *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<cocos2d::Node>(cocos2d::Node *,int,bool)::{lambda(float)#1}>,void ()(float)>::__clone	95151	3923	0	0
+00896AD0	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<cocos2d::Node>(cocos2d::Node *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<cocos2d::Node>(cocos2d::Node *,int,bool)::{lambda(float)#1}>,void ()(float)>::destroy	168333	20435	0	0
 00896ADA	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<cocos2d::Node>(cocos2d::Node *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<cocos2d::Node>(cocos2d::Node *,int,bool)::{lambda(float)#1}>,void ()(float)>::operator()	27855703	59553	19	51
 008A3F84	cocos2d::RenderTexture::~RenderTexture [deleting destructor]	1415	216	0	289
-008A5CC4	std::__function::__func<std::__bind<void (cocos2d::RenderTexture::*)(void),cocos2d::RenderTexture*>,std::allocator<std::__bind<void (cocos2d::RenderTexture::*)(void),cocos2d::RenderTexture*>>,void ()(void)>::destroy	9237	323	0	0
+008A5CC4	std::__function::__func<std::__bind<void (cocos2d::RenderTexture::*)(void),cocos2d::RenderTexture*>,std::allocator<std::__bind<void (cocos2d::RenderTexture::*)(void),cocos2d::RenderTexture*>>,void ()(void)>::destroy	9291	323	0	0
 008A5CCE	std::__function::__func<std::__bind<void (cocos2d::RenderTexture::*)(void),cocos2d::RenderTexture*>,std::allocator<std::__bind<void (cocos2d::RenderTexture::*)(void),cocos2d::RenderTexture*>>,void ()(void)>::operator()	3834	1034	0	0
-008A5D84	std::__function::__func<std::__bind<void (cocos2d::RenderTexture::*)(cocos2d::EventCustom *),cocos2d::RenderTexture*,std::placeholders::__ph<1> &>,std::allocator<std::__bind<void (cocos2d::RenderTexture::*)(cocos2d::EventCustom *),cocos2d::RenderTexture*,std::placeholders::__ph<1> &>>,void ()(cocos2d::EventCustom *)>::destroy	9202	345	0	0
-008A5FCC	cocos2d::Scene::getScene	3489057	158323	0	0
+008A5D84	std::__function::__func<std::__bind<void (cocos2d::RenderTexture::*)(cocos2d::EventCustom *),cocos2d::RenderTexture*,std::placeholders::__ph<1> &>,std::allocator<std::__bind<void (cocos2d::RenderTexture::*)(cocos2d::EventCustom *),cocos2d::RenderTexture*,std::placeholders::__ph<1> &>>,void ()(cocos2d::EventCustom *)>::destroy	9274	345	0	0
+008A5FCC	cocos2d::Scene::getScene	3489267	158335	0	0
 008A609C	cocos2d::Scene::addChild	99	0	0	0
-008A6600	cocos2d::Sprite::initWithTexture	2593346	89630	0	2
+008A6600	cocos2d::Sprite::initWithTexture	2595057	89643	0	2
 008A6B90	cocos2d::Sprite::~Sprite [deleting destructor]	1139140	48801	0	80
-008A6DD0	cocos2d::Sprite::getTexture	696534	72188	0	0
-008A6DDC	cocos2d::Sprite::setTextureRect	591265	50231	0	0
-008A703C	cocos2d::Sprite::setVertexRect	6334435	160890	0	0
-008A83E0	cocos2d::Sprite::setOpacityModifyRGB	3776613	82717	0	0
+008A6DD0	cocos2d::Sprite::getTexture	696843	72188	0	0
+008A6DDC	cocos2d::Sprite::setTextureRect	591962	50244	0	0
+008A703C	cocos2d::Sprite::setVertexRect	6348889	160921	0	0
+008A83E0	cocos2d::Sprite::setOpacityModifyRGB	3786776	82730	0	0
 008A8F18	cocos2d::SpriteBatchNode::~SpriteBatchNode [deleting destructor]	23521	558	0	123
 008A99E0	thunk to cocos2d::SpriteBatchNode::getBlendFunc	327	200	0	0
-008A99E4	cocos2d::SpriteBatchNode::getTexture	752868	1232	0	0
+008A99E4	cocos2d::SpriteBatchNode::getTexture	760293	1244	0	0
 008AA606	cocos2d::SpriteFrame::~SpriteFrame [deleting destructor]	37478	10589	0	0
-008AA8F8	cocos2d::SpriteFrame::getOffset	1383547	8239	0	0
+008AA8F8	cocos2d::SpriteFrame::getOffset	1383550	8239	0	0
 008C1768	cocos2d::tweenfunc::bounceEaseOut	23521	4231	0	0
 008C1964	cocos2d::tweenfunc::easeIn	132089	8705	0	0
 008D38C8	cocos2d::GLViewProtocol::pollInputEvents	895983	61842	0	0
-008D3B44	cocos2d::GLViewProtocol::getDesignResolutionSize	60521	21680	0	0
+008D3B44	cocos2d::GLViewProtocol::getDesignResolutionSize	60523	21681	0	0
 008D3B48	cocos2d::GLViewProtocol::getFrameSize	985	625	0	0
 008D4550	cocos2d::GLViewProtocol::getViewPortRect	9326	0	0	0
-008D4554	cocos2d::GLViewProtocol::getScaleX	10242	1179	0	0
-008D4558	cocos2d::GLViewProtocol::getScaleY	10242	1179	0	0
+008D4554	cocos2d::GLViewProtocol::getScaleX	10251	1179	0	0
+008D4558	cocos2d::GLViewProtocol::getScaleY	10251	1179	0	0
 008D4EC4	cocos2d::FileUtils::purgeCachedEntries	100	2	0	0
-008D6214	cocos2d::FileUtils::isFileExist	116827	751	0	0
+008D6214	cocos2d::FileUtils::isFileExist	117471	751	0	0
 008D93B0	cocos2d::SAXParser::SAXParser [base constructor]	7237	2736	0	0
 008D93B6	cocos2d::SAXParser::~SAXParser [base destructor]	7237	2706	0	0
 008D94EC	cocos2d::SAXParser::setDelegator	7237	2736	0	0
@@ -5964,10 +5967,10 @@ addr	name	calls	verified	mismatches	unverifiable
 008D94FC	tinyxml2::XMLVisitor::VisitExit	7223	2710	0	0
 008D9500	tinyxml2::XMLVisitor::Visit	9358	2637	0	0
 008D9508	cocos2d::XmlSaxHander::Visit	9359	2637	0	0
-008D9714	cocos2d::Image::~Image [deleting destructor]	87351	8742	0	0
+008D9714	cocos2d::Image::~Image [deleting destructor]	87654	8748	0	0
 008DBFE8	bg::AssetInputStream::~AssetInputStream	89	0	0	0
-008DC044	bg::AssetInputStream::read	11388	1010	0	0
-008DC090	bg::AssetInputStream::tell	5694	987	0	0
+008DC044	bg::AssetInputStream::read	11416	1016	0	0
+008DC090	bg::AssetInputStream::tell	5708	993	0	0
 008DC0B4	bg::AssetInputStream::validate	226	10	0	0
 008DC114	bg::FileInputStream::FileInputStream	3789	356	0	0
 008DC2DC	bg::FileInputStream::~FileInputStream	176	7	0	0
@@ -5975,74 +5978,74 @@ addr	name	calls	verified	mismatches	unverifiable
 008DC374	bg::FileInputStream::size	3185	343	0	0
 008DC3C4	bg::MemoryInputStream::MemoryInputStream(const void*,unsigned,const function&)	24862	2403	0	0
 008DC3F8	bg::MemoryInputStream::MemoryInputStream(const shared_ptr<Data>&)	12870	1279	0	0
-008DC424	bg::MemoryInputStream::~MemoryInputStream	58375	4109	0	0
-008DC4B4	bg::MemoryInputStream::read	145554	2980	0	0
+008DC424	bg::MemoryInputStream::~MemoryInputStream	58431	4109	0	0
+008DC4B4	bg::MemoryInputStream::read	145722	2980	0	0
 008DC4FA	bg::MemoryInputStream::tell	61074	1088	0	0
 008DC4FE	bg::MemoryInputStream::seek	59369	2959	0	0
-008DC52E	bg::MemoryInputStream::validate	21453	438	0	0
+008DC52E	bg::MemoryInputStream::validate	21509	438	0	0
 008DC53C	bg::InputStreamFactory::setAssetManager	178	78	0	0
 008DC554	bg::InputStreamFactory::open	3667	419	0	0
-008DC5F0	bg::InputStreamFactory::create	20859	1115	0	0
+008DC5F0	bg::InputStreamFactory::create	20915	1115	0	0
 008DC7CC	std::__shared_ptr_emplace<bg::FileInputStream>::__on_zero_shared	181	15	0	0
 008DC7D8	std::__shared_ptr_emplace<bg::FileInputStream>::__on_zero_shared_weak	181	15	0	0
 008DC8CC	std::__shared_ptr_emplace<bg::AssetInputStream>::__on_zero_shared	96	2	0	0
 008DC8D8	std::__shared_ptr_emplace<bg::AssetInputStream>::__on_zero_shared_weak	96	2	0	0
-008DC8E0	sub_8DC8E0	1462641	26076	0	0
-008DC8E8	sub_8DC8E8	1813610	27713	0	0
-008DC8F0	bg::Archive::getInstance	1251522	20344	0	0
+008DC8E0	sub_8DC8E0	1464120	26106	0	0
+008DC8E8	sub_8DC8E8	1816133	27743	0	0
+008DC8F0	bg::Archive::getInstance	1252571	20374	0	0
 008DC9CC	bg::Archive::getKey	921821	1812	0	0
-008DCBA8	bg::Archive::getData	303988	20051	0	0
+008DCBA8	bg::Archive::getData	305037	20081	0	0
 008DCDFC	bg::Archive::convert	25713	1281	0	0
-008DD1A4	bg::vfs (sub_8DD1A4): the statics on first use	900933	18633	0	0
-008DD46C	bg::vfs::readData	278667	18480	0	0
-008DD564	bg::vfs::exists	119919	1676	0	0
-008DD5F0	bg::vfs::getID	1385556	28496	0	0
+008DD1A4	bg::vfs (sub_8DD1A4): the statics on first use	904626	18664	0	0
+008DD46C	bg::vfs::readData	279696	18510	0	0
+008DD564	bg::vfs::exists	120563	1676	0	0
+008DD5F0	bg::vfs::getID	1387576	28510	0	0
 008DD6AC	bg::vfs::mount	75	9	0	0
 008DD790	bg::vfs::unmount	143	19	0	0
 008DD7A4	bg::vfs (sub_8DD7A4): unmount an id	110	5	0	0
 008DD830	bg::vfs archive (sub_8DD830): open	85	5	0	0
 008DE104	bg::vfs archive (sub_8DE104): constructor	85	5	0	0
-008DE234	bg::vfs archive (sub_8DE234): the entry by index	124381	7013	0	0
-008DE2DC	bg::vfs archive (sub_8DE2DC): the entry by name	124381	7013	0	0
-008DF01E	cocos2d::Size::Size [base constructor]	7123194	104409	0	0
-008DF026	cocos2d::Size::Size [base constructor]	19847833	682020	0	0
-008DF02C	cocos2d::Size::Size [base constructor]	79756697	1690770	0	0
-008DF040	cocos2d::Size::operator=	110232460	1583794	0	0
+008DE234	bg::vfs archive (sub_8DE234): the entry by index	125374	7043	0	0
+008DE2DC	bg::vfs archive (sub_8DE2DC): the entry by name	125374	7043	0	0
+008DF01E	cocos2d::Size::Size [base constructor]	7131153	104439	0	0
+008DF026	cocos2d::Size::Size [base constructor]	19851699	682068	0	0
+008DF02C	cocos2d::Size::Size [base constructor]	79789397	1690803	0	0
+008DF040	cocos2d::Size::operator=	110278827	1583828	0	0
 008DF04A	cocos2d::Size::setSize	481	8	0	0
-008DF170	cocos2d::Rect::Rect [base constructor]	3864968	96279	0	0
-008DF182	cocos2d::Rect::setRect	163779	1342	0	0
-008DF18A	cocos2d::Rect::Rect [base constructor]	11467991	184422	0	0
-008DF1A8	cocos2d::Rect::Rect [base constructor]	8196734	227175	0	0
-008DF1C0	cocos2d::Rect::operator=	14068107	171439	0	0
-008DF248	cocos2d::Rect::getMaxX	3461437	52616	0	0
-008DF274	cocos2d::Rect::getMinX	4778797	52687	0	0
-008DF278	cocos2d::Rect::getMaxY	3237523	52481	0	0
-008DF2A4	cocos2d::Rect::getMinY	5059841	52807	0	0
-008DFDEE	cocos2d::Mat4::Mat4 [base constructor]	611298982	24845634	0	0
-008DFE08	cocos2d::Mat4::~Mat4 [base destructor]	790472549	24902250	0	0
-008E1DC8	cocos2d::Mat4::multiply	99894860	3933820	0	0
-008E307A	cocos2d::Mat4::transformPoint	525651644	21540921	0	0
+008DF170	cocos2d::Rect::Rect [base constructor]	3876498	96309	0	0
+008DF182	cocos2d::Rect::setRect	163782	1342	0	0
+008DF18A	cocos2d::Rect::Rect [base constructor]	11498309	184453	0	0
+008DF1A8	cocos2d::Rect::Rect [base constructor]	8215071	227206	0	0
+008DF1C0	cocos2d::Rect::operator=	14108247	171470	0	0
+008DF248	cocos2d::Rect::getMaxX	3468871	52628	0	0
+008DF274	cocos2d::Rect::getMinX	4786231	52699	0	0
+008DF278	cocos2d::Rect::getMaxY	3244957	52493	0	0
+008DF2A4	cocos2d::Rect::getMinY	5067275	52819	0	0
+008DFDEE	cocos2d::Mat4::Mat4 [base constructor]	611300097	24845640	0	0
+008DFE08	cocos2d::Mat4::~Mat4 [base destructor]	790474297	24902256	0	0
+008E1DC8	cocos2d::Mat4::multiply	99895288	3933826	0	0
+008E307A	cocos2d::Mat4::transformPoint	525651656	21540921	0	0
 008E3228	cocos2d::Mat4::transformVector	3912168	233204	0	0
-008E499C	cocos2d::GLToCGAffine	164642	1336	0	0
-008E4B94	cocos2d::Vec2::Vec2 [base constructor]	52264335	701547	0	0
-008E4B9C	cocos2d::Vec2::Vec2 [base constructor]	136400402	1766786	0	0
-008E4C02	cocos2d::Vec2::Vec2 [base constructor]	89091590	1310219	0	0
-008E4C16	cocos2d::Vec2::~Vec2 [base destructor]	277165426	2758587	0	0
-008E50C4	cocos2d::Vec2::getNormalized	135299	787	0	0
+008E499C	cocos2d::GLToCGAffine	164645	1336	0	0
+008E4B94	cocos2d::Vec2::Vec2 [base constructor]	52393110	701582	0	0
+008E4B9C	cocos2d::Vec2::Vec2 [base constructor]	136489558	1766820	0	0
+008E4C02	cocos2d::Vec2::Vec2 [base constructor]	89162057	1310254	0	0
+008E4C16	cocos2d::Vec2::~Vec2 [base destructor]	277368350	2758622	0	0
+008E50C4	cocos2d::Vec2::getNormalized	135411	787	0	0
 008E530A	cocos2d::Vec2::set	692286	1400	0	0
 008E530E	cocos2d::Vec2::subtract	6314288	68377	0	0
-008E5E28	cocos2d::Vec3::Vec3 [base constructor]	19831504	1386227	0	0
-008E5E32	cocos2d::Vec3::Vec3 [base constructor]	49810138	895896	0	0
-008E5EB4	cocos2d::Vec3::Vec3 [base constructor]	3306008	24928	0	0
-008E5F50	cocos2d::Vec3::~Vec3 [base destructor]	70001844	1027058	0	0
-008E6912	cocos2d::Vec4::Vec4 [base constructor]	43020720	1563760	0	0
-008E691E	cocos2d::Vec4::Vec4 [base constructor]	66377	21750	0	0
-008E6A68	cocos2d::Vec4::~Vec4 [base destructor]	43087587	1569233	0	0
-008E7478	cocos2d::Vec4::set	19523114	669110	0	0
-008E7A00	cocos2d::PoolManager::getCurrentPool	8769393	317176	0	0
-008E86E8	cocos2d::Configuration::getMaxTextureSize	64089	1904	0	0
-008E86F4	cocos2d::Configuration::supportsNPOT	1522	55	0	0
-008E8716	cocos2d::Configuration::supportsShareableVAO	96133379	1474491	0	0
+008E5E28	cocos2d::Vec3::Vec3 [base constructor]	19869542	1386240	0	0
+008E5E32	cocos2d::Vec3::Vec3 [base constructor]	49905702	895927	0	0
+008E5EB4	cocos2d::Vec3::Vec3 [base constructor]	3324332	24945	0	0
+008E5F50	cocos2d::Vec3::~Vec3 [base destructor]	70116074	1027089	0	0
+008E6912	cocos2d::Vec4::Vec4 [base constructor]	43021343	1563761	0	0
+008E691E	cocos2d::Vec4::Vec4 [base constructor]	66388	21751	0	0
+008E6A68	cocos2d::Vec4::~Vec4 [base destructor]	43088212	1569234	0	0
+008E7478	cocos2d::Vec4::set	19523420	669110	0	0
+008E7A00	cocos2d::PoolManager::getCurrentPool	8782474	317198	0	0
+008E86E8	cocos2d::Configuration::getMaxTextureSize	64356	1910	0	0
+008E86F4	cocos2d::Configuration::supportsNPOT	1540	55	0	0
+008E8716	cocos2d::Configuration::supportsShareableVAO	96134679	1474503	0	0
 008E871A	cocos2d::Configuration::getValue	465	465	0	0
 008E8736	cocos2d::Configuration::setValue	165	79	0	0
 008ECC68	sub_8ECC68	150	150	0	0
@@ -6053,19 +6056,19 @@ addr	name	calls	verified	mismatches	unverifiable
 008ED0C0	sub_8ED0C0	150	150	0	0
 008ED0E0	nullsub_2290	152	152	0	0
 008ED230	std::__function::__func<std::__bind<void (cocos2d::Console::*)(int,std::string const&),cocos2d::Console*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>,std::allocator<std::__bind<void (cocos2d::Console::*)(int,std::string const&),cocos2d::Console*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>>,void ()(int,std::string const&)>::destroy	1520	1520	0	0
-008ED814	cocos2d::Data::Data [base constructor]	150786	10030	0	0
-008ED81C	cocos2d::Data::Data [base constructor]	149647	9976	0	0
-008ED89A	cocos2d::Data::~Data [base destructor]	290999	15474	0	0
+008ED814	cocos2d::Data::Data [base constructor]	151446	10043	0	0
+008ED81C	cocos2d::Data::Data [base constructor]	150305	9989	0	0
+008ED89A	cocos2d::Data::~Data [base destructor]	292315	15487	0	0
 008ED8B2	cocos2d::Data::clear	482	30	0	0
 008ED8C6	cocos2d::Data::operator=	82	6	0	0
-008ED8DE	cocos2d::Data::operator=	1060	84	0	0
-008ED8EE	cocos2d::Data::isNull	136645	10191	0	0
-008ED90A	cocos2d::Data::getBytes	330561	26488	0	0
-008ED90E	cocos2d::Data::getSize	304398	26002	0	0
-008ED912	cocos2d::Data::fastSet	134923	9641	0	0
-008EF8C8	cocos2d::Director::popMatrix	388833865	16422283	0	0
-008EFE68	cocos2d::Director::getTextureCache	1570942	88118	0	0
-008F0624	cocos2d::Director::getWinSize	19529527	669288	0	0
+008ED8DE	cocos2d::Data::operator=	1062	84	0	0
+008ED8EE	cocos2d::Data::isNull	137303	10204	0	0
+008ED90A	cocos2d::Data::getBytes	331208	26501	0	0
+008ED90E	cocos2d::Data::getSize	304984	26009	0	0
+008ED912	cocos2d::Data::fastSet	135545	9654	0	0
+008EF8C8	cocos2d::Director::popMatrix	388834234	16422283	0	0
+008EFE68	cocos2d::Director::getTextureCache	1573617	88132	0	0
+008F0624	cocos2d::Director::getWinSize	19529833	669288	0	0
 008F0E9C	cocos2d::DisplayLinkDirector::stopAnimation	100	2	0	0
 008F13CC	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<cocos2d::ActionManager>(cocos2d::ActionManager *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<cocos2d::ActionManager>(cocos2d::ActionManager *,int,bool)::{lambda(float)#1}>,void ()(float)>::__clone	326	160	0	0
 008F13EC	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<cocos2d::ActionManager>(cocos2d::ActionManager *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<cocos2d::ActionManager>(cocos2d::ActionManager *,int,bool)::{lambda(float)#1}>,void ()(float)>::destroy	326	160	0	0
@@ -6074,94 +6077,94 @@ addr	name	calls	verified	mismatches	unverifiable
 008F459C	cocos2d::EventDispatcher::setEnabled	79	79	0	0
 008F65E2	sub_8F65E2	14430	8057	0	0
 008F689C	nullsub_181	894866	60709	0	0
-008F8D70	cocos2d::EventListener::checkAvailable	194462	2310	0	0
-008F9D0C	cocos2d::EventListenerCustom::checkAvailable	194017	2407	0	0
-008F9DF4	sub_8F9DF4	387943	2809	0	0
-008F9E14	nullsub_2294	572312	4934	0	0
+008F8D70	cocos2d::EventListener::checkAvailable	195568	2322	0	0
+008F9D0C	cocos2d::EventListenerCustom::checkAvailable	195123	2419	0	0
+008F9DF4	sub_8F9DF4	390155	2821	0	0
+008F9E14	nullsub_2294	574524	4946	0	0
 008FA312	cocos2d::EventListenerKeyboard::checkAvailable	134	19	0	0
 008FA60C	sub_8FA60C	260	19	0	0
 008FA62C	nullsub_2296	271	19	0	0
 008FAC18	cocos2d::EventListenerTouchOneByOne::~EventListenerTouchOneByOne [deleting destructor]	32260	9799	0	0
-008FAC98	cocos2d::EventListenerTouchOneByOne::setSwallowTouches	35531	1082	0	0
-008FAD14	cocos2d::EventListenerTouchOneByOne::checkAvailable	35712	1082	0	0
-008FD0B4	cocos2d::Ref::retain	37543614	622771	0	0
-008FD0BC	cocos2d::Ref::release	27000198	732238	1	184
-008FD0D4	cocos2d::Ref::autorelease	7643557	130563	0	0
-008FD0F0	cocos2d::Ref::getReferenceCount	329570	2364	0	0
+008FAC98	cocos2d::EventListenerTouchOneByOne::setSwallowTouches	35774	1088	0	0
+008FAD14	cocos2d::EventListenerTouchOneByOne::checkAvailable	35955	1088	0	0
+008FD0B4	cocos2d::Ref::retain	37620975	622793	0	0
+008FD0BC	cocos2d::Ref::release	27014100	732250	1	184
+008FD0D4	cocos2d::Ref::autorelease	7656638	130585	0	0
+008FD0F0	cocos2d::Ref::getReferenceCount	329579	2364	0	0
 00900164	cocos2d::Scheduler::schedule	690	11	0	0
 00900308	cocos2d::TimerTargetSelector::~TimerTargetSelector [deleting destructor]	364	334	0	0
 00900E38	cocos2d::Touch::getLocationInView	490	198	0	0
 00901804	cocos2d::UserDefault::getDataForKey	99	2	0	0
-00901C04	cocos2d::Value::Value [base constructor]	807991	25268	0	0
+00901C04	cocos2d::Value::Value [base constructor]	808039	25274	0	0
 00901C16	cocos2d::Value::Value [base constructor]	511839	19849	0	0
-00901C1E	cocos2d::Value::Value [base constructor]	26725	419	0	0
+00901C1E	cocos2d::Value::Value [base constructor]	26839	431	0	0
 00901C26	cocos2d::Value::Value [base constructor]	163856	13394	0	0
 00901C30	cocos2d::Value::Value [base constructor]	936	936	0	0
 00901E04	cocos2d::Value::Value [base constructor]	710147	11968	0	0
-00901FBC	cocos2d::Value::~Value [base destructor]	1939724	27274	0	0
+00901FBC	cocos2d::Value::~Value [base destructor]	1939838	27286	0	0
 00902B3C	cocos2d::Value::asValueMap	158634	12124	0	0
-00904484	cocos2d::ZipUtils::isGZipBuffer	72180	9216	0	0
+00904484	cocos2d::ZipUtils::isGZipBuffer	72447	9222	0	0
 00905A88	base64Decode	137	74	0	0
 00905B2C	base64Encode	1785	1140	0	0
 00905BFC	cocos2d::ccArrayDoubleCapacity	1	1	0	0
 009062D4	cc_fps_images_len	205	104	0	0
-009062DC	cocos2d::Color3B::Color3B [base constructor]	104324	3011	0	0
-009062E6	cocos2d::Color3B::Color3B [base constructor]	21249425	459489	0	0
-009064C6	cocos2d::Color4B::Color4B [base constructor]	20543934	2032326	0	0
-009064D2	cocos2d::Color4B::Color4B [base constructor]	221566699	2838000	0	0
-0090669A	cocos2d::Color4F::Color4F [base constructor]	9594933	177878	0	0
-009066A6	cocos2d::Color4F::Color4F [base constructor]	1250685	35090	0	0
-0090A7F8	cocos2d::CustomCommand::init	21410545	1032361	0	0
+009062DC	cocos2d::Color3B::Color3B [base constructor]	104730	3012	0	0
+009062E6	cocos2d::Color3B::Color3B [base constructor]	21251729	459506	0	0
+009064C6	cocos2d::Color4B::Color4B [base constructor]	20582714	2032339	0	0
+009064D2	cocos2d::Color4B::Color4B [base constructor]	221740399	2838053	0	0
+0090669A	cocos2d::Color4F::Color4F [base constructor]	9613681	177891	0	0
+009066A6	cocos2d::Color4F::Color4F [base constructor]	1250735	35090	0	0
+0090A7F8	cocos2d::CustomCommand::init	21410599	1032361	0	0
 0090A850	cocos2d::CustomCommand::execute	20561829	881129	0	13247833
 0090B60E	cocos2d::GLProgram::getVertexAttrib	603	331	0	0
 0090B6A4	cocos2d::GLProgram::use	92280896	1301374	0	27211
-0090E2C0	cocos2d::GLProgramCache::getGLProgram	51781296	952670	0	0
+0090E2C0	cocos2d::GLProgramCache::getGLProgram	51792056	952683	0	0
 0090F0E6	cocos2d::GLProgramState::getOrCreateWithGLProgram	119889	8416	0	0
 0091062C	sub_91062C	1404	193	0	0
 0091064C	nullsub_2298	1410	195	0	0
-009126A0	cocos2d::RenderCommand::RenderCommand [base constructor]	6826469	219037	0	0
-009126C0	cocos2d::RenderCommand::~RenderCommand [base destructor]	7078218	118559	0	0
-009130B4	cocos2d::Renderer::popGroup	1199397	45995	0	0
+009126A0	cocos2d::RenderCommand::RenderCommand [base constructor]	6839145	219050	0	0
+009126C0	cocos2d::RenderCommand::~RenderCommand [base destructor]	7078326	118559	0	0
+009130B4	cocos2d::Renderer::popGroup	1199415	45995	0	0
 009135E2	cocos2d::Renderer::flush	23447030	1007167	0	56635
 00913A7C	sub_913A7C	150	150	0	0
 00913A9C	nullsub_2299	152	152	0	0
-00914A98	cocos2d::Texture2D::~Texture2D [deleting destructor]	26501	929	0	0
-00914ABA	cocos2d::Texture2D::getPixelFormat	62307	8323	0	0
-00914ABE	cocos2d::Texture2D::getPixelsWide	6320501	161081	0	0
-00914AC2	cocos2d::Texture2D::getPixelsHigh	6320501	161081	0	0
-00914AC6	cocos2d::Texture2D::getName	158148367	6120108	0	0
-00914B06	cocos2d::Texture2D::getContentSizeInPixels	94105	8465	0	0
-00914B42	cocos2d::Texture2D::hasPremultipliedAlpha	4597844	147728	0	0
-0091501C	cocos2d::Texture2D::initWithImage	73384	5536	9	12341
+00914A98	cocos2d::Texture2D::~Texture2D [deleting destructor]	26614	929	0	0
+00914ABA	cocos2d::Texture2D::getPixelFormat	62574	8329	0	0
+00914ABE	cocos2d::Texture2D::getPixelsWide	6334938	161112	0	0
+00914AC2	cocos2d::Texture2D::getPixelsHigh	6334938	161112	0	0
+00914AC6	cocos2d::Texture2D::getName	158148502	6120108	0	0
+00914B06	cocos2d::Texture2D::getContentSizeInPixels	94512	8471	0	0
+00914B42	cocos2d::Texture2D::hasPremultipliedAlpha	4609199	147741	0	0
+0091501C	cocos2d::Texture2D::initWithImage	73651	5542	9	12341
 00915CE4	cocos2d::Texture2D::PVRImagesHavePremultipliedAlpha	78	78	0	0
 00915F28	cocos2d::Texture2D::setDefaultAlphaPixelFormat	416	244	0	0
 00915F3C	cocos2d::Texture2D::getDefaultAlphaPixelFormat	169	84	0	0
-00916014	cocos2d::Texture2D::getPixelFormatInfoMap	70491	3786	0	0
+00916014	cocos2d::Texture2D::getPixelFormatInfoMap	70758	3792	0	0
 00916344	cocos2d::TextureAtlas::~TextureAtlas [deleting destructor]	102521	1136	0	0
-00916350	cocos2d::TextureAtlas::getTotalQuads	51290696	1358766	0	0
-00916354	cocos2d::TextureAtlas::getCapacity	1664144	17876	0	0
-00916358	cocos2d::TextureAtlas::getTexture	1707268	15147	0	0
-00916380	cocos2d::TextureAtlas::getQuads	22797825	662044	0	0
-00916B88	cocos2d::TextureAtlas::removeAllQuads	210793	7816	0	0
+00916350	cocos2d::TextureAtlas::getTotalQuads	51308916	1358783	0	0
+00916354	cocos2d::TextureAtlas::getCapacity	1673326	17893	0	0
+00916358	cocos2d::TextureAtlas::getTexture	1720166	15176	0	0
+00916380	cocos2d::TextureAtlas::getQuads	22806883	662061	0	0
+00916B88	cocos2d::TextureAtlas::removeAllQuads	212227	7845	0	0
 00916CC2	cocos2d::TextureAtlas::increaseTotalQuadsWith	507	248	0	0
 00916E80	cocos2d::TextureAtlas::drawQuads	25624941	726702	0	0
-009170BC	std::__function::__func<std::__bind<void (cocos2d::TextureAtlas::*)(cocos2d::EventCustom *),cocos2d::TextureAtlas*,std::placeholders::__ph<1> &>,std::allocator<std::__bind<void (cocos2d::TextureAtlas::*)(cocos2d::EventCustom *),cocos2d::TextureAtlas*,std::placeholders::__ph<1> &>>,void ()(cocos2d::EventCustom *)>::destroy	298661	3146	0	0
-00917464	LRUCache<unsigned, shared_ptr<Texture2D>>::find	1498653	54932	0	0
+009170BC	std::__function::__func<std::__bind<void (cocos2d::TextureAtlas::*)(cocos2d::EventCustom *),cocos2d::TextureAtlas*,std::placeholders::__ph<1> &>,std::allocator<std::__bind<void (cocos2d::TextureAtlas::*)(cocos2d::EventCustom *),cocos2d::TextureAtlas*,std::placeholders::__ph<1> &>>,void ()(cocos2d::EventCustom *)>::destroy	299923	3158	0	0
+00917464	LRUCache<unsigned, shared_ptr<Texture2D>>::find	1501328	54946	0	0
 009181FC	cocos2d::TextureCache::removeAllTextures	148	5	0	0
 00918218	cocos2d::TextureCache::getLimit	290	24	0	0
 0091821C	cocos2d::TextureCache::setLimit	99	2	0	0
 00918320	LRUCache<unsigned, shared_ptr<Texture2D>>::remove	189	98	0	0
-00918444	LRUCache<unsigned, shared_ptr<Texture2D>>::insert	61539	8040	0	223
-00918B54	LRUCache<unsigned, shared_ptr<Texture2D>>::update	812753	22897	0	0
-00918B98	LRUCache<unsigned, shared_ptr<Texture2D>>::removeLRUData	15202	51	0	0
-00918BC0	LRUCache<unsigned, shared_ptr<Texture2D>>::removeData	15293	55	0	0
-009191BC	shared_ptr<Texture2D> control block (TextureCache::insertTexture $_2) __on_zero_shared	21059	794	0	2843
-009191F0	shared_ptr<Texture2D> control block (TextureCache::insertTexture $_2) __on_zero_shared_weak	21059	3173	0	0
+00918444	LRUCache<unsigned, shared_ptr<Texture2D>>::insert	61806	8046	0	223
+00918B54	LRUCache<unsigned, shared_ptr<Texture2D>>::update	814018	22911	0	0
+00918B98	LRUCache<unsigned, shared_ptr<Texture2D>>::removeLRUData	15260	51	0	0
+00918BC0	LRUCache<unsigned, shared_ptr<Texture2D>>::removeData	15351	55	0	0
+009191BC	shared_ptr<Texture2D> control block (TextureCache::insertTexture $_2) __on_zero_shared	21172	794	0	2843
+009191F0	shared_ptr<Texture2D> control block (TextureCache::insertTexture $_2) __on_zero_shared_weak	21172	3173	0	0
 009191F8	std::__hash_table<std::__hash_value_type<unsigned int,std::shared_ptr<cocos2d::Texture2D>>,std::__unordered_map_hasher<unsigned int,std::__hash_value_type<unsigned int,std::shared_ptr<cocos2d::Texture2D>>,std::hash<unsigned int>,true>,std::__unordered_map_equal<unsigned int,std::__hash_value_type<unsigned int,std::shared_ptr<cocos2d::Texture2D>>,std::equal_to<unsigned int>,true>,std::allocator<std::__hash_value_type<unsigned int,std::shared_ptr<cocos2d::Texture2D>>>>::__erase_unique<unsigned int>	147	61	0	0
 00919386	std::__hash_table<unsigned int,std::hash<unsigned int>,std::equal_to<unsigned int>,std::allocator<unsigned int>>::__erase_unique<unsigned int>	163	81	0	0
-0091B508	cocos2d::GL::bindTexture2D	98919604	1211467	0	103
-0091B6D4	cocos2d::GL::setProjectionMatrixDirty	2972	408	0	0
-0092DAF4	llvm::ConvertUTF8toWide	235389	7797	0	0
+0091B508	cocos2d::GL::bindTexture2D	98920304	1211490	0	103
+0091B6D4	cocos2d::GL::setProjectionMatrixDirty	2990	408	0	0
+0092DAF4	llvm::ConvertUTF8toWide	236607	7814	0	0
 0092FF3C	tinyxml2::XMLText::Accept	1500016	37051	0	0
 00930344	tinyxml2::XMLDeclaration::Accept	6679	2691	0	0
 00930538	tinyxml2::XMLUnknown::Accept	6679	2691	0	0
@@ -6175,9 +6178,9 @@ addr	name	calls	verified	mismatches	unverifiable
 0093295E	tinyxml2::MemPoolT<36>::SetTracked	6679	2692	0	0
 00932976	tinyxml2::MemPoolT<52>::Free	3217214	66642	0	0
 00932988	tinyxml2::MemPoolT<52>::SetTracked	3217214	66642	0	0
-00936E1C	XXH32	2104973	12916	0	0
-0093745C	btf_is_valid(unsigned char*, int)	70302	8763	0	0
-00937494	btf_read(unsigned char*, int, int*, int*, unsigned char**, int*, bool*)	67250	8181	0	0
+00936E1C	XXH32	2105090	12916	0	0
+0093745C	btf_is_valid(unsigned char*, int)	70569	8769	0	0
+00937494	btf_read(unsigned char*, int, int*, int*, unsigned char**, int*, bool*)	67517	8187	0	0
 009390D8	sub_9390D8	16790	1155	0	0
 00939F48	sub_939F48	3830	322	0	0
 0094C2E4	nullsub_186	3830	322	0	0
@@ -6199,47 +6202,47 @@ addr	name	calls	verified	mismatches	unverifiable
 0097FB84	sub_97FB84	3830	324	0	0
 009880A0	sub_9880A0	11490	966	0	0
 00988178	sub_988178	7156	390	0	0
-009B3188	sub_9B3188	263790	7588	0	0
-009B3190	sub_9B3190	246984	2966	0	0
-009B3198	sub_9B3198	35648	1937	0	0
-009B3F00	ft_validator_init	13473	240	0	0
-009B62A0	FT_Stream_OpenMemory	4329	83	0	0
+009B3188	sub_9B3188	267076	7604	0	0
+009B3190	sub_9B3190	249379	2982	0	0
+009B3198	sub_9B3198	36044	1937	0	0
+009B3F00	ft_validator_init	13554	240	0	0
+009B62A0	FT_Stream_OpenMemory	4356	83	0	0
 009B62B8	FT_Stream_Close	3606	153	0	0
-009B6430	FT_Stream_Pos	252256	7216	0	0
-009B64B8	FT_Stream_Read	8655	90	0	0
-009B7280	FT_Sin	18941	5427	0	0
-009B7DD8	FT_Vector_From_Polar	457848	15784	0	0
-009B81E0	ft_mem_free	355017	3775	4979	0
-009B88D4	FT_Outline_Done	7467	2801	0	0
-009B998C	FT_Outline_New	7467	2801	0	0
-009BE9C0	sub_9BE9C0	2491	985	0	0
-009C240C	FT_Outline_GetOutsideBorder	2491	985	0	0
-009C3C24	sub_9C3C24	4491	150	0	0
-009C3EEC	sub_9C3EEC	30036	6248	0	0
-009C3EF4	sub_9C3EF4	38167	6560	0	0
-009C4BE4	sub_9C4BE4	112517	3881	0	0
-009C5700	sub_9C5700	4491	150	0	0
+009B6430	FT_Stream_Pos	255321	7232	0	0
+009B64B8	FT_Stream_Read	8709	90	0	0
+009B7280	FT_Sin	19751	5427	0	0
+009B7DD8	FT_Vector_From_Polar	476514	15784	0	0
+009B81E0	ft_mem_free	357670	3791	4979	0
+009B88D4	FT_Outline_Done	7791	2801	0	0
+009B998C	FT_Outline_New	7791	2801	0	0
+009BE9C0	sub_9BE9C0	2599	985	0	0
+009C240C	FT_Outline_GetOutsideBorder	2599	985	0	0
+009C3C24	sub_9C3C24	4518	150	0	0
+009C3EEC	sub_9C3EEC	30873	6248	0	0
+009C3EF4	sub_9C3EF4	39319	6560	0	0
+009C4BE4	sub_9C4BE4	113931	3897	0	0
+009C5700	sub_9C5700	4518	150	0	0
 009CFCA4	sub_9CFCA4	73	0	0	0
-009D1EEC	sub_9D1EEC	4491	153	0	0
+009D1EEC	sub_9D1EEC	4518	153	0	0
 009E3970	sub_9E3970	73	0	0	0
-009E4478	sub_9E4478	4491	153	0	0
-009E61E8	sub_9E61E8	4491	153	0	0
-009E97DC	sub_9E97DC	4491	153	0	0
-009EB0C8	sub_9EB0C8	4491	153	0	0
-009EC540	sub_9EC540	4491	153	0	0
-009EE5A4	sub_9EE5A4	4491	153	0	0
-009F3D70	sub_9F3D70	4491	150	0	0
-009F735C	sub_9F735C	13473	243	0	0
-009F7E80	sub_9F7E80	4410	145	0	0
-00A00884	sub_A00884	4491	153	0	0
-00A192D4	sub_A192D4	4491	153	0	0
+009E4478	sub_9E4478	4518	153	0	0
+009E61E8	sub_9E61E8	4518	153	0	0
+009E97DC	sub_9E97DC	4518	153	0	0
+009EB0C8	sub_9EB0C8	4518	153	0	0
+009EC540	sub_9EC540	4518	153	0	0
+009EE5A4	sub_9EE5A4	4518	153	0	0
+009F3D70	sub_9F3D70	4518	150	0	0
+009F735C	sub_9F735C	13554	243	0	0
+009F7E80	sub_9F7E80	4437	145	0	0
+00A00884	sub_A00884	4518	153	0	0
+00A192D4	sub_A192D4	4518	153	0	0
 00A3E7C4	cocos2d::Application::run	96	2	15	79
 00A3E7D2	cocos2d::Application::setAnimationInterval	230	2	0	0
 00A3E7D4	cocos2d::Application::getInstance	308	104	0	0
 00A3F1C8	initExtensions()	75	0	0	75
 00A3F41E	cocos2d::GLView::swapBuffers	895983	61842	0	0
 00A3F42C	cocos2d::FileUtilsAndroid::setassetmanager	42	42	0	0
-00A3F968	cocos2d::FileUtilsAndroid::getDataFromFile	124258	10005	0	0
+00A3F968	cocos2d::FileUtilsAndroid::getDataFromFile	124855	10012	0	0
 00A403F4	JNI_OnLoad	78	15	0	0
 00A40404	Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeInit	67	0	0	0
 00A40998	Java_org_cocos2dx_lib_Cocos2dxHelper_nativeSetApkPath	67	0	0	0
@@ -6255,9 +6258,9 @@ addr	name	calls	verified	mismatches	unverifiable
 00A42578	Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeTouchesMove	10440	0	0	0
 00A42824	Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeKeyDown	11	0	0	0
 00A465D4	deflateInit_	27080	2723	0	0
-00A47F20	inflateInit_	179474	10512	0	0
-00A4C448	sub_A4C448	328070	13210	0	0
-00A4C454	sub_A4C454	314688	23370	0	0
+00A47F20	inflateInit_	180171	10525	0	0
+00A4C448	sub_A4C448	328767	13223	0	0
+00A4C454	sub_A4C454	315385	23383	0	0
 00A4E324	png_zfree	553	57	174	0
 00A4E634	png_reset_crc	1434	607	0	0
 00A52AAC	png_set_error_fn	338	111	0	0
@@ -6436,53 +6439,53 @@ addr	name	calls	verified	mismatches	unverifiable
 00C3424C	NCONF_free	107	50	0	0
 00C34C50	_CONF_free_data	123	55	0	0
 00C35FAC	NCONF_default	107	50	0	0
-00C6067C	sub_C6067C	548106	35785	0	0
-00C6193E	sub_C6193E	464628	1160	0	0
-00C84450	sub_C84450	437876	798	0	0
-00C84466	sub_C84466	583841	808	0	0
-00C856D0	sub_C856D0	154876	1134	0	0
-00C88F38	sub_C88F38	154876	1134	0	0
+00C6067C	sub_C6067C	548115	35785	0	0
+00C6193E	sub_C6193E	466824	1160	0	0
+00C84450	sub_C84450	440072	798	0	0
+00C84466	sub_C84466	586769	808	0	0
+00C856D0	sub_C856D0	155608	1134	0	0
+00C88F38	sub_C88F38	155608	1134	0	0
 00C8D8C2	sub_C8D8C2	2044	0	0	0
-00C8DB74	sub_C8DB74	731903	831	0	0
-00C8DBB4	sub_C8DBB4	47495231	4538446	0	0
+00C8DB74	sub_C8DB74	735563	831	0	0
+00C8DBB4	sub_C8DBB4	47509344	4538478	0	0
 00C8DBC2	sub_C8DBC2	15147	11547	0	0
-00C8F01E	sub_C8F01E	154876	1134	0	0
-00C98EF0	operator new(unsigned)	162536216	276991	0	0
-00C98F4C	operator new(unsigned, const std::nothrow_t&)	1211403	9342	0	0
-00C98F6E	new[]	2006904	198915	0	0
-00C98F9A	delete	149210548	3266152	0	0
-00C98FB2	delete[]	1802788	59831	0	0
-00CA4978	sub_CA4978	4988	228	0	0
-00CA4984	frexp (sub_CA4984)	2006	23	0	0
-00CA4A78	snprintf (sub_CA4A78)	34917	2459	0	0
+00C8F01E	sub_C8F01E	155608	1134	0	0
+00C98EF0	operator new(unsigned)	162652464	277032	0	0
+00C98F4C	operator new(unsigned, const std::nothrow_t&)	1220231	9354	0	0
+00C98F6E	new[]	2008667	198939	0	0
+00C98F9A	delete	149273799	3266184	0	0
+00C98FB2	delete[]	1804019	59855	0	0
+00CA4978	sub_CA4978	4990	228	0	0
+00CA4984	frexp (sub_CA4984)	2008	23	0	0
+00CA4A78	snprintf (sub_CA4A78)	35546	2460	0	0
 00CD2EA4	sub_CD2EA4	18	6	0	0
-00CD2EB2	sub_CD2EB2	1093359	38849	0	0
-00CD63A0	__floatunsidf	5821009	18775	0	0
-00CD63C4	__floatsidf	526000612	74418	0	0
+00CD2EB2	sub_CD2EB2	1095792	38868	0	0
+00CD63A0	__floatunsidf	5825617	18787	0	0
+00CD63C4	__floatsidf	526490652	74436	0	0
 00CD6440	__floatdidf	357372	25	0	0
-00CD6920	__nedf2	38045366	31711	0	0
+00CD6920	__nedf2	38045484	31716	0	0
 00CD69A8	_aeabi_cdrcmple	19475	19424	0	0
-00CD6A3C	__unorddf2	19717373	22484	0	0
-00CD6A74	__fixdfsi	40410	803	0	0
-00CD6AD0	__fixunsdfsi	508504181	81756	0	0
-00CD6D60	__floatunsisf	645087524	210222	0	0
-00CD6D68	__floatsisf	501071104	232554	0	0
+00CD6A3C	__unorddf2	19717465	22489	0	0
+00CD6A74	__fixdfsi	40472	804	0	0
+00CD6AD0	__fixunsdfsi	508963252	81774	0	0
+00CD6D60	__floatunsisf	645572667	210257	0	0
+00CD6D68	__floatsisf	501293617	232608	0	0
 00CD6D88	__floatundisf	43145	6800	0	0
-00CD711C	__nesf2	5514194147	408797	0	0
+00CD711C	__nesf2	5514492425	408837	0	0
 00CD7180	_aeabi_cfrcmple	870643	827259	0	0
-00CD7208	__unordsf2	939035102	370117	0	0
-00CD7240	__fixsfsi	67809909	127979	0	0
-00CD729C	__fixunssfsi	654839404	96919	0	0
-00CD7388	__muldi3	3233840	34196	0	0
+00CD7208	__unordsf2	939131562	370157	0	0
+00CD7240	__fixsfsi	67832752	128002	0	0
+00CD729C	__fixunssfsi	655314454	96953	0	0
+00CD7388	__muldi3	3234532	34214	0	0
 00CD73E8	__fixdfdi	119124	9	0	0
 00CD7428	__fixunssfdi	21154	6490	0	0
 00CD7470	__fixunsdfdi	119124	18	0	0
 00CD8DB4	SQEX::FixedList<SQEX::BankImpl *>::NODE::~NODE [base destructor]	608	0	0	0
-00CD8E1C	SdSoundSystem (sub_CD8E1C): the bank of an id	17738	1388	0	0
+00CD8E1C	SdSoundSystem (sub_CD8E1C): the bank of an id	17754	1395	0	0
 00CD8EAC	SdSoundSystem (sub_CD8EAC): the sound thread	31	0	0	0
 00CD8FF0	SdSoundSystem_Initialize	82	10	9	0
 00CD927C	SdSoundSystem_Akb_GetSoundIsLoop	9	6	0	0
-00CD92E0	SdSoundSystem_AddData	5159	281	0	0
+00CD92E0	SdSoundSystem_AddData	5161	282	0	0
 00CD98B0	SdSoundSystem_AddStreamDataFromPath	4	4	0	0
 00CD9E88	SdSoundSystem_AddStreamDataFromFile	1	1	0	0
 00CDA460	SdSoundSystem_RemoveDataSync	6438	662	0	0
@@ -6492,7 +6495,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00CDA834	SdSoundSystem_BankCtrl_IsUsing	198407	953	0	0
 00CDA880	SdSoundSystem_BankCtrl_StopSounds	244	5	2	0
 00CDA948	SdSoundSystem_GetSoundsCount	960699	38914	0	0
-00CDA94C	SdSoundSystem_CreateSound	17224	1235	0	0
+00CDA94C	SdSoundSystem_CreateSound	17240	1242	0	0
 00CDAA00	SdSoundSystem_CreateSoundWithExternalID	7	7	0	0
 00CDAABC	SdSoundSystem_CreateLayoutSound	4	4	0	0
 00CDAB70	SdSoundSystem_CreateLayoutSoundWithExternalID	3	3	0	0
@@ -6529,7 +6532,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00CDBFF8	SQEX::StreamingBank::CreateSoundCoreWithExternalID	2	1	0	0
 00CDC18C	SQEX::StreamingBank::StreamingBank	10	5	0	0
 00CDC1F4	SQEX::StreamingBank::Update	3903	0	0	0
-00CDC2E0	akbIsAkb1File	5637259	482	0	0
+00CDC2E0	akbIsAkb1File	5637267	489	0	0
 00CDC360	akbIsAkb2File	29	16	0	0
 00CDC3CC	akbIsAkbFile	3	3	0	0
 00CDC3F8	akbGetVersion	1312735	21	0	0
@@ -6538,7 +6541,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00CDC4D4	akbGetFileSize	429137	4	0	0
 00CDC508	akbGetNumSounds	21	12	0	0
 00CDC534	akbGetSoundDataOffset	13	13	0	0
-00CDC584	akbGetSoundData	19465	1238	0	0
+00CDC584	akbGetSoundData	19481	1245	0	0
 00CDC5CC	akbGetSoundOffsetTableSize	3	3	0	0
 00CDC604	akbSoundGetType	9082	4	0	0
 00CDC61C	akbSoundGetAttributeData	9960	4	0	0
@@ -6580,8 +6583,8 @@ addr	name	calls	verified	mismatches	unverifiable
 00CDD430	SQEX::ActionManager::AddAction	58008	1339	0	0
 00CDD4F4	SQEX::ActionManager::ClearAction	2	2	0	0
 00CDD554	SQEX::ActionManager::Update	613479	7	0	0
-00CDD828	SQEX::SoundImpl::Initialize	18636	1340	0	0
-00CDD880	SQEX::SoundImpl::SoundImpl	19571	1291	0	0
+00CDD828	SQEX::SoundImpl::Initialize	18652	1347	0	0
+00CDD880	SQEX::SoundImpl::SoundImpl	19587	1298	0	0
 00CDD970	SQEX::SoundImpl::GetState	1969870	5364	0	0
 00CDD9B8	SQEX::SoundImpl::GetLocalState	37988	5	0	0
 00CDDA08	SQEX::SoundImpl::Stop	4545	0	0	0
@@ -6610,7 +6613,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00CDF2A4	SQEX::SoundManager::StopAll	2	2	0	0
 00CDF2EC	SQEX::SoundManager::SuspendAll	2	2	0	0
 00CDF334	SQEX::SoundManager::ResumeAll	1	1	0	0
-00CDF37C	SQEX::SoundManager::CreateSound	17209	1219	0	0
+00CDF37C	SQEX::SoundManager::CreateSound	17225	1226	0	0
 00CDFA8C	SQEX::SoundManager::CreateStreamingSound	10	5	0	0
 00CE0170	SQEX::SoundManager::Update	613478	4	0	0
 00CE03C0	SQEX::SoundManager::PrintDebugInfo	24	9	0	0
@@ -6620,12 +6623,12 @@ addr	name	calls	verified	mismatches	unverifiable
 00CE0570	SoundSystem ogg_malloc hook (sub_CE0570)	2818286	385	0	0
 00CE05B4	SoundSystem::Initialize	100	6	0	0
 00CE08F4	SoundSystem::IsSuspended	9420	0	0	0
-00CE0A20	SoundSystem::CreateSound	17207	1218	0	0
+00CE0A20	SoundSystem::CreateSound	17223	1225	0	0
 00CE0B38	SoundSystem::Update	689514	110154	30	9
 00CE1314	SoundSystem::GetSoundLimit	8951	3	0	0
 00CE1324	SoundSystem::GetSoundCount	1060833	154386	0	0
-00CE1328	Sound::Sound()	36478	1248	0	0
-00CE1334	Sound::Sound(int)	67124	9421	0	0
+00CE1328	Sound::Sound()	36510	1255	0	0
+00CE1334	Sound::Sound(int)	67140	9428	0	0
 00CE133C	Sound::Play	18173	966	0	0
 00CE1368	Sound::Stop	1964	9	0	0
 00CE1390	Sound::PauseOn	21	0	0	0
@@ -6685,7 +6688,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00CE3AF8	SQEX::TransferVorbisStreaming::Initialize	1	1	0	0
 00CE42A4	SQEX::TransferVorbisStreaming::TransferVorbisStreaming	1	1	0	0
 00CE4378	SQEX::Memory::Initialize	182	8	0	0
-00CE43B4	SQEX::Memory::Malloc	2765362	2279	0	0
+00CE43B4	SQEX::Memory::Malloc	2765396	2286	0	0
 00CE43B8	SQEX::Memory::Calloc	1463229	514	0	0
 00CE43BC	SQEX::Memory::Realloc	37800	14	0	0
 00CE43C0	SQEX::Memory::Free	1100052	1424	0	0
@@ -6749,13 +6752,13 @@ addr	name	calls	verified	mismatches	unverifiable
 00CE8EB8	msadpcm_get_samplesPerBlock	18	12	0	0
 00CE8ECC	msadpcm_decoder_initialize	6	6	0	0
 00CE9048	msadpcm_decode	6	6	0	0
-00CE9404	SQEX::BankImpl::Initialize	5122	68	0	0
+00CE9404	SQEX::BankImpl::Initialize	5124	69	0	0
 00CE942C	SQEX::List<Sound>::Node::~Node	8699	3	0	0
 00CE9454	SQEX::BankImpl::Update	8469486	13	0	0
 00CE953C	SQEX::BankImpl::~BankImpl	3419	662	0	0
-00CE960C	SQEX::BankImpl::BankImpl	4271	245	0	0
+00CE960C	SQEX::BankImpl::BankImpl	4272	246	0	0
 00CE963C	SQEX::BankImpl::CanRelease	205317	895	0	0
-00CE9650	SQEX::BankImpl::CreateSound	17209	1219	0	0
+00CE9650	SQEX::BankImpl::CreateSound	17225	1226	0	0
 00CE970C	SQEX::BankImpl::CreateSoundWithExternalID	8	4	0	0
 00CE97D0	SQEX::BankImpl::CreateLayoutSound	8	4	0	0
 00CE988C	SQEX::BankImpl::CreateLayoutSoundWithExternalID	6	3	0	0
@@ -6768,12 +6771,12 @@ addr	name	calls	verified	mismatches	unverifiable
 00CE9BD0	SQEX::File::Size	2	2	0	0
 00CE9C2C	SQEX::OnMemoryBank::~OnMemoryBank	6708	662	0	0
 00CE9C54	SQEX::OnMemoryBank::~OnMemoryBank [deleting destructor]	7322	856	0	0
-00CE9C90	SQEX::OnMemoryBank::CreateSoundCore	17209	1219	0	0
+00CE9C90	SQEX::OnMemoryBank::CreateSoundCore	17225	1226	0	0
 00CE9CAC	SQEX::OnMemoryBank::CreateSoundCoreWithExternalID	6	3	0	0
 00CE9CC8	SQEX::OnMemoryBank::CreateLayoutSoundCore	6	3	0	0
 00CE9CE4	SQEX::OnMemoryBank::CreateLayoutSoundCoreWithExternalID	6	3	0	0
-00CE9D00	SQEX::OnMemoryBank::OnMemoryBank	5311	245	0	0
-00CE9D30	SQEX::OnMemoryBank::Initialize	5110	72	0	0
+00CE9D00	SQEX::OnMemoryBank::OnMemoryBank	5313	246	0	0
+00CE9D30	SQEX::OnMemoryBank::Initialize	5112	73	0	0
 00CEAB3C	vorbis_comment_init	8849	3	0	0
 00CEC410	_ilog	63114618	10	0	0
 00CEC434	_make_words	362027	1	0	0
@@ -6790,8 +6793,8 @@ addr	name	calls	verified	mismatches	unverifiable
 00CF41FC	SQEX::DelegateManager::Initialize	99	9	0	0
 00CF42A0	SQEX::DelegateManager::AddDelegate	2191	0	0	0
 00CF4328	SQEX::DelegateManager::IsExist	2197	3	0	0
-00CF43B4	SQEX::DynamicValue::Initialize	154334	1292	0	0
-00CF43FC	SQEX::DynamicValue::DynamicValue [base constructor]	149383	2370	0	0
+00CF43B4	SQEX::DynamicValue::Initialize	154462	1299	0	0
+00CF43FC	SQEX::DynamicValue::DynamicValue [base constructor]	149511	2377	0	0
 00CF4418	SQEX::DynamicValue::GetValue	3413248	4	0	0
 00CF4450	SQEX::DynamicValue::SetTarget	30541	2	0	0
 00CF4490	SQEX::DynamicValue::NeedUpdate	8643132	21709	0	0
@@ -6800,6 +6803,6 @@ addr	name	calls	verified	mismatches	unverifiable
 00CF4508	SQEX::OnMemorySound::GetData	135578	116	0	0
 00CF4528	SQEX::OnMemorySound::~OnMemorySound	8699	1	0	0
 00CF4550	SQEX::OnMemorySound::IsReadyForPlay	9023	6	0	0
-00CF4564	SQEX::OnMemorySound::Initialize	18511	1343	0	0
-00CF456C	SQEX::OnMemorySound::OnMemorySound	19603	1307	0	0
+00CF4564	SQEX::OnMemorySound::Initialize	18527	1350	0	0
+00CF456C	SQEX::OnMemorySound::OnMemorySound	19619	1314	0	0
 00CF67D4	sub_CF67D4	2843652	212	0	0
