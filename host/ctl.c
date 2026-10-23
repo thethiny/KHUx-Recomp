@@ -468,7 +468,7 @@ static char *text_json(const char *s, int enter) {
 }
 
 /* ---------------------------------------------------------------- requests served on the main thread */
-typedef struct Req { char path[64]; char q[1024]; char *result; HANDLE done; struct Req *next; } Req;
+typedef struct Req { char path[64]; char q[8192]; char *result; HANDLE done; struct Req *next; } Req;
 static Req *req_head;
 static CRITICAL_SECTION req_lock;
 
@@ -563,16 +563,55 @@ static char *serve_main(Req *r) {
         /* DEV/TEST HARNESS ONLY: call?fn=0x..&args=0x..,5 calls a guest function on the main thread (up to 8
          * integer arguments, hex or decimal; "zero" passes a pointer to 64 zeroed bytes, e.g. an empty
          * shared_ptr; for JNI entry points "env" is the JNIEnv, "s:text" a Java string and "sa:a|b" a Java
-         * String[] ("sa:" an empty one)) and returns r0; e.g. rush mode tops up the special gauge with
+         * String[] ("sa:" an empty one); "c:text" a guest C string, "z:N" N zero bytes, "w:a|b|zN" a word array
+         * (zN: a pointer to N zero bytes, dHEX to those bytes); temporaries are freed after the call) and returns r0; e.g. rush mode tops up the special gauge with
          * SceneBattleBase::addPlayerCP(scene, n) */
-        char as[256] = "";
+        char as[4096] = "";
         if (!qget(r->q, "fn", v, sizeof(v))) return _strdup("{\"error\": \"call needs fn\"}");
         qget(r->q, "args", as, sizeof(as));
-        uint32_t a[8], tmp[8];
+        uint32_t a[8], tmp[16];
         int n = 0, nt = 0;
         for (char *tok = strtok(as, ","); tok && n < 8; tok = strtok(NULL, ",")) {
             if (!strcmp(tok, "zero")) a[n++] = tmp[nt++] = gzalloc(64);   /* a pointer to 64 zero bytes */
             else if (!strcmp(tok, "env")) a[n++] = jni_env;
+            else if (!strncmp(tok, "c:", 2)) {                    /* a guest C string */
+                size_t len = strlen(tok + 2);
+                uint32_t p = gzalloc((uint32_t)len + 1);
+                memcpy(GP(p), tok + 2, len);
+                a[n++] = p;
+                if (nt < 16) tmp[nt++] = p;
+            } else if (!strncmp(tok, "z:", 2)) {                  /* N zero bytes */
+                uint32_t p = gzalloc((uint32_t)strtoul(tok + 2, NULL, 0));
+                a[n++] = p;
+                if (nt < 16) tmp[nt++] = p;
+            } else if (!strncmp(tok, "w:", 2)) {                  /* words (zN: a pointer to N zero bytes) */
+                uint32_t words[32], m = 0;
+                for (char *it = tok + 2, *bar; *it && m < 32; it = bar + 1) {
+                    bar = strchr(it, '|');
+                    if (bar) *bar = 0;
+                    if (*it == 'z') {
+                        uint32_t q = gzalloc((uint32_t)strtoul(it + 1, NULL, 0));
+                        words[m++] = q;
+                        if (nt < 16) tmp[nt++] = q;
+                    } else if (*it == 'd') {                     /* dHEX: a pointer to those bytes */
+                        size_t hex = strlen(it + 1) / 2;
+                        uint32_t q = gzalloc((uint32_t)hex + 4);
+                        for (size_t k = 0; k < hex; k++) {
+                            char byte[3] = {it[1 + 2 * k], it[2 + 2 * k], 0};
+                            ((uint8_t *)GP(q))[k] = (uint8_t)strtoul(byte, NULL, 16);
+                        }
+                        words[m++] = q;
+                        if (nt < 16) tmp[nt++] = q;
+                    } else {
+                        words[m++] = (uint32_t)strtoul(it, NULL, 0);
+                    }
+                    if (!bar) break;
+                }
+                uint32_t p = gzalloc(m * 4 + 4);
+                memcpy(GP(p), words, m * 4);
+                a[n++] = p;
+                if (nt < 16) tmp[nt++] = p;
+            }
             else if (!strncmp(tok, "s:", 2)) a[n++] = jstring_new(tok + 2);
             else if (!strncmp(tok, "sa:", 3)) {
                 uint32_t items[16], m = 0;
@@ -695,7 +734,7 @@ static char *serve_main(Req *r) {
 static char *run_on_main(const char *path, const char *q) {
     Req *r = calloc(1, sizeof(Req));
     strncpy(r->path, path, 63);
-    strncpy(r->q, q, 1023);
+    strncpy(r->q, q, sizeof(r->q) - 1);
     r->done = CreateEventA(NULL, TRUE, FALSE, NULL);
     EnterCriticalSection(&req_lock);
     Req **p = &req_head;
@@ -914,12 +953,13 @@ static char *wait_json(const char *cond, int since, double timeout) {
 
 static DWORD WINAPI client(LPVOID p) {
     SOCKET s = (SOCKET)(uintptr_t)p;
-    char req[4096];
+    static __declspec(thread) char req[16384];
     int n = recv(s, req, sizeof(req) - 1, 0);
     if (n <= 0) { closesocket(s); return 0; }
     req[n] = 0;
-    char target[2048] = "";
-    sscanf(req, "GET %2047s", target);
+    static __declspec(thread) char target[8192];
+    target[0] = 0;
+    sscanf(req, "GET %8191s", target);
     char *q = strchr(target, '?');
     if (q) *q++ = 0; else q = "";
     char *path = target;

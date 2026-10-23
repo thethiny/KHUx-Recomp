@@ -98,6 +98,10 @@ OVERRIDES = {
     **{a: "LWF" for a in (0x456714, 0x456748, 0x456780)},
     # a vector destructor and a string helper instantiated in the game's objects
     **{a: "libc++ / C++ runtime" for a in (0x493E84, 0x498A1C)},
+    # unnamed static helpers found while sorting batch #10 (2026-10-23): x509v3 v3_cpols.c's r2i_certpol and
+    # vorbisfile.c's _get_next_page (calls ogg_sync_pageseek / ogg_sync_buffer)
+    0xBD68B4: "OpenSSL",
+    0xCE3BFC: "Ogg Vorbis",
     # newlocale / uselocale, strtod, the vfprintf family and its output sink, printf; with IDA's chunks of strtod
     # (0xC9DF62, 0xC9E16A) and vfprintf (0xCA338A, 0xCA3A22, 0xCA3B02)
     **{a: "libc / math helpers" for a in (0xC9C858, 0xC9C8E0, 0xC9CC58, 0xCA1C5C, 0xCA1CDE, 0xCA358E, 0xCA35A4,
