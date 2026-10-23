@@ -152,56 +152,64 @@ def main():
     game_txt = f" {game:,} of them run and are checked against the emulator in game." if game else ""
     share_txt = (f" In hybrid mode about {share * 100:.2f}% of the executed instructions already run as native C,"
                  if share else " Hybrid mode runs lifted C inside the emulator,")
-    rows = [
-        ("Decompiled", 100 * dec_ok / dec_total,
-         f"{dec_ok:,} of {dec_total:,} functions have Hex-Rays pseudocode ({dec_failed:,} failed). Reference only."),
-        ("Lifted", 100 * lift_ok / lift_total,
-         f"{lift_ok:,} of {lift_total:,} analysed functions translate to C (machine-generated, one C function per "
-         f"guest function, {escapes} instructions left to the emulator).{game_txt}"),
-        ("Rewritten", 100 * rewritten / lift_total,
-         "Readable, maintainable source (named types and variables, no register-level code)."
-         + (f" {rewritten:,} functions." if rewritten else " Not started.")),
-        ("Run in game", 100 * ran / lift_total,
-         f"Rewritten functions the game has called while the M3 verifier compared them with the lifted original "
-         f"({ran:,})."),
-        ("Verified", 100 * verified / lift_total,
-         f"Rewritten functions whose every checked call matched the lifted original ({verified:,}); normal play "
-         "installs only these."),
-        ("1:1 binary match", 100 * matching / lift_total,
-         "Source that rebuilds the original ARM binary byte for byte (a matching decompilation)."
-         + (f" {matching:,} functions." if matching else " Not started.")),
-        ("Recompiled", 100 * recompiled / lift_total,
-         "A native executable that runs without the emulator." + (
-             f" The native host (`host/`, Windows) runs all {recompiled:,} lifted functions natively, with real "
-             "threads, sound, sockets, JNI and OpenGL ES, and no emulator or Python: it plays the game through "
-             "login, the main menu and quests against the private server." if recompiled else
-             share_txt + " and memory/string functions, math, the heap, stdio streams and OpenGL ES are native, but APK "
-             "assets, threads, JNI, sockets and audio still go through the Python runtime (milestone M2).")),
-    ]
+    # (group, [(row, done, total)]), then the notes printed under the block
+    groups = [("Translation", [
+        ("Decompiled", dec_ok, dec_total),
+        ("Lifted", lift_ok, lift_total),
+        ("Recompiled", recompiled, lift_total),
+    ])]
+
+    def rewrite_rows(rw, ran_, ok, total):
+        return [("Rewritten", len(rw), total), ("Run under the verifier", len(ran_), total),
+                ("Verified", len(ok), total)]
+
+    lib_txt = ""
     if is_lib:
         n_lib = sum(1 for v in is_lib.values() if v)
         n_game = len(is_lib) - n_lib
+
         def part(addrs, lib):
-            return sum(1 for a in addrs if is_lib.get(a) is lib)
-        k = next(i for i, r in enumerate(rows) if r[0] == "Verified") + 1
-        rows[k:k] = [
-            ("  Game: rewritten", 100 * part(rw_set, False) / n_game,
-             f"The game's own code ({n_game:,} functions, including Square Enix's sound engine): "
-             f"{part(rw_set, False):,} rewritten."),
-            ("  Game: verified", 100 * part(ok_set, False) / n_game,
-             f"Game functions verified: {part(ok_set, False):,}."),
-            ("  Libraries: rewritten", 100 * part(rw_set, True) / n_lib,
-             f"Open-source libraries ({n_lib:,} functions: cocos2d-x, libc++, OpenSSL, freetype, libpng, ...; "
-             f"`rewrite/tools/libsplit.py`), which a native build can take from upstream source: "
-             f"{part(rw_set, True):,} rewritten."),
-            ("  Libraries: verified", 100 * part(ok_set, True) / n_lib,
-             f"Library functions verified: {part(ok_set, True):,}."),
-        ]
-    w = max(len(r[0]) for r in rows)
+            return {a for a in addrs if is_lib.get(a) is lib}
+        groups.append(("Rewrite: game code", rewrite_rows(part(rw_set, False), part(ran_set, False),
+                                                          part(ok_set, False), n_game)))
+        groups.append(("Rewrite: open-source libraries", rewrite_rows(part(rw_set, True), part(ran_set, True),
+                                                                      part(ok_set, True), n_lib)))
+        lib_txt = (f" **Game code** is the game's own {n_game:,} functions, Square Enix's sound engine included; "
+                   f"**open-source libraries** are the other {n_lib:,} (cocos2d-x, libc++, OpenSSL, FreeType, libpng "
+                   "and others; `rewrite/tools/libsplit.py`), which a native build can take from upstream source "
+                   "instead.")
+    groups.append(("Rewrite: all functions", rewrite_rows(rw_set, ran_set, ok_set, lift_total)))
+    groups.append(("Later, in a separate repository", [("1:1 binary match", matching, lift_total)]))
+
+    notes = [
+        ("Decompiled", f"functions with Hex-Rays pseudocode ({dec_failed:,} failed). Reference only."),
+        ("Lifted", f"functions the lifter translates to C (machine-generated, one C function per guest function, "
+                   f"{escapes} instructions left to the emulator).{game_txt}"),
+        ("Recompiled", "a native executable that runs without the emulator." + (
+            f" The native host (`host/`, Windows) runs every lifted function natively, with real threads, sound, "
+            "sockets, JNI and OpenGL ES, and no emulator or Python: it plays the game through login, the main "
+            "menu, quests, raids and multiplayer against the private server." if recompiled else
+            share_txt + " and memory/string functions, math, the heap, stdio streams and OpenGL ES are native, but "
+            "APK assets, threads, JNI, sockets and audio still go through the Python runtime (milestone M2).")),
+        ("Rewritten", "readable C++ (named types and variables, no register-level code) in `rewrite/`." + lib_txt),
+        ("Run under the verifier", "rewritten functions the game has called while the M3 verifier compared them "
+                                   "with the lifted original."),
+        ("Verified", "rewritten functions that matched the lifted original on every checked call. Normal play "
+                     "installs only these."),
+        ("1:1 binary match", "source that rebuilds the original ARM binary byte for byte (a matching "
+                             "decompilation). Planned, with the cleanup and the native build, for a fork of the "
+                             "finished rewrite."),
+    ]
+
+    w = max(len(name) for _, rows in groups for name, _, _ in rows)
     out = ["## Progress", "", "```"]
-    out += [f"{name.ljust(w)}  {bar(pct)}  {pct:5.1f}%" for name, pct, _ in rows]
+    for k, (g, rows) in enumerate(groups):
+        out += ([""] if k else []) + [g]
+        out += [f"  {name.ljust(w)}  {bar(100 * n / t)}  {100 * n / t:5.1f}%  {n:>6,} / {t:,}"
+                for name, n, t in rows]
     out += ["```", "", "Updated by `python recomp/progress.py`.", ""]
-    out += [f"- **{name.strip()}**: {desc}" for name, _, desc in rows]
+    out += [f"- **{name}**: {desc}" for name, desc in notes]
+    out += [""]
     section = "\n".join(out) + "\n\n"
 
     text = README.read_text(encoding="utf-8")
