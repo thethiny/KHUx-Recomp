@@ -23,3 +23,8 @@
 0066DC6E	0066C7D2	bl from 0x66D33E
 0066DCE2	0066C7D2	bl from 0x66D262
 0066DCEE	0066C7D2	bl from 0x66D26A / 0x66D4AA / 0x66D4B6
+# ChatScrollView::changeRow (0x556CB8): its exception cleanup pads (sub_558524 is the shared tail)
+00558128	00556CB8	landing pad
+0055851C	00556CB8	landing pad
+# ChatScrollDelView::changeRow (0x558F28, body continued in sub_559016): its exception cleanup pad
+00559FB2	00558F28	landing pad

@@ -522,6 +522,15 @@ uint32_t applyMember(uint32_t self) { return applyCondition(self, ROW_MEMBER); }
 RW_FUNCTION(0x6E1408, "ScenePartyRequest::openPopUpMember OK (sub_6E1408)", party_request::applyMember);
 uint32_t applyJoin(uint32_t self) { return applyCondition(self, ROW_JOIN); }
 RW_FUNCTION(0x6E19EC, "ScenePartyRequest::openPopUpJoin OK (sub_6E19EC)", party_request::applyJoin);
+constexpr uint32_t S_Button1 = 0xE06039, S_Label1 = 0xE0604E;
+const ConditionRow ROW_RANK{0x2A0, 0x2A4, S_Button2, S_Label2, 1, 5,
+                            {103800013, 103800014, 103800015, 103800016, 103800017}, 103800012};
+const ConditionRow ROW_PLAY_STYLE{0x298, 0x29C, S_Button1, S_Label1, 1, 3, {102400004, 102400005, 102400006},
+                                  102400003};
+uint32_t applyRank(uint32_t self) { return applyCondition(self, ROW_RANK); }
+RW_FUNCTION(0x6E2120, "ScenePartyRequest::openPopUpRank OK (sub_6E2120)", party_request::applyRank);
+uint32_t applyPlayStyle(uint32_t self) { return applyCondition(self, ROW_PLAY_STYLE); }
+RW_FUNCTION(0x6E26CC, "ScenePartyRequest::openPopUpPlayStyle OK (sub_6E26CC)", party_request::applyPlayStyle);
 
 // the player ID search popup's OK {edit box, scene, OK, Close, ID button, shadow, root, layer}: a valid number opens
 // the player's info; otherwise a message and the buttons back on
@@ -789,5 +798,426 @@ uint32_t openPopUpRequest(uint32_t self, uint32_t ok, uint32_t closed) {
     return 0x77C;
 }
 RW_FUNCTION(0x6DC0D0, "ScenePartyRequest::openPopUpRequest", party_request::openPopUpRequest);
+
+// ------------------------------------------------------------------------------------------------ requests
+// Find Party: a party's Request (/party/application with the party copied into the answer lambdas: a joined party
+// asks for the member popup, else "applied" and the row leaves the list; an invitation-only party leaves the screen)
+// and Invite (/party/invite/offer).
+//
+// hole::network::api::Party (0x70): +0 4 words (the id first), +0x10 string, +0x1C 2 words, +0x24 string,
+// +0x30 4 words, +0x40 vector<ull>, +0x4C 0x14 bytes, +0x60 string. A PartyApplicationList::PartyEx (0x198) is a
+// Party and 0x128 bytes.
+constexpr uint32_t Party_copy = 0x4B2E63, MEMCPY = 0x40E164;
+constexpr uint32_t VectorPartyEx_copy = 0x51EE91, VectorPartyEx_dtor = 0x4B3DD1, U64Vector_dtor = 0x468499;
+constexpr uint32_t IntVector_pushBackSlow = 0x4D6CC1, IntVector_dtor = 0x478961, IntScrollView_setItemIDs = 0x478929;
+constexpr uint32_t U64Vector_pushBackSlow = 0x4ECB6D, ULLScrollView_setItemIDs = 0x4FD231;
+constexpr uint32_t VectorAt_throw = 0x47CCE1;
+constexpr uint32_t SM_enableLoadingIndicator = 0x60D169, SceneUtil_openOkDialog4Line = 0x45C775;
+constexpr uint32_t SceneUtil_openPartyInfoJoinAlertPopup = 0x478E1D;
+constexpr uint32_t APIManager_openErrorDialog = 0x4C3C8D, APIManager_executePartyApplication = 0x4CF2C9;
+constexpr uint32_t APIManager_executePartyInviteOffer = 0x4D09A5;
+constexpr uint32_t IInOutAnimation_runOutAnimation = 0x6F24B5, FunctionVB_assign = 0x490109;
+constexpr uint32_t ScenePartyTop_callPartyTopAPI = 0x652595, SM_changeSceneLayer = 0x612B99;
+constexpr uint32_t ScenePartyRequest_loadList = 0x6D6A61;
+constexpr uint32_t GOT_FUNC_LAYER_VT = 0xFD6074, GOT_CREATE_PARTY_TOP = 0xFD6620;
+constexpr uint32_t PARTY = 0x70, PARTY_EX = 0x198, EX_REST = 0x128;
+constexpr uint32_t API_APPLICATIONS = 0x204, API_PARTY = 0x210, API_INVITES = 0x228, API_OFFLINE = 0x14;
+constexpr uint32_t F_COMMENT = 0x2D8, F_ENTRY_LIST = 0x2D0, F_INVITE_LIST = 0x2D4, F_INOUT = 0x28C;
+constexpr uint32_t VT_ApplyRow = 0xF68A98;        // a party row's Request {index (ull), scene, 0} (heap 0x18)
+constexpr uint32_t VT_ApplyAnswer = 0xF68AC4;     // {scene, -, index (ull), PartyEx} (heap 0x1B0)
+constexpr uint32_t VT_ApplyJoined = 0xF68AF0, VT_ApplyDone = 0xF68B1C, VT_ApplyOut = 0xF68B48;
+constexpr uint32_t VT_ApplyError = 0xF68B74;
+constexpr uint32_t VT_InviteRow = 0xF68BCC;       // a player row's Invite {scene, 0, user id} (heap 0x18)
+constexpr uint32_t VT_InviteAnswer = 0xF68BF8, VT_InviteJoined = 0xF68C24, VT_InviteDone = 0xF68C50;
+constexpr uint32_t VT_InviteError = 0xF68C7C, VT_ListError = 0xF69018;
+constexpr int32_t TXT_APPLIED = 103810003, TXT_INVITED = 103830015;
+constexpr uint32_t JOIN_INVITATION = 3;
+
+void partyMove(uint32_t dst, uint32_t src) {
+    auto take = [&](uint32_t o, uint32_t n) {
+        for (uint32_t k = 0; k < n; k += 4) {
+            st32(dst + o + k, ld32(src + o + k));
+        }
+    };
+    auto steal = [&](uint32_t o) {
+        take(o, 12);
+        for (uint32_t k = 0; k < 12; k += 4) st32(src + o + k, 0);
+    };
+    take(0, 0x10);
+    steal(0x10);
+    take(0x1C, 8);
+    steal(0x24);
+    take(0x30, 0x10);
+    steal(0x40);
+    call(MEMCPY, {dst + 0x4C, src + 0x4C, 0x14});
+    steal(0x60);
+}
+void partyFree(uint32_t p) {
+    strFree(p + 0x60);
+    call(U64Vector_dtor, {p + 0x40});
+    strFree(p + 0x24);
+    strFree(p + 0x10);
+}
+// a {4 words, PartyEx} lambda into its heap __func (0x1B0): the words, the party moved, the rest copied
+uint32_t heapPartyLambda(uint32_t vt, uint32_t lambda) {
+    const uint32_t heap = call(fn::operator_new, {0x1B0});
+    if (heap) {
+        st32(heap, vt);
+        for (uint32_t k = 0; k < 0x10; k += 4) st32(heap + 8 + k, ld32(lambda + k));
+        partyMove(heap + 0x18, lambda + 0x10);
+        call(MEMCPY, {heap + 0x88, lambda + 0x80, EX_REST});
+    }
+    return heap;
+}
+// __clone() / __clone(p) of those lambdas
+uint32_t clonePartyLambda(uint32_t vt, uint32_t self) {
+    const uint32_t heap = call(fn::operator_new, {0x1B0});
+    if (heap) {
+        st32(heap, vt);
+        for (uint32_t k = 8; k < 0x18; k += 4) st32(heap + k, ld32(self + k));
+        call(Party_copy, {heap + 0x18, self + 0x18});
+        call(MEMCPY, {heap + 0x88, self + 0x88, EX_REST});
+    }
+    return heap;
+}
+uint32_t clonePartyLambdaInto(uint32_t vt, uint32_t self, uint32_t p) {
+    if (!p) return self;
+    st32(p, vt);
+    for (uint32_t k = 8; k < 0x18; k += 4) st32(p + k, ld32(self + k));
+    call(Party_copy, {p + 0x18, self + 0x18});
+    return call(MEMCPY, {p + 0x88, self + 0x88, EX_REST});
+}
+uint32_t applyAnswerClone(uint32_t self) { return clonePartyLambda(VT_ApplyAnswer, self); }
+RW_FUNCTION(0x6E3018, "ScenePartyRequest application answer __clone() (sub_6E3018)", party_request::applyAnswerClone);
+uint32_t applyAnswerCloneInto(uint32_t self, uint32_t p) { return clonePartyLambdaInto(VT_ApplyAnswer, self, p); }
+RW_FUNCTION(0x6E308C, "ScenePartyRequest application answer __clone(p) (sub_6E308C)",
+            party_request::applyAnswerCloneInto);
+uint32_t applyDoneClone(uint32_t self) { return clonePartyLambda(VT_ApplyDone, self); }
+RW_FUNCTION(0x6E3644, "ScenePartyRequest applied dialog __clone() (sub_6E3644)", party_request::applyDoneClone);
+uint32_t applyDoneCloneInto(uint32_t self, uint32_t p) { return clonePartyLambdaInto(VT_ApplyDone, self, p); }
+RW_FUNCTION(0x6E36B8, "ScenePartyRequest applied dialog __clone(p) (sub_6E36B8)", party_request::applyDoneCloneInto);
+
+// a row's Request / Invite (the row's index or user id): the request popup, OK running the row lambda
+uint32_t requestPopup(uint32_t scene, uint32_t heap) {
+    Frame f;
+    const uint32_t ok = f.alloc(20), closed = f.alloc(20);
+    st32(ok + 16, heap);
+    st32(closed + 16, 0);
+    call(0x6DC0D1, {scene, ok, closed});
+    functionDestroy(closed);
+    functionDestroy(ok);
+    return 0;
+}
+uint32_t applyRowTouched(uint32_t self, uint32_t indexRef) {
+    const int32_t index = int32_t(ld32(indexRef));
+    const uint32_t scene = ld32(self + 4);
+    const uint32_t heap = call(fn::operator_new, {0x18});
+    if (heap) {
+        st32(heap, VT_ApplyRow);
+        st32(heap + 8, uint32_t(index));
+        st32(heap + 0xC, uint32_t(index >> 31));
+        st32(heap + 0x10, scene);
+        st32(heap + 0x14, 0);
+    }
+    return requestPopup(scene, heap);
+}
+RW_FUNCTION(0x6E294C, "ScenePartyRequest party row Request operator() (sub_6E294C)", party_request::applyRowTouched);
+uint32_t inviteRowTouched(uint32_t self, uint32_t idRef) {
+    const uint32_t lo = ld32(idRef), hi = ld32(idRef + 4);
+    const uint32_t scene = ld32(self + 4);
+    const uint32_t heap = call(fn::operator_new, {0x18});
+    if (heap) {
+        st32(heap, VT_InviteRow);
+        st32(heap + 8, scene);
+        st32(heap + 0xC, 0);
+        st32(heap + 0x10, lo);
+        st32(heap + 0x14, hi);
+    }
+    return requestPopup(scene, heap);
+}
+RW_FUNCTION(0x6E3BAC, "ScenePartyRequest player row Invite operator() (sub_6E3BAC)", party_request::inviteRowTouched);
+
+// the Request OK {-, index (ull), scene}: the party (PartyEx) copied from the application list; /party/application
+// with the comment and the answer lambda {scene, -, index, PartyEx}
+uint32_t applyConfirmed(uint32_t functor) {
+    const uint32_t scene = ld32(functor + 0x10);
+    Frame f;
+    const uint32_t parties = f.alloc(12);
+    call(VectorPartyEx_copy, {parties, call(fn::APIManager_getInstance, {}) + API_APPLICATIONS});
+    const uint32_t index = ld32(functor + 8);
+    if ((ld32(parties + 4) - ld32(parties)) / PARTY_EX <= index) call(VectorAt_throw, {parties});
+    const uint32_t ex = ld32(parties) + PARTY_EX * index;
+    const uint32_t party = f.alloc(PARTY_EX);
+    call(Party_copy, {party, ex});
+    call(MEMCPY, {party + PARTY, ex + PARTY, EX_REST});
+    const uint32_t first = f.alloc(0x10 + PARTY_EX);
+    st32(first, scene);
+    st32(first + 4, 0);
+    st32(first + 8, ld32(functor + 8));
+    st32(first + 0xC, ld32(functor + 0xC));
+    call(Party_copy, {first + 0x10, party});
+    call(MEMCPY, {first + 0x80, party + PARTY, EX_REST});
+    call(SM_enableLoadingIndicator, {sceneManager(), 1});
+    const uint32_t api = call(fn::APIManager_getInstance, {});
+    const uint32_t comment = strData(scene + F_COMMENT);
+    const uint32_t lo = ld32(party), hi = ld32(party + 4);
+    const uint32_t lambda = f.alloc(0x10 + PARTY_EX);
+    for (uint32_t k = 0; k < 0x10; k += 4) st32(lambda + k, ld32(first + k));
+    call(Party_copy, {lambda + 0x10, first + 0x10});
+    call(MEMCPY, {lambda + 0x80, first + 0x80, EX_REST});
+    const uint32_t fo = f.alloc(20);
+    st32(fo + 16, 0);
+    st32(fo + 16, heapPartyLambda(VT_ApplyAnswer, lambda));
+    call(APIManager_executePartyApplication, {api, 0, lo, hi, comment, fo});
+    functionDestroy(fo);
+    partyFree(lambda + 0x10);
+    partyFree(first + 0x10);
+    partyFree(party);
+    call(VectorPartyEx_dtor, {parties});
+    return 0;
+}
+RW_FUNCTION(0x6E2AEC, "ScenePartyRequest party row Request OK (sub_6E2AEC)", party_request::applyConfirmed);
+
+void errorDialog(uint32_t vt) {
+    if (!ld8(call(fn::APIManager_getInstance, {}) + API_OFFLINE)) return;
+    const uint32_t api = call(fn::APIManager_getInstance, {});
+    Frame f;
+    const uint32_t cb = newFunction(f, vt, {});
+    call(APIManager_openErrorDialog, {api, cb, 1});
+    functionDestroy(cb);
+}
+void joinAlert(uint32_t which, uint32_t vt) {
+    Frame f;
+    const uint32_t cb = newFunction(f, vt, {});
+    call(SceneUtil_openPartyInfoJoinAlertPopup, {which, cb});
+    functionDestroy(cb);
+}
+
+// the application's answer (bool ok) {scene, -, index, PartyEx}: already in a party: the join alert; else
+// "applied" with the lambda moved on
+uint32_t applyAnswered(uint32_t functor, uint32_t okRef) {
+    const uint32_t ok = ld8(okRef), scene = ld32(functor + 8);
+    call(SM_enableLoadingIndicator, {sceneManager(), 0});
+    const uint32_t api = call(fn::APIManager_getInstance, {});
+    if (!ok) {
+        errorDialog(VT_ApplyError);
+        return 0;
+    }
+    if (ld32(ld32(api + API_PARTY) + 0x44)) {
+        joinAlert(1, VT_ApplyJoined);
+        return 0;
+    }
+    Frame f;
+    const uint32_t td = textData(f, TXT_APPLIED);
+    const uint32_t text = newStr(f, textDataStr(td));
+    const uint32_t lambda = f.alloc(0x10 + PARTY_EX);
+    st32(lambda, scene);
+    st32(lambda + 4, 0);
+    st32(lambda + 8, ld32(functor + 0x10));
+    st32(lambda + 0xC, ld32(functor + 0x14));
+    call(Party_copy, {lambda + 0x10, functor + 0x18});
+    call(MEMCPY, {lambda + 0x80, functor + 0x88, EX_REST});
+    const uint32_t fo = f.alloc(20);
+    st32(fo + 16, 0);
+    st32(fo + 16, heapPartyLambda(VT_ApplyDone, lambda));
+    call(SceneUtil_openOkDialog4Line, {text, fo, 0});
+    functionDestroy(fo);
+    partyFree(lambda + 0x10);
+    strFree(text);
+    sharedRelease(td);
+    return 0;
+}
+RW_FUNCTION(0x6E316C, "ScenePartyRequest application answer operator() (sub_6E316C)", party_request::applyAnswered);
+
+// "applied" closed (bool) {scene, -, index, PartyEx}: the row out of the party list; an invitation-only party: the
+// scene leaves
+uint32_t applyDone(uint32_t functor, uint32_t okRef) {
+    if (!ld8(okRef)) return 0;
+    const uint32_t scene = ld32(functor + 8);
+    const uint32_t listRef = scene + F_ENTRY_LIST;
+    const uint32_t lo = ld32(functor + 0x10), hi = ld32(functor + 0x14);
+    Frame f;
+    const uint32_t ids = f.alloc(12);
+    for (uint32_t k = 0; k < 12; k += 4) st32(ids + k, 0);
+    uint32_t list = ld32(listRef);
+    for (uint32_t k = 0; k < (ld32(list + 0x62C) - ld32(list + 0x628)) >> 2; k++) {
+        const uint32_t id = ld32(list + 0x628) + 4 * k;
+        const uint32_t v = ld32(id);
+        if (v != lo || uint32_t(int32_t(v) >> 31) != hi) {
+            const uint32_t end = ld32(ids + 4);
+            if (end == ld32(ids + 8)) {
+                call(IntVector_pushBackSlow, {ids, id});
+            } else {
+                uint32_t next = 0;
+                if (end) {
+                    st32(end, v);
+                    next = ld32(ids + 4);
+                }
+                st32(ids + 4, next + 4);
+            }
+        }
+        list = ld32(listRef);
+    }
+    call(IntScrollView_setItemIDs, {list, ids});
+    if (ld32(functor + 0x38) == JOIN_INVITATION) {
+        Frame h;
+        const uint32_t fo = newFunction(h, VT_ApplyOut, {});
+        call(IInOutAnimation_runOutAnimation, {scene + F_INOUT, fo});
+        functionDestroy(fo);
+    }
+    call(IntVector_dtor, {ids});
+    return 0;
+}
+RW_FUNCTION(0x6E3798, "ScenePartyRequest applied dialog closed operator() (sub_6E3798)", party_request::applyDone);
+
+// the out animation's end: the party data reloaded, the party top
+uint32_t backToPartyTop() {
+    const uint32_t sm = sceneManager();
+    st8(sm + 0x4CC, 1);
+    {
+        Frame f;
+        const uint32_t none = newEmptyFunction(f);
+        call(FunctionVB_assign, {sm + 0x548, none});
+        functionDestroy(none);
+    }
+    {
+        Frame f;
+        const uint32_t none = newEmptyFunction(f);
+        call(ScenePartyTop_callPartyTopAPI, {none});
+        functionDestroy(none);
+    }
+    const uint32_t sm2 = sceneManager();
+    Frame f;
+    const uint32_t fo = newFunction(f, ld32(GOT_FUNC_LAYER_VT) + 8, {ld32(GOT_CREATE_PARTY_TOP)});
+    call(SM_changeSceneLayer, {sm2, fo, 1, 1, 1});
+    functionDestroy(fo);
+    return 0;
+}
+RW_FUNCTION(0x6E3970, "ScenePartyRequest applied out-animation end (sub_6E3970)", party_request::backToPartyTop);
+
+// the Invite OK {scene, 0, user id}: /party/invite/offer with the comment
+uint32_t inviteConfirmed(uint32_t functor) {
+    const uint32_t lo = ld32(functor + 0x10), hi = ld32(functor + 0x14), scene = ld32(functor + 8);
+    call(SM_enableLoadingIndicator, {sceneManager(), 1});
+    const uint32_t api = call(fn::APIManager_getInstance, {});
+    const uint32_t comment = strData(scene + F_COMMENT);
+    Frame f;
+    const uint32_t fo = f.alloc(20);
+    st32(fo + 16, 0);
+    const uint32_t heap = call(fn::operator_new, {0x18});
+    if (heap) {
+        st32(heap, VT_InviteAnswer);
+        st32(heap + 8, scene);
+        st32(heap + 0xC, 0);
+        st32(heap + 0x10, lo);
+        st32(heap + 0x14, hi);
+    }
+    st32(fo + 16, heap);
+    call(APIManager_executePartyInviteOffer, {api, 0, lo, hi, comment, fo});
+    functionDestroy(fo);
+    return 0;
+}
+RW_FUNCTION(0x6E3D4C, "ScenePartyRequest player row Invite OK (sub_6E3D4C)", party_request::inviteConfirmed);
+
+// its answer (bool ok) {scene, 0, user id}: the user already in a party: the join alert; else "invited"
+uint32_t inviteAnswered(uint32_t functor, uint32_t okRef) {
+    const uint32_t ok = ld8(okRef), scene = ld32(functor + 8);
+    call(SM_enableLoadingIndicator, {sceneManager(), 0});
+    const uint32_t api = call(fn::APIManager_getInstance, {});
+    if (!ok) {
+        errorDialog(VT_InviteError);
+        return 0;
+    }
+    if (ld32(ld32(api + API_INVITES))) {
+        joinAlert(0, VT_InviteJoined);
+        return 0;
+    }
+    Frame f;
+    const uint32_t td = textData(f, TXT_INVITED);
+    const uint32_t text = newStr(f, textDataStr(td));
+    const uint32_t lo = ld32(functor + 0x10), hi = ld32(functor + 0x14);
+    const uint32_t fo = f.alloc(20);
+    st32(fo + 16, 0);
+    const uint32_t heap = call(fn::operator_new, {0x18});
+    if (heap) {
+        st32(heap, VT_InviteDone);
+        st32(heap + 8, scene);
+        st32(heap + 0xC, 0);
+        st32(heap + 0x10, lo);
+        st32(heap + 0x14, hi);
+    }
+    st32(fo + 16, heap);
+    call(SceneUtil_openOkDialog4Line, {text, fo, 0});
+    functionDestroy(fo);
+    strFree(text);
+    sharedRelease(td);
+    return 0;
+}
+RW_FUNCTION(0x6E3F04, "ScenePartyRequest invite answer operator() (sub_6E3F04)", party_request::inviteAnswered);
+
+// "invited" closed (bool) {scene, 0, user id}: the player out of the invite list
+uint32_t inviteDone(uint32_t functor, uint32_t okRef) {
+    if (!ld8(okRef)) return 0;
+    const uint32_t listRef = ld32(functor + 8) + F_INVITE_LIST;
+    const uint32_t lo = ld32(functor + 0x10), hi = ld32(functor + 0x14);
+    Frame f;
+    const uint32_t ids = f.alloc(12);
+    for (uint32_t k = 0; k < 12; k += 4) st32(ids + k, 0);
+    uint32_t list = ld32(listRef);
+    for (uint32_t k = 0; k < (ld32(list + 0x62C) - ld32(list + 0x628)) >> 3; k++) {
+        const uint32_t id = ld32(list + 0x628) + 8 * k;
+        if (ld32(id) != lo || ld32(id + 4) != hi) {
+            const uint32_t end = ld32(ids + 4);
+            if (end == ld32(ids + 8)) {
+                call(U64Vector_pushBackSlow, {ids, id});
+            } else {
+                uint32_t next = 0;
+                if (end) {
+                    st32(end, ld32(id));
+                    st32(end + 4, ld32(id + 4));
+                    next = ld32(ids + 4);
+                }
+                st32(ids + 4, next + 8);
+            }
+        }
+        list = ld32(listRef);
+    }
+    call(ULLScrollView_setItemIDs, {list, ids});
+    call(U64Vector_dtor, {ids});
+    return 0;
+}
+RW_FUNCTION(0x6E421C, "ScenePartyRequest invited dialog closed operator() (sub_6E421C)", party_request::inviteDone);
+
+// a list request's answer (bool ok) {scene...}: the list loaded (sub_6D6A60) or the error dialog
+uint32_t listAnswered(uint32_t functor, uint32_t okRef) {
+    const uint32_t ok = ld8(okRef);
+    call(SM_enableLoadingIndicator, {sceneManager(), 0});
+    if (ok) call(ScenePartyRequest_loadList, {functor + 4});
+    else errorDialog(VT_ListError);
+    return 0;
+}
+RW_FUNCTION(0x6E58C0, "ScenePartyRequest list answer operator() (sub_6E58C0)", party_request::listAnswered);
+
+// the search condition buttons {scene}: their popups after the popup delay
+uint32_t delayed(uint32_t functor, uint32_t vt) {
+    delayedOnScene(ld32(functor + 4), vt);
+    return 0;
+}
+uint32_t delayed1(uint32_t f) { return delayed(f, 0xF68D2C); }
+uint32_t delayed2(uint32_t f) { return delayed(f, 0xF68D84); }
+uint32_t delayed3(uint32_t f) { return delayed(f, 0xF68DDC); }
+uint32_t delayed4(uint32_t f) { return delayed(f, 0xF68E34); }
+uint32_t delayed5(uint32_t f) { return delayed(f, 0xF68E8C); }
+uint32_t delayed6(uint32_t f) { return delayed(f, 0xF68EE4); }
+uint32_t delayed7(uint32_t f) { return delayed(f, 0xF68F3C); }
+uint32_t delayed8(uint32_t f) { return delayed(f, 0xF68F94); }
+RW_FUNCTION(0x6E4648, "ScenePartyRequest delayed popup (sub_6E4648)", party_request::delayed1);
+RW_FUNCTION(0x6E485C, "ScenePartyRequest delayed popup (sub_6E485C)", party_request::delayed2);
+RW_FUNCTION(0x6E4A70, "ScenePartyRequest delayed popup (sub_6E4A70)", party_request::delayed3);
+RW_FUNCTION(0x6E4C84, "ScenePartyRequest delayed popup (sub_6E4C84)", party_request::delayed4);
+RW_FUNCTION(0x6E4E98, "ScenePartyRequest delayed popup (sub_6E4E98)", party_request::delayed5);
+RW_FUNCTION(0x6E50AC, "ScenePartyRequest delayed popup (sub_6E50AC)", party_request::delayed6);
+RW_FUNCTION(0x6E52C0, "ScenePartyRequest delayed popup (sub_6E52C0)", party_request::delayed7);
+RW_FUNCTION(0x6E54D4, "ScenePartyRequest delayed popup (sub_6E54D4)", party_request::delayed8);
 
 }  // namespace party_request

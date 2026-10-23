@@ -1,7 +1,8 @@
 // Party > Manage (ScenePartyManagement), the leader's two lists: Invitations sent (runInJoinLayout $_11: "Cancel
 // Invitation" -> /party/invite/cancel 95) and Requests received (runInJoinLayout $_13: "Delete" -> /party/applicant/
-// reject 87). A row's touch copies the row's 56-byte record into a confirm lambda (OK -> the request lambda -> the
-// result dialog -> the OK lambda that drops the row from the list). The confirm dialogs: openPopUpCheck (a plain
+// reject 87; $_12: "Approve" -> /party/applicant/agree), and Leave Party. A row's touch copies the row's 56-byte
+// record into a confirm lambda (OK -> the request lambda -> the result dialog -> the OK lambda that drops the row
+// from the list). The confirm dialogs: openPopUpCheck (a plain
 // OK / Cancel dialog) and openPopUpApproveCheck (the applicant's message on a party popup; under-13 players see a
 // fixed text instead). Also init's $_9 (the tab button) and MemberScrollView::changeRow $_4 / $_6 (row buttons).
 #include "../scene/SceneUi.hpp"
@@ -42,6 +43,10 @@ constexpr uint32_t AcceptLambda_build = 0x6EBA51;                    // sub_6EBA
 constexpr uint32_t APIManager_executePartyApplicationCancel = 0x4CF601;
 constexpr uint32_t APIManager_executePartyOfferReject = 0x4D1179;
 constexpr uint32_t APIManager_executePartyOfferAgree = 0x4D0FCD;     // (api, -, uint64 offer, const function&)
+constexpr uint32_t APIManager_executePartyApplicantAgree = 0x4CF8F1;
+constexpr uint32_t APIManager_executePartyLeave = 0x4CEF99;          // (api, const function<void(bool)>&)
+constexpr uint32_t SceneManager_updateHeader = 0x611169;
+constexpr uint32_t ApproveLambda_build = 0x6EE2A9;                   // sub_6EE2A8 (the approve row's confirm)
 constexpr uint32_t IntVector_pushBackSlow = 0x4D6CC1, IntVector_dtor = 0x478961;
 constexpr uint32_t IntScrollView_setItemIDs = 0x478929;              // BaseScrollView<int>::setItemIDs
 constexpr uint32_t IInOutAnimation_runOutAnimation = 0x6F24B5;       // (this, function<void()>)
@@ -96,6 +101,10 @@ constexpr List APPLICATIONS{SC_APPLICATIONS, 0xF69540, 0xF6956C, 0xF69598, 0xF69
                             g::APIManager_executePartyApplicationCancel, TXT_APPLICATION_WITHDRAWN, true};
 constexpr List OFFERS{SC_OFFERS, 0xF69388, 0xF693B4, 0xF693E0, 0xF6940C, g::APIManager_executePartyOfferReject,
                       TXT_OFFER_DELETED, true};
+// runInJoinLayout $_12: "Approve" a request received (/party/applicant/agree; the confirm built by sub_6EE2A8)
+constexpr int32_t TXT_REQUEST_APPROVE_ASK = 103850004, TXT_REQUEST_APPROVED = 103850008;
+constexpr List APPROVALS{SC_REQUESTS, 0, 0xF69724, 0xF69750, 0xF6977C, g::APIManager_executePartyApplicantAgree,
+                         TXT_REQUEST_APPROVED, false};
 
 // a row's touch: the confirm dialog of a list (OK / Cancel: openPopUpCheck; the party popup: openPopUpApproveCheck)
 struct RowSpec {
@@ -108,6 +117,7 @@ constexpr RowSpec INVITE_ROW{SC_INVITES, false, TXT_INVITE_CANCEL_ASK, 0, 0xF697
 constexpr RowSpec APPLICATION_ROW{SC_APPLICATIONS, true, TXT_APPLICATION_WITHDRAW_ASK, 0, 0xF69540, 0};
 constexpr RowSpec REQUEST_ROW{SC_REQUESTS, false, TXT_REQUEST_DELETE_ASK, TXT_U13, 0xF6961C, g::ApplicantLambda_build};
 constexpr RowSpec OFFER_ROW{SC_OFFERS, true, TXT_OFFER_DELETE_ASK, TXT_OFFER_U13, 0xF69388, g::OfferLambda_build};
+constexpr RowSpec APPROVE_ROW{SC_REQUESTS, false, TXT_REQUEST_APPROVE_ASK, TXT_U13, 0, g::ApproveLambda_build};
 
 // TextData `id` into the shared_ptr at `td` and its text into the std::string at `text`
 void textInto(uint32_t td, uint32_t text, int32_t id) {
@@ -379,6 +389,10 @@ struct PartyManagement {
     static void offerDone(uint32_t f, uint32_t ok) { requestDone(OFFERS, f, ok); }
     static void applicationDrop(uint32_t f, uint32_t ok) { dropRow(APPLICATIONS, f, ok); }
     static void offerDrop(uint32_t f, uint32_t ok) { dropRow(OFFERS, f, ok); }
+    static void approveRowTouchR(uint32_t f, uint32_t row) { approveRowTouch(APPROVE_ROW, f, row); }
+    static void approveConfirmed(uint32_t f) { confirmed(APPROVALS, f); }
+    static void approveDone(uint32_t f, uint32_t ok) { requestDone(APPROVALS, f, ok); }
+    static void approveDrop(uint32_t f, uint32_t ok) { dropRow(APPROVALS, f, ok); }
 
     // ScenePartyManagement::openPopUpCheck(text, ok, cancel): an OK / Cancel dialog running one of the two
     static void openPopUpCheck(uint32_t /*self*/, uint32_t text, uint32_t ok, uint32_t cancel) {
@@ -737,6 +751,92 @@ struct PartyEntry {
         functionDestroy(layer);
     }
 };
+
+// The leader's "Leave Party" (runInJoinLayout): the button -> after the popup delay the OK / Cancel dialog ->
+// /party/leave -> "left" (OK: the header updated, the scene leaves to the party top) or the error dialog.
+constexpr uint32_t VT_LeaveAsk = 0xF698B0, VT_LeaveConfirm = 0xF698DC, VT_LeaveRequest = 0xF69908;
+constexpr uint32_t VT_LeaveLeft = 0xF69934, VT_LeaveOut = 0xF69960, VT_LeaveError = 0xF6998C;
+constexpr int32_t TXT_LEAVE_ASK = 103850011, TXT_LEFT = 103850013;
+constexpr uint32_t SM_LEAVING = 0x309;                // SceneManager: byte, the party is being left
+
+struct PartyLeave {
+    // the button {scene}(sender, type)
+    static uint32_t touched(uint32_t functor, uint32_t, uint32_t typeRef) {
+        if (ld32(typeRef) != TOUCH_ENDED) return 0;
+        const uint32_t scene = ld32(functor + 4);
+        call(g::AudioPlaySystemSEDecide, {});
+        call(g::SceneManager_openNoTapScreen, {sceneManager(), ld32(sceneManager() + SM_POPUP_DELAY)});
+        const uint32_t wait = call(fn::DelayTime_create, {ld32(sceneManager() + SM_POPUP_DELAY)});
+        Frame f;
+        const uint32_t then = newFunction(f, VT_LeaveAsk, {scene});
+        const uint32_t done = call(fn::CallFunc_create, {then});
+        call(fn::Node_runAction, {scene, call(fn::Sequence_create, {wait, done, 0})});
+        functionDestroy(then);
+        return 0;
+    }
+    // the delayed {scene}: the OK / Cancel dialog
+    static uint32_t ask(uint32_t functor) {
+        const uint32_t scene = ld32(functor + 4);
+        Frame f;
+        const uint32_t td = f.alloc(8), text = f.alloc(12);
+        textInto(td, text, TXT_LEAVE_ASK);
+        const uint32_t ok = newFunction(f, VT_LeaveConfirm, {scene});
+        const uint32_t cancel = f.alloc(20);
+        st32(cancel + 16, 0);
+        call(g::ScenePartyManagement_openPopUpCheck, {VT_LeaveConfirm, text, ok, cancel});
+        functionDestroy(cancel);
+        functionDestroy(ok);
+        strFree(text);
+        sharedRelease(td);
+        return 0;
+    }
+    // OK {scene}: the request
+    static uint32_t confirmed(uint32_t functor) {
+        const uint32_t scene = ld32(functor + 4);
+        call(g::SceneManager_enableLoadingIndicator, {sceneManager(), 1});
+        const uint32_t api = call(fn::APIManager_getInstance, {});
+        Frame f;
+        const uint32_t cb = newFunction(f, VT_LeaveRequest, {scene});
+        call(g::APIManager_executePartyLeave, {api, cb});
+        functionDestroy(cb);
+        return 0;
+    }
+    // its answer (bool ok) {scene}
+    static uint32_t done(uint32_t functor, uint32_t okRef) {
+        const uint32_t ok = ld8(okRef), scene = ld32(functor + 4);
+        call(g::SceneManager_enableLoadingIndicator, {sceneManager(), 0});
+        st8(sceneManager() + SM_LEAVING, 1);
+        Frame f;
+        if (ok) {
+            const uint32_t td = textData(f, TXT_LEFT);
+            const uint32_t text = newStr(f, textDataStr(td));
+            const uint32_t cb = newFunction(f, VT_LeaveLeft, {scene});
+            call(g::SceneUtil_openOkDialog4Line, {text, cb, 0});
+            functionDestroy(cb);
+            strFree(text);
+            sharedRelease(td);
+            return 0;
+        }
+        if (!ld8(call(fn::APIManager_getInstance, {}) + API_OFFLINE)) return 0;
+        const uint32_t api = call(fn::APIManager_getInstance, {});
+        const uint32_t cb = newFunction(f, VT_LeaveError, {});
+        call(g::APIManager_openErrorDialog, {api, cb, 1});
+        functionDestroy(cb);
+        return 0;
+    }
+    // the "left" dialog closed (bool ok) {scene}: the header, then the scene leaves (to the party top)
+    static uint32_t left(uint32_t functor, uint32_t okRef) {
+        if (!ld8(okRef)) return 0;
+        const uint32_t scene = ld32(functor + 4);
+        st8(sceneManager() + SM_LEAVING, 0);
+        call(g::SceneManager_updateHeader, {sceneManager()});
+        Frame f;
+        const uint32_t then = newFunction(f, VT_LeaveOut, {});
+        call(g::IInOutAnimation_runOutAnimation, {scene + SC_IN_OUT, then});
+        functionDestroy(then);
+        return 0;
+    }
+};
 }  // namespace
 
 RW_FUNCTION(0x6EEB74, "ScenePartyManagement::runInJoinLayout::$_11 operator()(uint64) (cancel invitation)",
@@ -794,3 +894,16 @@ RW_FUNCTION(0x6EBC74, "ScenePartyManagement::runInEntryLayout::$_15::lambda() op
 RW_FUNCTION(0x6EBDC0, "ScenePartyManagement::runInEntryLayout::$_15::lambda()::lambda(bool) operator()",
             PartyEntry::acceptDone);
 RW_FUNCTION(0x6EBF40, "ScenePartyManagement::runInEntryLayout::$_15 out-animation end operator()", PartyEntry::acceptLeft);
+RW_FUNCTION(0x6EDD20, "ScenePartyManagement::runInJoinLayout::$_12 operator()(uint64) (approve request)",
+            PartyManagement::approveRowTouchR);
+RW_FUNCTION(0x6EE4D0, "ScenePartyManagement::runInJoinLayout::$_12::lambda() operator()", PartyManagement::approveConfirmed);
+RW_FUNCTION(0x6EE668, "ScenePartyManagement::runInJoinLayout::$_12::lambda()::lambda(bool) operator()",
+            PartyManagement::approveDone);
+RW_FUNCTION(0x6EE8B8, "ScenePartyManagement::runInJoinLayout::$_12 result dialog lambda(bool) operator()",
+            PartyManagement::approveDrop);
+RW_FUNCTION(0x6EF6B4, "ScenePartyManagement leave button operator() (sub_6EF6B4)", PartyLeave::touched);
+RW_FUNCTION(0x6EF83C, "ScenePartyManagement leave confirm dialog (sub_6EF83C)", PartyLeave::ask);
+RW_FUNCTION(0x6EFA08, "ScenePartyManagement leave request (sub_6EFA08)", PartyLeave::confirmed);
+RW_FUNCTION(0x6EFB40, "ScenePartyManagement leave answer (sub_6EFB40)", PartyLeave::done);
+RW_FUNCTION(0x6EFD58, "ScenePartyManagement left dialog closed (sub_6EFD58)", PartyLeave::left);
+RW_FUNCTION(0x6EFE9C, "ScenePartyManagement leave out-animation end (sub_6EFE9C)", PartyEntry::acceptLeft);

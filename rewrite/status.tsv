@@ -553,12 +553,21 @@ addr	name	calls	verified	mismatches	unverifiable
 004D9890	iap::ProductInfo::ProductInfo(const ProductInfo&)	84	38	0	0
 004DAB70	std::__hash_table<std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>>>::~__hash_table [base destructor]	521	179	0	0
 004DABE8	ChatManager::Message::init	84	7	0	0
+004DAE70	ChatManager::Block::init	72	72	0	0
 004DB0E4	ChatManager::getInstance	91	41	0	0
 004DB18E	ChatManager::ChatManager	58	4	0	0
 004DB224	ChatManager::updateInterval	137	94	0	0
 004DB270	ChatManager::getUser	109	0	1	73
 004DB698	createHeaders(bool)	93	18	0	0
 004DB7E0	ChatManager::getMessage	10	0	0	10
+004DBC88	ChatManager::update	1	0	0	1
+004DC020	ChatManager::createMessage	1	0	0	1
+004DC364	ChatManager::deleteMessage	1	0	0	1
+004DC900	ChatManager::unblock	2	0	0	2
+004DD220	ChatManager::unblock $_20 operator() (sub_4DD220)	2	0	0	2
+004DD5E8	ChatManager::deleteMessage $_18 operator() (sub_4DD5E8)	2	0	2	0
+004DD7CC	ChatManager::createMessage $_17 operator() (sub_4DD7CC)	2	2	0	0
+004DD9B0	ChatManager::update $_16 operator() (sub_4DD9B0)	2	2	0	0
 004DDAB4	ChatManager::getMessage  __func::__clone()	4	0	0	0
 004DDB68	ChatManager::getMessage  __func::destroy_deallocate	8	4	0	0
 004DDB94	ChatManager::getMessage::$_N::operator() (sub_4DDB94)	2	2	0	0
@@ -566,6 +575,7 @@ addr	name	calls	verified	mismatches	unverifiable
 004DE3E4	ChatManager::getUser  __func::__clone()	114	0	0	0
 004DE498	ChatManager::getUser  __func::destroy_deallocate	229	87	0	0
 004DE4C4	ChatManager::getUser::$_N::operator()	43	43	0	0
+004DEB5E	ChatManager::Block::Block(const Block&)	244	226	0	0
 004DED64	DownloadManager::start	119	0	0	21
 004DF1F4	DownloadManager::finalize	123	81	0	18
 004DF2A0	DownloadManager::onRespond	135	81	0	24
@@ -1055,21 +1065,25 @@ addr	name	calls	verified	mismatches	unverifiable
 0051B9BC	MyRecordScrollView::init::$_1 destroy()	51	12	0	0
 0051BA38	MyRecordScrollView::init::$_0 __clone(__base*)	34	6	0	0
 0051BA58	MyRecordScrollView::init::$_0 destroy()	51	12	0	0
-0051C958	PartyScrollView::~PartyScrollView	8	2	0	0
-0051CB04	PartyScrollView::create	8	2	0	0
-0051CB60	PartyScrollView::PartyScrollView	4	2	0	0
-0051CCF0	PartyScrollView::init	8	2	0	0
-0051CEF4	PartyScrollView::getLayoutPanel	6	2	0	0
-0051CFC0	PartyScrollView::createRow	12	2	0	0
-0051EEE4	PartyScrollView::registItemTouchEvent	68	2	0	0
+0051C958	PartyScrollView::~PartyScrollView	24	18	0	0
+0051CB04	PartyScrollView::create	32	18	0	0
+0051CB60	PartyScrollView::PartyScrollView	20	18	0	0
+0051CCF0	PartyScrollView::init	40	18	0	0
+0051CEF4	PartyScrollView::getLayoutPanel	18	2	0	0
+0051CFC0	PartyScrollView::createRow	18	2	6	0
+0051D018	PartyScrollView::changeRow	36	6	0	0
+0051EEE4	PartyScrollView::registItemTouchEvent	221	51	0	0
 0051F844	PartyScrollView::changeRow::$_5 operator()	8	8	0	0
 0051F9E6	PartyScrollView::changeRow::$_5::lambda() operator()	2	2	0	0
 0051FA9C	PartyScrollView::changeRow::$_4 operator()	12	12	0	0
 0051FC3E	PartyScrollView::changeRow::$_4::lambda() operator()	2	2	0	0
 0051FCF4	PartyScrollView::changeRow::$_3 operator()	20	20	0	0
 0051FE96	PartyScrollView::changeRow::$_3::lambda() operator()	1	1	0	0
-005201E8	PartyScrollView::changeRow::$_0 __clone()	30	6	0	0
-005202EA	PartyScrollView::changeRow::$_0 destroy_deallocate()	60	8	0	0
+0051FF4C	PartyScrollView::changeRow::$_2 operator()	8	8	0	0
+005201E8	PartyScrollView::changeRow::$_0 __clone()	60	6	0	0
+005202EA	PartyScrollView::changeRow::$_0 destroy_deallocate()	114	14	0	0
+00520330	PartyScrollView::changeRow::$_0 operator()	8	8	0	0
+005204E8	PartyScrollView::changeRow::$_0::lambda() operator()	1	0	0	1
 00520710	MemberScrollView::~MemberScrollView	4	2	0	0
 005208F8	MemberScrollView::create	23	1	0	0
 00520954	MemberScrollView::MemberScrollView	16	1	0	0
@@ -1083,9 +1097,10 @@ addr	name	calls	verified	mismatches	unverifiable
 00523CE8	MemberScrollView::changeRow::$_6 operator()	4	4	0	0
 00523F30	MemberScrollView::changeRow::$_5 __clone()	51	6	0	0
 00523F92	MemberScrollView::changeRow::$_5 destroy_deallocate()	81	9	0	0
+00523F9C	MemberScrollView member button (sub_523F9C)	8	8	0	0
 005241E4	MemberScrollView::changeRow::$_4 __clone()	51	6	0	0
 00524246	MemberScrollView::changeRow::$_4 destroy_deallocate()	81	9	0	0
-00524250	MemberScrollView::changeRow::$_4 operator()	8	8	0	0
+00524250	MemberScrollView::changeRow::$_4 operator()	16	16	0	0
 00524498	MemberScrollView::changeRow::$_3 __clone()	51	6	0	0
 005244FA	MemberScrollView::changeRow::$_3 destroy_deallocate()	81	9	0	0
 00524504	MemberScrollView::changeRow::$_3 operator() (profile button)	24	24	0	0
@@ -1212,8 +1227,12 @@ addr	name	calls	verified	mismatches	unverifiable
 00539CCC	AvatarInfoDialog::openPopUpLeaderChange(function<void(bool)>)	3	2	0	0
 00539F34	AvatarInfoDialog::openPopUpSubLeaderAppoint(function<void(bool)>)	1	1	0	0
 0053A18C	AvatarInfoDialog::openPopUpSubLeaderDismiss(function<void(bool)>)	1	1	0	0
+0053A3E4	AvatarInfoDialog::openPopUpMemberExpel(function<void(bool)>)	2	2	0	0
 0053C6CC	AvatarInfoDialog::setTouchEnabledUnderUIButtons	5	5	0	0
 0053E30C	ScenePartyTop::create	32	9	2	0
+00540890	AvatarInfoDialog expel lambda __func::destroy_deallocate (sub_540890)	10	4	0	0
+005408D8	AvatarInfoDialog expel answered (sub_5408D8)	2	1	0	1
+00540B9C	AvatarInfoDialog expel done (sub_540B9C)	1	1	0	0
 00540ED0	AvatarInfoDialog::openPopUpSubLeaderDismiss::$_51 __clone()	4	1	0	0
 00541030	AvatarInfoDialog::openPopUpSubLeaderDismiss::$_51 destroy_deallocate()	5	2	0	0
 00541078	AvatarInfoDialog::openPopUpSubLeaderDismiss::$_51 operator()	1	0	0	1
@@ -1307,6 +1326,18 @@ addr	name	calls	verified	mismatches	unverifiable
 00556CB8	ChatScrollView::changeRow	288	8	1	6
 0055852C	ChatScrollView::getTextLineCount	250	13	0	0
 00558710	ChatScrollView::setMessages	23	3	0	3
+00558A94	ChatScrollDelView::~ChatScrollDelView	6	6	0	0
+00558BE0	ChatScrollDelView::create	8	7	1	0
+00558C74	ChatScrollDelView::init	9	7	0	0
+00558ECC	ChatScrollDelView::createRow	16	8	0	0
+00558F28	ChatScrollDelView::changeRow	32	8	0	0
+00559FE4	ChatScrollDelView::setMessages	8	8	0	0
+0055A84C	ChatBlockListScrollView::~ChatBlockListScrollView	2	2	0	0
+0055AA28	ChatBlockListScrollView::create	4	4	0	0
+0055AAC4	ChatBlockListScrollView::init	4	4	0	0
+0055AD1C	ChatBlockListScrollView::createRow	8	4	0	0
+0055AD74	ChatBlockListScrollView::changeRow	16	4	0	0
+0055B7A0	ChatBlockListScrollView::setBlockList	4	4	0	0
 0055B874	ChatStampListScrollView::~ChatStampListScrollView	1	1	0	0
 0055B9D8	ChatStampListScrollView::create	1	1	0	0
 0055BA84	ChatStampListScrollView::init	1	1	0	0
@@ -1316,6 +1347,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0055C65C	ChatEditBoxMessageSend::~ChatEditBoxMessageSend	10	8	0	0
 0055C6C8	ChatEditBoxMessageSend::~ChatEditBoxMessageSend [deleting destructor]	2	2	0	0
 0055C6E8	ChatEditBoxMessageSend::create	8	8	0	0
+0055C75E	ChatEditBoxMessageSend::editBoxEditingDidEnd	2	2	0	0
 0055DAE4	BaseStageScrollView::BaseStageScrollView()	203	2	0	0
 0055DD24	RankingRewardScrollView::~RankingRewardScrollView	12	2	0	0
 0055DEA8	RankingRewardScrollView::create	21	3	0	0
@@ -1707,6 +1739,11 @@ addr	name	calls	verified	mismatches	unverifiable
 00592560	BuyMagicStoneDialog::open $_0 __func::__clone(__base*)	36	26	0	0
 00592580	BuyMagicStoneDialog::open $_0 __func::destroy	58	32	0	0
 00592794	BuyMagicStoneDialog::open $_0 __func::destroy_deallocate	6	4	0	0
+00592994	PartyInfoDialog::create	2	2	0	0
+005939E0	PartyInfoDialog::openRequest	2	0	0	2
+00593C48	PartyInfoDialog::createRequestLayout	2	2	0	0
+00596080	PartyInfoDialog::close	2	1	0	0
+005965CA	PartyInfoDialog request popup result operator() (sub_5965CA)	1	1	0	0
 0059734C	RaidBossLwfDialog::create	15	0	0	0
 005973EC	RaidBossLwfDialog::open	15	0	0	0
 00597940	RaidBossLwfDialog::settingRaidLwf	13	0	0	0
@@ -3282,11 +3319,13 @@ addr	name	calls	verified	mismatches	unverifiable
 00656B44	ScenePartyTop invite popup close (sub_656B44)	1	1	0	0
 00656C82	ScenePartyTop invite popup closed __func::operator() (sub_656C82)	1	1	0	0
 00656E7C	ScenePartyTop invite copy button lambda __func::__clone() (sub_656E7C)	2	1	0	0
+00656F6C	ScenePartyTop copy invite (sub_656F6C)	12	12	0	0
 0065722C	ScenePartyTop::runInEntryLayout::$_23 operator() (Manage)	8	8	0	0
 0065735C	ScenePartyTop::runInEntryLayout::$_23::lambda() operator()	2	0	0	2
 00657478	ScenePartyTop::runInEntryLayout::$_23::lambda()::lambda(bool) operator()	2	0	0	2
 00657634	ScenePartyManagement::create	3	3	0	0
-00657910	SceneParty: to ScenePartyRequest lambda operator() (sub_657910)	2	0	0	2
+006577E0	ScenePartyTop back button (sub_6577E0)	16	16	0	0
+00657910	SceneParty: to ScenePartyRequest lambda operator() (sub_657910)	4	0	0	4
 00657A80	ScenePartyRequest::create	1	1	0	0
 00657AD4	ScenePartyRequest::ScenePartyRequest	8	1	0	0
 006580F0	ScenePartyTop::runInJoinLayout $_19 __func::__clone(__base*)	24	10	0	0
@@ -4049,14 +4088,14 @@ addr	name	calls	verified	mismatches	unverifiable
 006D1004	ScenePresentBox::openPresentBoxDialogMain $_12 __func::__clone(__base*)	2	1	0	0
 006D2320	ScenePartyCreate::openPopUpCreateParty()	1	1	0	0
 006D5D1C	ScenePartyRequest::callUserSearchAPI	5	0	0	3
-006D5F0C	ScenePartyRequest::callPartySearchAPI	4	0	0	2
+006D5F0C	ScenePartyRequest::callPartySearchAPI	8	0	0	4
 006D6050	ScenePartyRequest::~ScenePartyRequest	2	2	0	0
 006D6120	ScenePartyRequest::init	8	1	0	0
 006D6A60	ScenePartyRequest::init list loader (sub_6D6A60)	8	1	0	0
 006D6C44	ScenePartyRequest::init search filter button (sub_6D6C44)	32	1	0	0
 006D6FC8	ScenePartyRequest::runInAnimation	8	1	0	0
 006D7190	ScenePartyRequest::runInJoinLayout	12	3	0	0
-006D7450	ScenePartyRequest::runInEntryLayout	3	3	0	0
+006D7450	ScenePartyRequest::runInEntryLayout	11	11	0	0
 006D7584	ScenePartyRequest::runOutAnimationMain	4	2	0	0
 006D7774	ScenePartyRequest::openPopUpPlayStyle	2	2	0	0
 006D7DBC	ScenePartyRequest::openPopUp	10	5	0	0
@@ -4067,15 +4106,15 @@ addr	name	calls	verified	mismatches	unverifiable
 006D94EC	ScenePartyRequest::openPopUpMember	1	1	0	0
 006D9B38	ScenePartyRequest::openPopUpMember check (sub_6D9B38)	4	3	0	0
 006DB8D0	ScenePartyRequest::openPopUpSearchID	2	2	0	0
-006DC0D0	ScenePartyRequest::openPopUpRequest	2	2	0	0
+006DC0D0	ScenePartyRequest::openPopUpRequest	10	6	0	0
 006DD290	ScenePartyRequest::backScene	2	2	0	0
 006DD3C8	ScenePartyRequest::backScene lambda __func::operator() (sub_6DD3C8)	4	0	0	4
 006DD688	ScenePartyRequest::openPopUp closed operator()	9	5	0	0
 006DD70C	ScenePartyRequest::openPopUp close animation (sub_6DD70C)	10	5	0	0
 006DDA4C	ScenePartyRequest::openPopUp OK operator()	16	16	0	0
 006DDD9C	ScenePartyRequest::openPopUp OK function operator()	4	4	0	0
-006DE004	ScenePartyRequest::openPopUp close with the buttons off (sub_6DE004)	2	2	0	0
-006DE418	ScenePartyRequest create popup OK operator() (sub_6DE418)	4	4	0	0
+006DE004	ScenePartyRequest::openPopUp close with the buttons off (sub_6DE004)	6	6	0	0
+006DE418	ScenePartyRequest create popup OK operator() (sub_6DE418)	20	20	0	0
 006DED2A	ScenePartyRequest ID popup result __func::operator()(bool) (sub_6DED2A)	2	2	0	0
 006DEDA4	ScenePartyRequest ID popup close (sub_6DEDA4)	4	2	0	0
 006DEEE2	ScenePartyRequest ID popup closed __func::operator() (sub_6DEEE2)	2	2	0	0
@@ -4083,7 +4122,18 @@ addr	name	calls	verified	mismatches	unverifiable
 006E17BE	ScenePartyRequest::openPopUpJoin box 2 operator()	4	4	0	0
 006E18DE	ScenePartyRequest::openPopUpJoin box 1 operator()	4	4	0	0
 006E19EC	ScenePartyRequest::openPopUpJoin OK (sub_6E19EC)	2	1	0	0
+006E294C	ScenePartyRequest party row Request operator() (sub_6E294C)	2	2	0	0
+006E2AEC	ScenePartyRequest party row Request OK (sub_6E2AEC)	1	0	0	1
+006E3018	ScenePartyRequest application answer __clone() (sub_6E3018)	3	2	0	0
+006E316C	ScenePartyRequest application answer operator() (sub_6E316C)	2	2	0	0
+006E3644	ScenePartyRequest applied dialog __clone() (sub_6E3644)	8	2	0	0
+006E3798	ScenePartyRequest applied dialog closed operator() (sub_6E3798)	2	2	0	0
+006E3BAC	ScenePartyRequest player row Invite operator() (sub_6E3BAC)	2	2	0	0
+006E3D4C	ScenePartyRequest player row Invite OK (sub_6E3D4C)	1	0	0	1
+006E3F04	ScenePartyRequest invite answer operator() (sub_6E3F04)	2	2	0	0
+006E421C	ScenePartyRequest invited dialog closed operator() (sub_6E421C)	2	2	0	0
 006E56F0	ScenePartyRequest::init $_7 __func::operator() (sub_6E56F0)	4	3	0	1
+006E58C0	ScenePartyRequest list answer operator() (sub_6E58C0)	4	2	2	0
 006E5AB0	ScenePartyRequest::init $_85 UlbE_ __func::operator()(bool) (sub_6E5AB0)	1	1	0	0
 006E6384	ScenePartyManagement::callAPIs	2	0	0	0
 006E6578	ScenePartyManagement::~ScenePartyManagement	3	3	0	0
@@ -4094,14 +4144,14 @@ addr	name	calls	verified	mismatches	unverifiable
 006E8860	ScenePartyManagement::runOutAnimationMain	6	3	0	0
 006E8950	ScenePartyManagement::runOutJoinLayout	1	1	0	0
 006E8AF8	ScenePartyManagement::runOutEntryLayout	2	2	0	0
-006E8C04	ScenePartyManagement::openPopUpCheck	7	3	0	0
-006E8D74	ScenePartyManagement::openPopUpApproveCheck	16	7	0	0
+006E8C04	ScenePartyManagement::openPopUpCheck	9	4	0	0
+006E8D74	ScenePartyManagement::openPopUpApproveCheck	20	9	0	0
 006E9734	ScenePartyManagement::backScene	1	1	0	0
 006E9850	ScenePartyManagement::backScene lambda __func::operator() (sub_6E9850)	2	0	0	2
-006E9B18	ScenePartyManagement::openPopUpApproveCheck popup result operator()	7	7	0	0
-006E9C90	ScenePartyManagement::openPopUpApproveCheck close (sub_6E9C90)	7	7	0	0
-006E9DCE	ScenePartyManagement::openPopUpApproveCheck remove lambda operator()	7	7	0	0
-006EA338	ScenePartyManagement::openPopUpCheck lambda __clone()	14	3	0	0
+006E9B18	ScenePartyManagement::openPopUpApproveCheck popup result operator()	9	9	0	0
+006E9C90	ScenePartyManagement::openPopUpApproveCheck close (sub_6E9C90)	9	9	0	0
+006E9DCE	ScenePartyManagement::openPopUpApproveCheck remove lambda operator()	9	9	0	0
+006EA338	ScenePartyManagement::openPopUpCheck lambda __clone()	18	4	0	0
 006EA680	ScenePartyManagement::runInEntryLayout::$_16 operator()(int) (delete invitation)	7	3	0	0
 006EABE4	ScenePartyManagement::runInEntryLayout::$_16 confirm std::function (sub_6EABE4)	8	3	0	0
 006EACBC	ScenePartyManagement::runInEntryLayout::$_16::lambda() __clone()	8	3	0	0
@@ -4126,12 +4176,22 @@ addr	name	calls	verified	mismatches	unverifiable
 006ED7BC	ScenePartyManagement::runInJoinLayout::$_13::lambda()::lambda(bool) operator()	1	1	0	0
 006EDA0C	ScenePartyManagement::runInJoinLayout::$_13 result dialog lambda(bool) operator()	1	1	0	0
 006EDCFC	ScenePartyManagement applicant lambda __func::destroy_deallocate() (sub_6EDCFC)	2	1	0	0
+006EDD20	ScenePartyManagement::runInJoinLayout::$_12 operator()(uint64) (approve request)	2	2	0	0
+006EE4D0	ScenePartyManagement::runInJoinLayout::$_12::lambda() operator()	1	0	0	1
+006EE668	ScenePartyManagement::runInJoinLayout::$_12::lambda()::lambda(bool) operator()	2	2	0	0
+006EE8B8	ScenePartyManagement::runInJoinLayout::$_12 result dialog lambda(bool) operator()	2	2	0	0
 006EEB74	ScenePartyManagement::runInJoinLayout::$_11 operator()(uint64) (cancel invitation)	1	1	0	0
 006EEF74	ScenePartyManagement::runInJoinLayout::$_11::lambda() __clone()	6	1	0	0
 006EF0C4	ScenePartyManagement::runInJoinLayout::$_11::lambda() operator()	1	0	0	1
 006EF25C	ScenePartyManagement::runInJoinLayout::$_11::lambda()::lambda(bool) operator()	1	1	0	0
 006EF4AC	ScenePartyManagement::runInJoinLayout::$_11 result dialog lambda(bool) operator()	1	1	0	0
-006F010A	ScenePartyManagement::init::$_9 operator() (tab button)	16	15	1	0
+006EF6B4	ScenePartyManagement leave button operator() (sub_6EF6B4)	4	4	0	0
+006EF83C	ScenePartyManagement leave confirm dialog (sub_6EF83C)	1	1	0	0
+006EFA08	ScenePartyManagement leave request (sub_6EFA08)	1	0	0	1
+006EFB40	ScenePartyManagement leave answer (sub_6EFB40)	1	1	0	0
+006EFD58	ScenePartyManagement left dialog closed (sub_6EFD58)	1	1	0	0
+006EFE9C	ScenePartyManagement leave out-animation end (sub_6EFE9C)	1	0	0	1
+006F010A	ScenePartyManagement::init::$_9 operator() (tab button)	40	37	3	0
 006F0278	ScenePartyManagement::init $_6 __func::operator()(Touch*, Event*) (sub_6F0278)	3	3	0	0
 006F0748	ScenePartyManagement::callAPIs applicants lambda __func::operator() (sub_6F0748)	2	0	0	2
 006F0AA8	ScenePartyMember::~ScenePartyMember (deleting)	2	2	0	0

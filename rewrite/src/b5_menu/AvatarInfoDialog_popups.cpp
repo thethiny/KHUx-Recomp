@@ -1,5 +1,6 @@
 // AvatarInfoDialog popups (party member info): the OK / Cancel confirmations (expel, cancel, invitation, reject)
-// and their request lambdas, the party offer / join request popups (comment field) and the sub name choice.
+// and their request lambdas, the party offer / join request popups (comment field) and the sub name choice;
+// batch #8 adds the popups' lambdas (answers, OK / Cancel / result / close, requests, __func thunks).
 #include "../scene/SceneUi.hpp"
 
 using namespace scene;
@@ -496,7 +497,390 @@ uint32_t openPopUpJoinRequest(uint32_t self, uint32_t done) {
     static constexpr PartyPopup P{103810002, 103800044, 103810025, 0xF577B0, 0xF576D4, 0xF576A8, 0xF5767C, 0xF57624, true};
     return partyMessagePopup(self, done, P);
 }
+
+// ------------------------------------------------------------------------------------------------ batch #8
+// The party popups' lambdas: the cancel / expel answers and their requests, the join request / offer popups' OK,
+// Cancel, result and close lambdas, their requests and answers, the __func thunks of the two-function lambdas, and
+// the sub name choice's result.
+constexpr uint32_t APIManager_executePartyMemberExpel = 0x4D0591;      // (api, -, u64 user, function)
+constexpr uint32_t APIManager_executePartyApplication = 0x4CF2C9;      // (api, -, u64 party, comment, function)
+constexpr uint32_t APIManager_executePartyInviteOffer = 0x4D09A5;      // (api, -, u64 user, comment, function)
+constexpr uint32_t APIManager_needsRetry = 0x4C3C63;
+constexpr uint32_t FunctionVB_call = 0x474139, FunctionVB_assign = 0x490109;
+constexpr uint32_t AudioPlaySystemSECancel = 0x5C0D81;
+constexpr uint32_t SM_closeCurrentPopup = 0x6216A1, SM_openNoTapScreen = 0x61FB25, SM_openPopupAllClear = 0x6217DD;
+constexpr uint32_t SM_changeSceneLayer = 0x612B99;
+constexpr uint32_t SceneUtil_createClosePopupAnimation = 0x45BC61, SceneUtil_splitSpaceCheck = 0x47898D;
+constexpr uint32_t SceneUtil_openPartyInfoJoinAlertPopup = 0x478E1D;
+constexpr uint32_t EaseSineOut_create = 0x860D09;
+constexpr uint32_t AvatarInfoDialog_close = 0x534F51, AvatarTitleScrollView_setEnabledTapItem = 0x511349;
+constexpr uint32_t ScenePartyTop_callPartyTopAPI = 0x652595;
+constexpr uint32_t String_copyAssign = 0x498A1D;
+constexpr uint32_t GOT_SHADOW_FADE = 0xFD65C0, GOT_FUNC_LAYER_VT = 0xFD6074, GOT_CREATE_PARTY_TOP = 0xFD6620;
+constexpr uint32_t F_SENDING = 0x4C0, F_COMMENT = 0x470, F_PARTY_INFO = 0x310;
+constexpr uint32_t SM_LOCKED = 0x309, SM_NO_TAP_TIME = 0x300;
+constexpr uint32_t V_SET_TOUCH_ENABLED = 0x29C, V_REMOVE_CHILD = 0x12C, V_EDIT_GET_TEXT = 0x2AC;
+
+uint32_t api() { return call(g::APIManager_getInstance, {}); }
+uint32_t sm() { return call(g::SM_getInstance, {}); }
+
+// the cancel confirmation's answer {self, done}: /party/member/expel for the shown user, then "cancelled"
+void cancelAnswered(uint32_t functor, uint32_t okRef) {
+    sendForUser(functor, okRef, APIManager_executePartyMemberExpel, 0xF575CC);
+}
+void cancelDone(uint32_t functor, uint32_t okRef) { requestDone(functor, okRef, 103850003, 0xF575F8); }
+
+// the expel confirmation's answer {self, done, cancelled}: Cancel runs `cancelled(false)`; OK: the request
+void expelAnswered(uint32_t functor, uint32_t okRef) {
+    if (!ld8(okRef)) {
+        call(FunctionVB_call, {functor + 0x28, 0});
+        return;
+    }
+    sendForUser(functor, okRef, APIManager_executePartyMemberExpel, 0xF57B20);
+}
+// its request's callback {done}: "expelled" (OK: done), or done(false) unless retried and the error dialog
+void expelDone(uint32_t functor, uint32_t okRef) {
+    const uint8_t ok = ld8(okRef);
+    call(g::SM_enableLoadingIndicator, {sm(), 0});
+    st8(sm() + SM_LOCKED, 1);
+    if (ok) {
+        Frame f;
+        const uint32_t text = f.alloc(8);
+        call(g::TextData_get, {text, 0, 103840006});
+        const uint32_t msg = newStr(f, ld32(ld32(text) + 4));
+        const uint32_t c = f.alloc(20);
+        call(g::FunctionVB_copy, {c, functor + 8});
+        call(g::SceneUtil_openOkDialog4Line, {msg, c, 0});
+        functionDestroy(c);
+        strFree(msg);
+        releaseIf(ld32(text + 4));
+        return;
+    }
+    if (!ld8(api() + 0x14)) return;
+    if (!call(APIManager_needsRetry, {api()}) && ld32(functor + 0x18)) call(FunctionVB_call, {functor + 8, 0});
+    const uint32_t a = api();
+    Frame f;
+    const uint32_t fo = newFunction(f, 0xF57B4C, {});
+    call(g::APIManager_openErrorDialog, {a, fo, 1});
+    functionDestroy(fo);
+}
+
+// the party message popup's result {self, -, shadow, widget, layer, done(, self)}(bool sent): cancelled: not sending;
+// the shadow fades, the eased close animation then the close lambda {layer, shadow, widget, done, sent(, self)}
+void popupResult(uint32_t functor, uint32_t okRef, uint32_t vt, bool join) {
+    const uint8_t ok = ld8(okRef);
+    if (!ok) {
+        const uint32_t self = ld32(functor + 8);
+        call(AudioPlaySystemSECancel, {});
+        st8(self + F_SENDING, 1);
+    }
+    const uint32_t self2 = join ? ld32(functor + 0x38) : 0;
+    const uint32_t shadow = ld32(functor + 0x10);
+    call(fn::Node_runAction, {shadow, call(fn::FadeTo_create, {ld32(ld32(GOT_SHADOW_FADE)), 0})});
+    const uint32_t widget = ld32(functor + 0x14);
+    Frame f;
+    const uint32_t done = f.alloc(20);
+    call(g::FunctionVB_copy, {done, functor + 0x20});
+    const uint32_t fo = f.alloc(20);
+    st32(fo + 16, 0);
+    const uint32_t obj = call(fn::operator_new, {0x38});
+    if (obj) {
+        st32(obj, vt);
+        st32(obj + 8, ld32(functor + 0x18));
+        st32(obj + 0xC, ld32(functor + 0x10));
+        st32(obj + 0x10, widget);
+        call(g::FunctionVB_move, {obj + 0x18, done});
+        if (join) {
+            st32(obj + 0x30, ok);
+            st32(obj + 0x34, self2);
+        } else {
+            st8(obj + 0x30, ok);
+        }
+    }
+    st32(fo + 16, obj);
+    const uint32_t anim = call(SceneUtil_createClosePopupAnimation, {widget, fo});
+    call(fn::Node_runAction, {widget, call(EaseSineOut_create, {anim})});
+    functionDestroy(fo);
+    functionDestroy(done);
+}
+void joinResult(uint32_t functor, uint32_t okRef) { popupResult(functor, okRef, 0xF57650, true); }
+void offerResult(uint32_t functor, uint32_t okRef) { popupResult(functor, okRef, 0xF578B8, false); }
+
+// the join request popup closed {layer, shadow, widget, done, sent, self}: both removed, done(sent); sent and now
+// in a party (the party's join type 3): the dialog closes and the party top reloads
+void joinClosed(uint32_t functor) {
+    const uint32_t self = ld32(functor + 0x34);
+    const uint32_t layer = ld32(functor + 8);
+    vcall(layer, V_REMOVE_CHILD, {layer, ld32(functor + 0xC), 1});
+    vcall(ld32(functor + 8), V_REMOVE_CHILD, {ld32(functor + 8), ld32(functor + 0x10), 1});
+    call(FunctionVB_call, {functor + 0x18, ld8(functor + 0x30)});
+    if (!ld8(functor + 0x30)) return;
+    const uint32_t party = ld32(api() + 0x210);
+    if (!party || ld32(party + 0x44)) return;
+    const uint32_t info = ld32(api() + 0x1E4);
+    if (!info || ld32(info + 0x20) != 3) return;
+    call(AvatarInfoDialog_close, {self});
+    call(SM_openPopupAllClear, {sm()});
+    const uint32_t m = sm();
+    st8(m + 0x4CC, 1);
+    {
+        Frame f;
+        const uint32_t none = newEmptyFunction(f);
+        call(FunctionVB_assign, {m + 0x548, none});
+        functionDestroy(none);
+    }
+    {
+        Frame f;
+        const uint32_t none = newEmptyFunction(f);
+        call(ScenePartyTop_callPartyTopAPI, {none});
+        functionDestroy(none);
+    }
+    const uint32_t m2 = sm();
+    Frame f;
+    const uint32_t fo = newFunction(f, ld32(GOT_FUNC_LAYER_VT) + 8, {ld32(GOT_CREATE_PARTY_TOP)});
+    call(SM_changeSceneLayer, {m2, fo, 1, 1, 1});
+    functionDestroy(fo);
+}
+
+// Cancel {OK, Cancel}(sender, type): the popup closed, both buttons off
+uint32_t cancelTouched(uint32_t functor, uint32_t, uint32_t typeRef) {
+    const uint32_t type = ld32(typeRef);
+    if (type != 2) return type;
+    call(SM_closeCurrentPopup, {sm(), 0});
+    vcall(ld32(functor + 4), V_SET_TOUCH_ENABLED, {ld32(functor + 4), 0});
+    return vcall(ld32(functor + 8), V_SET_TOUCH_ENABLED, {ld32(functor + 8), 0});
+}
+
+// a delayed lambda {self} on self
+void delayedOn(uint32_t self, uint32_t vt) {
+    const uint32_t m = sm();
+    call(SM_openNoTapScreen, {m, ld32(sm() + SM_NO_TAP_TIME)});
+    const uint32_t delay = call(fn::DelayTime_create, {ld32(sm() + SM_NO_TAP_TIME)});
+    Frame f;
+    const uint32_t fo = newFunction(f, vt, {self});
+    const uint32_t then = call(fn::CallFunc_create, {fo});
+    call(fn::Node_runAction, {self, call(fn::Sequence_create, {delay, then, 0})});
+    functionDestroy(fo);
+}
+// the user level (party data word 0)
+int32_t level(uint32_t party) {
+    Frame f;
+    const uint32_t v = f.alloc(4);
+    call(0x45A269, {party, v, ld32(party + 0xC), 4, 0});
+    return int32_t(ld32(v));
+}
+// OK {edit box, party, party ctrl, self}(sender, type): from level 13 the comment must not be empty (else the
+// "empty" lambda) and pass the space check (else the NG message); then sending: the comment kept, the request after
+// the popup delay
+struct OkLambdas {
+    uint32_t vtEmpty, vtSend, vtNg;
+};
+void okTouched(uint32_t functor, uint32_t typeRef, const OkLambdas &l) {
+    if (ld32(typeRef) != 2) return;
+    const uint32_t self = ld32(functor + 0x10);
+    call(g::AudioPlaySystemSEDecide, {});
+    const uint32_t edit = ld32(functor + 4), party = ld32(functor + 8);
+    if (edit && party && level(party) >= 13) {
+        const uint32_t text = vcall(edit, V_EDIT_GET_TEXT, {edit});
+        if (!strSize(text)) {
+            delayedOn(self, l.vtEmpty);
+            return;
+        }
+        if (!call(SceneUtil_splitSpaceCheck, {text})) {
+            st8(sm() + SM_LOCKED, 1);
+            Frame f;
+            const uint32_t td = f.alloc(8);
+            call(g::TextData_get, {td, 0, 103810020});
+            const uint32_t msg = newStr(f, ld32(ld32(td) + 4));
+            const uint32_t fo = newFunction(f, l.vtNg, {});
+            call(g::SceneUtil_openOkDialog4Line, {msg, fo, 0});
+            functionDestroy(fo);
+            strFree(msg);
+            releaseIf(ld32(td + 4));
+            return;
+        }
+    }
+    st8(self + F_SENDING, 1);
+    if (const uint32_t p = ld32(functor + 8); p && level(p) >= 13)
+        call(String_copyAssign, {self + F_COMMENT, vcall(ld32(functor + 4), V_EDIT_GET_TEXT, {ld32(functor + 4)})});
+    delayedOn(self, l.vtSend);
+}
+void joinOk(uint32_t functor, uint32_t, uint32_t typeRef) { okTouched(functor, typeRef, {0xF57758, 0xF57700, 0xF5772C}); }
+void offerOk(uint32_t functor, uint32_t, uint32_t typeRef) { okTouched(functor, typeRef, {0xF579C0, 0xF57968, 0xF57994}); }
+
+// the empty comment's delayed lambda: the NG message
+void emptyComment(uint32_t vt) {
+    st8(sm() + SM_LOCKED, 1);
+    Frame f;
+    const uint32_t td = f.alloc(8);
+    call(g::TextData_get, {td, 0, 103810020});
+    const uint32_t msg = newStr(f, ld32(ld32(td) + 4));
+    const uint32_t fo = newFunction(f, vt, {});
+    call(g::SceneUtil_openOkDialog4Line, {msg, fo, 0});
+    functionDestroy(fo);
+    strFree(msg);
+    releaseIf(ld32(td + 4));
+}
+void joinEmpty(uint32_t) { emptyComment(0xF57784); }
+void offerEmpty(uint32_t) { emptyComment(0xF579EC); }
+
+// the join request's send {self, ?}: /party/application for the shown party with the comment (the answer lambda
+// gets the lambda's second word, never set by its creator)
+void joinSend(uint32_t functor) {
+    const uint32_t self = ld32(functor + 4);
+    call(g::SM_enableLoadingIndicator, {sm(), 1});
+    const uint32_t a = api();
+    const uint32_t info = ld32(self + F_PARTY_INFO);
+    Frame f;
+    const uint32_t id = f.alloc(8);
+    call(0x45A269, {info, id, ld32(info + 0xC) + 0x28, 8, 0x28});
+    const uint32_t comment = strData(self + F_COMMENT);
+    const uint32_t other = ld32(functor + 8);
+    const uint32_t fo = newFunction(f, 0xF577DC, {other});
+    call(APIManager_executePartyApplication, {a, other, ld32(id), ld32(id + 4), comment, fo});
+    functionDestroy(fo);
+}
+// the offer's send {self, ?}: /party/invite/offer for the shown user with the comment
+void offerSend(uint32_t functor) {
+    const uint32_t self = ld32(functor + 4);
+    call(g::SM_enableLoadingIndicator, {sm(), 1});
+    const uint32_t a = api();
+    const uint32_t hi = ld32(self + F_USER + 4), lo = ld32(self + F_USER);
+    const uint32_t comment = strData(self + F_COMMENT);
+    const uint32_t other = ld32(functor + 8);
+    Frame f;
+    const uint32_t fo = newFunction(f, 0xF57A44, {other});
+    call(APIManager_executePartyInviteOffer, {a, comment, lo, hi, comment, fo});
+    functionDestroy(fo);
+}
+
+// their answers {self}(bool ok): failed: the error dialog, not sending unless retried; done: the join alert when
+// the party / invitee is taken, else "applied" / "invited"
+struct Answer {
+    uint32_t api, vtJoined, vtDone, vtError;
+    bool joinAlert;
+    int32_t text;
+};
+void answered(uint32_t functor, uint32_t okRef, const Answer &a) {
+    const uint8_t ok = ld8(okRef);
+    const uint32_t self = ld32(functor + 4);
+    call(g::SM_enableLoadingIndicator, {sm(), 0});
+    if (!ok) {
+        st8(sm() + SM_LOCKED, 1);
+        if (ld8(api() + 0x14)) {
+            const uint32_t x = api();
+            Frame f;
+            const uint32_t fo = newFunction(f, a.vtError, {});
+            call(g::APIManager_openErrorDialog, {x, fo, 1});
+            functionDestroy(fo);
+        }
+        if (!call(APIManager_needsRetry, {api()})) st8(self + F_SENDING, 0);
+        return;
+    }
+    const uint32_t list = ld32(api() + a.api);
+    if (!(a.joinAlert ? ld32(list + 0x44) : ld32(list))) {
+        api();
+        st8(sm() + SM_LOCKED, 1);
+        Frame f;
+        const uint32_t td = f.alloc(8);
+        call(g::TextData_get, {td, 0, uint32_t(a.text)});
+        const uint32_t msg = newStr(f, ld32(ld32(td) + 4));
+        const uint32_t fo = newFunction(f, a.vtDone, {});
+        call(g::SceneUtil_openOkDialog4Line, {msg, fo, 0});
+        functionDestroy(fo);
+        strFree(msg);
+        releaseIf(ld32(td + 4));
+        return;
+    }
+    Frame f;
+    const uint32_t fo = newFunction(f, a.vtJoined, {});
+    call(SceneUtil_openPartyInfoJoinAlertPopup, {a.joinAlert ? 1u : 0u, fo});
+    functionDestroy(fo);
+}
+void joinAnswered(uint32_t functor, uint32_t okRef) {
+    answered(functor, okRef, {0x210, 0xF57808, 0xF57834, 0xF57860, true, 103810003});
+}
+void offerAnswered(uint32_t functor, uint32_t okRef) {
+    answered(functor, okRef, {0x228, 0xF57A70, 0xF57A9C, 0xF57AC8, false, 103830015});
+}
+
+// __func thunks of the lambdas holding two std::function<void(bool)> (at +0x10 and `second`)
+uint32_t destroyFn(uint32_t fo) {
+    const uint32_t p = ld32(fo + 16);
+    if (p == fo) return vcall(p, 0x10, {p});
+    if (p) return vcall(p, 0x14, {p});
+    return 0;
+}
+uint32_t twoFnDestroy(uint32_t self, uint32_t second) {
+    destroyFn(self + second);
+    return destroyFn(self + 0x10);
+}
+uint32_t twoFnDtor(uint32_t self, uint32_t vt, uint32_t second) {
+    st32(self, vt);
+    twoFnDestroy(self, second);
+    return self;
+}
+uint32_t expelDtor(uint32_t s) { return twoFnDtor(s, 0xF57AF4, 0x28); }
+void expelDelete(uint32_t s) { expelDtor(s); call(fn::operator_delete, {s}); }
+uint32_t expelDestroy(uint32_t s) { return twoFnDestroy(s, 0x28); }
+void expelDestroyDelete(uint32_t s) { expelDestroy(s); call(fn::operator_delete, {s}); }
+uint32_t b78Dtor(uint32_t s) { return twoFnDtor(s, 0xF57B78, 0x30); }
+void b78Delete(uint32_t s) { b78Dtor(s); call(fn::operator_delete, {s}); }
+uint32_t b78Destroy(uint32_t s) { return twoFnDestroy(s, 0x30); }
+uint32_t bfcDtor(uint32_t s) { return twoFnDtor(s, 0xF57BFC, 0x30); }
+void bfcDelete(uint32_t s) { bfcDtor(s); call(fn::operator_delete, {s}); }
+uint32_t bfcDestroy(uint32_t s) { return twoFnDestroy(s, 0x30); }
+uint32_t c80Dtor(uint32_t s) { return twoFnDtor(s, 0xF57C80, 0x28); }
+void c80Delete(uint32_t s) { c80Dtor(s); call(fn::operator_delete, {s}); }
+uint32_t c80Destroy(uint32_t s) { return twoFnDestroy(s, 0x28); }
+
+// the sub name choice's result {Close, title list, widget, 2 words}(bool chosen): taps off; cancelled: the close
+// animation (its end {word, widget, word})
+void subNameResult(uint32_t functor, uint32_t okRef) {
+    const uint8_t ok = ld8(okRef);
+    vcall(ld32(functor + 4), V_SET_TOUCH_ENABLED, {ld32(functor + 4), 0});
+    call(AvatarTitleScrollView_setEnabledTapItem, {ld32(functor + 8), 0});
+    if (ok) return;
+    call(AudioPlaySystemSECancel, {});
+    const uint32_t widget = ld32(functor + 0xC);
+    Frame f;
+    const uint32_t fo = newFunction(f, 0xF57D30, {ld32(functor + 0x10), widget, ld32(functor + 0x14)});
+    call(fn::Node_runAction, {widget, call(SceneUtil_createClosePopupAnimation, {widget, fo})});
+    functionDestroy(fo);
+}
 }  // namespace
+
+RW_FUNCTION(0x53D6CC, "AvatarInfoDialog cancel answered (sub_53D6CC)", cancelAnswered);
+RW_FUNCTION(0x53D980, "AvatarInfoDialog cancel done (sub_53D980)", cancelDone);
+RW_FUNCTION(0x5408D8, "AvatarInfoDialog expel answered (sub_5408D8)", expelAnswered);
+RW_FUNCTION(0x540B9C, "AvatarInfoDialog expel done (sub_540B9C)", expelDone);
+RW_FUNCTION(0x53DD30, "AvatarInfoDialog join request popup result (sub_53DD30)", joinResult);
+RW_FUNCTION(0x53F410, "AvatarInfoDialog offer popup result (sub_53F410)", offerResult);
+RW_FUNCTION(0x53E134, "AvatarInfoDialog join request popup closed (sub_53E134)", joinClosed);
+RW_FUNCTION(0x53E4C2, "AvatarInfoDialog join request Cancel (sub_53E4C2)", cancelTouched);
+RW_FUNCTION(0x53F8B2, "AvatarInfoDialog offer Cancel (sub_53F8B2)", cancelTouched);
+RW_FUNCTION(0x53E638, "AvatarInfoDialog join request OK (sub_53E638)", joinOk);
+RW_FUNCTION(0x53FA28, "AvatarInfoDialog offer OK (sub_53FA28)", offerOk);
+RW_FUNCTION(0x53EAD4, "AvatarInfoDialog join request empty comment (sub_53EAD4)", joinEmpty);
+RW_FUNCTION(0x53FEC4, "AvatarInfoDialog offer empty comment (sub_53FEC4)", offerEmpty);
+RW_FUNCTION(0x53ED10, "AvatarInfoDialog join request send (sub_53ED10)", joinSend);
+RW_FUNCTION(0x540100, "AvatarInfoDialog offer send (sub_540100)", offerSend);
+RW_FUNCTION(0x53EE90, "AvatarInfoDialog join request answered (sub_53EE90)", joinAnswered);
+RW_FUNCTION(0x540280, "AvatarInfoDialog offer answered (sub_540280)", offerAnswered);
+RW_FUNCTION(0x540684, "AvatarInfoDialog expel lambda __func::~__func (sub_540684)", expelDtor);
+RW_FUNCTION(0x5406DC, "AvatarInfoDialog expel lambda __func::~__func (deleting) (sub_5406DC)", expelDelete);
+RW_FUNCTION(0x540854, "AvatarInfoDialog expel lambda __func::destroy (sub_540854)", expelDestroy);
+RW_FUNCTION(0x540890, "AvatarInfoDialog expel lambda __func::destroy_deallocate (sub_540890)", expelDestroyDelete);
+RW_FUNCTION(0x540E1C, "AvatarInfoDialog lambda F57B78 __func::~__func (sub_540E1C)", b78Dtor);
+RW_FUNCTION(0x540E74, "AvatarInfoDialog lambda F57B78 __func::~__func (deleting) (sub_540E74)", b78Delete);
+RW_FUNCTION(0x540FF4, "AvatarInfoDialog lambda F57B78 __func::destroy (sub_540FF4)", b78Destroy);
+RW_FUNCTION(0x5415F4, "AvatarInfoDialog lambda F57BFC __func::~__func (sub_5415F4)", bfcDtor);
+RW_FUNCTION(0x54164C, "AvatarInfoDialog lambda F57BFC __func::~__func (deleting) (sub_54164C)", bfcDelete);
+RW_FUNCTION(0x5417CC, "AvatarInfoDialog lambda F57BFC __func::destroy (sub_5417CC)", bfcDestroy);
+RW_FUNCTION(0x541DC8, "AvatarInfoDialog lambda F57C80 __func::~__func (sub_541DC8)", c80Dtor);
+RW_FUNCTION(0x541E20, "AvatarInfoDialog lambda F57C80 __func::~__func (deleting) (sub_541E20)", c80Delete);
+RW_FUNCTION(0x541F98, "AvatarInfoDialog lambda F57C80 __func::destroy (sub_541F98)", c80Destroy);
+RW_FUNCTION(0x5425D0, "AvatarInfoDialog sub name choice result (sub_5425D0)", subNameResult);
 
 RW_FUNCTION(0x53A640, "AvatarInfoDialog::openPopUpOffer(function<void(bool)>)", openPopUpOffer);
 RW_FUNCTION(0x53B38C, "AvatarInfoDialog::openPopUpJoinRequest(function<void(bool)>)", openPopUpJoinRequest);
