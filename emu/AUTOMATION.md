@@ -9,8 +9,9 @@ tools only — they call the game's own functions, nothing ships with them.
 | What | Command (bash, repo root unless noted) |
 |---|---|
 | Private server | `cd server && KHUX_VERSION_RES=1 python run.py` (run_in_background; port 80) |
-| Game, normal | `cd recomp && out/host/khux.exe > out/host/rwtest.log 2>&1` (run_in_background) |
+| Game, normal | `cd recomp && KHUX_DEV=1 out/host/khux.exe > out/host/rwtest.log 2>&1` (run_in_background; `KHUX_DEV=1` enables the dev endpoints `call` / `poke` / `warp` / `rwonly`, which insta-win and the cheats need) |
 | Game, verifying rewrites | prefix `KHUX_RW_VERIFY=1` (slow: every rewritten call runs twice; crackling audio) |
+| Dev shortcuts (exe, `KHUX_DEV=1`) | `python -m recomp.emu.dev scene SceneLoginBonus` (jump to a scene through `SceneManager::changeSceneLayer`), `dev call NAME args` (a direct call by rewrite name), `dev only NAME$ ...` (change the installed rewrites without a restart) - see `emu/dev.py` |
 | Tap through to the title | `python -m recomp.emu.boot_to_title` |
 | Close the notice | `python -m recomp.emu.step tap name=Button_Close` |
 | Stop the game | `powershell -c "Stop-Process -Name khux"` |

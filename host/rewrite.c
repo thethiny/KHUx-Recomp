@@ -59,7 +59,7 @@ static const char *(*rw_where_fn)(void);   /* crash reports: what the verifier i
 static const char *read_list(const char *v) {
     if (!v || v[0] != '@') return v;
     FILE *f = fopen(v + 1, "rb");
-    if (!f) fatal("cannot read %s", v + 1);
+    if (!f) return NULL;                                  /* callers check: the environment list is fatal */
     fseek(f, 0, SEEK_END);
     long n = ftell(f);
     fseek(f, 0, SEEK_SET);
@@ -109,6 +109,35 @@ static void rw_debug(char *out, int cap) {
     for (int k = 0; k < rec && n < cap - 40; k++) n += snprintf(out + n, (size_t)(cap - n), " %s", import_shadow_name(k));
 }
 static void (*rw_report_fn)(void);
+/* what rewrite_load bound, kept for rewrite_set_only */
+static uint32_t (*rw_entry_addr)(int);
+static const char *(*rw_entry_name)(int);
+static int (*rw_entry_effect)(int);
+static int (*rw_bind_fn)(int, uint32_t, int);
+static int (*rw_index)(uint32_t);
+static LiftFn *rw_slots;
+static int rw_count;
+static const char *rw_skip;
+
+/* point the override slots of the listed functions (all when `only` is NULL; KHUX_RW_SKIP left out) at their
+ * rewrites; with `clear`, the others go back to the lifted code. Effect boundaries stay with any filter. */
+static int install(const char *only, int clear) {
+    int bound = 0;
+    for (int i = 0; i < rw_count; i++) {
+        uint32_t a = rw_entry_addr(i);
+        int effect = rw_entry_effect && rw_entry_effect(i);
+        int k = rw_index(a);
+        if (k < 0) {
+            if (!clear) hlog("!! rewrite: %s at %08X is not a lifted function", rw_entry_name(i), a);
+            continue;
+        }
+        int want = effect || ((!only || name_listed(only, rw_entry_name(i))) &&
+                              !(rw_skip && name_listed(rw_skip, rw_entry_name(i))));
+        if (want) bound += rw_bind_fn(i, L.table[k].addr, k);
+        else if (clear) rw_slots[k] = NULL;
+    }
+    return bound;
+}
 
 static void rw_log(const char *line) { hlog("%s", line); }
 
@@ -179,20 +208,32 @@ void rewrite_load(const char *root) {
     host.verify = v && strcmp(v, "0") != 0;
     int n = init(&host);
     if (n < 0) fatal("rewrite.dll does not match this host (rebuild both)");
-    int bound = 0;
     /* bisecting: KHUX_RW_ONLY / KHUX_RW_SKIP = comma-separated name prefixes ("SafeBuffer::,AppState::") */
-    const char *only = read_list(getenv("KHUX_RW_ONLY")), *skip = read_list(getenv("KHUX_RW_SKIP"));
-    for (int i = 0; i < n; i++) {
-        uint32_t a = entry_addr(i);
-        int effect = entry_effect && entry_effect(i);     /* effect boundaries stay with any filter */
-        if (!effect && only && !name_listed(only, entry_name(i))) continue;
-        if (!effect && skip && name_listed(skip, entry_name(i))) continue;
-        int k = index(a);
-        if (k < 0) { hlog("!! rewrite: %s at %08X is not a lifted function", entry_name(i), a); continue; }
-        bound += bind(i, L.table[k].addr, k);
-    }
+    const char *ov = getenv("KHUX_RW_ONLY"), *sv = getenv("KHUX_RW_SKIP");
+    const char *only = read_list(ov);
+    rw_skip = read_list(sv);
+    if ((ov && !only) || (sv && !rw_skip)) fatal("cannot read %s", ov && !only ? ov + 1 : sv + 1);
+    rw_entry_addr = entry_addr;
+    rw_entry_name = entry_name;
+    rw_entry_effect = entry_effect;
+    rw_bind_fn = bind;
+    rw_index = index;
+    rw_slots = *slot_ptr;
+    rw_count = n;
+    int bound = install(only, 0);
     hlog("rewrite.dll: %d of %d rewritten functions installed%s", bound, n,
          host.verify ? " (verifying every call)" : " (the verified ones)");
+}
+
+/* DEV/TEST HARNESS ONLY (ctl "rwonly", KHUX_DEV=1): change which rewritten functions are installed while the game
+ * runs, as KHUX_RW_ONLY does at boot - "name$,prefix,..." or "@file"; empty: all of them again. KHUX_RW_SKIP still
+ * applies. Runs on the main thread (ctl run_on_main), so no guest code is between a slot check and its call. A
+ * capture's only.txt keeps the boot list. Returns the number installed, or -1 (no rewrite.dll) / -2 (bad list). */
+int rewrite_set_only(const char *list) {
+    if (!rw_bind_fn) return -1;
+    const char *only = list && *list ? read_list(list) : NULL;
+    if (list && *list && !only) return -2;
+    return install(only, 1);
 }
 
 const char *rewrite_where(void) { return rw_where_fn ? rw_where_fn() : ""; }

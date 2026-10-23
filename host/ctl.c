@@ -11,6 +11,7 @@
 #include "host.h"
 #include <math.h>
 extern volatile int rewrite_host_call_returns;        /* rewrite.c */
+int rewrite_set_only(const char *list);                 /* rewrite.c: ctl "rwonly" */
 #include <ctype.h>
 
 #define CONTROL_PORT 8765
@@ -549,6 +550,22 @@ static char *serve_main(Req *r) {
         int frames = qget(r->q, "frames", v, sizeof(v)) ? atoi(v) : 12, hold = qget(r->q, "hold", v2, sizeof(v2)) ? atoi(v2) : 0;
         return swipe_json((float)atof(a[0]), (float)atof(a[1]), (float)atof(a[2]), (float)atof(a[3]), frames, hold);
     }
+    /* DEV/TEST HARNESS ONLY: the endpoints that call or change game code and memory need KHUX_DEV=1 on khux.exe */
+    if (!strcmp(r->path, "poke") || !strcmp(r->path, "call") || !strcmp(r->path, "warp") || !strcmp(r->path, "rwonly")) {
+        const char *dev = getenv("KHUX_DEV");
+        if (!dev || !strcmp(dev, "0")) return _strdup("{\"error\": \"dev endpoint: start khux.exe with KHUX_DEV=1\"}");
+    }
+    if (!strcmp(r->path, "rwonly")) {
+        /* DEV/TEST HARNESS ONLY: rwonly?set=name$,prefix,... or set=@file changes which rewritten functions are
+         * installed (KHUX_RW_ONLY without a restart); no set: all of them again (host/rewrite.c) */
+        char lst[4096] = "";
+        qget(r->q, "set", lst, sizeof(lst));
+        int k = rewrite_set_only(lst);
+        if (k < 0) return _strdup(k == -1 ? "{\"error\": \"no rewrite.dll\"}" : "{\"error\": \"cannot read the list\"}");
+        SB b = {0};
+        sb_fmt(&b, "{\"installed\": %d}", k);
+        return b.s;
+    }
     if (!strcmp(r->path, "poke")) {
         /* DEV/TEST HARNESS ONLY: poke?addr=0x..&byte=N writes one guest byte (insta-win sets the "final team
          * fought" flag, StageActorManager+124, before the stage finish) */
@@ -564,7 +581,9 @@ static char *serve_main(Req *r) {
          * integer arguments, hex or decimal; "zero" passes a pointer to 64 zeroed bytes, e.g. an empty
          * shared_ptr; for JNI entry points "env" is the JNIEnv, "s:text" a Java string and "sa:a|b" a Java
          * String[] ("sa:" an empty one); "c:text" a guest C string, "z:N" N zero bytes, "w:a|b|zN" a word array
-         * (zN: a pointer to N zero bytes, dHEX to those bytes); temporaries are freed after the call) and returns r0; e.g. rush mode tops up the special gauge with
+         * (zN: a pointer to N zero bytes, dHEX to those bytes), "fn:VT|a|b" a std::function held inline (its __func
+         * vtable and captures; not destroyed, so only for trivially copyable captures); temporaries are freed after
+         * the call) and returns r0; e.g. rush mode tops up the special gauge with
          * SceneBattleBase::addPlayerCP(scene, n) */
         char as[4096] = "";
         if (!qget(r->q, "fn", v, sizeof(v))) return _strdup("{\"error\": \"call needs fn\"}");
@@ -609,6 +628,20 @@ static char *serve_main(Req *r) {
                 }
                 uint32_t p = gzalloc(m * 4 + 4);
                 memcpy(GP(p), words, m * 4);
+                a[n++] = p;
+                if (nt < 16) tmp[nt++] = p;
+            }
+            else if (!strncmp(tok, "fn:", 3)) {                 /* fn:VTABLE|w|w|w: a libc++ std::function held */
+                uint32_t words[4] = {0}, m = 0;                   /* inline (__func vtable and up to 3 captures) */
+                for (char *it = tok + 3, *bar; *it && m < 4; it = bar + 1) {
+                    bar = strchr(it, '|');
+                    if (bar) *bar = 0;
+                    words[m++] = (uint32_t)strtoul(it, NULL, 0);
+                    if (!bar) break;
+                }
+                uint32_t p = gzalloc(20);                         /* buffer +0..+15, __f_ at +16 points to it */
+                memcpy(GP(p), words, 16);
+                memcpy(GP(p + 16), &p, 4);
                 a[n++] = p;
                 if (nt < 16) tmp[nt++] = p;
             }
@@ -976,7 +1009,7 @@ static DWORD WINAPI client(LPVOID p) {
         body = wait_json(cond, qget(q, "since", v, sizeof(v)) ? atoi(v) : n_events,
                          qget(q, "timeout", v2, sizeof(v2)) ? atof(v2) : 60);
     } else if (!strcmp(path, "ui") || !strcmp(path, "tap") || !strcmp(path, "swipe") || !strcmp(path, "text") || !strcmp(path, "key") || !strcmp(path, "call") || !strcmp(path, "poke") ||
-               !strcmp(path, "peek") || !strcmp(path, "textdata") || !strcmp(path, "warp")) body = run_on_main(path, q);
+               !strcmp(path, "peek") || !strcmp(path, "textdata") || !strcmp(path, "warp") || !strcmp(path, "rwonly")) body = run_on_main(path, q);
     else body = _strdup("{\"error\": \"unknown endpoint\", \"endpoints\": [\"state\", \"events?since=\", "
                         "\"wait?for=\", \"ui\", \"tap\", \"swipe\", \"text\", \"peek\", \"textdata\"]}");
     char head[256];

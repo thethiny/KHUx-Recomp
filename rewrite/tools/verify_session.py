@@ -34,7 +34,7 @@ def main():
     lose = "--lose" in args
     kill_exe()
     time.sleep(1)
-    env = dict(os.environ, KHUX_RW_VERIFY="1")
+    env = dict(os.environ, KHUX_RW_VERIFY="1", KHUX_DEV="1")      # dev endpoints: insta-win calls the game
     cmd = [str(RECOMP / "out" / "host" / "khux.exe")] + (["--fs", fs] if fs else [])
     with open(LOG, "w") as log:
         exe = subprocess.Popen(cmd, cwd=str(RECOMP), stdout=log, stderr=subprocess.STDOUT, env=env)

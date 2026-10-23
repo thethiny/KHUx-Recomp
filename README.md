@@ -144,7 +144,7 @@ Translation
 Rewrite: game code
   Rewritten               ████████████████████  100.0%  18,828 / 18,828
   Run under the verifier  █████░░░░░░░░░░░░░░░   26.9%   5,065 / 18,828
-  Verified                ████░░░░░░░░░░░░░░░░   20.8%   3,919 / 18,828
+  Verified                ████░░░░░░░░░░░░░░░░   21.0%   3,953 / 18,828
 
 Rewrite: open-source libraries
   Rewritten               ████████░░░░░░░░░░░░   41.1%  15,449 / 37,547
@@ -154,7 +154,7 @@ Rewrite: open-source libraries
 Rewrite: all functions
   Rewritten               ████████████░░░░░░░░   60.8%  34,277 / 56,381
   Run under the verifier  ███░░░░░░░░░░░░░░░░░   12.7%   7,170 / 56,381
-  Verified                ██░░░░░░░░░░░░░░░░░░   10.0%   5,657 / 56,381
+  Verified                ██░░░░░░░░░░░░░░░░░░   10.1%   5,691 / 56,381
 
 Binary match
   1:1 binary match        ░░░░░░░░░░░░░░░░░░░░    0.0%       0 / 56,381

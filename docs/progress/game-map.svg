@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 686" width="1000" height="686" role="img" aria-label="Game code: 3,919 of 18,828 functions verified">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 686" width="1000" height="686" role="img" aria-label="Game code: 3,953 of 18,828 functions verified">
 <style>
 .bg{fill:#ffffff}.v{fill:#2da44e}.r{fill:#d4a72c}.t{fill:#d0d7de}.grid{stroke:#ffffff}.edge{stroke:#ffffff}
 .txt{fill:#1f2328;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}
@@ -8,14 +8,14 @@
 .txt{fill:#e6edf3}.halo{stroke:#0d1117}.dim{fill:#9198a1}}
 </style>
 <rect class="bg" width="1000" height="686"/>
-<text class="txt" x="4" y="19" font-size="16" font-weight="600">Game code: 20.8% verified, 100.0% rewritten (18,828 functions, one cell each, grouped by class)</text>
-<rect class="v" x="4" y="29" width="11" height="11" rx="2"/><text class="txt dim" x="19" y="39" font-size="12">verified (3,919)</text>
-<rect class="r" x="149" y="29" width="11" height="11" rx="2"/><text class="txt dim" x="164" y="39" font-size="12">rewritten, not verified yet (14,909)</text>
+<text class="txt" x="4" y="19" font-size="16" font-weight="600">Game code: 21.0% verified, 100.0% rewritten (18,828 functions, one cell each, grouped by class)</text>
+<rect class="v" x="4" y="29" width="11" height="11" rx="2"/><text class="txt dim" x="19" y="39" font-size="12">verified (3,953)</text>
+<rect class="r" x="149" y="29" width="11" height="11" rx="2"/><text class="txt dim" x="164" y="39" font-size="12">rewritten, not verified yet (14,875)</text>
 <rect class="t" x="434" y="29" width="11" height="11" rx="2"/><text class="txt dim" x="449" y="39" font-size="12">not rewritten (0)</text>
-<g><title>other classes (110 classes under 50 functions each): 565/1389 verified (41%), 1389/1389 rewritten</title>
+<g><title>other classes (110 classes under 50 functions each): 566/1389 verified (41%), 1389/1389 rewritten</title>
 <rect class="v" x="1.0" y="47.0" width="194.1" height="93.2"/>
-<rect class="v" x="1.0" y="140.2" width="119.9" height="5.8"/>
-<rect class="r" x="120.9" y="140.2" width="74.2" height="5.8"/>
+<rect class="v" x="1.0" y="140.2" width="125.6" height="5.8"/>
+<rect class="r" x="126.6" y="140.2" width="68.5" height="5.8"/>
 <rect class="r" x="1.0" y="146.0" width="194.1" height="133.9"/>
 <rect class="r" x="1.0" y="279.9" width="165.6" height="5.8"/>
 <path class="grid" d="M6.7 47.0v238.7M12.4 47.0v238.7M18.1 47.0v238.7M23.8 47.0v238.7M29.6 47.0v238.7M35.3 47.0v238.7M41.0 47.0v238.7M46.7 47.0v238.7M52.4 47.0v238.7M58.1 47.0v238.7M63.8 47.0v238.7M69.5 47.0v238.7M75.2 47.0v238.7M80.9 47.0v238.7M86.7 47.0v238.7M92.4 47.0v238.7M98.1 47.0v238.7M103.8 47.0v238.7M109.5 47.0v238.7M115.2 47.0v238.7M120.9 47.0v238.7M126.6 47.0v238.7M132.3 47.0v238.7M138.0 47.0v238.7M143.8 47.0v238.7M149.5 47.0v238.7M155.2 47.0v238.7M160.9 47.0v238.7M166.6 47.0v238.7M172.3 47.0v238.7M178.0 47.0v238.7M183.7 47.0v238.7M189.4 47.0v238.7M1.0 52.8h194.1M1.0 58.6h194.1M1.0 64.5h194.1M1.0 70.3h194.1M1.0 76.1h194.1M1.0 81.9h194.1M1.0 87.8h194.1M1.0 93.6h194.1M1.0 99.4h194.1M1.0 105.2h194.1M1.0 111.0h194.1M1.0 116.9h194.1M1.0 122.7h194.1M1.0 128.5h194.1M1.0 134.3h194.1M1.0 140.2h194.1M1.0 146.0h194.1M1.0 151.8h194.1M1.0 157.6h194.1M1.0 163.4h194.1M1.0 169.3h194.1M1.0 175.1h194.1M1.0 180.9h194.1M1.0 186.7h194.1M1.0 192.6h194.1M1.0 198.4h194.1M1.0 204.2h194.1M1.0 210.0h194.1M1.0 215.8h194.1M1.0 221.7h194.1M1.0 227.5h194.1M1.0 233.3h194.1M1.0 239.1h194.1M1.0 245.0h194.1M1.0 250.8h194.1M1.0 256.6h194.1M1.0 262.4h194.1M1.0 268.2h194.1M1.0 274.1h194.1M1.0 279.9h194.1" stroke-width="0.6" fill="none"/>
@@ -45,16 +45,16 @@
 <text class="txt halo" x="4.0" y="468.0" font-size="11">OtherMenuDialog</text>
 <text class="txt halo" x="4.0" y="481.0" font-size="10">7%</text>
 </g>
-<g><title>other scroll views (24 classes under 50 functions each): 197/649 verified (30%), 649/649 rewritten</title>
+<g><title>other scroll views (24 classes under 50 functions each): 198/649 verified (31%), 649/649 rewritten</title>
 <rect class="v" x="1.0" y="574.5" width="194.1" height="27.6"/>
-<rect class="v" x="1.0" y="602.1" width="154.2" height="5.5"/>
-<rect class="r" x="155.2" y="602.1" width="40.0" height="5.5"/>
+<rect class="v" x="1.0" y="602.1" width="159.9" height="5.5"/>
+<rect class="r" x="160.9" y="602.1" width="34.3" height="5.5"/>
 <rect class="r" x="1.0" y="607.7" width="194.1" height="71.8"/>
 <rect class="r" x="1.0" y="679.5" width="17.1" height="5.5"/>
 <path class="grid" d="M6.7 574.5v110.5M12.4 574.5v110.5M18.1 574.5v110.5M23.8 574.5v110.5M29.6 574.5v110.5M35.3 574.5v110.5M41.0 574.5v110.5M46.7 574.5v110.5M52.4 574.5v110.5M58.1 574.5v110.5M63.8 574.5v110.5M69.5 574.5v110.5M75.2 574.5v110.5M80.9 574.5v110.5M86.7 574.5v110.5M92.4 574.5v110.5M98.1 574.5v110.5M103.8 574.5v110.5M109.5 574.5v110.5M115.2 574.5v110.5M120.9 574.5v110.5M126.6 574.5v110.5M132.3 574.5v110.5M138.0 574.5v110.5M143.8 574.5v110.5M149.5 574.5v110.5M155.2 574.5v110.5M160.9 574.5v110.5M166.6 574.5v110.5M172.3 574.5v110.5M178.0 574.5v110.5M183.7 574.5v110.5M189.4 574.5v110.5M1.0 580.1h194.1M1.0 585.6h194.1M1.0 591.1h194.1M1.0 596.6h194.1M1.0 602.1h194.1M1.0 607.7h194.1M1.0 613.2h194.1M1.0 618.7h194.1M1.0 624.2h194.1M1.0 629.8h194.1M1.0 635.3h194.1M1.0 640.8h194.1M1.0 646.3h194.1M1.0 651.9h194.1M1.0 657.4h194.1M1.0 662.9h194.1M1.0 668.4h194.1M1.0 674.0h194.1M1.0 679.5h194.1" stroke-width="0.6" fill="none"/>
 <rect class="edge" x="0.0" y="573.5" width="196.1" height="112.5" fill="none" stroke-width="2"/>
 <text class="txt halo" x="4.0" y="587.5" font-size="11">other scroll views</text>
-<text class="txt halo" x="4.0" y="600.5" font-size="10">30%</text>
+<text class="txt halo" x="4.0" y="600.5" font-size="10">31%</text>
 </g>
 <g><title>AvatarInfoDialog: 41/535 verified (8%), 535/535 rewritten</title>
 <rect class="v" x="197.1" y="47.0" width="130.8" height="5.6"/>
@@ -99,16 +99,16 @@
 <text class="txt halo" x="200.1" y="459.9" font-size="11">ScenePartyManageme…</text>
 <text class="txt halo" x="200.1" y="472.9" font-size="10">10%</text>
 </g>
-<g><title>ScenePartyTop: 56/454 verified (12%), 454/454 rewritten</title>
+<g><title>ScenePartyTop: 57/454 verified (13%), 454/454 rewritten</title>
 <rect class="v" x="197.1" y="570.8" width="130.8" height="11.4"/>
-<rect class="v" x="197.1" y="582.2" width="56.9" height="5.7"/>
-<rect class="r" x="254.0" y="582.2" width="73.9" height="5.7"/>
+<rect class="v" x="197.1" y="582.2" width="62.5" height="5.7"/>
+<rect class="r" x="259.7" y="582.2" width="68.2" height="5.7"/>
 <rect class="r" x="197.1" y="587.9" width="130.8" height="91.4"/>
 <rect class="r" x="197.1" y="679.3" width="96.7" height="5.7"/>
 <path class="grid" d="M202.8 570.8v114.2M208.5 570.8v114.2M214.2 570.8v114.2M219.9 570.8v114.2M225.6 570.8v114.2M231.3 570.8v114.2M236.9 570.8v114.2M242.6 570.8v114.2M248.3 570.8v114.2M254.0 570.8v114.2M259.7 570.8v114.2M265.4 570.8v114.2M271.1 570.8v114.2M276.7 570.8v114.2M282.4 570.8v114.2M288.1 570.8v114.2M293.8 570.8v114.2M299.5 570.8v114.2M305.2 570.8v114.2M310.9 570.8v114.2M316.6 570.8v114.2M322.2 570.8v114.2M197.1 576.5h130.8M197.1 582.2h130.8M197.1 587.9h130.8M197.1 593.6h130.8M197.1 599.3h130.8M197.1 605.0h130.8M197.1 610.8h130.8M197.1 616.5h130.8M197.1 622.2h130.8M197.1 627.9h130.8M197.1 633.6h130.8M197.1 639.3h130.8M197.1 645.0h130.8M197.1 650.7h130.8M197.1 656.4h130.8M197.1 662.2h130.8M197.1 667.9h130.8M197.1 673.6h130.8M197.1 679.3h130.8" stroke-width="0.6" fill="none"/>
 <rect class="edge" x="196.1" y="569.8" width="132.8" height="116.2" fill="none" stroke-width="2"/>
 <text class="txt halo" x="200.1" y="583.8" font-size="11">ScenePartyTop</text>
-<text class="txt halo" x="200.1" y="596.8" font-size="10">12%</text>
+<text class="txt halo" x="200.1" y="596.8" font-size="10">13%</text>
 </g>
 <g><title>SQEX: 201/432 verified (47%), 432/432 rewritten</title>
 <rect class="v" x="329.9" y="47.0" width="106.3" height="58.1"/>
@@ -132,27 +132,27 @@
 <text class="txt halo" x="332.9" y="195.6" font-size="11">StartDeckEditD…</text>
 <text class="txt halo" x="332.9" y="208.6" font-size="10">14%</text>
 </g>
-<g><title>other battle / stage (18 classes under 50 functions each): 194/402 verified (48%), 402/402 rewritten</title>
+<g><title>other battle / stage (18 classes under 50 functions each): 195/402 verified (49%), 402/402 rewritten</title>
 <rect class="v" x="329.9" y="317.9" width="106.3" height="56.4"/>
-<rect class="v" x="329.9" y="374.3" width="22.4" height="5.6"/>
-<rect class="r" x="352.3" y="374.3" width="83.9" height="5.6"/>
+<rect class="v" x="329.9" y="374.3" width="28.0" height="5.6"/>
+<rect class="r" x="357.9" y="374.3" width="78.3" height="5.6"/>
 <rect class="r" x="329.9" y="380.0" width="106.3" height="56.4"/>
 <rect class="r" x="329.9" y="436.4" width="16.8" height="5.6"/>
 <path class="grid" d="M335.5 317.9v124.2M341.1 317.9v124.2M346.7 317.9v124.2M352.3 317.9v124.2M357.9 317.9v124.2M363.5 317.9v124.2M369.1 317.9v124.2M374.7 317.9v124.2M380.3 317.9v124.2M385.9 317.9v124.2M391.5 317.9v124.2M397.1 317.9v124.2M402.7 317.9v124.2M408.2 317.9v124.2M413.8 317.9v124.2M419.4 317.9v124.2M425.0 317.9v124.2M430.6 317.9v124.2M329.9 323.5h106.3M329.9 329.2h106.3M329.9 334.8h106.3M329.9 340.5h106.3M329.9 346.1h106.3M329.9 351.7h106.3M329.9 357.4h106.3M329.9 363.0h106.3M329.9 368.7h106.3M329.9 374.3h106.3M329.9 380.0h106.3M329.9 385.6h106.3M329.9 391.3h106.3M329.9 396.9h106.3M329.9 402.5h106.3M329.9 408.2h106.3M329.9 413.8h106.3M329.9 419.5h106.3M329.9 425.1h106.3M329.9 430.8h106.3M329.9 436.4h106.3" stroke-width="0.6" fill="none"/>
 <rect class="edge" x="328.9" y="316.9" width="108.3" height="126.2" fill="none" stroke-width="2"/>
 <text class="txt halo" x="332.9" y="330.9" font-size="11">other battle /…</text>
-<text class="txt halo" x="332.9" y="343.9" font-size="10">48%</text>
+<text class="txt halo" x="332.9" y="343.9" font-size="10">49%</text>
 </g>
-<g><title>IMedalSortFilter: 46/387 verified (12%), 387/387 rewritten</title>
+<g><title>IMedalSortFilter: 49/387 verified (13%), 387/387 rewritten</title>
 <rect class="v" x="329.9" y="444.1" width="106.3" height="11.4"/>
-<rect class="v" x="329.9" y="455.4" width="44.8" height="5.7"/>
-<rect class="r" x="374.7" y="455.4" width="61.5" height="5.7"/>
+<rect class="v" x="329.9" y="455.4" width="61.5" height="5.7"/>
+<rect class="r" x="391.5" y="455.4" width="44.8" height="5.7"/>
 <rect class="r" x="329.9" y="461.1" width="106.3" height="96.7"/>
 <rect class="r" x="329.9" y="557.8" width="39.2" height="5.7"/>
 <path class="grid" d="M335.5 444.1v119.5M341.1 444.1v119.5M346.7 444.1v119.5M352.3 444.1v119.5M357.9 444.1v119.5M363.5 444.1v119.5M369.1 444.1v119.5M374.7 444.1v119.5M380.3 444.1v119.5M385.9 444.1v119.5M391.5 444.1v119.5M397.1 444.1v119.5M402.7 444.1v119.5M408.2 444.1v119.5M413.8 444.1v119.5M419.4 444.1v119.5M425.0 444.1v119.5M430.6 444.1v119.5M329.9 449.7h106.3M329.9 455.4h106.3M329.9 461.1h106.3M329.9 466.8h106.3M329.9 472.5h106.3M329.9 478.2h106.3M329.9 483.9h106.3M329.9 489.6h106.3M329.9 495.3h106.3M329.9 500.9h106.3M329.9 506.6h106.3M329.9 512.3h106.3M329.9 518.0h106.3M329.9 523.7h106.3M329.9 529.4h106.3M329.9 535.1h106.3M329.9 540.8h106.3M329.9 546.5h106.3M329.9 552.2h106.3M329.9 557.8h106.3" stroke-width="0.6" fill="none"/>
 <rect class="edge" x="328.9" y="443.1" width="108.3" height="121.5" fill="none" stroke-width="2"/>
 <text class="txt halo" x="332.9" y="457.1" font-size="11">IMedalSortFilt…</text>
-<text class="txt halo" x="332.9" y="470.1" font-size="10">12%</text>
+<text class="txt halo" x="332.9" y="470.1" font-size="10">13%</text>
 </g>
 <g><title>SceneActionMap: 115/387 verified (30%), 387/387 rewritten</title>
 <rect class="v" x="329.9" y="565.5" width="106.3" height="34.1"/>
@@ -176,20 +176,20 @@
 <text class="txt halo" x="441.2" y="60.0" font-size="11">SceneMyPage</text>
 <text class="txt halo" x="441.2" y="73.0" font-size="10">11%</text>
 </g>
-<g><title>SceneDeckEdit: 59/343 verified (17%), 343/343 rewritten</title>
-<rect class="v" x="570.1" y="47.0" width="117.0" height="10.7"/>
-<rect class="v" x="570.1" y="57.7" width="111.2" height="5.3"/>
-<rect class="r" x="681.2" y="57.7" width="5.9" height="5.3"/>
-<rect class="r" x="570.1" y="63.0" width="117.0" height="74.6"/>
+<g><title>SceneDeckEdit: 67/343 verified (20%), 343/343 rewritten</title>
+<rect class="v" x="570.1" y="47.0" width="117.0" height="16.0"/>
+<rect class="v" x="570.1" y="63.0" width="41.0" height="5.3"/>
+<rect class="r" x="611.0" y="63.0" width="76.1" height="5.3"/>
+<rect class="r" x="570.1" y="68.3" width="117.0" height="69.3"/>
 <rect class="r" x="570.1" y="137.6" width="17.6" height="5.3"/>
 <path class="grid" d="M575.9 47.0v96.0M581.8 47.0v96.0M587.6 47.0v96.0M593.5 47.0v96.0M599.3 47.0v96.0M605.2 47.0v96.0M611.0 47.0v96.0M616.9 47.0v96.0M622.7 47.0v96.0M628.6 47.0v96.0M634.4 47.0v96.0M640.3 47.0v96.0M646.1 47.0v96.0M652.0 47.0v96.0M657.8 47.0v96.0M663.7 47.0v96.0M669.5 47.0v96.0M675.4 47.0v96.0M681.2 47.0v96.0M570.1 52.3h117.0M570.1 57.7h117.0M570.1 63.0h117.0M570.1 68.3h117.0M570.1 73.7h117.0M570.1 79.0h117.0M570.1 84.3h117.0M570.1 89.7h117.0M570.1 95.0h117.0M570.1 100.3h117.0M570.1 105.6h117.0M570.1 111.0h117.0M570.1 116.3h117.0M570.1 121.6h117.0M570.1 127.0h117.0M570.1 132.3h117.0M570.1 137.6h117.0" stroke-width="0.6" fill="none"/>
 <rect class="edge" x="569.1" y="46.0" width="119.0" height="98.0" fill="none" stroke-width="2"/>
 <text class="txt halo" x="573.1" y="60.0" font-size="11">SceneDeckEdit</text>
-<text class="txt halo" x="573.1" y="73.0" font-size="10">17%</text>
+<text class="txt halo" x="573.1" y="73.0" font-size="10">20%</text>
 </g>
-<g><title>SceneUnionRegister: 16/339 verified (5%), 339/339 rewritten</title>
-<rect class="v" x="689.1" y="47.0" width="92.5" height="5.6"/>
-<rect class="r" x="781.6" y="47.0" width="23.1" height="5.6"/>
+<g><title>SceneUnionRegister: 17/339 verified (5%), 339/339 rewritten</title>
+<rect class="v" x="689.1" y="47.0" width="98.3" height="5.6"/>
+<rect class="r" x="787.4" y="47.0" width="17.3" height="5.6"/>
 <rect class="r" x="689.1" y="52.6" width="115.6" height="84.7"/>
 <rect class="r" x="689.1" y="137.3" width="109.8" height="5.6"/>
 <path class="grid" d="M694.9 47.0v96.0M700.6 47.0v96.0M706.4 47.0v96.0M712.2 47.0v96.0M718.0 47.0v96.0M723.8 47.0v96.0M729.5 47.0v96.0M735.3 47.0v96.0M741.1 47.0v96.0M746.9 47.0v96.0M752.7 47.0v96.0M758.5 47.0v96.0M764.2 47.0v96.0M770.0 47.0v96.0M775.8 47.0v96.0M781.6 47.0v96.0M787.4 47.0v96.0M793.1 47.0v96.0M798.9 47.0v96.0M689.1 52.6h115.6M689.1 58.3h115.6M689.1 63.9h115.6M689.1 69.6h115.6M689.1 75.2h115.6M689.1 80.9h115.6M689.1 86.5h115.6M689.1 92.2h115.6M689.1 97.8h115.6M689.1 103.5h115.6M689.1 109.1h115.6M689.1 114.7h115.6M689.1 120.4h115.6M689.1 126.0h115.6M689.1 131.7h115.6M689.1 137.3h115.6" stroke-width="0.6" fill="none"/>
@@ -285,15 +285,15 @@
 <text class="txt halo" x="441.2" y="613.7" font-size="11">BattleResu…</text>
 <text class="txt halo" x="441.2" y="626.7" font-size="10">25%</text>
 </g>
-<g><title>SceneRanking: 38/210 verified (18%), 210/210 rewritten</title>
+<g><title>SceneRanking: 40/210 verified (19%), 210/210 rewritten</title>
 <rect class="v" x="521.4" y="145.0" width="84.5" height="11.5"/>
-<rect class="v" x="521.4" y="156.5" width="45.1" height="5.7"/>
-<rect class="r" x="566.5" y="156.5" width="39.4" height="5.7"/>
+<rect class="v" x="521.4" y="156.5" width="56.4" height="5.7"/>
+<rect class="r" x="577.7" y="156.5" width="28.2" height="5.7"/>
 <rect class="r" x="521.4" y="162.2" width="84.5" height="63.2"/>
 <path class="grid" d="M527.0 145.0v80.5M532.6 145.0v80.5M538.3 145.0v80.5M543.9 145.0v80.5M549.6 145.0v80.5M555.2 145.0v80.5M560.8 145.0v80.5M566.5 145.0v80.5M572.1 145.0v80.5M577.7 145.0v80.5M583.4 145.0v80.5M589.0 145.0v80.5M594.6 145.0v80.5M600.3 145.0v80.5M521.4 150.7h84.5M521.4 156.5h84.5M521.4 162.2h84.5M521.4 168.0h84.5M521.4 173.7h84.5M521.4 179.5h84.5M521.4 185.2h84.5M521.4 191.0h84.5M521.4 196.7h84.5M521.4 202.5h84.5M521.4 208.2h84.5M521.4 214.0h84.5M521.4 219.7h84.5" stroke-width="0.6" fill="none"/>
 <rect class="edge" x="520.4" y="144.0" width="86.5" height="82.5" fill="none" stroke-width="2"/>
 <text class="txt halo" x="524.4" y="158.0" font-size="11">SceneRanking</text>
-<text class="txt halo" x="524.4" y="171.0" font-size="10">18%</text>
+<text class="txt halo" x="524.4" y="171.0" font-size="10">19%</text>
 </g>
 <g><title>SceneTitle: 43/196 verified (22%), 196/196 rewritten</title>
 <rect class="v" x="607.9" y="145.0" width="78.8" height="17.2"/>
@@ -359,15 +359,15 @@
 <text class="txt halo" x="524.4" y="240.5" font-size="11">PopupRegis…</text>
 <text class="txt halo" x="524.4" y="253.5" font-size="10">4%</text>
 </g>
-<g><title>SceneSphereBoardSelect: 10/183 verified (5%), 183/183 rewritten</title>
-<rect class="v" x="521.4" y="304.8" width="56.0" height="5.4"/>
-<rect class="r" x="577.4" y="304.8" width="22.4" height="5.4"/>
+<g><title>SceneSphereBoardSelect: 11/183 verified (6%), 183/183 rewritten</title>
+<rect class="v" x="521.4" y="304.8" width="61.6" height="5.4"/>
+<rect class="r" x="583.0" y="304.8" width="16.8" height="5.4"/>
 <rect class="r" x="521.4" y="310.2" width="78.4" height="64.6"/>
 <rect class="r" x="521.4" y="374.8" width="5.6" height="5.4"/>
 <path class="grid" d="M527.0 304.8v75.4M532.6 304.8v75.4M538.2 304.8v75.4M543.8 304.8v75.4M549.4 304.8v75.4M555.0 304.8v75.4M560.6 304.8v75.4M566.2 304.8v75.4M571.8 304.8v75.4M577.4 304.8v75.4M583.0 304.8v75.4M588.6 304.8v75.4M594.2 304.8v75.4M521.4 310.2h78.4M521.4 315.6h78.4M521.4 321.0h78.4M521.4 326.4h78.4M521.4 331.7h78.4M521.4 337.1h78.4M521.4 342.5h78.4M521.4 347.9h78.4M521.4 353.3h78.4M521.4 358.7h78.4M521.4 364.0h78.4M521.4 369.4h78.4M521.4 374.8h78.4" stroke-width="0.6" fill="none"/>
 <rect class="edge" x="520.4" y="303.8" width="80.4" height="77.4" fill="none" stroke-width="2"/>
 <text class="txt halo" x="524.4" y="317.8" font-size="11">SceneSpher…</text>
-<text class="txt halo" x="524.4" y="330.8" font-size="10">5%</text>
+<text class="txt halo" x="524.4" y="330.8" font-size="10">6%</text>
 </g>
 <g><title>SceneUtil: 83/182 verified (46%), 182/182 rewritten</title>
 <rect class="v" x="521.4" y="382.2" width="78.4" height="28.8"/>
@@ -481,13 +481,15 @@
 <text class="txt halo" x="604.8" y="393.1" font-size="11">SceneMix…</text>
 <text class="txt halo" x="604.8" y="406.1" font-size="10">11%</text>
 </g>
-<g><title>SceneDrawRaise: 11/154 verified (7%), 154/154 rewritten</title>
+<g><title>SceneDrawRaise: 14/154 verified (9%), 154/154 rewritten</title>
 <rect class="v" x="601.8" y="459.9" width="64.9" height="5.4"/>
-<rect class="r" x="601.8" y="465.3" width="64.9" height="70.8"/>
+<rect class="v" x="601.8" y="465.3" width="17.7" height="5.4"/>
+<rect class="r" x="619.5" y="465.3" width="47.2" height="5.4"/>
+<rect class="r" x="601.8" y="470.8" width="64.9" height="65.4"/>
 <path class="grid" d="M607.7 459.9v76.2M613.6 459.9v76.2M619.5 459.9v76.2M625.4 459.9v76.2M631.3 459.9v76.2M637.2 459.9v76.2M643.1 459.9v76.2M649.0 459.9v76.2M654.9 459.9v76.2M660.8 459.9v76.2M601.8 465.3h64.9M601.8 470.8h64.9M601.8 476.2h64.9M601.8 481.7h64.9M601.8 487.1h64.9M601.8 492.6h64.9M601.8 498.0h64.9M601.8 503.5h64.9M601.8 508.9h64.9M601.8 514.3h64.9M601.8 519.8h64.9M601.8 525.2h64.9M601.8 530.7h64.9" stroke-width="0.6" fill="none"/>
 <rect class="edge" x="600.8" y="458.9" width="66.9" height="78.2" fill="none" stroke-width="2"/>
 <text class="txt halo" x="604.8" y="472.9" font-size="11">SceneDra…</text>
-<text class="txt halo" x="604.8" y="485.9" font-size="10">7%</text>
+<text class="txt halo" x="604.8" y="485.9" font-size="10">9%</text>
 </g>
 <g><title>PartyScrollView: 28/148 verified (19%), 148/148 rewritten</title>
 <rect class="v" x="601.8" y="538.1" width="64.9" height="10.5"/>
@@ -500,10 +502,10 @@
 <text class="txt halo" x="604.8" y="551.1" font-size="11">PartyScr…</text>
 <text class="txt halo" x="604.8" y="564.1" font-size="10">19%</text>
 </g>
-<g><title>SceneAvatarEdit: 27/145 verified (19%), 145/145 rewritten</title>
+<g><title>SceneAvatarEdit: 28/145 verified (19%), 145/145 rewritten</title>
 <rect class="v" x="601.8" y="613.3" width="64.9" height="10.2"/>
-<rect class="v" x="601.8" y="623.6" width="29.5" height="5.1"/>
-<rect class="r" x="631.3" y="623.6" width="35.4" height="5.1"/>
+<rect class="v" x="601.8" y="623.6" width="35.4" height="5.1"/>
+<rect class="r" x="637.2" y="623.6" width="29.5" height="5.1"/>
 <rect class="r" x="601.8" y="628.7" width="64.9" height="51.2"/>
 <rect class="r" x="601.8" y="679.9" width="11.8" height="5.1"/>
 <path class="grid" d="M607.7 613.3v71.7M613.6 613.3v71.7M619.5 613.3v71.7M625.4 613.3v71.7M631.3 613.3v71.7M637.2 613.3v71.7M643.1 613.3v71.7M649.0 613.3v71.7M654.9 613.3v71.7M660.8 613.3v71.7M601.8 618.4h64.9M601.8 623.6h64.9M601.8 628.7h64.9M601.8 633.8h64.9M601.8 638.9h64.9M601.8 644.0h64.9M601.8 649.2h64.9M601.8 654.3h64.9M601.8 659.4h64.9M601.8 664.5h64.9M601.8 669.6h64.9M601.8 674.8h64.9M601.8 679.9h64.9" stroke-width="0.6" fill="none"/>
@@ -511,21 +513,21 @@
 <text class="txt halo" x="604.8" y="626.3" font-size="11">SceneAva…</text>
 <text class="txt halo" x="604.8" y="639.3" font-size="10">19%</text>
 </g>
-<g><title>DrawScrollView: 28/141 verified (20%), 141/141 rewritten</title>
+<g><title>DrawScrollView: 29/141 verified (21%), 141/141 rewritten</title>
 <rect class="v" x="668.7" y="299.3" width="68.7" height="11.0"/>
-<rect class="v" x="668.7" y="310.3" width="22.9" height="5.5"/>
-<rect class="r" x="691.6" y="310.3" width="45.8" height="5.5"/>
+<rect class="v" x="668.7" y="310.3" width="28.6" height="5.5"/>
+<rect class="r" x="697.3" y="310.3" width="40.1" height="5.5"/>
 <rect class="r" x="668.7" y="315.8" width="68.7" height="43.9"/>
 <rect class="r" x="668.7" y="359.7" width="51.5" height="5.5"/>
 <path class="grid" d="M674.4 299.3v65.8M680.1 299.3v65.8M685.9 299.3v65.8M691.6 299.3v65.8M697.3 299.3v65.8M703.0 299.3v65.8M708.7 299.3v65.8M714.5 299.3v65.8M720.2 299.3v65.8M725.9 299.3v65.8M731.6 299.3v65.8M668.7 304.8h68.7M668.7 310.3h68.7M668.7 315.8h68.7M668.7 321.3h68.7M668.7 326.8h68.7M668.7 332.2h68.7M668.7 337.7h68.7M668.7 343.2h68.7M668.7 348.7h68.7M668.7 354.2h68.7M668.7 359.7h68.7" stroke-width="0.6" fill="none"/>
 <rect class="edge" x="667.7" y="298.3" width="70.7" height="67.8" fill="none" stroke-width="2"/>
 <text class="txt halo" x="671.7" y="312.3" font-size="11">DrawScro…</text>
-<text class="txt halo" x="671.7" y="325.3" font-size="10">20%</text>
+<text class="txt halo" x="671.7" y="325.3" font-size="10">21%</text>
 </g>
-<g><title>CarouselDeck: 49/137 verified (36%), 137/137 rewritten</title>
+<g><title>CarouselDeck: 50/137 verified (36%), 137/137 rewritten</title>
 <rect class="v" x="739.4" y="299.3" width="66.7" height="21.9"/>
-<rect class="v" x="739.4" y="321.3" width="5.6" height="5.5"/>
-<rect class="r" x="744.9" y="321.3" width="61.1" height="5.5"/>
+<rect class="v" x="739.4" y="321.3" width="11.1" height="5.5"/>
+<rect class="r" x="750.5" y="321.3" width="55.6" height="5.5"/>
 <rect class="r" x="739.4" y="326.8" width="66.7" height="32.9"/>
 <rect class="r" x="739.4" y="359.7" width="27.8" height="5.5"/>
 <path class="grid" d="M744.9 299.3v65.8M750.5 299.3v65.8M756.0 299.3v65.8M761.6 299.3v65.8M767.1 299.3v65.8M772.7 299.3v65.8M778.2 299.3v65.8M783.8 299.3v65.8M789.4 299.3v65.8M794.9 299.3v65.8M800.5 299.3v65.8M739.4 304.8h66.7M739.4 310.3h66.7M739.4 315.8h66.7M739.4 321.3h66.7M739.4 326.8h66.7M739.4 332.2h66.7M739.4 337.7h66.7M739.4 343.2h66.7M739.4 348.7h66.7M739.4 354.2h66.7M739.4 359.7h66.7" stroke-width="0.6" fill="none"/>
@@ -629,14 +631,16 @@
 <text class="txt halo" x="731.5" y="380.1" font-size="11">Battle…</text>
 <text class="txt halo" x="731.5" y="393.1" font-size="10">14%</text>
 </g>
-<g><title>SceneLoginBonus: 20/99 verified (20%), 99/99 rewritten</title>
+<g><title>SceneLoginBonus: 26/99 verified (26%), 99/99 rewritten</title>
 <rect class="v" x="786.7" y="367.1" width="54.4" height="11.5"/>
-<rect class="r" x="786.7" y="378.7" width="54.4" height="40.3"/>
+<rect class="v" x="786.7" y="378.7" width="32.7" height="5.8"/>
+<rect class="r" x="819.3" y="378.7" width="21.8" height="5.8"/>
+<rect class="r" x="786.7" y="384.4" width="54.4" height="34.6"/>
 <rect class="r" x="786.7" y="419.0" width="49.0" height="5.8"/>
 <path class="grid" d="M792.1 367.1v57.6M797.5 367.1v57.6M803.0 367.1v57.6M808.4 367.1v57.6M813.9 367.1v57.6M819.3 367.1v57.6M824.8 367.1v57.6M830.2 367.1v57.6M835.7 367.1v57.6M786.7 372.9h54.4M786.7 378.7h54.4M786.7 384.4h54.4M786.7 390.2h54.4M786.7 396.0h54.4M786.7 401.7h54.4M786.7 407.5h54.4M786.7 413.2h54.4M786.7 419.0h54.4" stroke-width="0.6" fill="none"/>
 <rect class="edge" x="785.7" y="366.1" width="56.4" height="59.6" fill="none" stroke-width="2"/>
 <text class="txt halo" x="789.7" y="380.1" font-size="11">SceneL…</text>
-<text class="txt halo" x="789.7" y="393.1" font-size="10">20%</text>
+<text class="txt halo" x="789.7" y="393.1" font-size="10">26%</text>
 </g>
 <g><title>BaseEndlessrollView: 15/97 verified (15%), 97/97 rewritten</title>
 <rect class="v" x="843.1" y="367.1" width="53.3" height="5.2"/>
@@ -767,15 +771,15 @@
 <text class="txt halo" x="952.2" y="439.8" font-size="11">Enemy…</text>
 <text class="txt halo" x="952.2" y="452.8" font-size="10">51%</text>
 </g>
-<g><title>SceneAgreement: 4/73 verified (5%), 73/73 rewritten</title>
-<rect class="v" x="783.0" y="474.6" width="23.6" height="5.0"/>
-<rect class="r" x="806.6" y="474.6" width="17.7" height="5.0"/>
+<g><title>SceneAgreement: 5/73 verified (7%), 73/73 rewritten</title>
+<rect class="v" x="783.0" y="474.6" width="29.6" height="5.0"/>
+<rect class="r" x="812.5" y="474.6" width="11.8" height="5.0"/>
 <rect class="r" x="783.0" y="479.7" width="41.4" height="45.2"/>
 <rect class="r" x="783.0" y="524.8" width="17.7" height="5.0"/>
 <path class="grid" d="M788.9 474.6v55.2M794.8 474.6v55.2M800.7 474.6v55.2M806.6 474.6v55.2M812.5 474.6v55.2M818.5 474.6v55.2M783.0 479.7h41.4M783.0 484.7h41.4M783.0 489.7h41.4M783.0 494.7h41.4M783.0 499.7h41.4M783.0 504.8h41.4M783.0 509.8h41.4M783.0 514.8h41.4M783.0 519.8h41.4M783.0 524.8h41.4" stroke-width="0.6" fill="none"/>
 <rect class="edge" x="782.0" y="473.6" width="43.4" height="57.2" fill="none" stroke-width="2"/>
 <text class="txt halo" x="786.0" y="487.6" font-size="11">Scen…</text>
-<text class="txt halo" x="786.0" y="500.6" font-size="10">5%</text>
+<text class="txt halo" x="786.0" y="500.6" font-size="10">7%</text>
 </g>
 <g><title>StageFieldManager: 39/67 verified (58%), 67/67 rewritten</title>
 <rect class="v" x="783.0" y="531.8" width="41.4" height="25.3"/>
@@ -863,16 +867,14 @@
 <text class="txt halo" x="829.4" y="537.5" font-size="11">Stage…</text>
 <text class="txt halo" x="829.4" y="550.5" font-size="10">44%</text>
 </g>
-<g><title>RaidBossLwfDialog: 17/62 verified (27%), 62/62 rewritten</title>
-<rect class="v" x="826.4" y="566.8" width="48.6" height="5.7"/>
-<rect class="v" x="826.4" y="572.4" width="43.2" height="5.7"/>
-<rect class="r" x="869.6" y="572.4" width="5.4" height="5.7"/>
+<g><title>RaidBossLwfDialog: 18/62 verified (29%), 62/62 rewritten</title>
+<rect class="v" x="826.4" y="566.8" width="48.6" height="11.3"/>
 <rect class="r" x="826.4" y="578.1" width="48.6" height="22.7"/>
 <rect class="r" x="826.4" y="600.8" width="43.2" height="5.7"/>
 <path class="grid" d="M831.8 566.8v39.6M837.2 566.8v39.6M842.6 566.8v39.6M848.0 566.8v39.6M853.4 566.8v39.6M858.8 566.8v39.6M864.2 566.8v39.6M869.6 566.8v39.6M826.4 572.4h48.6M826.4 578.1h48.6M826.4 583.8h48.6M826.4 589.4h48.6M826.4 595.1h48.6M826.4 600.8h48.6" stroke-width="0.6" fill="none"/>
 <rect class="edge" x="825.4" y="565.8" width="50.6" height="41.6" fill="none" stroke-width="2"/>
 <text class="txt halo" x="829.4" y="579.8" font-size="11">RaidB…</text>
-<text class="txt halo" x="829.4" y="592.8" font-size="10">27%</text>
+<text class="txt halo" x="829.4" y="592.8" font-size="10">29%</text>
 </g>
 <g><title>ColosseumScrollView: 16/59 verified (27%), 59/59 rewritten</title>
 <rect class="v" x="826.4" y="608.4" width="48.6" height="5.4"/>
@@ -904,15 +906,15 @@
 <text class="txt halo" x="880.0" y="537.5" font-size="11">Scen…</text>
 <text class="txt halo" x="880.0" y="550.5" font-size="10">19%</text>
 </g>
-<g><title>SceneInvitation: 3/58 verified (5%), 58/58 rewritten</title>
-<rect class="v" x="918.8" y="524.5" width="17.1" height="5.0"/>
-<rect class="r" x="935.9" y="524.5" width="22.8" height="5.0"/>
+<g><title>SceneInvitation: 4/58 verified (7%), 58/58 rewritten</title>
+<rect class="v" x="918.8" y="524.5" width="22.8" height="5.0"/>
+<rect class="r" x="941.6" y="524.5" width="17.1" height="5.0"/>
 <rect class="r" x="918.8" y="529.5" width="39.8" height="35.1"/>
 <rect class="r" x="918.8" y="564.6" width="11.4" height="5.0"/>
 <path class="grid" d="M924.5 524.5v45.1M930.2 524.5v45.1M935.9 524.5v45.1M941.6 524.5v45.1M947.2 524.5v45.1M952.9 524.5v45.1M918.8 529.5h39.8M918.8 534.5h39.8M918.8 539.5h39.8M918.8 544.5h39.8M918.8 549.5h39.8M918.8 554.6h39.8M918.8 559.6h39.8M918.8 564.6h39.8" stroke-width="0.6" fill="none"/>
 <rect class="edge" x="917.8" y="523.5" width="41.8" height="47.1" fill="none" stroke-width="2"/>
 <text class="txt halo" x="921.8" y="537.5" font-size="11">Scen…</text>
-<text class="txt halo" x="921.8" y="550.5" font-size="10">5%</text>
+<text class="txt halo" x="921.8" y="550.5" font-size="10">7%</text>
 </g>
 <g><title>StageUI: 33/56 verified (59%), 56/56 rewritten</title>
 <rect class="v" x="960.6" y="524.5" width="38.4" height="22.6"/>

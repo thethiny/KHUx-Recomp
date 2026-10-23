@@ -1342,7 +1342,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0055852C	ChatScrollView::getTextLineCount	250	13	0	0
 00558710	ChatScrollView::setMessages	23	3	0	3
 00558A94	ChatScrollDelView::~ChatScrollDelView	6	6	0	0
-00558BE0	ChatScrollDelView::create	14	13	1	0
+00558BE0	ChatScrollDelView::create	1	1	0	0
 00558C74	ChatScrollDelView::init	15	13	0	0
 00558ECC	ChatScrollDelView::createRow	16	8	0	0
 00558F28	ChatScrollDelView::changeRow	32	8	0	0
@@ -1772,7 +1772,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00597F16	RaidBossLwfDialog::settingRaidLwf $_3 operator()	13	12	0	0
 00597F90	RaidBossLwfDialog::settingRaidLwf $_2 __clone(dst)	58	12	0	0
 00597FB4	RaidBossLwfDialog::settingRaidLwf $_2 destroy	89	1	0	0
-00597FC0	RaidBossLwfDialog::settingRaidLwf $_2 operator()	13	0	12	0
+00597FC0	RaidBossLwfDialog::settingRaidLwf $_2 operator()	1	1	0	0
 00598208	RaidBossLwfDialog::open $_1 __clone(dst)	30	0	0	0
 00598230	RaidBossLwfDialog::open $_1 destroy	48	13	0	0
 0059823C	RaidBossLwfDialog::open $_1 operator()	18	13	0	0
@@ -1952,7 +1952,7 @@ addr	name	calls	verified	mismatches	unverifiable
 005B1430	DrawScrollView::openCheckbondsPopup $_20 __func::__clone()	6	0	0	0
 005B1CA4	DrawScrollView::openCheckRaisePopup $_15 __func::__clone()	3	0	0	0
 005B1D60	DrawScrollView::openCheckRaisePopup $_15 __func::destroy_deallocate	3	0	0	0
-005B1D8C	DrawScrollView::openCheckRaisePopup $_15 __func::operator() (sub_5B1D8C)	12	11	1	0
+005B1D8C	DrawScrollView::openCheckRaisePopup $_15 __func::operator() (sub_5B1D8C)	4	4	0	0
 005B1E5C	DrawScrollView::openCheckRaisePopup close lambda (sub_5B1E5C)	5	2	0	0
 005B2030	DrawScrollView popup closed lambda __func::__clone() (sub_5B2030)	7	2	0	0
 005B20F4	DrawScrollView popup closed lambda __func::destroy_deallocate() (sub_5B20F4)	11	5	0	0
@@ -2256,7 +2256,7 @@ addr	name	calls	verified	mismatches	unverifiable
 005D2A56	sub_5D2A56	14	0	0	0
 005D2AC8	CarouselDeck::createMadalButton $_7 __func::__clone(__base*)	820	2	0	0
 005D2AE8	CarouselDeck::createMadalButton $_7 __func::destroy	1505	82	0	0
-005D2AF4	CarouselDeck burst area touch operator() (sub_5D2AF4)	133	132	1	0
+005D2AF4	CarouselDeck burst area touch operator() (sub_5D2AF4)	20	20	0	0
 005D2DEC	sub_5D2DEC	548	530	0	0
 005D2E0C	nullsub_856	844	785	0	0
 005D2E18	LuxBoard sprite lambda (sub_5D2E18)	2	1	0	0
@@ -2673,7 +2673,7 @@ addr	name	calls	verified	mismatches	unverifiable
 005F01C4	RaidBattle::resetAttackDamage	11	11	0	0
 005F0428	RaidBattle::enemyAttack	1	1	0	0
 005F05AC	RaidBattle::addCondition	11	11	0	0
-005F0A5C	RaidBattle::RaidDamageSub	3	2	1	0
+005F0A5C	RaidBattle::RaidDamageSub	5	5	0	0
 005F0AA0	RaidBattle::RaidBossEndSequence	4	2	0	0
 005F0B8C	RaidBattle::use_skill_check	1	1	0	0
 005F0D20	RaidBattle::use_skill	1	1	0	0
@@ -3352,7 +3352,7 @@ addr	name	calls	verified	mismatches	unverifiable
 006590C0	ScenePartyTop::runInJoinLayout $_15 __func::destroy	51	21	0	0
 00659144	ScenePartyTop::runInJoinLayout $_14 __func::__clone(__base*)	28	14	0	0
 00659164	ScenePartyTop::runInJoinLayout $_14 __func::destroy	51	21	0	0
-00659170	ScenePartyTop ranking button lambda __func::operator() (sub_659170)	12	11	1	0
+00659170	ScenePartyTop ranking button lambda __func::operator() (sub_659170)	4	4	0	0
 006592A0	ScenePartyTop ranking run-out lambda __func::operator() (sub_6592A0)	1	0	0	1
 006594B8	ScenePartyTop::runInJoinLayout $_13 __func::__clone(__base*)	28	14	0	0
 006594DC	ScenePartyTop::runInJoinLayout $_13 __func::destroy	51	21	0	0
@@ -3450,7 +3450,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00669874	SceneDeckEdit::getSortFilter	63	8	0	0
 006698B6	thunk to SceneDeckEdit::getSortFilter	20	0	0	0
 006698C0	IMedalSortFilter::registSortButton sort label lambda	1	0	0	0
-00669D50	IMedalSortFilter::openMedalSortPopup	8	7	1	0
+00669D50	IMedalSortFilter::openMedalSortPopup	2	2	0	0
 0066DDDC	IMedalSortFilter::openMedalSortPopup text helper (sub_66DDDC)	232	7	0	0
 0066DFD0	openMedalSortPopup close handler lambda __clone()	18	12	0	0
 0066E1A8	openMedalSortPopup close handler lambda operator()	6	6	0	0
@@ -3458,8 +3458,8 @@ addr	name	calls	verified	mismatches	unverifiable
 0066E6CE	sub_66E6CE	6	0	0	0
 0066E834	openMedalSortPopup Filter tab lambda operator()	24	24	0	0
 0066E9FC	openMedalSortPopup Sort tab lambda operator()	24	24	0	0
-0066EAEE	sub_66EAEE	4	3	1	0
-0066EB8E	sub_66EB8E	4	3	1	0
+0066EAEE	sub_66EAEE	4	4	0	0
+0066EB8E	sub_66EB8E	4	4	0	0
 0066EC38	openMedalSortPopup Button_Release lambda __clone()	12	6	0	0
 0066ECF0	openMedalSortPopup Button_Release lambda operator()	12	12	0	0
 0066EFC4	openMedalSortPopup Filter_Skill_NotSet lambda operator()	6	6	0	0
@@ -3605,10 +3605,10 @@ addr	name	calls	verified	mismatches	unverifiable
 0067F36C	SceneDownload::create	2	0	0	0
 0067F540	SceneNotice::create	71	5	0	0
 0067F5C4	SceneTutorialDownload::create	4	4	0	0
-0067F618	SceneInvitation::create	4	3	1	0
+0067F618	SceneInvitation::create	1	1	0	0
 0067F6AC	SceneNameRegister::create	3	3	0	0
-0067F73C	SceneUnionRegister::create	3	2	1	0
-0067F7F4	SceneAgreement::create	9	7	2	0
+0067F73C	SceneUnionRegister::create	1	1	0	0
+0067F7F4	SceneAgreement::create	1	1	0	0
 0067F86C	SceneTutorialDownload::SceneTutorialDownload	8	4	0	0
 0067F9E8	SceneTitle::init $_7 UlvE0_ __func::__clone(__base*)	192	87	0	0
 0067FA08	SceneTitle::init $_7 UlvE0_ __func::destroy	313	146	0	0
@@ -3801,14 +3801,14 @@ addr	name	calls	verified	mismatches	unverifiable
 0068E01C	SceneShopTop::runInAnimation::$_5 destroy()	2	1	0	0
 0068E390	SceneShopTop::runInAnimation::$_5::{lambda()#2}::operator()	2	1	0	0
 0068E7EC	DrawScrollView::DrawScrollView	16	11	0	0
-00690658	SceneDrawRaise::openDrawResultsPopup(const vector<unsigned long long>&)	7	2	5	0
+00690658	SceneDrawRaise::openDrawResultsPopup(const vector<unsigned long long>&)	1	1	0	0
 006914CC	SceneDrawRaise::createDrawMedal	40	0	0	0
 00692660	SceneDrawRaise::dropAnimation	5	1	0	0
 00692950	SceneDrawRaise::dropAnimation::$_17 __clone()	5	1	0	0
 00692A08	SceneDrawRaise::dropAnimation::$_17 destroy_deallocate()	5	1	0	0
 0069344C	SceneDrawRaise::openDrawResultsPopup $_12 __func::__clone() (sub_69344C)	11	1	0	0
 006934AA	sub_6934AA	4	0	0	0
-006934B4	SceneDrawRaise::openDrawResultsPopup $_12 __func::operator() (sub_6934B4)	6	2	4	0
+006934B4	SceneDrawRaise::openDrawResultsPopup $_12 __func::operator() (sub_6934B4)	1	1	0	0
 0069368C	SceneDrawRaise::openDrawResultsPopup $_12 UlvE_ __func::__clone(__base*) (sub_69368C)	157	95	0	0
 006936B4	nullsub_1474	20	1	0	0
 006936BE	SceneDrawRaise::openDrawResultsPopup $_12 UlvE_ __func::operator() (sub_6936BE)	5	5	0	0
@@ -3816,7 +3816,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00693784	nullsub_1475	8	0	0	0
 00693A54	SceneDrawRaise::openDrawResultsPopup $_10 __func::__clone() (sub_693A54)	11	1	0	0
 00693ABA	sub_693ABA	4	0	0	0
-00693AC4	SceneDrawRaise::openDrawResultsPopup $_10 __func::operator() (sub_693AC4)	12	11	1	0
+00693AC4	SceneDrawRaise::openDrawResultsPopup $_10 __func::operator() (sub_693AC4)	8	8	0	0
 00693C54	SceneDrawRaise::openDrawResultsPopup $_10 UlvE0_ __func::__clone() (sub_693C54)	5	1	0	0
 00693CC0	SceneDrawRaise::openDrawResultsPopup $_10 UlvE0_ __func::operator() (sub_693CC0)	1	0	0	1
 006940F0	SceneDrawRaise::openDrawResultsPopup $_18 UlvE_ __func::__clone(__base*) (sub_6940F0)	10	1	0	0
@@ -3943,7 +3943,7 @@ addr	name	calls	verified	mismatches	unverifiable
 006B37F0	SceneEvolveMedal::init $_7 __func::operator()(Touch*, Event*) (sub_6B37F0)	1	1	0	0
 006B72C8	SceneSphereBoardSelect::initSphereBoardList	2	0	0	2
 006B84C4	SphereScrollView::create	3	0	0	3
-006B8974	SceneSphereBoardSelect::setSphereBoardList	4	2	2	0
+006B8974	SceneSphereBoardSelect::setSphereBoardList	1	1	0	0
 006B9550	SceneSphereBoardSelect::update	5067	5067	0	0
 006BA138	SceneSphereBoardSelect::openBoardBuyDialog	2	1	1	0
 006BB958	SceneSphereBoardSelect::backScene $_14 __func::operator()	2	0	0	2
@@ -4230,7 +4230,7 @@ addr	name	calls	verified	mismatches	unverifiable
 006F2564	FlashDrama::FlashDrama()	9	0	0	0
 006F2838	FlashDrama::FlashDrama(const char*)	10	0	0	0
 006F2884	FlashDrama::~FlashDrama	8	3	0	0
-006F29AC	FlashDrama::~FlashDrama (deleting)	10	3	1	1
+006F29AC	FlashDrama::~FlashDrama (deleting)	1	1	0	0
 006F29B8	FlashDrama::update	2422	2411	11	0
 006F2C70	FlashDrama::updateSound	4875	2424	0	0
 006F2E20	FlashDrama::addEventListeners	20	0	0	0
@@ -4276,7 +4276,7 @@ addr	name	calls	verified	mismatches	unverifiable
 006F63C4	SceneLoginBonus::~SceneLoginBonus	3	3	0	0
 006F647C	SceneLoginBonus::~SceneLoginBonus [deleting destructor]	2	0	0	2
 006F649C	SceneLoginBonus::init	4	2	0	0
-006F710C	SceneLoginBonus::initLoginBonus	3	1	2	0
+006F710C	SceneLoginBonus::initLoginBonus	1	1	0	0
 006F85B8	SceneLoginBonus::update	382	328	0	0
 006F85BC	SceneLoginBonus::runInAnimation	6	3	0	0
 006F8DEC	SceneLoginBonus::runOutAnimationMain	6	3	0	0
@@ -4321,14 +4321,14 @@ addr	name	calls	verified	mismatches	unverifiable
 006FBE1C	SceneRanking::~SceneRanking() (deleting)	1	0	0	1
 006FBE80	SceneRanking::init()	2	0	0	1
 006FC928	SceneRanking::initScene(SceneManager::SelectRanking)	2	0	0	1
-006FCA7C	SceneRanking::initRankingTitle()	19	0	4	6
+006FCA7C	SceneRanking::initRankingTitle()	2	2	0	0
 006FD858	SceneRanking::initMyRanking()	6	5	0	0
 006FD9FC	SceneRanking::initRankingScrollView()	2	0	0	1
 006FDCF0	SceneRanking::init $_11::operator()(int, bool)	4	0	0	3
 006FDE40	SceneRanking::init $_14::operator()(SelectRanking, bool, int)	6	0	0	5
 006FE004	SceneRanking::update	9864	8489	0	0
 006FE008	SceneRanking::changeTickerMessage(SceneManager::SelectRanking)	2	0	0	1
-006FE0E4	SceneRanking::changeScrollView(bool)	13	5	5	1
+006FE0E4	SceneRanking::changeScrollView(bool)	1	1	0	0
 006FE270	SceneRanking::changeScrollView $_15::operator()()	12	0	0	7
 006FEEE8	SceneRanking::runInAnimation()	6	5	0	0
 006FF0A4	SceneRanking::runOutAnimationMain(std::function<void()>)	3	1	0	0
@@ -4387,7 +4387,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00703CB0	SceneRanking::init::$_14::lambda(bool) operator()	6	6	0	0
 007051F8	SceneAvatarEdit::initAvatarPartsList	5	5	0	0
 007054AC	SceneAvatarEdit::initTabButton	4	4	0	0
-007058C8	SceneAvatarEdit::initMyCordinateButton	5	3	2	0
+007058C8	SceneAvatarEdit::initMyCordinateButton	1	1	0	0
 00705C24	SceneAvatarEdit::changeMyCordinate(int)	8	8	0	0
 00705CF4	SceneAvatarEdit::changeTab(int)	7	7	0	0
 00706610	SceneAvatarEdit::initAvatarPartsList lambda body (sub_706610)	350	5	0	0
