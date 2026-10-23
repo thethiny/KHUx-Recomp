@@ -179,7 +179,7 @@ def main():
                    "and others; `rewrite/tools/libsplit.py`), which a native build can take from upstream source "
                    "instead.")
     groups.append(("Rewrite: all functions", rewrite_rows(rw_set, ran_set, ok_set, lift_total)))
-    groups.append(("Later, in a separate repository", [("1:1 binary match", matching, lift_total)]))
+    groups.append(("Binary match", [("1:1 binary match", matching, lift_total)]))
 
     notes = [
         ("Decompiled", f"functions with Hex-Rays pseudocode ({dec_failed:,} failed). Reference only."),
@@ -197,8 +197,7 @@ def main():
         ("Verified", "rewritten functions that matched the lifted original on every checked call. Normal play "
                      "installs only these."),
         ("1:1 binary match", "source that rebuilds the original ARM binary byte for byte (a matching "
-                             "decompilation). Planned, with the cleanup and the native build, for a fork of the "
-                             "finished rewrite."),
+                             "decompilation). Not started."),
     ]
 
     w = max(len(name) for _, rows in groups for name, _, _ in rows)

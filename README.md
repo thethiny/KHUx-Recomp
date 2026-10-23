@@ -152,7 +152,7 @@ Rewrite: all functions
   Run under the verifier  ███░░░░░░░░░░░░░░░░░   12.7%   7,167 / 56,381
   Verified                ██░░░░░░░░░░░░░░░░░░    9.9%   5,601 / 56,381
 
-Later, in a separate repository
+Binary match
   1:1 binary match        ░░░░░░░░░░░░░░░░░░░░    0.0%       0 / 56,381
 ```
 
@@ -164,7 +164,7 @@ Updated by `python recomp/progress.py`.
 - **Rewritten**: readable C++ (named types and variables, no register-level code) in `rewrite/`. **Game code** is the game's own 18,828 functions, Square Enix's sound engine included; **open-source libraries** are the other 37,547 (cocos2d-x, libc++, OpenSSL, FreeType, libpng and others; `rewrite/tools/libsplit.py`), which a native build can take from upstream source instead.
 - **Run under the verifier**: rewritten functions the game has called while the M3 verifier compared them with the lifted original.
 - **Verified**: rewritten functions that matched the lifted original on every checked call. Normal play installs only these.
-- **1:1 binary match**: source that rebuilds the original ARM binary byte for byte (a matching decompilation). Planned, with the cleanup and the native build, for a fork of the finished rewrite.
+- **1:1 binary match**: source that rebuilds the original ARM binary byte for byte (a matching decompilation). Not started.
 
 ## Status
 
@@ -177,8 +177,9 @@ Updated by `python recomp/progress.py`.
   with the original on real calls so far; the rest has either only run nested inside other rewritten functions,
   or belongs to screens and states the test sessions have not reached yet. Checking it is the current work.
   The rewrite stays faithful to the original, bugs included, down to the JNI boundary.
-- **Next, in a fork of this repository**: cleanup (moving data off guest addresses, a platform interface in
-  place of the JNI boundary), a native build without lifted code, a 1:1 matching source, and an Android APK.
+- **Next**: checking the rest of the rewrite. The 1:1 binary match is also done in this repository; the cleanup and refactoring of the
+  rewrite (moving data off guest addresses, a platform interface in place of the JNI boundary) happen in a fork of
+  this repository, so this one stays the faithful version.
 
 ## License
 

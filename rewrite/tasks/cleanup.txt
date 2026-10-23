@@ -1,6 +1,6 @@
-# Cleanup tasks for after M3. They will NOT be done in this repo: cleanup (and the native build without lifted code,
-# the 1:1 match, the APK) happen in a separate repo forked from the finished rewrite (user, 2026-10-23). This list
-# carries over to that fork; this repo stays the faithful rewrite + verifier.
+# Cleanup tasks for after M3. They will NOT be done in this repo: the cleanup and refactoring of the rewrite happen
+# in a separate repo forked from the finished rewrite (user, 2026-10-23). This list carries over to that fork; this
+# repo stays the faithful rewrite + verifier (the 1:1 binary match stays here too - user, 2026-10-24).
 
 - Library grouping: add a third group "Internal libraries" (Square Enix's own shared libraries, no public source:
   the rewrite is their only source) between "Game" and "Libraries" (open source, from upstream) in
