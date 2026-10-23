@@ -1,0 +1,25 @@
+# fragment	parent	why (read by rewrite/tools/chunks.py: listed as chunks of the parent)
+# Pieces of a function's body that chunks.py cannot see: the lifter emitted them as calls (bl) or they are reached
+# only through the exception tables (landing pads), so no other lifted body holds their label. The parent's rewrite
+# runs their code as part of its own body (or, for landing pads, has none: the pads only run under the lifted parent).
+# APIManager::verifyResponse (0x4BB4C4; IDA split it, see JOURNAL 2026-10-19): outlined pieces called from its body
+004C1A02	004BB4C4	bl from 0x4BF20E / 0x4BF250
+004C2174	004BB4C4	bl from 0x4BCF06
+004C2192	004BB4C4	bl from 0x4BD02A
+004C22DA	004BB4C4	bl from 0x4BD778
+004C2560	004BB4C4	bl from 0x4BF9FE / 0x4BFA06
+004C257C	004BB4C4	bl from 0x4BFF58 / 0x4BFF60
+# its exception cleanup (no callers; sub_4C259A calls the pieces after it)
+004C232E	004BB4C4	landing pad
+004C2414	004BB4C4	landing pad
+004C259A	004BB4C4	landing pad
+004C1E6C	004C259A	bl from the pad
+004C1E9C	004C259A	bl from the pad
+004C1F62	004C259A	bl from the pad
+004C1E2A	004C259A	landing pad tail
+# sub_66C7D2 (a chunk of SceneDeckEdit's sub_669D50): its exception cleanup pads and their shared tails
+0066D6C4	0066C7D2	landing pad
+0066DCCC	0066C7D2	landing pad
+0066DC6E	0066C7D2	bl from 0x66D33E
+0066DCE2	0066C7D2	bl from 0x66D262
+0066DCEE	0066C7D2	bl from 0x66D26A / 0x66D4AA / 0x66D4B6

@@ -32,7 +32,10 @@ LIBS = [
     ("LWF", r"(LWF::|lwf_)"),
     ("libc++ / C++ runtime", r"(std::|__cxa|__cxxabiv1|__gnu_|_Unwind|__aeabi|__udiv|__div|__mod|__umod|"
                              r"operator new|operator delete|__dynamic_cast|__gxx|__cxx|_ZN?St|__clz|__ctz|"
-                             r"__(add|sub|mul|div|cmp|fix|float|extend|trunc|neg|ash|lsh|lsr)\w*[sd]f\d|__popcount)"),
+                             r"__(add|sub|mul|div|cmp|fix|float|extend|trunc|neg|ash|lsh|lsr)\w*[sd]f\d|__popcount|"
+                             # libunwind (unw_* and its C++ namespace) and compiler-rt's soft-float helpers
+                             r"unw_|libunwind::|__(gt|lt|ge|le|eq|ne|un)[sd]f2$|__float(un)?[sd]i[sd]f$|"
+                             r"__fix(uns)?[sd]f[sd]i$)"),
     ("libpng", r"(png_|_png)"),
     ("freetype", r"(FT_|ft_|af_|tt_|TT_|cff_|CFF_|ps_|PS_|t1_|T1_|t42_|pfr_|bdf_|pcf_|sfnt_|gxv_|otv_|FTC_|"
                  r"winfnt|pshinter|psh_|psaux|_ft_|tt_face|ft_smooth|gray_)"),
@@ -44,6 +47,13 @@ LIBS = [
                 r"tree_|v3_|X9|ssl3|SSLv|TLSv|dtls1|ssl23|asn1_|ASN1_|cms_|ts_|NETSCAPE|PROXY|AUTHORITY|DIST|"
                 r"ACCESS|USERNOTICE|POLICY|GENERAL|EDIPARTY|OTHERNAME|SXNET|ISSUING|CRL|crl|EXTENDED|BASIC|"
                 r"AES_|private_|EVP|HMAC_|MD5_|SHA1|SHA256|SHA512|ERR|ERR_load|BIO_|PEM_)"),
+    # OpenSSL's C helpers whose names the prefixes above miss (asn1 / x509v3 / dso / txt_db / pqueue / rc2 / idea /
+    # md4 / ripemd / whirlpool / smime and the GOST engine's helpers), matched whole
+    ("OpenSSL", r"(n_ssl3_mac|do_dtls1_write|md4_block|int_rsa_verify|a2d_ASN1|[ic]2[aic]_ASN1|a2i_|i2a_|"
+                r"hex_to_string|string_to_hex|name_cmp|NAME_CONSTRAINTS|pqueue_|RC2_|idea_|o2i_|i2o_|ECPK|"
+                r"DHparams|DSO_|UTF8_(get|put)c|_CONF_|TXT_DB_|pkey_GOST|fill_GOST|getbnfrombuf|unpack_cp_|"
+                r"hashsum2bn|store_bignum|pack_sign_cp|mac_block|get_mac$|get_encryption_params|start_hash|"
+                r"hash_block|finish_hash|keyDiversifyCryptoPro|keyUnwrapCryptoPro|ripemd160|whirlpool|SMIME_)"),
     ("curl", r"(curl|Curl|CURL)"),
     ("Ogg Vorbis", r"(vorbis|ogg_|ov_|_vorbis|_ogg|oggpack|drft_|mdct_|_ve_|floor0|floor1|res0|res1|res2|"
                    r"mapping0|vorbis_)"),
@@ -138,7 +148,48 @@ def groups():
     for a, lib in OVERRIDES.items():
         if a in out: out[a] = lib
         elif a | 1 in out: out[a | 1] = lib
+    # unnamed functions the nearest-name rule gives to the game although only one library calls them (IDA's
+    # outlined pieces of freetype / curl at the start of .text): the callers' library, to a fixed point
+    callers = call_graph()
+    unnamed = [a for a, name in items if name.startswith(("sub_", "nullsub_", "j_")) and out.get(a) is None]
+    changed = True
+    while changed:
+        changed = False
+        for a in unnamed:
+            if out.get(a) is not None:
+                continue
+            libs = {out.get(c) for c in callers.get(a, ())}
+            # not libc++: its templates (std::function thunks, std::sort) call the game's own lambdas
+            if len(libs) == 1 and None not in libs and "libc++ / C++ runtime" not in libs:
+                out[a] = libs.pop()
+                changed = True
     return out
+
+
+_CALLS = None
+
+
+def call_graph():
+    """callee -> callers, from the lifted C (rt_call / TAIL targets)."""
+    global _CALLS
+    if _CALLS is None:
+        import collections
+        _CALLS = collections.defaultdict(set)
+        fn = re.compile(r"^void F_([0-9A-F]+)\(CPU \*c\) \{")
+        call = re.compile(r"(?:rt_call(?:_frag)?\(c, |TAIL\()0x([0-9A-F]+)u\)")
+        for f in sorted(unit.LIFT.glob("lift_*.c")):
+            if f.name == "lift_table.c":
+                continue
+            cur = None
+            for line in f.read_text(encoding="utf-8", errors="replace").splitlines():
+                m = fn.match(line)
+                if m:
+                    cur = int(m.group(1), 16)
+                    continue
+                if cur is not None and "0x" in line:
+                    for t in call.findall(line):
+                        _CALLS[int(t, 16) & ~1].add(cur)
+    return _CALLS
 
 
 def main():

@@ -109,6 +109,9 @@ RW_FUNCTION(0x4F08E4, "StageState::~StageState (deleting)", StageState::deleting
 
 int32_t StageState::getMaxHP(const StageState *) { return userMaxHp(); }
 RW_FUNCTION(0x4F0930, "StageState::getMaxHP", StageState::getMaxHP);
+// the same through the IStatus base at +32 (the thunk's own copy of the body: no this adjustment needed)
+static int32_t getMaxHPThunk(uint32_t) { return userMaxHp(); }
+RW_FUNCTION(0x4F0994, "non-virtual thunk to StageState::getMaxHP (+32)", getMaxHPThunk);
 
 // ------------------------------------------------------------------------------------------- HP / gauge / points
 int32_t StageState::addDamage(StageState *self, int32_t damage) {

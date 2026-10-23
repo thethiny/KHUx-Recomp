@@ -92,8 +92,13 @@ def chunks():
 
 
 def with_chunks(addrs):
-    """addrs plus the chunks of any function in it."""
-    return addrs | {a for a, ps in chunks().items() if any(p in addrs for p in ps)}
+    """addrs plus the chunks of any function in it (transitively: a chunk of a chunk counts too)."""
+    out, cs = set(addrs), chunks()
+    while True:
+        more = {a for a, ps in cs.items() if a not in out and any(p in out for p in ps)}
+        if not more:
+            return out
+        out |= more
 
 
 def rewritten_set():

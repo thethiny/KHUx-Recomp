@@ -1213,3 +1213,14 @@ uint32_t StageFieldManager::isHitTestTouchRectAndTouchUI(StageFieldManager *self
     return rw::call(a::hitShapeInfo_isIntersects, {a::touchUiShapeLast, f.addr(0x10), f.addr(0x20)});
 }
 RW_FUNCTION(0x757E74, "StageFieldManager::isHitTestTouchRectAndTouchUI", StageFieldManager::isHitTestTouchRectAndTouchUI);
+
+// onEventOccursTreasure $_0 {-, this}(MapTreasure*): the opened treasure's map nodes (+0x2AC..+0x2B0) added to the
+// field; returns the last call's r0 (or the closure when there are none), as the original
+static uint32_t treasureNodesAdded(uint32_t self, uint32_t treasurep) {
+    const uint32_t t = ld(treasurep);
+    const uint32_t end = ld(t + 0x2B0);
+    uint32_t r = self;
+    for (uint32_t p = ld(t + 0x2AC); p != end; p += 4) r = rw::call(0x755509, {ld(self + 4), ld(p)});
+    return r;
+}
+RW_FUNCTION(0x75842E, "StageFieldManager::onEventOccursTreasure $_0 (sub_75842E)", treasureNodesAdded);

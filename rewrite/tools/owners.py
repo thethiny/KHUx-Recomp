@@ -26,6 +26,78 @@ import unit  # noqa: E402
 OUT = RECOMP / "out" / "rewrite" / "owners.json"
 
 
+def first_name(mangled, start):
+    """The first <length><identifier> at `start` (skipping an N nesting prefix and qualifiers)."""
+    i = start
+    while i < len(mangled) and mangled[i] in "NKVZ":
+        i += 1
+    m = re.match(r"(\d+)", mangled[i:])
+    if not m:
+        return ""
+    n = int(m.group(1))
+    i += len(m.group(1))
+    return mangled[i:i + n]
+
+
+def vtable_owners():
+    """Functions stored in a vtable -> the class named by the vtable's typeinfo. For a libc++ std::function
+    __func<lambda> the typeinfo names the lambda's enclosing function ("...__funcIZN13SceneDeckEdit22run...E4$_38...")
+    and that function's class is taken; for a class vtable ("13SceneDeckEdit") the class itself."""
+    sys.path.insert(0, str(RECOMP))
+    import struct
+    import paths  # noqa: E402
+    from elftools.elf.elffile import ELFFile
+    so = paths.so()
+    data = open(so, "rb").read()
+    with open(so, "rb") as fh:
+        segs = [(s["p_vaddr"], s["p_filesz"], s["p_offset"]) for s in ELFFile(fh).iter_segments()
+                if s["p_type"] == "PT_LOAD"]
+
+    def word(va):
+        for v, sz, off in segs:
+            if v <= va < v + sz - 3:
+                return struct.unpack_from("<I", data, off + va - v)[0]
+        return None
+
+    def cstr(va):
+        for v, sz, off in segs:
+            if v <= va < v + sz:
+                o = off + va - v
+                return data[o:data.index(b"\0", o)].decode("ascii", "replace")
+        return ""
+
+    text_end = min(v for v, _, _ in segs if v >= 0xF00000)
+    out = {}
+    for v, sz, off in segs:
+        if v < 0xF00000:
+            continue
+        i = 0
+        while i < sz - 8:
+            # a vtable: 0 (offset to top), a typeinfo in the data segment, then code pointers
+            top = struct.unpack_from("<I", data, off + i)[0]
+            ti = struct.unpack_from("<I", data, off + i + 4)[0]
+            first = struct.unpack_from("<I", data, off + i + 8)[0] if i + 12 <= sz else 0
+            if top == 0 and v <= ti < v + sz and 0x400000 <= first < text_end:
+                name = cstr(word(ti + 4) or 0) if word(ti + 4) else ""
+                owner = ""
+                if "__funcIZ" in name:
+                    owner = first_name(name, name.index("__funcIZ") + len("__funcIZ"))
+                elif name and (name[0].isdigit() or name[0] == "N"):
+                    owner = first_name(name, 0)
+                k = i + 8
+                while k < sz - 3:
+                    w = struct.unpack_from("<I", data, off + k)[0]
+                    if not (0x400000 <= w < text_end):
+                        break
+                    if owner:
+                        out.setdefault(w & ~1, owner)
+                    k += 4
+                i = k
+                continue
+            i += 4
+    return out
+
+
 def main():
     idx = unit.load_index()
     addrs = sorted(int(k, 16) for k in idx)
@@ -51,7 +123,12 @@ def main():
                     callers[int(t, 16) & ~1].add(cur)
 
     owners, how = {}, collections.Counter()
+    vt_owner = vtable_owners()
     for a in unnamed:
+        if a in vt_owner:
+            owners[a] = vt_owner[a]
+            how["vtable"] += 1
+            continue
         cs = {cls.get(c) or owners.get(c) for c in callers.get(a, ())}
         cs.discard(None)
         cs.discard("")

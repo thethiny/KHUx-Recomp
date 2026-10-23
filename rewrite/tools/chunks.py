@@ -64,6 +64,19 @@ def main():
         if not parents or foreign or a in called or (a | 1) in words or (a not in thumb and a in words):
             continue
         rows.append((a, sorted(parents)))
+    # fragments listed by hand (rewrite/tasks/fragments.tsv): bl-called / landing-pad pieces of a parent's body
+    listed = {a for a, _ in rows}
+    frag = REWRITE / "tasks" / "fragments.tsv"
+    if frag.exists():
+        for line in frag.read_text(encoding="utf-8").splitlines():
+            p = line.split("\t")
+            if len(p) >= 2 and not line.startswith("#"):
+                a, parent = int(p[0], 16), int(p[1], 16)
+                if a in listed:
+                    continue
+                rows.append((a, [parent]))
+                listed.add(a)
+        rows.sort()
     OUT.write_text("# chunk\tparents (rewrite/tools/chunks.py)\n" +
                    "".join(f"{a:08X}\t{' '.join(f'{p:08X}' for p in ps)}\n" for a, ps in rows), encoding="utf-8")
     print(f"{len(rows)} chunks -> {OUT}")

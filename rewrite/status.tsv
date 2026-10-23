@@ -697,6 +697,7 @@ addr	name	calls	verified	mismatches	unverifiable
 004F05C8	StageState::setPlayableActorPoisonEffect	155	78	0	0
 004F089C	StageState::~StageState	42	1	0	0
 004F0930	StageState::getMaxHP	5191	918	0	0
+004F0994	non-virtual thunk to StageState::getMaxHP (+32)	3	3	0	0
 004F0CCC	std::__shared_ptr_emplace<StageState>::__on_zero_shared	41	1	0	0
 004F0CD8	std::__shared_ptr_emplace<StageState>::__on_zero_shared_weak	41	1	0	0
 004F0CE0	SaveBin::set	14375	1677	0	0
@@ -908,6 +909,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00506EF4	RaidBossScrollView::setRaidBossFrame(Widget*, int)	6	4	0	0
 005070CC	RaidBossScrollView::init()	11	4	0	0
 0050718C	RaidBossScrollView::update(float)	127995	124315	0	0
+005072F4	popUpRaidBossInfo(const RaidBase::Info&, function<void()>)	1	1	0	0
 00508198	RaidBossScrollView::createRow(int, int)	7	4	0	0
 005082F0	RaidBossScrollView::changeRow(Widget*, int, int)	18	8	0	0
 005083D0	RaidBossScrollView::registItemTouchEvent(Widget*, int)	30	12	0	0
@@ -3783,6 +3785,7 @@ addr	name	calls	verified	mismatches	unverifiable
 006A0424	std::__sort3<SceneMixedMedal medal compare&, shared_ptr<UserMedalData>*> (sub_6A0424)	350	9	0	0
 006A04FA	std::__sort4<SceneMixedMedal medal compare&, shared_ptr<UserMedalData>*> (sub_6A04FA)	82	9	0	0
 006A059A	std::__sort5<SceneMixedMedal medal compare&, shared_ptr<UserMedalData>*> (sub_6A059A)	56	9	0	0
+006A0664	std::__insertion_sort_incomplete (SceneMixedMedal materials) (sub_6A0664)	2	2	0	0
 006A08E0	sub_6A08E0	8	0	0	0
 006A0900	nullsub_1490	10	0	0	0
 006A0AE8	sub_6A0AE8	2	0	0	0
@@ -3795,6 +3798,7 @@ addr	name	calls	verified	mismatches	unverifiable
 006A10CC	SceneMixedMedal::initMedalSelectPanel $_29 UlbE_ __func::__clone() (sub_6A10CC)	12	1	0	0
 006A1298	SceneMixedMedal::openResultPopup $_28 __func::__clone() (sub_6A1298)	9	1	0	0
 006A13EA	SceneMixedMedal::openResultPopup $_28 __func::destroy_deallocate (sub_6A13EA)	14	6	0	0
+006A1418	SceneMixedMedal guilt bonus animation (sub_6A1418)	1	1	0	0
 006A1AD4	SceneMixedMedal::openResultPopup show lines (sub_6A1AD4)	5	5	0	0
 006A3670	SceneMixedMedal::openResultPopup $_41 __func::__clone() (sub_6A3670)	10	5	0	0
 006A36E0	SceneMixedMedal::openResultPopup $_41 __func::operator() (sub_6A36E0)	16	16	0	0
