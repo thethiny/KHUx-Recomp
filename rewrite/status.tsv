@@ -1,20 +1,32 @@
 addr	name	calls	verified	mismatches	unverifiable
 0044F6D8	FreeType TT_Hint_Glyph (sub_44F6D8)	1061	376	0	0
 0044FF84	FreeType tt_size_run_prep (sub_44FF84)	97	31	0	0
-00453280	bg::MemoryStream static constructor (sub_453280)	14	14	0	0
-00453324	RemoteNotification.cpp static constructor (sub_453324)	14	14	0	0
-00453374	audio sources static constructor (sub_453374)	14	14	0	0
-004533F8	audio names static constructor (sub_4533F8)	14	14	0	0
-0045344C	Avatar.cpp static constructor (sub_45344C)	27	26	0	0
-0045355C	snow particle settings static constructor (sub_45355C)	27	26	0	0
-00453B04	PauseState.cpp static constructor (sub_453B04)	14	14	0	0
-00453B7C	AvatarActor.cpp static constructor (sub_453B7C)	14	14	0	0
-00453C6C	direction table static constructor (sub_453C6C)	14	14	0	0
-00453DD4	StageActorManager.cpp static constructor (sub_453DD4)	27	26	0	0
-00453EA4	shape tables static constructor (sub_453EA4)	14	14	0	0
-00454160	MasterDataManager.cpp static constructor (sub_454160)	27	26	0	0
-00457A00	bg pixel formats static constructor (sub_457A00)	14	14	0	0
-00457E40	bg::Archive static constructor (sub_457E40)	14	14	0	0
+00453224	png_colorspace_endpoints_match, green and blue (sub_453224)	8	8	0	0
+00453280	bg::MemoryStream static constructor (sub_453280)	18	18	0	0
+00453324	RemoteNotification.cpp static constructor (sub_453324)	18	18	0	0
+00453374	audio sources static constructor (sub_453374)	18	18	0	0
+004533F8	audio names static constructor (sub_4533F8)	18	18	0	0
+0045344C	Avatar.cpp static constructor (sub_45344C)	31	30	0	0
+00453510	snow settings static destructor (sub_453510)	4	4	0	0
+0045355C	snow particle settings static constructor (sub_45355C)	31	30	0	0
+00453B04	PauseState.cpp static constructor (sub_453B04)	18	18	0	0
+00453B7C	AvatarActor.cpp static constructor (sub_453B7C)	18	18	0	0
+00453C48	direction table static destructor (sub_453C48)	4	4	0	0
+00453C6C	direction table static constructor (sub_453C6C)	18	18	0	0
+00453DD4	StageActorManager.cpp static constructor (sub_453DD4)	31	30	0	0
+00453E30	shape table 1 static destructor (sub_453E30)	4	4	0	0
+00453E54	shape table 2 static destructor (sub_453E54)	4	4	0	0
+00453E78	shape table 3 static destructor (sub_453E78)	3	3	0	0
+00453EA4	shape tables static constructor (sub_453EA4)	18	18	0	0
+004540F4	MasterDataManager.cpp static destructor (sub_4540F4)	3	3	0	0
+00454160	MasterDataManager.cpp static constructor (sub_454160)	31	30	0	0
+00457884	cocos2d::s_attributeNames static destructor (sub_457884)	3	3	0	0
+00457A00	bg pixel formats static constructor (sub_457A00)	18	18	0	0
+00457E40	bg::Archive static constructor (sub_457E40)	18	18	0	0
+00459078	libc++ wide am/pm table static destructor (sub_459078)	3	3	0	0
+0045917C	libc++ am/pm table static destructor (sub_45917C)	3	3	0	0
+00459280	libc++ wide month table static destructor (sub_459280)	3	3	0	0
+00459384	libc++ month table static destructor (sub_459384)	3	3	0	0
 004595C8	SdSoundSystem static constructor (sub_4595C8)	24	24	0	0
 0045968C	SQEX action queue static constructor (sub_45968C)	24	24	0	0
 00459710	SQEX sound list static constructor (sub_459710)	24	24	0	0
@@ -608,7 +620,10 @@ addr	name	calls	verified	mismatches	unverifiable
 004E1D0C	Java_org_cocos2dx_cpp_GooglePlayManager_onPurchaseFinish	1	0	0	0
 004E2610	RemoteNotification::needsGetToken	456	424	0	0
 004E262C	RemoteNotification::getToken	69	49	0	0
+004E27C0	Java_org_cocos2dx_cpp_AppActivity_didRegister	8	8	0	0
+004E2BB0	Java_org_cocos2dx_cpp_TrackingSDKManager_getAppConfig	8	8	0	0
 004E49AC	_JNIEnv::CallObjectMethod	8416	1469	0	0
+004E5804	Java_org_cocos2dx_cpp_FacebookManager_onLogin	2	1	0	1
 004E7828	SaveBin::get<std::vector<int>>	495	40	0	0
 004E78CC	SaveBin::get<std::unordered_map<unsigned, unsigned>>	99	8	0	0
 004E7970	AppState::MedalSortFilterState::load	500	45	0	0
@@ -5551,6 +5566,7 @@ addr	name	calls	verified	mismatches	unverifiable
 007BE454	cocostudio::DictionaryHelper::getDictionaryFromArray_json	197198	2075	0	0
 007BE46E	cocostudio::DictionaryHelper::checkObjectExist_json	40977	290	0	0
 007C5A9C	cocostudio::WidgetPropertiesReader0300::setPropsForAllWidgetFromJsonDictionary	258321	5393	18	191
+007C9444	cocostudio sendEvent(unsigned int)	4	4	0	0
 007CF490	sub_7CF490	501	36	0	0
 007CF4AC	nullsub_178	503	36	0	0
 007CF638	sub_7CF638	501	36	0	0

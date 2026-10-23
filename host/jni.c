@@ -98,7 +98,10 @@ uint32_t jarray_new(char type, uint32_t n, const void *data) {
     o->kind = J_ARRAY;
     o->et = type;
     o->n = n;
-    if (type == 'L') o->refs = calloc(n ? n : 1, 4);
+    if (type == 'L') {
+        o->refs = calloc(n ? n : 1, 4);
+        if (data) memcpy(o->refs, data, (size_t)n * 4);   /* element handles */
+    }
     else {
         o->data = calloc(n ? n : 1, (size_t)elem_size(type));
         if (data) memcpy(o->data, data, (size_t)n * (size_t)elem_size(type));

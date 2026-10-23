@@ -26,3 +26,16 @@
     61C2B4 61FAB6 66D6C4 66DC6E 66DCCC 66DCE2 66DCEE.
   Before counting: confirm each one (no prologue, tail into the parent or _Unwind_Resume) and give chunks.py / libsplit
   a "pad" kind so progress.py credits it to the parent.
+
+- JNI boundary -> platform interface (user decision 2026-10-23: the rewrite stays faithful up to the JNI boundary;
+  replacing it is cleanup). Today the rewritten C++ calls Java exactly as the original did (JniHelper, the JNIEnv
+  table: FindClass, Call*Method, GetStringUTFChars, NewStringUTF, ...) and Java calls back through the
+  Java_org_cocos2dx_* entry points (b13_jni/JniCallbacks.cpp, system/Iap.cpp, the cocos2d-x Cocos2dx* natives).
+  On PC the host's host/jni.c is not emulation: it reimplements the Android shell's API in C (fake JNIEnv, object
+  handles, a table of Java methods: GDI text bitmaps, a Windows input box, a store where every purchase succeeds,
+  UUIDs, video events; unknown methods answer 0 / null / ""), and fires the Java->native callbacks itself.
+  To remake: give the client a platform interface (text rendering, text input, store, video, push token, Facebook,
+  tracking, device info, ...) called directly by the C++ instead of through JNI; a Windows implementation (what
+  host/jni.c does now) and an Android one (thin JNI to the APK's Java). Features with no PC meaning (Facebook,
+  push, tracking SDK) become explicit no-ops. Where a stub's answer matters, copy the real Java's behaviour from
+  the APK's classes.dex. Do it after the faithful rewrite is complete and verified (it changes client code).

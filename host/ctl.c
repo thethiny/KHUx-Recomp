@@ -562,7 +562,8 @@ static char *serve_main(Req *r) {
     if (!strcmp(r->path, "call")) {
         /* DEV/TEST HARNESS ONLY: call?fn=0x..&args=0x..,5 calls a guest function on the main thread (up to 8
          * integer arguments, hex or decimal; "zero" passes a pointer to 64 zeroed bytes, e.g. an empty
-         * shared_ptr) and returns r0; e.g. rush mode tops up the special gauge with
+         * shared_ptr; for JNI entry points "env" is the JNIEnv, "s:text" a Java string and "sa:a|b" a Java
+         * String[] ("sa:" an empty one)) and returns r0; e.g. rush mode tops up the special gauge with
          * SceneBattleBase::addPlayerCP(scene, n) */
         char as[256] = "";
         if (!qget(r->q, "fn", v, sizeof(v))) return _strdup("{\"error\": \"call needs fn\"}");
@@ -571,7 +572,18 @@ static char *serve_main(Req *r) {
         int n = 0, nt = 0;
         for (char *tok = strtok(as, ","); tok && n < 8; tok = strtok(NULL, ",")) {
             if (!strcmp(tok, "zero")) a[n++] = tmp[nt++] = gzalloc(64);   /* a pointer to 64 zero bytes */
-            else a[n++] = (uint32_t)strtoul(tok, NULL, 0);
+            else if (!strcmp(tok, "env")) a[n++] = jni_env;
+            else if (!strncmp(tok, "s:", 2)) a[n++] = jstring_new(tok + 2);
+            else if (!strncmp(tok, "sa:", 3)) {
+                uint32_t items[16], m = 0;
+                for (char *it = tok + 3, *bar; *it && m < 16; it = bar + 1) {
+                    bar = strchr(it, '|');
+                    if (bar) *bar = 0;
+                    items[m++] = jstring_new(it);
+                    if (!bar) break;
+                }
+                a[n++] = jarray_new('L', m, items);
+            } else a[n++] = (uint32_t)strtoul(tok, NULL, 0);
         }
         uint32_t ida = (uint32_t)strtoul(v, NULL, 16) & ~1u, fn = 0;
         for (int lo = 0, hi = L.count - 1; lo <= hi && !fn;) {        /* the lifted entry (Thumb bit included) */

@@ -1,8 +1,11 @@
 // The game's own source files' static constructors (the .init_array entries the host runs at load): the objects
 // at namespace scope of Avatar, AvatarActor, StageActorManager, PauseState, RemoteNotification, the audio sources,
 // the snow particle settings, the direction and shape tables, MasterDataManager's table registry and bg's
-// (MemoryStream, Archive, pixel formats), each with its destructor registered through __cxa_atexit. The engine's
-// (cocos2d-x, cocostudio, LWF, FreeType, plugins) and the C libraries' come from upstream source.
+// (MemoryStream, Archive, pixel formats), each with its destructor registered through __cxa_atexit (the array
+// destructors are here too). The engine's (cocos2d-x, cocostudio, LWF, FreeType, plugins) and the C libraries' come
+// from upstream source.
+#include <iterator>
+
 #include "Guest.hpp"
 
 namespace {
@@ -103,7 +106,7 @@ void destroyPoints(uint32_t points) {
 constexpr uint32_t MASTER_HEADER_CONSTANT = 0x10054A4;
 constexpr uint32_t TABLE_DESCRIPTORS = 0x1004100, DESCRIPTOR_SIZE = 0x38;
 constexpr uint32_t VT_GET_HASH_GOT = 0xFD6A18;    // &vtable of __func<const char*(*)()>, shared by every table
-constexpr uint32_t TABLE_DESCRIPTORS_DTOR = 0x4541F5;   // sub_4541F4: ~ the 49 descriptors
+constexpr uint32_t TABLE_DESCRIPTORS_DTOR = 0x4540F5;   // sub_4540F4: ~ the 49 descriptors
 struct TableRow {
     uint32_t name;     // the table's name (a string literal)
     uint32_t parseGot; // GOT: &vtable of __func<shared_ptr<const X>(*)(const Value&)>, then &X::parse
@@ -507,6 +510,52 @@ struct StaticConstructors {
         staticFunction(load<uint32_t>(ARCHIVE_DELETER_GOT), VT_DELETER_FN_GOT, ARCHIVE_FREE, DELETER_FN_DTOR_GOT);
     }
 };
+// The exit-time destructors the constructors above register (__cxa_atexit(dtor, nullptr, &__dso_handle)): each
+// destroys its array's objects last to first. Vec2's destructor does nothing, but the calls stay.
+struct StaticDestructors {
+    // the four snow settings: each one's four points (+0x10 .. +0x28), last point first
+    static void snowSettings() {
+        for (uint32_t k = 4; k-- > 0;) {
+            const uint32_t end = SNOW_SETTINGS_2 + (k + 1) * SETTING_SIZE;
+            for (uint32_t p = 1; p <= 4; p++) call(VEC2_DTOR, {end - 8 * p});
+        }
+    }
+    // the nine unit steps
+    static void directions() {
+        for (uint32_t k = 9; k-- > 0;) call(VEC2_DTOR, {DIRECTIONS + 0x1C + 8 * k});
+    }
+    // each shape's position
+    static void shapes(uint32_t table, uint32_t count) {
+        for (uint32_t k = count; k-- > 0;) call(VEC2_DTOR, {table + k * SHAPE_SIZE + 4});
+    }
+    static void shapes1() { shapes(SHAPES_1, 2); }
+    static void shapes2() { shapes(SHAPES_2, 2); }
+    static void shapes3() { shapes(SHAPES_3, 3); }
+    // MasterDataManager::TABLE_DESCRIPTORS: per descriptor, getHash's std::function, then parse's
+    static void masterTables() {
+        for (uint32_t k = std::size(MASTER_TABLES); k-- > 0;) {
+            const uint32_t at = TABLE_DESCRIPTORS + k * DESCRIPTOR_SIZE;
+            destroyFunction(at + 0x20);
+            destroyFunction(at + 8);
+        }
+    }
+
+private:
+    // std::function's destructor: a callable kept in the buffer is destroyed in place (__base::destroy, slot 4),
+    // one on the heap is destroyed and freed (destroy_deallocate, slot 5)
+    static void destroyFunction(uint32_t fn) {
+        const uint32_t f = load<uint32_t>(fn + 0x10);
+        if (f == fn) call(load<uint32_t>(load<uint32_t>(f) + 0x10), {f});
+        else if (f) call(load<uint32_t>(load<uint32_t>(f) + 0x14), {f});
+    }
+};
+RW_FUNCTION(0x453510, "snow settings static destructor (sub_453510)", StaticDestructors::snowSettings);
+RW_FUNCTION(0x453C48, "direction table static destructor (sub_453C48)", StaticDestructors::directions);
+RW_FUNCTION(0x453E30, "shape table 1 static destructor (sub_453E30)", StaticDestructors::shapes1);
+RW_FUNCTION(0x453E54, "shape table 2 static destructor (sub_453E54)", StaticDestructors::shapes2);
+RW_FUNCTION(0x453E78, "shape table 3 static destructor (sub_453E78)", StaticDestructors::shapes3);
+RW_FUNCTION(0x4540F4, "MasterDataManager.cpp static destructor (sub_4540F4)", StaticDestructors::masterTables);
+
 RW_FUNCTION(0x45344C, "Avatar.cpp static constructor (sub_45344C)", StaticConstructors::avatar);
 RW_FUNCTION(0x453DD4, "StageActorManager.cpp static constructor (sub_453DD4)", StaticConstructors::stageActorManager);
 RW_FUNCTION(0x45355C, "snow particle settings static constructor (sub_45355C)", StaticConstructors::snow);

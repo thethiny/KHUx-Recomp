@@ -107,8 +107,8 @@ Lifted                  ██████████████████�
 Rewritten               ████████████░░░░░░░░   60.5%
 Run in game             ██░░░░░░░░░░░░░░░░░░   12.5%
 Verified                ██░░░░░░░░░░░░░░░░░░    9.7%
-  Game: rewritten       ████████████████████   99.0%
-  Game: verified        ████░░░░░░░░░░░░░░░░   19.8%
+  Game: rewritten       ████████████████████   99.2%
+  Game: verified        ████░░░░░░░░░░░░░░░░   19.9%
   Libraries: rewritten  ████████░░░░░░░░░░░░   41.1%
   Libraries: verified   █░░░░░░░░░░░░░░░░░░░    4.6%
 1:1 binary match        ░░░░░░░░░░░░░░░░░░░░    0.0%
@@ -119,11 +119,11 @@ Updated by `python recomp/progress.py`.
 
 - **Decompiled**: 56,014 of 56,604 functions have Hex-Rays pseudocode (590 failed). Reference only.
 - **Lifted**: 56,381 of 56,381 analysed functions translate to C (machine-generated, one C function per guest function, 65 instructions left to the emulator). 14,189 of them run and are checked against the emulator in game.
-- **Rewritten**: Readable, maintainable source (named types and variables, no register-level code). 34,097 functions.
-- **Run in game**: Rewritten functions the game has called while the M3 verifier compared them with the lifted original (7,023).
-- **Verified**: Rewritten functions whose every checked call matched the lifted original (5,461); normal play installs only these.
-- **Game: rewritten**: The game's own code (18,830 functions, including Square Enix's sound engine): 18,648 rewritten.
-- **Game: verified**: Game functions verified: 3,725.
+- **Rewritten**: Readable, maintainable source (named types and variables, no register-level code). 34,121 functions.
+- **Run in game**: Rewritten functions the game has called while the M3 verifier compared them with the lifted original (7,039).
+- **Verified**: Rewritten functions whose every checked call matched the lifted original (5,477); normal play installs only these.
+- **Game: rewritten**: The game's own code (18,830 functions, including Square Enix's sound engine): 18,672 rewritten.
+- **Game: verified**: Game functions verified: 3,741.
 - **Libraries: rewritten**: Open-source libraries (37,545 functions: cocos2d-x, libc++, OpenSSL, freetype, libpng, ...; `rewrite/tools/libsplit.py`), which a native build can take from upstream source: 15,449 rewritten.
 - **Libraries: verified**: Library functions verified: 1,736.
 - **1:1 binary match**: Source that rebuilds the original ARM binary byte for byte (a matching decompilation). Not started.
