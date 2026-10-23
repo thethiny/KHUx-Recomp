@@ -149,9 +149,9 @@ Self *Self::destroy(Self *self) {
 }
 RW_FUNCTION(0x4FA3AC, "MagicStoneScrollView::~MagicStoneScrollView()", MagicStoneScrollView::destroy);
 
-// 916 x 145 rows; the row template is the ItemBase card of ShopBuyItem_ItemBase_ver120.json moved into a Widget
+// 917 x 145 rows; the row template is the ItemBase card of ShopBuyItem_ItemBase_ver120.json moved into a Widget
 uint32_t Self::init(Self *self) {
-    self->itemWidth = 916.0f;
+    self->itemWidth = 917.0f;
     self->itemHeight = 145.0f;
     IScrollProtocol::setEnabledScrollBar(self, 1);
     self->offsetX = float(self->itemWidth) * 0.5f;
@@ -312,7 +312,7 @@ uint32_t Self::changeRow(Self *self, Addr widget, uint32_t index, int32_t /*arg*
         limit = uint32_t(safe32(ld32(misc), 4));
         sharedRelease(misc);
     }
-    SceneUtil::setButtonEnabled(button, buyText, SceneUtil::hasMagicStone(int32_t(limit)) ^ 1, 0);
+    SceneUtil::setImageButtonEnabled(button, buyText, SceneUtil::hasMagicStone(int32_t(limit)) ^ 1, 0);   // the ImageButton overload
     sharedRelease(shop);
     strFree(price);
     return 0;

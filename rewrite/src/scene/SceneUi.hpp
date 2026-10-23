@@ -91,7 +91,7 @@ inline uint32_t titleLabel(uint32_t node, uint32_t name, uint32_t len, int32_t t
 // a StringBuffer (printf into a 1 KB stack buffer)
 inline uint32_t stringBuffer(Frame &f, std::initializer_list<uint32_t> fmtAndArgs) {
     uint32_t buf = f.alloc(STRING_BUFFER_SIZE);
-    uint32_t args[8];
+    uint32_t args[10];
     uint32_t n = 0;
     args[n++] = buf;
     for (uint32_t a : fmtAndArgs) args[n++] = a;
@@ -101,7 +101,9 @@ inline uint32_t stringBuffer(Frame &f, std::initializer_list<uint32_t> fmtAndArg
     case 4: call(fn::StringBuffer_ctor, {args[0], args[1], args[2], args[3]}); break;
     case 5: call(fn::StringBuffer_ctor, {args[0], args[1], args[2], args[3], args[4]}); break;
     case 6: call(fn::StringBuffer_ctor, {args[0], args[1], args[2], args[3], args[4], args[5]}); break;
-    default: call(fn::StringBuffer_ctor, {args[0], args[1], args[2], args[3], args[4], args[5], args[6]}); break;
+    case 7: call(fn::StringBuffer_ctor, {args[0], args[1], args[2], args[3], args[4], args[5], args[6]}); break;
+    case 8: call(fn::StringBuffer_ctor, {args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]}); break;
+    default: call(fn::StringBuffer_ctor, {args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]}); break;
     }
     return buf;
 }

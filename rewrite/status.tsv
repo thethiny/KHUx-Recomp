@@ -135,6 +135,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00474700	SceneUtil::openWebViewInfoPopup(Layer*, ...)	3	2	0	0
 00474DCC	SceneUtil::openSellOkPopup(int, bool)	4	2	0	0
 0047546C	SceneUtil::openAvatarBoardFilterPopup(function<void()>)	28	8	8	0
+00476E80	SceneUtil::openAdventureSelectFilterPopup(function<void(bool)>)	1	1	0	0
 00478928	BaseScrollView<int>::setItemIDs(const vector<int>&)	19	5	0	1
 00478BA8	SceneUtil::addBackKeyCallback	119	22	0	0
 00478EDC	SceneUtil::openPurchaseSucceededPopup(Node*, int, int, function<void(bool)>)	2	1	0	0
@@ -810,16 +811,16 @@ addr	name	calls	verified	mismatches	unverifiable
 004F9C80	CustomTextView::createCustomElement	558	50	0	0
 004F9E14	non-virtual thunk to CustomTextView::textHandler	568	50	0	18
 004F9E9C	CustomTextView::~CustomTextView (deleting)	244	57	0	0
-004FA3AC	MagicStoneScrollView::~MagicStoneScrollView()	6	0	0	2
+004FA3AC	MagicStoneScrollView::~MagicStoneScrollView()	9	3	0	2
 004FA534	MagicStoneScrollView::~MagicStoneScrollView [deleting destructor]	4	0	0	4
-004FA568	MagicStoneScrollView::create()	4	0	0	2
-004FA5BC	MagicStoneScrollView::MagicStoneScrollView()	6	2	0	0
-004FA730	MagicStoneScrollView::init()	6	0	0	2
+004FA568	MagicStoneScrollView::create()	2	2	0	0
+004FA5BC	MagicStoneScrollView::MagicStoneScrollView()	10	4	0	0
+004FA730	MagicStoneScrollView::init()	13	2	0	2
 004FA8A0	BaseScrollView<int>::init()	106	2	0	1
-004FA8DC	MagicStoneScrollView::createRow(int, int)	20	0	0	10
-004FA934	MagicStoneScrollView::changeRow(Widget*, int, int)	192	38	0	124
-004FB758	MagicStoneScrollView::registItemTouchEvent(Widget*, int)	66	44	0	0
-004FB934	MagicStoneScrollView::setProductInfoMap(const unordered_map<string, ProductInfo>*)	6	4	0	0
+004FA8DC	MagicStoneScrollView::createRow(int, int)	35	15	0	10
+004FA934	MagicStoneScrollView::changeRow(Widget*, int, int)	237	68	0	124
+004FB758	MagicStoneScrollView::registItemTouchEvent(Widget*, int)	93	71	0	0
+004FB934	MagicStoneScrollView::setProductInfoMap(const unordered_map<string, ProductInfo>*)	9	7	0	0
 004FC56C	MiniMedalScrollView::~MiniMedalScrollView	1	0	0	0
 004FC898	MiniMedalScrollView::~MiniMedalScrollView (deleting)	2	0	0	0
 004FC968	BaseScrollView<unsigned long long>::init()	135	3	0	2
@@ -1205,6 +1206,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0053743C	AvatarInfoDialog::editBoxEditingDidEnd(EditBox*)	2	2	0	0
 005376D0	AvatarInfoDialog::openPopUpPlayStyle(function<void(bool)>)	2	1	0	0
 00539240	AvatarInfoDialog::openPopUpPlayStyle time boxes (sub_539240)	1	1	0	0
+00539514	AvatarInfoDialog::openPopUpSelectSubName(int, int, function<void(int)>)	2	2	0	0
 00539CCC	AvatarInfoDialog::openPopUpLeaderChange(function<void(bool)>)	3	2	0	0
 00539F34	AvatarInfoDialog::openPopUpSubLeaderAppoint(function<void(bool)>)	1	1	0	0
 0053A18C	AvatarInfoDialog::openPopUpSubLeaderDismiss(function<void(bool)>)	1	1	0	0
@@ -1289,6 +1291,12 @@ addr	name	calls	verified	mismatches	unverifiable
 00552F00	RankingScrollView avatar touch lambda __func::operator() (sub_552F00)	4	3	0	1
 005531C4	RankingScrollView::initPartyLayer::$_0 __clone()	21	11	0	0
 005532B2	RankingScrollView::initPartyLayer::$_0 destroy_deallocate()	29	19	0	0
+00555A34	SerialCodeScrollView::~SerialCodeScrollView()	1	1	0	0
+00555B94	SerialCodeScrollView::create()	1	0	0	0
+00555BE8	SerialCodeScrollView::SerialCodeScrollView()	1	0	0	0
+00555D1C	SerialCodeScrollView::init()	1	0	0	0
+00555FA0	SerialCodeScrollView::createRow(int, int)	6	1	0	0
+00555FF8	SerialCodeScrollView::changeRow(Widget*, int, int)	12	1	0	0
 005567B4	ChatScrollView::~ChatScrollView	16	6	0	1
 0055692C	ChatScrollView::~ChatScrollView [deleting destructor]	9	0	0	9
 00556960	ChatScrollView::create	2	2	0	0
@@ -1647,6 +1655,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00589208	BuyMagicStoneDialog::initItemIDsAndProductIDs(vector<int>&, vector<string>&)	3	1	0	0
 00589638	BuyMagicStoneDialog::callGetPaymentInfo(const function<void(bool)>&)	6	0	0	3
 005897A4	BuyMagicStoneDialog::callSendProductsRequest(const vector<string>&, const function&)	12	6	0	0
+00589A28	BuyMagicStoneDialog::openStoneInfoPopup()	2	2	0	0
 0058A2B0	BuyMagicStoneDialog::checkTransaction(const function<void(bool)>&)	6	4	0	0
 0058A4E8	BuyMagicStoneDialog::updatePaymentInfo(Node*)	6	4	0	0
 0058A7A0	BuyMagicStoneDialog::purchaseCallback	1	1	0	0
@@ -1660,12 +1669,14 @@ addr	name	calls	verified	mismatches	unverifiable
 0058B938	BuyMagicStoneDialog::initTokushohoButton $_15 __func::destroy	18	6	0	0
 0058BB60	BuyMagicStoneDialog::initFundSettlementButton $_14 __func::__clone(__base*)	12	0	0	0
 0058BB7C	BuyMagicStoneDialog::initFundSettlementButton $_14 __func::destroy	18	6	0	0
+0058BB88	BuyMagicStoneDialog web info button B (sub_58BB88)	8	8	0	0
 0058BDA4	BuyMagicStoneDialog::initJewelInfoButton $_13 __func::__clone(__base*)	12	0	0	0
 0058BDC0	BuyMagicStoneDialog::initJewelInfoButton $_13 __func::destroy	18	6	0	0
 0058C33C	BuyMagicStoneDialog::purchaseCallback $_11 __func::operator()(bool) (sub_58C33C)	1	1	0	0
 0058C398	std::__sort<BuyMagicStoneDialog sort comparator&, int*>	6	2	0	0
 0058C708	BuyMagicStoneDialog::initItemIDsAndProductIDs sort comparator	66	9	0	0
 0058C7C0	std::__sort3<BuyMagicStoneDialog sort comparator&, int*>	8	3	0	0
+0058D420	BuyMagicStoneDialog owned Jewels result (sub_58D420)	2	2	0	0
 0058D7AC	BuyMagicStoneDialog::callSendProductsRequest  __func::__clone()	12	6	0	0
 0058D850	BuyMagicStoneDialog::callSendProductsRequest  __func::destroy_deallocate	18	10	0	0
 0058D948	BuyMagicStoneDialog::callGetPaymentInfo $_3 __func::__clone()	12	6	0	0
@@ -1791,14 +1802,31 @@ addr	name	calls	verified	mismatches	unverifiable
 0059E84C	OtherMenuDialog::create	9	9	0	0
 0059E8E0	OtherMenuDialog::open	2	0	0	2
 0059F710	OtherMenuDialog::setButtonLabel (sub_59F710)	81	45	0	10
+0059F8CC	OtherMenuDialog::priOpenUserCodePopup()	2	0	0	2
 0059FDB8	OtherMenuDialog::close	6	5	0	0
 0059FEAC	OtherMenuDialog::openLegalPopup	1	1	0	0
 005A058C	OtherMenuDialog::openSerialCodePopup	1	1	0	0
 005A0EB0	OtherMenuDialog::editBoxTextChanged	1	1	0	0
 005A0FD8	OtherMenuDialog::editBoxEditingDidEnd	1	1	0	0
+005A1248	OtherMenuDialog::openSerialCodeListPopup(function<void()>)	1	0	0	0
+005A18D8	OtherMenuDialog::openUserCodePopup(function<void()>)	4	4	0	0
+005A1FF0	OtherMenuDialog::openIssueUserCodePopup(function<void()>)	4	2	0	0
+005A2570	OtherMenuDialog::openInputUserCodePopup(function<void()>)	4	2	0	0
 005A35E8	OtherMenuDialog::~OtherMenuDialog [deleting destructor]	2	1	0	0
+005A40DC	OtherMenuDialog code input result (sub_5A40DC)	2	2	0	0
+005A41D0	OtherMenuDialog code input close (sub_5A41D0)	2	2	0	0
+005A4BA8	OtherMenuDialog issued code result (sub_5A4BA8)	2	2	0	0
+005A5228	OtherMenuDialog user code top result (sub_5A5228)	8	4	0	0
+005A5728	OtherMenuDialog user code Input button (sub_5A5728)	8	8	0	0
+005A5858	OtherMenuDialog user code Issue button (sub_5A5858)	7	6	0	1
+005A59A0	OtherMenuDialog pincode create callback (sub_5A59A0)	2	2	0	0
+005A5D30	OtherMenuDialog serial code list result (sub_5A5D30)	1	1	0	0
+005A6240	OtherMenuDialog serial code list loaded (sub_5A6240)	1	1	0	0
 005A6688	OtherMenuDialog serial popup result __func::operator()(bool) (sub_5A6688)	1	1	0	0
 005A69A8	OtherMenuDialog serial popup closed __func::operator() (sub_5A69A8)	1	1	0	0
+005A6BC8	OtherMenuDialog serial popup List button (sub_5A6BC8)	4	3	0	1
+005A6D72	OtherMenuDialog serial list closed (sub_5A6D72)	1	1	0	0
+005A6E54	OtherMenuDialog serial popup Send button (sub_5A6E54)	4	4	0	0
 005A71C8	OtherMenuDialog profile edit answer operator()(bool) (sub_5A71C8)	1	1	0	0
 005A76C4	OtherMenuDialog legal popup result __func::operator()(bool) (sub_5A76C4)	1	1	0	0
 005A79D4	OtherMenuDialog legal popup closed __func::operator() (sub_5A79D4)	1	1	0	0
@@ -4005,8 +4033,10 @@ addr	name	calls	verified	mismatches	unverifiable
 006CCD90	SceneAlbum::init	7	2	1	0
 006CDD40	SceneAlbum::runInAnimation	10	2	0	0
 006CDE04	SceneAlbum::runOutAnimationMain	12	6	0	0
+006CDF48	SceneAlbum::openAlbumMedalPopup(int)	2	2	0	0
 006CE5E4	SceneAlbum::backScene	7	6	0	0
 006CE6E4	SceneAlbum::backScene lambda __func::operator() (sub_6CE6E4)	5	0	0	5
+006CE8A4	SceneAlbum medal popup close button (sub_6CE8A4)	8	8	0	0
 006CEC8C	std::__sort<album order comparator&, int*> (sub_6CEC8C)	104	2	0	0
 006CEFFC	SceneAlbum::init album order comparator (sub_6CEFFC)	54666	4754	0	0
 006CF158	std::__sort3<album order comparator&, int*> (sub_6CF158)	464	44	0	0

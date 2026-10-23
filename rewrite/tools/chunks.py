@@ -29,7 +29,7 @@ def main():
     fre = re.compile(r"^void F_([0-9A-F]+)\(CPU")
     lre = re.compile(r"^L_([0-9A-F]+):")
     cre = re.compile(r"rt_call\(c, 0x([0-9A-F]+)u\)")
-    entries, labels, called = set(), {}, set()
+    entries, labels, called, called_from = set(), {}, set(), {}
     files = sorted(glob.glob(str(RECOMP / "out" / "lift_all" / "lift_*.c")))
     for f in files:
         cur = None
@@ -44,16 +44,24 @@ def main():
                 if m and cur is not None:
                     labels.setdefault(int(m.group(1), 16), set()).add(cur)
             for m in cre.finditer(line):
-                called.add(int(m.group(1), 16) & ~1)
+                called_from.setdefault(int(m.group(1), 16) & ~1, set()).add(cur)
     data = Path(paths.so()).read_bytes()
     words = set(struct.unpack_from("<%dI" % (len(data) // 4), data))
     hexre = re.compile(r"0x([0-9A-Fa-f]{6,8})")
     for f in (REWRITE / "src").rglob("*.cpp"):
         called.update(int(h, 16) & ~1 for h in hexre.findall(f.read_text(encoding="utf-8", errors="replace")))
+    # a function pointer to Thumb code has bit 0 set: for a Thumb piece only that word counts (the even value is
+    # often just data that happens to match)
+    import json
+    thumb = {int(fn["addr"], 16) for fn in json.load(open(RECOMP / "out" / "analysis.json"))["functions"]
+             if fn.get("mode") == "thumb"}
     rows = []
     for a in sorted(entries):
         parents = labels.get(a, set()) - {a}
-        if not parents or a in called or a in words or (a | 1) in words:
+        # a piece called (bl) only from inside its own parents is still part of them: IDA's split epilogues and
+        # tails, which run in the parent's frame and return for it
+        foreign = called_from.get(a, set()) - parents - {a}
+        if not parents or foreign or a in called or (a | 1) in words or (a not in thumb and a in words):
             continue
         rows.append((a, sorted(parents)))
     OUT.write_text("# chunk\tparents (rewrite/tools/chunks.py)\n" +
