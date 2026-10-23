@@ -135,7 +135,7 @@ void SceneUtil::updateTutorialStatus(int32_t phase, uint64_t flags, uint32_t ski
     }
     uint32_t api = call(fn::APIManager_getInstance, {});
     // the completion lambda [blockLoading, cb] (a copy of cb), then copied again into the heap __func
-    uint32_t captured = f.alloc(24);
+    uint32_t captured = f.alloc(0x20);       // blockLoading at +0, the std::function at +8 (0x1C bytes)
     functionCopy(captured + 8, cb);
     uint32_t done = f.alloc(20);
     st32(done + 16, 0);
@@ -599,7 +599,7 @@ void SceneUtil::NormalTutorialPopup(Addr result, int32_t id, Addr callback, uint
     }
     uint32_t mgr = sceneManager();
     uint32_t canClose = newFunction(f, VT_Popup_CanClose, {button});
-    uint32_t captured = f.alloc(24);
+    uint32_t captured = f.alloc(0x20);       // blockLoading at +0, the std::function at +8 (0x1C bytes)
     functionCopy(captured, cb);
     uint32_t onClose = f.alloc(20);
     st32(onClose + 16, 0);

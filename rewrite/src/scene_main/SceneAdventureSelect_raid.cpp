@@ -111,7 +111,7 @@ void SceneAdventureSelect::raidBossRewardPopup(Addr self, Addr done) {
     // the lambda {self, std::function done} built on the stack, then moved into the heap __func
     uint32_t doneCopy = f.alloc(20);
     call(fn::function_vv_copy, {doneCopy, done});
-    uint32_t lambda = f.alloc(0x18);       // self at +0, the std::function at +8
+    uint32_t lambda = f.alloc(0x20);       // self at +0, the std::function at +8 (0x1C bytes)
     functionCopy(lambda + 8, doneCopy);
     uint32_t cb = f.alloc(20);
     st32(cb + 16, 0);

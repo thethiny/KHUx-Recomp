@@ -20,5 +20,3 @@ void CarouselDeck::setDeckMedal(CarouselDeck *self, uint32_t unused) {
 void SceneAdventureSelect::initEvent(Addr self) { rw::call(0x721839, {self}); }
 void SceneAdventureSelect::initEventBanner(Addr self, uint32_t flag) { rw::call(0x720A5D, {self, flag}); }
 void SceneMixedMedal::finalize(SceneMixedMedal *self) { rw::call(0x69F56D, {guest_addr(self)}); }
-// sub_5B6140: std::function<void(Touch*,Event*)> = registItemTouchEvent()::$_2
-void RaidSubdueScrollView::assignTouchEnded(Addr function, Addr captures) { rw::call(0x5B6141, {function, captures}); }

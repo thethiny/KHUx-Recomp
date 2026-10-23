@@ -242,39 +242,53 @@ RW_FUNCTION(0x5F4D7C, "RaidBossActor::setAttackDamage", RaidBossActor::setAttack
 int32_t RaidBossActor::getAttack(const RaidBossActor *self, int32_t) { return partGet(self, 0, RaidParts::ATTACK); }
 RW_FUNCTION(0x5F4DFC, "RaidBossActor::getAttack", RaidBossActor::getAttack);
 
-#define RBA_PART_GETTER(ADDR, NAME, FIELD)                                                                    \
-    int32_t RaidBossActor::NAME(const RaidBossActor *self, int32_t part) { return partGet(self, part, FIELD); } \
-    RW_FUNCTION(ADDR, "RaidBossActor::" #NAME, RaidBossActor::NAME);
-RBA_PART_GETTER(0x5F4E54, getExpAttack, RaidParts::EXP_ATTACK)
-RBA_PART_GETTER(0x5F4EB4, getExpSuppress, RaidParts::EXP_SUPPRESS)
-RBA_PART_GETTER(0x5F4F10, getMoneyAttack, RaidParts::MONEY_ATTACK)
-RBA_PART_GETTER(0x5F4F70, getMoneySuppress, RaidParts::MONEY_SUPPRESS)
-RBA_PART_GETTER(0x5F4FD0, getLuxAttack, RaidParts::LUX_ATTACK)
-RBA_PART_GETTER(0x5F5030, getLuxSuppress, RaidParts::LUX_SUPPRESS)
-RBA_PART_GETTER(0x5F5090, getBurstAttack, RaidParts::BURST_ATTACK)
-RBA_PART_GETTER(0x5F50F0, getBurstSuppress, RaidParts::BURST_SUPPRESS)
-RBA_PART_GETTER(0x5F5150, getHpAttack, RaidParts::HP_ATTACK)
-RBA_PART_GETTER(0x5F51B0, getHpSuppress, RaidParts::HP_SUPPRESS)
-RBA_PART_GETTER(0x5F5210, getGuiltSuppress, RaidParts::GUILT_SUPPRESS)
-RBA_PART_GETTER(0x5F5270, getRewardId, RaidParts::REWARD_ID)
-RBA_PART_GETTER(0x5F52D0, getMvpRewardId, RaidParts::MVP_REWARD_ID)
-RBA_PART_GETTER(0x5F5330, getDestroyAllRewardId, RaidParts::DESTROY_ALL_REWARD_ID)
-#undef RBA_PART_GETTER
+int32_t RaidBossActor::getExpAttack(const RaidBossActor *self, int32_t part) { return partGet(self, part, RaidParts::EXP_ATTACK); }
+RW_FUNCTION(0x5F4E54, "RaidBossActor::getExpAttack", RaidBossActor::getExpAttack);
+int32_t RaidBossActor::getExpSuppress(const RaidBossActor *self, int32_t part) { return partGet(self, part, RaidParts::EXP_SUPPRESS); }
+RW_FUNCTION(0x5F4EB4, "RaidBossActor::getExpSuppress", RaidBossActor::getExpSuppress);
+int32_t RaidBossActor::getMoneyAttack(const RaidBossActor *self, int32_t part) { return partGet(self, part, RaidParts::MONEY_ATTACK); }
+RW_FUNCTION(0x5F4F10, "RaidBossActor::getMoneyAttack", RaidBossActor::getMoneyAttack);
+int32_t RaidBossActor::getMoneySuppress(const RaidBossActor *self, int32_t part) { return partGet(self, part, RaidParts::MONEY_SUPPRESS); }
+RW_FUNCTION(0x5F4F70, "RaidBossActor::getMoneySuppress", RaidBossActor::getMoneySuppress);
+int32_t RaidBossActor::getLuxAttack(const RaidBossActor *self, int32_t part) { return partGet(self, part, RaidParts::LUX_ATTACK); }
+RW_FUNCTION(0x5F4FD0, "RaidBossActor::getLuxAttack", RaidBossActor::getLuxAttack);
+int32_t RaidBossActor::getLuxSuppress(const RaidBossActor *self, int32_t part) { return partGet(self, part, RaidParts::LUX_SUPPRESS); }
+RW_FUNCTION(0x5F5030, "RaidBossActor::getLuxSuppress", RaidBossActor::getLuxSuppress);
+int32_t RaidBossActor::getBurstAttack(const RaidBossActor *self, int32_t part) { return partGet(self, part, RaidParts::BURST_ATTACK); }
+RW_FUNCTION(0x5F5090, "RaidBossActor::getBurstAttack", RaidBossActor::getBurstAttack);
+int32_t RaidBossActor::getBurstSuppress(const RaidBossActor *self, int32_t part) { return partGet(self, part, RaidParts::BURST_SUPPRESS); }
+RW_FUNCTION(0x5F50F0, "RaidBossActor::getBurstSuppress", RaidBossActor::getBurstSuppress);
+int32_t RaidBossActor::getHpAttack(const RaidBossActor *self, int32_t part) { return partGet(self, part, RaidParts::HP_ATTACK); }
+RW_FUNCTION(0x5F5150, "RaidBossActor::getHpAttack", RaidBossActor::getHpAttack);
+int32_t RaidBossActor::getHpSuppress(const RaidBossActor *self, int32_t part) { return partGet(self, part, RaidParts::HP_SUPPRESS); }
+RW_FUNCTION(0x5F51B0, "RaidBossActor::getHpSuppress", RaidBossActor::getHpSuppress);
+int32_t RaidBossActor::getGuiltSuppress(const RaidBossActor *self, int32_t part) { return partGet(self, part, RaidParts::GUILT_SUPPRESS); }
+RW_FUNCTION(0x5F5210, "RaidBossActor::getGuiltSuppress", RaidBossActor::getGuiltSuppress);
+int32_t RaidBossActor::getRewardId(const RaidBossActor *self, int32_t part) { return partGet(self, part, RaidParts::REWARD_ID); }
+RW_FUNCTION(0x5F5270, "RaidBossActor::getRewardId", RaidBossActor::getRewardId);
+int32_t RaidBossActor::getMvpRewardId(const RaidBossActor *self, int32_t part) { return partGet(self, part, RaidParts::MVP_REWARD_ID); }
+RW_FUNCTION(0x5F52D0, "RaidBossActor::getMvpRewardId", RaidBossActor::getMvpRewardId);
+int32_t RaidBossActor::getDestroyAllRewardId(const RaidBossActor *self, int32_t part) { return partGet(self, part, RaidParts::DESTROY_ALL_REWARD_ID); }
+RW_FUNCTION(0x5F5330, "RaidBossActor::getDestroyAllRewardId", RaidBossActor::getDestroyAllRewardId);
 
 // master::RaidEnemy bad status protection / resistance values (the shared_ptr is the caller's)
-#define RBA_ENEMY_GETTER(ADDR, NAME, FIELD)                                                                   \
-    int32_t RaidBossActor::NAME(const RaidBossActor *, const guest::SharedPtr *enemy) {                       \
-        return get32(enemy->obj, FIELD);                                                                      \
-    }                                                                                                         \
-    RW_FUNCTION(ADDR, "RaidBossActor::" #NAME, RaidBossActor::NAME);
-RBA_ENEMY_GETTER(0x5F5390, get_protectPoison, RE_PROTECT_POISON)
-RBA_ENEMY_GETTER(0x5F53E4, get_protectDeepPoison, RE_PROTECT_DEEP_POISON)
-RBA_ENEMY_GETTER(0x5F5438, get_protectSleep, RE_PROTECT_SLEEP)
-RBA_ENEMY_GETTER(0x5F548C, get_protectParalysis, RE_PROTECT_PARALYSIS)
-RBA_ENEMY_GETTER(0x5F54E0, get_protectConfusion, RE_PROTECT_CONFUSION)
-RBA_ENEMY_GETTER(0x5F5534, get_registPoison, RE_REGIST_POISON)
-RBA_ENEMY_GETTER(0x5F5588, get_registDeepPoison, RE_REGIST_DEEP_POISON)
-RBA_ENEMY_GETTER(0x5F55DC, get_registSleep, RE_REGIST_SLEEP)
-RBA_ENEMY_GETTER(0x5F5630, get_registParalysis, RE_REGIST_PARALYSIS)
-RBA_ENEMY_GETTER(0x5F5684, get_registConfusion, RE_REGIST_CONFUSION)
-#undef RBA_ENEMY_GETTER
+int32_t RaidBossActor::get_protectPoison(const RaidBossActor *, const guest::SharedPtr *enemy) { return get32(enemy->obj, RE_PROTECT_POISON); }
+RW_FUNCTION(0x5F5390, "RaidBossActor::get_protectPoison", RaidBossActor::get_protectPoison);
+int32_t RaidBossActor::get_protectDeepPoison(const RaidBossActor *, const guest::SharedPtr *enemy) { return get32(enemy->obj, RE_PROTECT_DEEP_POISON); }
+RW_FUNCTION(0x5F53E4, "RaidBossActor::get_protectDeepPoison", RaidBossActor::get_protectDeepPoison);
+int32_t RaidBossActor::get_protectSleep(const RaidBossActor *, const guest::SharedPtr *enemy) { return get32(enemy->obj, RE_PROTECT_SLEEP); }
+RW_FUNCTION(0x5F5438, "RaidBossActor::get_protectSleep", RaidBossActor::get_protectSleep);
+int32_t RaidBossActor::get_protectParalysis(const RaidBossActor *, const guest::SharedPtr *enemy) { return get32(enemy->obj, RE_PROTECT_PARALYSIS); }
+RW_FUNCTION(0x5F548C, "RaidBossActor::get_protectParalysis", RaidBossActor::get_protectParalysis);
+int32_t RaidBossActor::get_protectConfusion(const RaidBossActor *, const guest::SharedPtr *enemy) { return get32(enemy->obj, RE_PROTECT_CONFUSION); }
+RW_FUNCTION(0x5F54E0, "RaidBossActor::get_protectConfusion", RaidBossActor::get_protectConfusion);
+int32_t RaidBossActor::get_registPoison(const RaidBossActor *, const guest::SharedPtr *enemy) { return get32(enemy->obj, RE_REGIST_POISON); }
+RW_FUNCTION(0x5F5534, "RaidBossActor::get_registPoison", RaidBossActor::get_registPoison);
+int32_t RaidBossActor::get_registDeepPoison(const RaidBossActor *, const guest::SharedPtr *enemy) { return get32(enemy->obj, RE_REGIST_DEEP_POISON); }
+RW_FUNCTION(0x5F5588, "RaidBossActor::get_registDeepPoison", RaidBossActor::get_registDeepPoison);
+int32_t RaidBossActor::get_registSleep(const RaidBossActor *, const guest::SharedPtr *enemy) { return get32(enemy->obj, RE_REGIST_SLEEP); }
+RW_FUNCTION(0x5F55DC, "RaidBossActor::get_registSleep", RaidBossActor::get_registSleep);
+int32_t RaidBossActor::get_registParalysis(const RaidBossActor *, const guest::SharedPtr *enemy) { return get32(enemy->obj, RE_REGIST_PARALYSIS); }
+RW_FUNCTION(0x5F5630, "RaidBossActor::get_registParalysis", RaidBossActor::get_registParalysis);
+int32_t RaidBossActor::get_registConfusion(const RaidBossActor *, const guest::SharedPtr *enemy) { return get32(enemy->obj, RE_REGIST_CONFUSION); }
+RW_FUNCTION(0x5F5684, "RaidBossActor::get_registConfusion", RaidBossActor::get_registConfusion);

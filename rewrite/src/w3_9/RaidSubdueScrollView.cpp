@@ -74,6 +74,7 @@ constexpr int32_t TXT_ENTRANT = 103200034;
 // __func vtables (+8) of registItemTouchEvent's lambdas
 constexpr uint32_t VT_TouchBegan = 0xF5C9AC;     // $_0 {view, Rect, row}
 constexpr uint32_t VT_TouchMoved = 0xF5C980;     // $_1 {view, Rect}
+constexpr uint32_t VT_TouchEnded = 0xF5C954;     // $_2 {view}
 
 // node virtual slots (byte offsets)
 constexpr uint32_t V_init = 0x248;
@@ -752,3 +753,29 @@ void Self::update(Self *self, float dt) {
     if (self->velocity == 0.0f) vcall(me, IScrollProtocol::V_updateScroll, {me, 0});
 }
 RW_FUNCTION(0x5B64FC, "RaidSubdueScrollView::update(float)", RaidSubdueScrollView::update);
+
+// ------------------------------------------------------------------------------------------------ touch lambdas
+// sub_5B6140: a touch-ended / cancelled slot gets the [view] lambda $_2
+void Self::assignTouchEnded(Addr function, Addr captures) {
+    Frame f;
+    uint32_t fo = newFunction(f, VT_TouchEnded, {ld32(captures)});
+    call(g::FunctionTouchVoid_swap, {fo, function});
+    functionDestroy(fo);
+}
+RW_FUNCTION(0x5B6140, "RaidSubdueScrollView::registItemTouchEvent $_2 setter (sub_5B6140)", RaidSubdueScrollView::assignTouchEnded);
+
+// $_1 {view, Rect}: the touch is converted into the view's parent and tested against the card's rect; the result
+// is not used
+void Self::onTouchMoved(Addr functor, Addr touchRef, Addr) {
+    uint32_t touch = ld32(touchRef);
+    uint32_t view = ld32(functor + 4);
+    uint32_t parent = vcall(view, IScrollProtocol::V_getParent, {view});
+    Frame f;
+    uint32_t loc = f.alloc(8), p = f.alloc(8);
+    call(0x900E57, {loc, touch});                  // Touch::getLocation
+    call(0x89599D, {p, parent, loc});              // Node::convertToNodeSpace
+    call(g::Vec2_dtor, {loc});
+    call(0x8DF2A9, {functor + 8, p});              // Rect::containsPoint
+    call(g::Vec2_dtor, {p});
+}
+RW_FUNCTION(0x5BA7F8, "RaidSubdueScrollView::registItemTouchEvent $_1 operator() (sub_5BA7F8)", RaidSubdueScrollView::onTouchMoved);

@@ -208,6 +208,12 @@ struct RaidBossActor : MapNode {
     static int32_t getRemainingTime(const RaidBossActor *self);
     static int32_t getNumberOfParts(const RaidBossActor *self);
 
+    // status (RaidBossActor_status.cpp)
+    static void raidAddCondition(RaidBossActor *self, int32_t type, int32_t turns, int32_t count);
+    static void elapsePartsTurn(RaidBossActor *self, int32_t part);
+    static void elapsePartsCount(RaidBossActor *self, int32_t part);
+    static void UpdateStatus(RaidBossActor *self);
+
     // prizes (RaidBossActor_prizes.cpp)
     static void addCrushingPrizes(RaidBossActor *self, int32_t part);
     static void addCrushingPrizesLux(RaidBossActor *self, int32_t part, int32_t hp);
