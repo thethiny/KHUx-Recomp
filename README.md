@@ -143,18 +143,18 @@ Translation
 
 Rewrite: game code
   Rewritten               ████████████████████  100.0%  18,828 / 18,828
-  Run under the verifier  █████░░░░░░░░░░░░░░░   26.9%   5,065 / 18,828
-  Verified                ████░░░░░░░░░░░░░░░░   21.0%   3,953 / 18,828
+  Run under the verifier  ██████░░░░░░░░░░░░░░   31.9%   5,999 / 18,828
+  Verified                ██████░░░░░░░░░░░░░░   27.8%   5,232 / 18,828
 
 Rewrite: open-source libraries
   Rewritten               ████████░░░░░░░░░░░░   41.1%  15,449 / 37,547
-  Run under the verifier  █░░░░░░░░░░░░░░░░░░░    5.6%   2,105 / 37,547
-  Verified                █░░░░░░░░░░░░░░░░░░░    4.6%   1,738 / 37,547
+  Run under the verifier  █░░░░░░░░░░░░░░░░░░░    5.6%   2,115 / 37,547
+  Verified                █░░░░░░░░░░░░░░░░░░░    4.7%   1,750 / 37,547
 
 Rewrite: all functions
   Rewritten               ████████████░░░░░░░░   60.8%  34,277 / 56,381
-  Run under the verifier  ███░░░░░░░░░░░░░░░░░   12.7%   7,170 / 56,381
-  Verified                ██░░░░░░░░░░░░░░░░░░   10.1%   5,691 / 56,381
+  Run under the verifier  ███░░░░░░░░░░░░░░░░░   14.4%   8,114 / 56,381
+  Verified                ██░░░░░░░░░░░░░░░░░░   12.4%   6,982 / 56,381
 
 Binary match
   1:1 binary match        ░░░░░░░░░░░░░░░░░░░░    0.0%       0 / 56,381

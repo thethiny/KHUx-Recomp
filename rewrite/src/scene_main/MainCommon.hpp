@@ -82,7 +82,7 @@ inline Vec2 touchLocation(uint32_t touch) {
 // cocos2d::Node virtual slots (byte offsets) missing from scene::node
 namespace vslot {
 constexpr uint32_t release = 0x04;                         // deleting destructor
-constexpr uint32_t init = 0x250;                           // Node::init()
+constexpr uint32_t init = 0x248;                           // init() (from the vtable pointer; _ZTV + 0x250)
 }  // namespace vslot
 
 // EventListenerTouchOneByOne: onTouchBegan std::function at +0x50

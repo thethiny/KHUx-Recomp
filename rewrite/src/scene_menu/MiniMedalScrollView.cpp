@@ -297,7 +297,7 @@ uint32_t MiniMedalScrollView::changeRow(MiniMedalScrollView *self, Addr widget, 
     }
     uint32_t medalNode = findNode(widget, STR_Medal, 5);
     if (!medalNode) return 1;
-    uint32_t view = findNode(medalNode, STR_medalView, 9);
+    uint32_t view = findNode(widget, STR_medalView, 9);   // searched from the row widget, not from "Medal"
     DeckMedalView *dv = rw::host_ptr<DeckMedalView>(view);
     dv->mixMode = self->mixMode;
     dv->isShowMixInfo = self->isShowMixInfo;

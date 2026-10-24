@@ -62,7 +62,7 @@ struct ChatManager {
         }
         uint32_t user = ld32(call(API_MANAGER, {}) + 0x7C);
         uint32_t host = (ld8(user + 0x2C) & 1) ? ld32(user + 0x34) : user + 0x2D;
-        uint32_t url = f.alloc(0x400);
+        uint32_t url = f.alloc(0x420);   // StringBuffer: 1 KiB of text, then its length word at +0x400
         call(0x49140D, {url, 0xDFC192, host});  // StringBuffer("%s/user", host)
         uint32_t headers = f.alloc(12);
         call(0x4DB699, {headers, 1});  // createHeaders(true)

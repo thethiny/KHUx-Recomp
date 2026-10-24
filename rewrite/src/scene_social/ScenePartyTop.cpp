@@ -309,7 +309,7 @@ void callPartyTopAPI(uint32_t callback) {
         call(fn::function_vb_move, {heap + at, copy});
     }
     st32(fo + 16, heap);
-    if (partyInfo) call(g::APIManager_executePartyGet, {api2, 0, 0, fo});
+    if (partyInfo) call(g::APIManager_executePartyGet, {api2, 0, 0, 0, fo});
     else call(g::APIManager_executePaymentInfo, {api2, fo});
     functionDestroy(fo);
     functionDestroy(copy);

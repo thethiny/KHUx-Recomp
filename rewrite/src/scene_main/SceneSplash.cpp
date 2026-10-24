@@ -16,7 +16,18 @@ constexpr float WAIT_TIME = 2.0f;
 SceneSplash *self_of(uint32_t func) { return rw::host_ptr<SceneSplash>(ld32(func + 4)); }
 }  // namespace
 
-uint32_t SceneSplash::create() { return createLayer(SIZE, VTABLE); }
+// the original calls SceneSplash::init directly (devirtualized: the type is known after operator new)
+uint32_t SceneSplash::create() {
+    uint32_t self = call(fn::operator_new, {SIZE});
+    call(lib::Layer_ctor, {self});
+    st32(self, VTABLE);
+    if (call(0x680DA1, {self}) == 1) {   // SceneSplash::init
+        call(lib::Ref_autorelease, {self});
+        return self;
+    }
+    vcall(self, vslot::release, {self});
+    return 0;
+}
 RW_FUNCTION(0x638474, "SceneSplash::create", SceneSplash::create);
 
 uint32_t SceneSplash::createScene() {

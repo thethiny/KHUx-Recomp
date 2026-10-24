@@ -69,7 +69,7 @@ constexpr uint32_t bg_vfs_readData = 0x8DD46D;         // (shared_ptr<bg::Data>*
 // cocos2d::Node / Layer virtual slots used here that SceneCommon.hpp does not name (vtable byte offsets)
 namespace slot {
 constexpr uint32_t release = 0x04;           // deleting destructor
-constexpr uint32_t init = 0x250;
+constexpr uint32_t init = 0x248;   // init() (from the vtable pointer; _ZTV + 0x250)
 constexpr uint32_t setPosition = 0x4C;
 constexpr uint32_t setOpacity = 0x214;
 constexpr uint32_t setColor = 0x22C;

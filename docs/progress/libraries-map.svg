@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 686" width="1000" height="686" role="img" aria-label="Open-source libraries: 1,738 of 37,547 functions verified">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 686" width="1000" height="686" role="img" aria-label="Open-source libraries: 1,750 of 37,547 functions verified">
 <style>
 .bg{fill:#ffffff}.v{fill:#2da44e}.r{fill:#d4a72c}.t{fill:#d0d7de}.grid{stroke:#ffffff}.edge{stroke:#ffffff}
 .txt{fill:#1f2328;font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}
@@ -8,14 +8,14 @@
 .txt{fill:#e6edf3}.halo{stroke:#0d1117}.dim{fill:#9198a1}}
 </style>
 <rect class="bg" width="1000" height="686"/>
-<text class="txt" x="4" y="19" font-size="16" font-weight="600">Open-source libraries: 4.6% verified, 41.2% rewritten (37,547 functions, one cell each, grouped by library)</text>
-<rect class="v" x="4" y="29" width="11" height="11" rx="2"/><text class="txt dim" x="19" y="39" font-size="12">verified (1,738)</text>
-<rect class="r" x="149" y="29" width="11" height="11" rx="2"/><text class="txt dim" x="164" y="39" font-size="12">rewritten, not verified yet (13,713)</text>
+<text class="txt" x="4" y="19" font-size="16" font-weight="600">Open-source libraries: 4.7% verified, 41.2% rewritten (37,547 functions, one cell each, grouped by library)</text>
+<rect class="v" x="4" y="29" width="11" height="11" rx="2"/><text class="txt dim" x="19" y="39" font-size="12">verified (1,750)</text>
+<rect class="r" x="149" y="29" width="11" height="11" rx="2"/><text class="txt dim" x="164" y="39" font-size="12">rewritten, not verified yet (13,701)</text>
 <rect class="t" x="434" y="29" width="11" height="11" rx="2"/><text class="txt dim" x="449" y="39" font-size="12">not rewritten (22,096)</text>
-<g><title>libc++ / C++ runtime: 903/17251 verified (5%), 9363/17251 rewritten</title>
+<g><title>libc++ / C++ runtime: 915/17251 verified (5%), 9363/17251 rewritten</title>
 <rect class="v" x="1.0" y="47.0" width="457.5" height="32.7"/>
-<rect class="v" x="1.0" y="79.7" width="61.8" height="4.1"/>
-<rect class="r" x="62.8" y="79.7" width="395.6" height="4.1"/>
+<rect class="v" x="1.0" y="79.7" width="111.3" height="4.1"/>
+<rect class="r" x="112.3" y="79.7" width="346.2" height="4.1"/>
 <rect class="r" x="1.0" y="83.8" width="457.5" height="306.7"/>
 <rect class="r" x="1.0" y="390.5" width="160.7" height="4.1"/>
 <rect class="t" x="161.7" y="390.5" width="296.7" height="4.1"/>

@@ -1355,8 +1355,11 @@ __declspec(dllexport) int rw_bind(int i, uint32_t target, int slot) {
     uint32_t a = rw::entries()[i].addr & ~1u;
     // a NOVERIFY function cannot be shadow-checked: while verifying, the lifted code runs instead
     // (effect boundaries are installed only while verifying)
+    // KHUX_RW_ALL=1 (not verifying): every rewrite, verified or not - the game on 100% rewritten code, no fallback
+    static const bool all = [] { const char *e = getenv("KHUX_RW_ALL"); return e && strcmp(e, "0") != 0; }();
     bool ok = rw::entries()[i].effect ? rw::H->verify != 0
             : rw::H->verify ? rw::entries()[i].verify
+            : all           ? true
                             : std::binary_search(rw::verified_set.begin(), rw::verified_set.end(), a);
     if (ok) rw::H->override_slots[slot] = rw::entries()[i].tramp;
     return ok ? 1 : 0;

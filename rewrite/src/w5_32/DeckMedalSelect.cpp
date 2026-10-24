@@ -45,7 +45,7 @@ constexpr uint32_t VT_CanClose = 0xF63838;       // $_25 {close button, this}
 constexpr uint32_t VT_OnClose = 0xF637E0;        // $_26 {this, Win_under, close button, Win_under's scale}
 constexpr uint32_t VT_Closed = 0xF6380C;         // $_26's animation end {this, Win_under, scale}
 constexpr uint32_t VT_BackOut = 0xF632B8;        // backScene $_49 {}
-constexpr uint32_t VT_KbEvent = 0xF63468;        // runUpdateKeybladeEvent $_38 {bool, function<void(bool)>} (0x28)
+constexpr uint32_t VT_KbEvent = 0xF63470;        // runUpdateKeybladeEvent $_38 {bool, function<void(bool)>} (0x28)
 constexpr uint32_t VT_KbRetry = 0xF63EC0;        // $_38's error-dialog lambda
 // SceneDeckEdit
 constexpr uint32_t F_INOUT = 0x288, F_COST_MEDALS = 0x290, F_DECK_MEDALS = 0x29C, F_PANEL = 0x2F8, F_SELECT = 0x2FC;
