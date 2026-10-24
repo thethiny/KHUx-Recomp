@@ -15,15 +15,15 @@ constexpr uint32_t ChatStampVector_dtor = 0x55B939;               // ~__vector_b
 constexpr uint32_t ChatStampVector_assign = 0x55C7E9;             // vector<ChatStamp>::assign(first, last)
 constexpr uint32_t VectorInt_pushBackSlow = 0x47D709;             // vector<int>::__push_back_slow_path(int&&)
 constexpr uint32_t VectorInt_copy = 0x4AF707, VectorBaseInt_dtor = 0x478961;
-constexpr uint32_t Ref_retain = 0x8FD0B5, Ref_release = 0x8FD0BD, Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Widget_create = 0x825875, Widget_clone = 0x8272B9;
-constexpr uint32_t Node_scheduleUpdate = 0x894BA7;
-constexpr uint32_t Size_ctor = 0x8DF027, Rect_ctor = 0x8DF18B, Vec2_copy = 0x8E4C03, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t ArmatureDataManager_getInstance = 0x7AC9B5, ArmatureDataManager_addArmatureFileInfo = 0x7AD7BD;
-constexpr uint32_t Armature_create = 0x79F3C7;
-constexpr uint32_t Sprite_create = 0x8A64DD;
-constexpr uint32_t Director_getTextureCache = 0x8EFE69, TextureCache_addImage = 0x917DA9;
-constexpr uint32_t Texture2D_getContentSize = 0x914ACB;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain, Ref_release = rwlib::cocos2d::Ref::release, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Widget_create = rwlib::cocos2d::ui::Widget::create, Widget_clone = rwlib::cocos2d::ui::Widget::clone;
+constexpr uint32_t Node_scheduleUpdate = rwlib::cocos2d::Node::scheduleUpdate;
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff, Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff, Vec2_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance, ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;
+constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create;
+constexpr uint32_t Sprite_create = rwlib::cocos2d::Sprite::create__v;
+constexpr uint32_t Director_getTextureCache = rwlib::cocos2d::Director::getTextureCache, TextureCache_addImage = rwlib::cocos2d::TextureCache::addImage;
+constexpr uint32_t Texture2D_getContentSize = rwlib::cocos2d::Texture2D::getContentSize;
 constexpr uint32_t ImageButton_create = 0x531239;                // (std::string by value, bool)
 constexpr uint32_t ImageButton_setTargetView = 0x5318C1;         // (button, node, float)
 constexpr uint32_t ImageButton_addTouchEventListener = 0x5315B1; // (button, function by value)

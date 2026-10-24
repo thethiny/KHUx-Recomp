@@ -12,7 +12,7 @@ using namespace scene;
 using Self = SceneDrawRaise;
 
 namespace {
-constexpr uint32_t Layer_init = 0x88A8A1;                // cocos2d::Layer::init
+constexpr uint32_t Layer_init = rwlib::cocos2d::Layer::init;                // cocos2d::Layer::init
 constexpr uint32_t Function_vv_assign = 0x4EB9CD;        // std::function<void()>::operator=(const function&)
 constexpr uint32_t SceneManager_hideHeader = 0x61154D;   // (mgr, std::function<void()> by value)
 constexpr uint32_t SceneManager_changeBackground = 0x6128ED;   // (mgr, BackGroundType, const std::string&)
@@ -26,11 +26,11 @@ constexpr uint32_t VectorU64_pushBackSlow = 0x4ECB6D;    // std::vector<u64>::__
 constexpr uint32_t Vector_throwOutOfRange = 0x47CCE1;    // __vector_base_common::__throw_out_of_range (at())
 constexpr uint32_t AudioLWFNode_create = 0x5EB6B5;       // (const char* path, void*)
 constexpr uint32_t FlashMovieView_create = 0x5682A1;     // (LWFNode*, bool)
-constexpr uint32_t Vec2_ctor = 0x8E4B9D;                 // cocos2d::Vec2::Vec2(float, float)
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff;                 // cocos2d::Vec2::Vec2(float, float)
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t MovieHandlerMap_insertUnique = 0x530869;   // map<string, function<void(Movie*)>>::__insert_unique(hint, pair)
 constexpr uint32_t MovieHandlerMap_destroy = 0x530811;        // its __tree::destroy(node)
-constexpr uint32_t LWF_AddMovieEventHandler = 0x808645;       // LWF::AddMovieEventHandler(name, map)
+constexpr uint32_t LWF_AddMovieEventHandler = rwlib::LWF::LWF::AddMovieEventHandler;       // LWF::AddMovieEventHandler(name, map)
 
 constexpr uint32_t STR_DeckBG = 0xE03AF2;                // "img/ui/Equip_DeckBG_01.png"
 constexpr uint32_t STR_RaidGachaDemo = 0xE04AE3;         // "lwf/raisedraw/demo/raidgacha_result_display_%02d/..."

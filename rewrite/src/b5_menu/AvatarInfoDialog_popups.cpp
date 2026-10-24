@@ -156,15 +156,15 @@ void openPopUpSelectSubName(uint32_t, uint32_t mode, uint32_t, uint32_t done) {
     constexpr uint32_t SceneUtil_createShadowSprite = 0x45AD69, SceneUtil_setShadow = 0x45BD15;
     constexpr uint32_t SceneUtil_getSideMargin = 0x45AD0D, SceneUtil_getSideHeightMargin = 0x45AF59;
     constexpr uint32_t SceneUtil_createOpenPopupAnimation = 0x45BC05;
-    constexpr uint32_t FadeTo_create = 0x86B3E1, Node_runAction = 0x894AED;
-    constexpr uint32_t GUIReader_getInstance = 0x7BF1E5, GUIReader_widgetFromJsonFile = 0x7BF9FD;
-    constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
-    constexpr uint32_t Text_setString = 0x83A2DD;
+    constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create, Node_runAction = rwlib::cocos2d::Node::runAction;
+    constexpr uint32_t GUIReader_getInstance = rwlib::cocostudio::GUIReader::getInstance, GUIReader_widgetFromJsonFile = rwlib::cocostudio::GUIReader::widgetFromJsonFile;
+    constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+    constexpr uint32_t Text_setString = rwlib::cocos2d::ui::Text::setString;
     constexpr uint32_t VectorInt_pushBackSlow = 0x47D709, VectorInt_copy = 0x4AF707, VectorInt_dtor = 0x478961;
     constexpr uint32_t SafeBuffer_read = 0x45A269;
     constexpr uint32_t AvatarTitleScrollView_create = 0x510A45, BaseScrollViewInt_setItemIDs = 0x478929;
     constexpr uint32_t FunctionVI_copy = 0x539C99, FunctionVI_copy2 = 0x543045, FunctionVI_swap = 0x5428E1;
-    constexpr uint32_t Widget_addTouchEventListener = 0x826CCF, SM_openPopup = 0x61524D;
+    constexpr uint32_t Widget_addTouchEventListener = rwlib::cocos2d::ui::Widget::addTouchEventListener, SM_openPopup = 0x61524D;
     constexpr uint32_t GOT_ANCHOR_MIDDLE = 0xFD6054;
 
     call(g::AudioPlaySystemSEPopUp, {});
@@ -313,12 +313,12 @@ uint32_t partyMessagePopup(uint32_t self, uint32_t done, const PartyPopup &p) {
     constexpr uint32_t SceneUtil_createShadowSprite = 0x45AD69, SceneUtil_setShadow = 0x45BD15;
     constexpr uint32_t SceneUtil_createOpenPopupAnimation = 0x45BC05;
     constexpr uint32_t SceneUtil_textFieldToUiText = 0x45C465, SceneUtil_textFieldToEditBox = 0x45C0A1;
-    constexpr uint32_t FadeTo_create = 0x86B3E1, Node_runAction = 0x894AED;
-    constexpr uint32_t GUIReader_getInstance = 0x7BF1E5, GUIReader_widgetFromJsonFile = 0x7BF9FD;
-    constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17, Size_ctor = 0x8DF027;
-    constexpr uint32_t Text_setString = 0x83A2DD, Text_getString = 0x83A33B, String_assign = 0x498A1D;
+    constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create, Node_runAction = rwlib::cocos2d::Node::runAction;
+    constexpr uint32_t GUIReader_getInstance = rwlib::cocostudio::GUIReader::getInstance, GUIReader_widgetFromJsonFile = rwlib::cocostudio::GUIReader::widgetFromJsonFile;
+    constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base, Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;
+    constexpr uint32_t Text_setString = rwlib::cocos2d::ui::Text::setString, Text_getString = rwlib::cocos2d::ui::Text::getString, String_assign = 0x498A1D;
     constexpr uint32_t String_ctor = 0x48D811, SafeBuffer_read = 0x45A269, MasterMisc_create = 0x786D5D;
-    constexpr uint32_t FunctionVV_swap = 0x4EE86D, Widget_addTouchEventListener = 0x826CCF;
+    constexpr uint32_t FunctionVV_swap = 0x4EE86D, Widget_addTouchEventListener = rwlib::cocos2d::ui::Widget::addTouchEventListener;
     constexpr uint32_t S_CALLIGRAPHY = 0xDF9F1F;
 
     auto readInt = [](uint32_t sb, uint32_t offset, uint32_t dst) {
@@ -512,7 +512,7 @@ constexpr uint32_t SM_closeCurrentPopup = 0x6216A1, SM_openNoTapScreen = 0x61FB2
 constexpr uint32_t SM_changeSceneLayer = 0x612B99;
 constexpr uint32_t SceneUtil_createClosePopupAnimation = 0x45BC61, SceneUtil_splitSpaceCheck = 0x47898D;
 constexpr uint32_t SceneUtil_openPartyInfoJoinAlertPopup = 0x478E1D;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr uint32_t AvatarInfoDialog_close = 0x534F51, AvatarTitleScrollView_setEnabledTapItem = 0x511349;
 constexpr uint32_t ScenePartyTop_callPartyTopAPI = 0x652595;
 constexpr uint32_t String_copyAssign = 0x498A1D;

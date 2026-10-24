@@ -12,6 +12,7 @@ the same objects as the lifted code. Moving data off guest addresses comes after
 ```
 rewrite/
   include/rw/rw.hpp      the runtime API (fields, pointers, calls, registration)
+  include/rw/lib.hpp     the library functions the game code calls, by name (generated)
   runtime/               registry, trampolines, the verifier
   src/<area>/<Class>.hpp game object layouts (structs over guest memory)
   src/<area>/<Class>.cpp the class's functions, each registered with RW_FUNCTION
@@ -31,6 +32,8 @@ rewrite/
     replay.py            re-verifies recorded calls offline (the replay sandbox); replay_bisect.py narrows one down
     watch_log.py         follows a session log (mismatches, faults, crashes)
     libsplit.py          which functions are open-source library code
+    gen_lib_bindings.py  writes include/rw/lib.hpp and uses its names in the sources (a rename: the objects
+                         must not change)
     owners.py, chunks.py, context.py, mapaddr.py, api_audit.py, check_imports.py   analysis helpers
 ```
 

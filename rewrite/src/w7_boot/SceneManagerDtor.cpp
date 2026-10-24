@@ -5,11 +5,11 @@ using namespace scene;
 
 namespace {
 constexpr uint32_t GOT_SceneManager_vtable = 0xFD6894;
-constexpr uint32_t Ref_release = 0x8FD0BD, map_string_destroy = 0x622035;
+constexpr uint32_t Ref_release = rwlib::cocos2d::Ref::release, map_string_destroy = 0x622035;
 constexpr uint32_t vector_fn_b_dtor = 0x60CA61, vector_fn_bool_dtor = 0x60CAAB;   // vector<function<void(bool)>>,
                                                                                  // vector<function<bool()>>
 constexpr uint32_t vector_block_dtor = 0x4DB601, vector_string_dtor = 0x47363F, vector_int_dtor = 0x478961;
-constexpr uint32_t vector_message_dtor = 0x4DBBBD, Vec2_dtor_ = 0x8E4C17, Layer_dtor = 0x88A88D;
+constexpr uint32_t vector_message_dtor = 0x4DBBBD, Vec2_dtor_ = rwlib::cocos2d::Vec2::dtor_base, Layer_dtor = rwlib::cocos2d::Layer::dtor_base;
 
 void freeBuffer(uint32_t p) { if (p) call(fn::operator_delete, {p}); }
 void freeLongString(uint32_t s) { if (ld8(s) & 1) call(fn::operator_delete, {ld32(s + 8)}); }

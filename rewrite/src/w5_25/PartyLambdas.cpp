@@ -21,9 +21,9 @@ constexpr uint32_t SceneManager_openNoTapScreen = 0x61FB25;      // (mgr, float 
 constexpr uint32_t SceneManager_enableLoadingIndicator = 0x60D169;
 constexpr uint32_t APIManager_executePartyGet = 0x4C69BD;        // (api, unsigned long long, const function<void(bool)>&)
 constexpr uint32_t APIManager_openErrorDialog = 0x4C3C8D;
-constexpr uint32_t DelayTime_create = 0x86852D, CallFunc_create = 0x866B39, Sequence_create = 0x867999;
-constexpr uint32_t Touch_getLocation = 0x900E57, Node_convertToNodeSpace = 0x89599D;
-constexpr uint32_t Size_copy = 0x8DF02D, Rect_ctor = 0x8DF18B, Rect_containsPoint = 0x8DF2A9, Vec2_dtor = 0x8E4C17;
+constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create, CallFunc_create = rwlib::cocos2d::CallFunc::create, Sequence_create = rwlib::cocos2d::Sequence::create;
+constexpr uint32_t Touch_getLocation = rwlib::cocos2d::Touch::getLocation, Node_convertToNodeSpace = rwlib::cocos2d::Node::convertToNodeSpace;
+constexpr uint32_t Size_copy = rwlib::cocos2d::Size::ctor_base__RKS0_, Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff, Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t GOT_FuncLayerPtr_vt = 0xFD6074;   // &vtable of __func<Layer*(*)(), ..., Layer*()>
 constexpr uint32_t GOT_createPartyRequest = 0xFD68D0;   // &createSceneLayer<ScenePartyRequest>
 }  // namespace g

@@ -6,9 +6,9 @@
 namespace cipher {
 
 namespace {
-constexpr uint32_t AES_SET_ENCRYPT_KEY = 0xB8DE18;   // AES_set_encrypt_key(key, bits, schedule)
-constexpr uint32_t AES_SET_DECRYPT_KEY = 0xB8DE1C;   // AES_set_decrypt_key(key, bits, schedule)
-constexpr uint32_t AES_CBC_ENCRYPT = 0xB8EF88;       // AES_cbc_encrypt(in, out, len, schedule, iv, enc)
+constexpr uint32_t AES_SET_ENCRYPT_KEY = rwlib::AES_set_encrypt_key;   // AES_set_encrypt_key(key, bits, schedule)
+constexpr uint32_t AES_SET_DECRYPT_KEY = rwlib::AES_set_decrypt_key;   // AES_set_decrypt_key(key, bits, schedule)
+constexpr uint32_t AES_CBC_ENCRYPT = rwlib::AES_cbc_encrypt;       // AES_cbc_encrypt(in, out, len, schedule, iv, enc)
 constexpr uint32_t MEMCPY = 0x40E164;                // memcpy (import)
 constexpr uint32_t MEMSET = 0x40E7A0;                // memset (import)
 constexpr uint32_t MAKE_SHARED_DATA = 0x4D7929;      // make_shared<bg::Data>(out, unsigned char*&, unsigned&, void(&)(void*))

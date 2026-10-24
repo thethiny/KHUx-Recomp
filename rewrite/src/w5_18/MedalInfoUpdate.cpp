@@ -32,11 +32,11 @@ constexpr uint32_t MedalDataManager_getMedalLargeImagePath = 0x76B1E5;
 constexpr uint32_t SkillDataManager_getInstance = 0x76BA0D, SkillDataManager_getData = 0x76BA59;
 constexpr uint32_t SkillDataManager_getImagePath = 0x76BE8D;
 constexpr uint32_t Burst_create = 0x77A491;
-constexpr uint32_t ImageView_loadTexture = 0x839731;
-constexpr uint32_t TextAtlas_setString = 0x83AED7;
-constexpr uint32_t LoadingBar_setPercent = 0x83BB05;
-constexpr uint32_t Size_ctor = 0x8DF027;
-constexpr uint32_t Color3B_ctor = 0x9062E7;
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;
+constexpr uint32_t TextAtlas_setString = rwlib::cocos2d::ui::TextAtlas::setString;
+constexpr uint32_t LoadingBar_setPercent = rwlib::cocos2d::ui::LoadingBar::setPercent;
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;
+constexpr uint32_t Color3B_ctor = rwlib::cocos2d::Color3B::ctor_base;
 constexpr uint32_t aeabi_idiv = 0xCD5E8D;
 }  // namespace g
 

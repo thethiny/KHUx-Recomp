@@ -6,14 +6,14 @@
 namespace w4b2 {
 using namespace scene;
 
-constexpr uint32_t PROGRAM_CACHE = 0x90D241;        // GLProgramCache::getInstance
-constexpr uint32_t GET_PROGRAM = 0x90E2C1;          // GLProgramCache::getGLProgram(name)
-constexpr uint32_t ADD_PROGRAM = 0x90E2D7;          // GLProgramCache::addGLProgram(program, name)
-constexpr uint32_t STATE_FOR_PROGRAM = 0x90F0E7;    // GLProgramState::getOrCreateWithGLProgram
-constexpr uint32_t SET_STATE = 0x893617;            // Node::setGLProgramState
-constexpr uint32_t UNIFORM_LOC = 0x90BCA5;          // GLProgram::getUniformLocationForName
-constexpr uint32_t UNIFORM_1F = 0x90BE81, UNIFORM_2F = 0x90BEE1, UNIFORM_3F = 0x90BF4D;
-constexpr uint32_t UPDATE_UNIFORMS = 0x90A9F5;
+constexpr uint32_t PROGRAM_CACHE = rwlib::cocos2d::GLProgramCache::getInstance;        // GLProgramCache::getInstance
+constexpr uint32_t GET_PROGRAM = rwlib::cocos2d::GLProgramCache::getGLProgram;          // GLProgramCache::getGLProgram(name)
+constexpr uint32_t ADD_PROGRAM = rwlib::cocos2d::GLProgramCache::addGLProgram;          // GLProgramCache::addGLProgram(program, name)
+constexpr uint32_t STATE_FOR_PROGRAM = rwlib::cocos2d::GLProgramState::getOrCreateWithGLProgram;    // GLProgramState::getOrCreateWithGLProgram
+constexpr uint32_t SET_STATE = rwlib::cocos2d::Node::setGLProgramState;            // Node::setGLProgramState
+constexpr uint32_t UNIFORM_LOC = rwlib::cocos2d::GLProgram::getUniformLocationForName;          // GLProgram::getUniformLocationForName
+constexpr uint32_t UNIFORM_1F = rwlib::cocos2d::GLProgram::setUniformLocationWith1f, UNIFORM_2F = rwlib::cocos2d::GLProgram::setUniformLocationWith2f, UNIFORM_3F = rwlib::cocos2d::GLProgram::setUniformLocationWith3f;
+constexpr uint32_t UPDATE_UNIFORMS = rwlib::cocos2d::GLProgram::updateUniforms;
 
 // ============================================================================================ shader
 struct Shader {
@@ -28,15 +28,15 @@ struct Shader {
     // a new program from the shared vertex shader and `frag` (read from the vfs), cached under the name
     static void buildProgram(Frame &f, uint32_t node, uint32_t nameVar, uint32_t frag) {
         uint32_t p = call(fn::operator_new, {0x88});
-        call(0x90ADDD, {p});  // GLProgram::GLProgram
+        call(rwlib::cocos2d::GLProgram::ctor_base, {p});  // GLProgram::GLProgram
         uint32_t vs = ld32(ld32(0xFD6120));
         uint32_t data = f.alloc(8);
         call(0x8DD46D, {data, frag});  // bg::vfs::readData
-        call(0x90A931, {p, vs, ld32(ld32(data) + 4)});  // initWithByteArrays
+        call(rwlib::cocos2d::GLProgram::initWithByteArrays, {p, vs, ld32(ld32(data) + 4)});  // initWithByteArrays
         if (ld32(data + 4) != 0) call(fn::shared_release, {ld32(data + 4)});
-        call(0x8FD0D5, {p});  // autorelease
+        call(rwlib::cocos2d::Ref::autorelease, {p});  // autorelease
         call(SET_STATE, {node, call(STATE_FOR_PROGRAM, {p})});
-        call(0x90A9B5, {p});           // link
+        call(rwlib::cocos2d::GLProgram::link, {p});           // link
         call(UPDATE_UNIFORMS, {p});
         uint32_t cache = call(PROGRAM_CACHE, {});
         uint32_t s = f.alloc(12);
@@ -72,11 +72,11 @@ struct Shader {
     static uint32_t setGuiltShaderParam(uint32_t node, float time, float fade, float param7, int32_t type,
                                         float param5) {
         Frame f;
-        uint32_t prog = ld32(call(0x89360F, {node}) + 0x70);  // getGLProgramState()->getGLProgram()
+        uint32_t prog = ld32(call(rwlib::cocos2d::Node::getGLProgramState, {node}) + 0x70);  // getGLProgramState()->getGLProgram()
         call(UPDATE_UNIFORMS, {prog});
         uint32_t view = ld32(call(fn::Director_getInstance, {}) + 0x9C);
         uint32_t size = f.alloc(8);
-        call(0x8DF02D, {size, vcall(view, 0x1C, {view})});  // Size of the frame size
+        call(rwlib::cocos2d::Size::ctor_base__RKS0_, {size, vcall(view, 0x1C, {view})});  // Size of the frame size
         set1f(prog, 0xDFA257, fbits(time));
         set1f(prog, 0xDFA25C, fbits(fade));
         call(UNIFORM_2F, {prog, call(UNIFORM_LOC, {prog, 0xDFA261}), ld32(size), ld32(size + 4)});  // resolution
@@ -142,11 +142,11 @@ RW_FUNCTION(0x494CC8, "shader::set_guilt_shader_param", Shader::setGuiltShaderPa
 // tinted nodes vector +0x2B8
 struct GuiltBurstCutInShader {
     static constexpr uint32_t SET_PARAM = 0x494CC9, SET_CONCENT_PARAM = 0x495171, TINT = 0x495ED9;
-    static constexpr uint32_t COLOR3B = 0x9062E7;
+    static constexpr uint32_t COLOR3B = rwlib::cocos2d::Color3B::ctor_base;
 
     static uint32_t create() {
         uint32_t obj = call(fn::operator_new, {0x2C8});
-        call(0x892531, {obj});  // Node::Node
+        call(rwlib::cocos2d::Node::ctor_base, {obj});  // Node::Node
         uint32_t vt = ld32(0xFD6128);
         st32(obj, vt + 8);
         call(0x40E7A0, {obj + 0x270, 0x20, 0});  // __aeabi_memset
@@ -165,7 +165,7 @@ struct GuiltBurstCutInShader {
         st32(obj + 0x2BC, 0);
         st32(obj + 0x2C0, 0);
         if (call(ld32(vt + 0x250), {obj}) == 1) {  // init
-            call(0x8FD0D5, {obj});
+            call(rwlib::cocos2d::Ref::autorelease, {obj});
             return obj;
         }
         vcall(obj, 4, {obj});
@@ -174,12 +174,12 @@ struct GuiltBurstCutInShader {
     static void destroyDelete(uint32_t self) {
         st32(self, ld32(0xFD6128) + 8);
         call(0x495295, {self + 0x2B8});  // vector dtor
-        call(0x8927ED, {self});
+        call(rwlib::cocos2d::Node::dtor_base, {self});
         call(fn::operator_delete, {self});
     }
     static uint32_t makeTexture(Frame &f, uint32_t size) {
         int32_t w = f2i(ldf(size)), h = f2i(ldf(size + 4));
-        uint32_t rt = call(0x8A452D, {uint32_t(w), uint32_t(h)});  // RenderTexture::create
+        uint32_t rt = call(rwlib::cocos2d::RenderTexture::create__ii, {uint32_t(w), uint32_t(h)});  // RenderTexture::create
         return rt;
     }
     static void setupTexture(Frame &f, uint32_t self, uint32_t field, uint32_t size) {
@@ -192,17 +192,17 @@ struct GuiltBurstCutInShader {
         float x = ldf(size) * 0.5f;
         float y = ldf(size + 4) * 0.5f;
         uint32_t pos = f.alloc(8);
-        call(0x8E4B9D, {pos, fbits(x), fbits(y)});
+        call(rwlib::cocos2d::Vec2::ctor_base__ff, {pos, fbits(x), fbits(y)});
         call(setPosition, {rt, pos});
-        call(0x8E4C17, {pos});
+        call(rwlib::cocos2d::Vec2::dtor_base, {pos});
     }
     static uint32_t init(uint32_t self) {
         Frame f;
-        if (call(0x892B69, {self}) != 1) return 0;  // Node::init
+        if (call(rwlib::cocos2d::Node::init, {self}) != 1) return 0;  // Node::init
         vcall(self, 0x11C, {self});  // getParent (result unused)
         uint32_t view = ld32(call(fn::Director_getInstance, {}) + 0x9C);
         uint32_t size = f.alloc(8);
-        call(0x8DF02D, {size, vcall(view, 0x34, {view})});  // Size of the design resolution
+        call(rwlib::cocos2d::Size::ctor_base__RKS0_, {size, vcall(view, 0x34, {view})});  // Size of the design resolution
         st32(self + 0x270, makeTexture(f, size));
         setupTexture(f, self, 0x270, size);
         st32(self + 0x274, makeTexture(f, size));

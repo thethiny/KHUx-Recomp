@@ -14,9 +14,9 @@ constexpr uint32_t SceneUtil_setShadow = 0x45BD15;
 constexpr uint32_t SceneUtil_createOpenPopupAnimation = 0x45BC05;
 constexpr uint32_t SceneUtil_setTextLook = 0x4744F5;      // sub_4744F4(text, on, 0)
 constexpr uint32_t AppState_getAvatarBoardFilterState = 0x4EB189;
-constexpr uint32_t Widget_setBright = 0x825A09;
-constexpr uint32_t CheckBox_setSelectedState = 0x8382E7;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Widget_setBright = rwlib::cocos2d::ui::Widget::setBright;
+constexpr uint32_t CheckBox_setSelectedState = rwlib::cocos2d::ui::CheckBox::setSelectedState;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 }  // namespace g
 
 constexpr uint32_t S_FilterJson = 0xDF9BC4;   // "cocostudio/publish/SphereBoard_Filter_ver120.json"

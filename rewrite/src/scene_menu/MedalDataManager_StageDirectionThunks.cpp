@@ -10,8 +10,8 @@ constexpr uint32_t AUDIO_MANAGER_GET_INSTANCE = 0x5BECFD;  // audio::Manager::ge
 constexpr uint32_t AUDIO_MANAGER_GET_LAYER = 0x5BF33D;     // audio::Manager::getLayer(shared_ptr<Layer>* out, mgr, int)
 constexpr uint32_t AUDIO_LAYER_PLAY_SE = 0x5BF785;         // audio::Layer::playSE(layer, ResourceID, int, int)
 constexpr uint32_t STAGE_DIRECTION_COCOS_START = 0x7682D1; // StageDirection::cocos_start(int)
-constexpr uint32_t NODE_SCHEDULE_UPDATE = 0x894BA7;        // cocos2d::Node::scheduleUpdate()
-constexpr uint32_t NODE_UNSCHEDULE_UPDATE = 0x894CB3;      // cocos2d::Node::unscheduleUpdate()
+constexpr uint32_t NODE_SCHEDULE_UPDATE = rwlib::cocos2d::Node::scheduleUpdate;        // cocos2d::Node::scheduleUpdate()
+constexpr uint32_t NODE_UNSCHEDULE_UPDATE = rwlib::cocos2d::Node::unscheduleUpdate;      // cocos2d::Node::unscheduleUpdate()
 
 // StageDirection fields the lambdas touch
 constexpr uint32_t SD_NODE_A = 0x280;       // child nodes removed when the start direction ends

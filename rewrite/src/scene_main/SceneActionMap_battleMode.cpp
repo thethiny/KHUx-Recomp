@@ -113,9 +113,9 @@ constexpr uint32_t StageDirection_cocos_lose_colosseum = 0x769599;
 constexpr uint32_t LuxBoard_setNumber = 0x5D38C1, LuxBoard_getUIPos = 0x5D3B69;
 constexpr uint32_t Burst_create = 0x77A491, Random_getInstance = 0x492055, Random_generateUniformInt = 0x492225;
 constexpr uint32_t function_b_call = 0x51022D;
-constexpr uint32_t DelayTime_create = 0x86852D, CallFunc_create = 0x866B39, Sequence_create = 0x867999;
-constexpr uint32_t Node_runAction = 0x894AED, MoveTo_create = 0x86941D, EaseSineOut_create = 0x860D09;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_ctor_copy = 0x8E4C03, Vec2_dtor = 0x8E4C17, Vec2_subtract = 0x8E530F;
+constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create, CallFunc_create = rwlib::cocos2d::CallFunc::create, Sequence_create = rwlib::cocos2d::Sequence::create;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction, MoveTo_create = rwlib::cocos2d::MoveTo::create, EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_ctor_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base, Vec2_subtract = rwlib::cocos2d::Vec2::subtract;
 constexpr uint32_t SceneUtil_openTutorialPopup = 0x4684C9;
 constexpr uint32_t ATAN2F = 0x41C768, COSF = 0x41C8AC, SINF = 0x41A9E0;   // imports
 }  // namespace f

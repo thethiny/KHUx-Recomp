@@ -27,8 +27,8 @@ constexpr uint32_t ProductMap_dtor = 0x4DABC7;
 constexpr uint32_t FunctionProducts_assign = 0x4E176D;       // std::function<void(Result, const map*)>::operator=
 constexpr uint32_t FunctionProducts_call = 0x4E189D;         // operator()(Result, const map*)
 constexpr uint32_t AppConfig_get = 0x799FD1;                 // (string* out, const char* key)
-constexpr uint32_t JniHelper_getStaticMethodInfo = 0xA4225D; // (info, cls, name, sig)
-constexpr uint32_t JniHelper_getMethodInfo = 0xA422DD;
+constexpr uint32_t JniHelper_getStaticMethodInfo = rwlib::cocos2d::JniHelper::getStaticMethodInfo; // (info, cls, name, sig)
+constexpr uint32_t JniHelper_getMethodInfo = rwlib::cocos2d::JniHelper::getMethodInfo;
 constexpr uint32_t JNIEnv_CallStaticObjectMethod = 0x4E0939;
 constexpr uint32_t JNIEnv_CallVoidMethod = 0x4E17DD;
 constexpr uint32_t JNIEnv_CallBooleanMethod = 0x4E16B5;

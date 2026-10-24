@@ -8,9 +8,9 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t Text_setString = 0x83A2DD;
-constexpr uint32_t ImageView_loadTexture = 0x839731;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t Text_setString = rwlib::cocos2d::ui::Text::setString;
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;
 constexpr uint32_t SafeBuffer_read = 0x45A269;
 constexpr uint32_t ThrowOutOfRangeSlide = 0x664B11, ThrowOutOfRangeKeyblades = 0x664B15;
 constexpr uint32_t DIVSI3 = 0xCD5E8D;

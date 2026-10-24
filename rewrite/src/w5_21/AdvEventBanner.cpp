@@ -13,17 +13,17 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Layout_ctor = 0x828671;
-constexpr uint32_t Ref_retain = 0x8FD0B5, Ref_release = 0x8FD0BD, Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Size_ctor = 0x8DF027, Rect_ctor = 0x8DF18B, Rect_containsPoint = 0x8DF2A9, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Widget_create = 0x825875, Widget_clone = 0x8272B9;
-constexpr uint32_t ImageView_loadTexture = 0x839731, ImageView_loadTextureTex = 0x8398FD;
-constexpr uint32_t Node_runAction = 0x894AED, Node_convertToNodeSpace = 0x89599D, Touch_getLocation = 0x900E57;
-constexpr uint32_t Image_ctor = 0x8D967D, Image_initWithImageData = 0x8D9815;
-constexpr uint32_t Texture2D_ctor = 0x9149FD, Texture2D_initWithImage = 0x91501D;
-constexpr uint32_t Director_getInstance = 0x8EE519;
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5, EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
-constexpr uint32_t EventDispatcher_addSceneGraph = 0x8F3649;
+constexpr uint32_t Layout_ctor = rwlib::cocos2d::ui::Layout::ctor_base;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain, Ref_release = rwlib::cocos2d::Ref::release, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff, Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff, Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Widget_create = rwlib::cocos2d::ui::Widget::create, Widget_clone = rwlib::cocos2d::ui::Widget::clone;
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE, ImageView_loadTextureTex = rwlib::cocos2d::ui::ImageView::loadTexture__PNS_9Texture2DE;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction, Node_convertToNodeSpace = rwlib::cocos2d::Node::convertToNodeSpace, Touch_getLocation = rwlib::cocos2d::Touch::getLocation;
+constexpr uint32_t Image_ctor = rwlib::cocos2d::Image::ctor_base, Image_initWithImageData = rwlib::cocos2d::Image::initWithImageData;
+constexpr uint32_t Texture2D_ctor = rwlib::cocos2d::Texture2D::ctor_base, Texture2D_initWithImage = rwlib::cocos2d::Texture2D::initWithImage;
+constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create, EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
+constexpr uint32_t EventDispatcher_addSceneGraph = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
 constexpr uint32_t FunctionBTE_swap = 0x483E4D, FunctionVTE_swap = 0x4F3699;
 constexpr uint32_t FunctionVV_call = 0x470E69, FunctionVI_call = 0x4F321D;
 constexpr uint32_t ThrowOutOfRange = 0x47CCE1, StringInit = 0x47CD93;

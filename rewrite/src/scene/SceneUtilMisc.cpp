@@ -22,9 +22,9 @@ constexpr uint32_t StringVector_dtor = 0x47363F;
 constexpr uint32_t ThrowOutOfRange = 0x47CCE1;
 constexpr uint32_t STR_NewLine = 0xDF9E14, STR_Space = 0xDF9E16, STR_WideSpace = 0xDF9E18, STR_Tab = 0xDF9E1C;
 
-constexpr uint32_t RenderTexture_create = 0x8A3FFD;            // (w, h, PixelFormat, depthStencilFormat)
-constexpr uint32_t Node_visit = 0x8944C9;
-constexpr uint32_t Renderer_render = 0x913611;
+constexpr uint32_t RenderTexture_create = rwlib::cocos2d::RenderTexture::create__iiNS_9Texture2D11PixelFormatEj;            // (w, h, PixelFormat, depthStencilFormat)
+constexpr uint32_t Node_visit = rwlib::cocos2d::Node::visit__v;
+constexpr uint32_t Renderer_render = rwlib::cocos2d::Renderer::render;
 constexpr uint32_t RenderTexture_beginWithClear = 0x274;       // vtable slots
 constexpr uint32_t RenderTexture_end = 0x280;
 constexpr uint32_t Director_renderer = 0x114;

@@ -30,13 +30,13 @@ constexpr uint32_t TextRendererFunction_assign = 0x6F6095;   // function<void(co
 constexpr uint32_t VectorU64_insert = 0x6AD345;
 constexpr uint32_t VectorMovie_resize = 0x7384D9;
 constexpr uint32_t runOutAnimation = 0x738841;
-constexpr uint32_t Armature_create = 0x79F3C7;
-constexpr uint32_t ArmatureDataManager_getInstance = 0x7AC9B5, ArmatureDataManager_addArmatureFileInfo = 0x7AD7BD;
-constexpr uint32_t LWF_AddMovieEventHandler = 0x808645;
-constexpr uint32_t Layer_ctor = 0x88A7D1, Layer_init = 0x88A8A1;
-constexpr uint32_t Scene_create = 0x8A5F37;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create;
+constexpr uint32_t ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance, ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;
+constexpr uint32_t LWF_AddMovieEventHandler = rwlib::LWF::LWF::AddMovieEventHandler;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base, Layer_init = rwlib::cocos2d::Layer::init;
+constexpr uint32_t Scene_create = rwlib::cocos2d::Scene::create;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t truncdfsf2 = 0xCD6B24;
 constexpr uint32_t uldivmod = 0xCD733C, umoddi3 = 0xCD7805;
 }  // namespace g

@@ -8,11 +8,11 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
-constexpr uint32_t FadeTo_create = 0x86B3E1;
-constexpr uint32_t Vec2_ctorXY = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t GUIReader_getInstance = 0x7BF1E5, GUIReader_widgetFromJsonFile = 0x7BF9FD;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
+constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create;
+constexpr uint32_t Vec2_ctorXY = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t GUIReader_getInstance = rwlib::cocostudio::GUIReader::getInstance, GUIReader_widgetFromJsonFile = rwlib::cocostudio::GUIReader::widgetFromJsonFile;
 constexpr uint32_t SceneUtil_createShadowSprite = 0x45AD69;
 constexpr uint32_t SceneUtil_createOpenPopupAnimation = 0x45BC05;
 constexpr uint32_t SceneUtil_createClosePopupAnimation = 0x45BC61;
@@ -30,9 +30,9 @@ constexpr uint32_t SerialCodeScrollView_create = 0x555B95;
 constexpr uint32_t BaseScrollViewInt_setItemIDs = 0x478929;
 constexpr uint32_t VectorInt_pushBackSlow = 0x4D6CC1;
 constexpr uint32_t VectorInt_dtor = 0x478961;
-constexpr uint32_t Widget_addTouchEventListener = 0x826CCF;
+constexpr uint32_t Widget_addTouchEventListener = rwlib::cocos2d::ui::Widget::addTouchEventListener;
 constexpr uint32_t SM_closeCurrentPopup = 0x6216A1, SM_setEnabledTouchEffect = 0x60CF65;
-constexpr uint32_t Size_ctor = 0x8DF027;
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;
 constexpr uint32_t SceneUtil_textFieldToEditBox = 0x45C0A1, SceneUtil_setButtonEnabled = 0x468625;
 constexpr uint32_t SceneUtil_splitSpaceCheck = 0x47898D, SceneUtil_openOkDialog4Line = 0x45C775;
 constexpr uint32_t SceneUtil_openOkCancelDialog8Line = 0x45CB15, SceneUtil_isLoggedInFacebook = 0x4697E9;
@@ -45,9 +45,9 @@ constexpr uint32_t String_notEqual = 0x47CBD5;
 constexpr uint32_t AudioPushGameMainBGM = 0x5C0FE5;
 constexpr uint32_t MEMCPY = 0x40E164;
 constexpr uint32_t GOT_POPUP_FADE_TIME = 0xFD65C0;
-constexpr uint32_t VideoPlayer_create = 0x5A358D;
-constexpr uint32_t Director_getVisibleSize = 0x8F0675;
-constexpr uint32_t DelayTime_create = 0x86852D, CallFunc_create = 0x866B39, Sequence_create = 0x867999;
+constexpr uint32_t VideoPlayer_create = rwlib::cocos2d::experimental::ui::VideoPlayer::create;
+constexpr uint32_t Director_getVisibleSize = rwlib::cocos2d::Director::getVisibleSize;
+constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create, CallFunc_create = rwlib::cocos2d::CallFunc::create, Sequence_create = rwlib::cocos2d::Sequence::create;
 constexpr uint32_t FunctionVB_copy = 0x45C84D, FunctionVB_move = 0x47BC69;
 constexpr uint32_t FacebookManager_getInstance = 0x4E5585, FacebookManager_login = 0x4E5747;
 }  // namespace g
@@ -418,7 +418,7 @@ void openInputUserCodePopup(uint32_t self, uint32_t done) {
     }
     // the field's text: a ui::Text in its place (same position, anchor, font size and area), empty
     const uint32_t parent = vcall(field, 0x11C, {field});
-    const uint32_t text = call(0x839DED, {});                       // ui::Text::create()
+    const uint32_t text = call(rwlib::cocos2d::ui::Text::create, {});                       // ui::Text::create()
     st32(self + F_CODE_TEXT, text);
     vcall(text, node::setPosition, {text, vcall(field, node::getPosition, {field})});
     {
@@ -429,16 +429,16 @@ void openInputUserCodePopup(uint32_t self, uint32_t done) {
         const uint32_t t = ld32(self + F_CODE_TEXT);
         Frame t2;
         const uint32_t font = newStr(t2, S_FontSoGei, 0x22);
-        call(0x83A499, {t, font});                                  // Text::setFontName
+        call(rwlib::cocos2d::ui::Text::setFontName, {t, font});                                  // Text::setFontName
         strFree(font);
     }
     {
         const uint32_t t = ld32(self + F_CODE_TEXT);
-        call(0x83A35D, {t, call(0x83F72D, {field})});               // setFontSize(TextField::getFontSize)
+        call(rwlib::cocos2d::ui::Text::setFontSize, {t, call(rwlib::cocos2d::ui::TextField::getFontSize, {field})});               // setFontSize(TextField::getFontSize)
     }
     {
         const uint32_t t = ld32(self + F_CODE_TEXT);
-        call(0x83A605, {t, vcall(field, V_getContentSize, {field})});   // setTextAreaSize
+        call(rwlib::cocos2d::ui::Text::setTextAreaSize, {t, vcall(field, V_getContentSize, {field})});   // setTextAreaSize
     }
     {
         const uint32_t t = ld32(self + F_CODE_TEXT);

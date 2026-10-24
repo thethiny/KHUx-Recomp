@@ -37,7 +37,7 @@ RW_SIZE(DataDownloader, 0x34);
 
 namespace {
 using rw::guest_addr;
-constexpr uint32_t Device_setKeepScreenOn = 0xA3F16D;
+constexpr uint32_t Device_setKeepScreenOn = rwlib::cocos2d::Device::setKeepScreenOn;
 constexpr uint32_t FUNC_VB_CALL = 0x474139;            // std::function<void(bool)>::operator()(bool)
 constexpr uint32_t FUNC_VB_ASSIGN = 0x490109;          // std::function<void(bool)>::operator=(const function&)
 constexpr uint32_t APIManager_getInstance = 0x4BA8C9;

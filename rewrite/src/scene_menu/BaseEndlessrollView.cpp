@@ -10,19 +10,19 @@ using Self = BaseEndlessrollView;
 
 namespace {
 namespace g {
-constexpr uint32_t Node_ctor = 0x892531;
-constexpr uint32_t Node_dtor = 0x8927ED;
-constexpr uint32_t Node_scheduleUpdate = 0x894BA7;
-constexpr uint32_t Node_unscheduleUpdate = 0x894CB3;
+constexpr uint32_t Node_ctor = rwlib::cocos2d::Node::ctor_base;
+constexpr uint32_t Node_dtor = rwlib::cocos2d::Node::dtor_base;
+constexpr uint32_t Node_scheduleUpdate = rwlib::cocos2d::Node::scheduleUpdate;
+constexpr uint32_t Node_unscheduleUpdate = rwlib::cocos2d::Node::unscheduleUpdate;
 constexpr uint32_t WidgetVector_dtor = 0x485A8F;            // cocos2d::Vector<ui::Widget*>::~Vector
 constexpr uint32_t WidgetVector_clear = 0x485B45;
 constexpr uint32_t WidgetVector_pushBack = 0x4F6B5D;
-constexpr uint32_t Widget_clone = 0x8272B9;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D;                    // Vec2(float, float)
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5;
-constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
-constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = 0x8F3649;
+constexpr uint32_t Widget_clone = rwlib::cocos2d::ui::Widget::clone;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff;                    // Vec2(float, float)
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create;
+constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
+constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
 constexpr uint32_t TouchBoolFunction_swap = 0x483E4D;       // std::function<bool(Touch*, Event*)>::swap
 constexpr uint32_t TouchVoidFunction_swap = 0x4F3699;       // std::function<void(Touch*, Event*)>::swap
 constexpr uint32_t function_vf_call = 0x4F8E89;             // std::function<void(float)>::operator()

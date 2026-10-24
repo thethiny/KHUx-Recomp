@@ -22,9 +22,9 @@ constexpr uint32_t APIManager_executeUserMedalEnhance = 0x4CA119;  // (api, ull 
 constexpr uint32_t AudioPlaySystemSEPopUp = 0x5C0E09;
 constexpr uint32_t SM_enableLoadingIndicator = 0x60D169, SM_getPopupLayer = 0x613E69, SM_openPopup = 0x61524D;
 constexpr uint32_t MedalDataManager_getInstance = 0x76AD69, MedalDataManager_getMedalData = 0x76ADB5;
-constexpr uint32_t GUIReader_getInstance = 0x7BF1E5, GUIReader_widgetFromJsonFile = 0x7BF9FD;
-constexpr uint32_t Widget_addTouchEventListener = 0x826CCF;
-constexpr uint32_t FadeTo_create = 0x86B3E1, Node_runAction = 0x894AED;
+constexpr uint32_t GUIReader_getInstance = rwlib::cocostudio::GUIReader::getInstance, GUIReader_widgetFromJsonFile = rwlib::cocostudio::GUIReader::widgetFromJsonFile;
+constexpr uint32_t Widget_addTouchEventListener = rwlib::cocos2d::ui::Widget::addTouchEventListener;
+constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create, Node_runAction = rwlib::cocos2d::Node::runAction;
 }  // namespace g
 
 // SceneMixedMedal

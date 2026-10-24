@@ -9,8 +9,8 @@
 
 namespace {
 namespace g {
-constexpr uint32_t ref_retain = 0x8FD0B5;                  // cocos2d::Ref::retain()
-constexpr uint32_t ref_autorelease = 0x8FD0D5;             // cocos2d::Ref::autorelease()
+constexpr uint32_t ref_retain = rwlib::cocos2d::Ref::retain;                  // cocos2d::Ref::retain()
+constexpr uint32_t ref_autorelease = rwlib::cocos2d::Ref::autorelease;             // cocos2d::Ref::autorelease()
 constexpr uint32_t field_removeMapNodeToField = 0x7558E5;  // StageFieldManager::removeMapNodeToField(MapNode*)
 constexpr uint32_t field_isCollisionSafe = 0x7569B5;       // StageFieldManager::isCollisionSafe(float, float)
 constexpr uint32_t medalDeck_getCurrentMedalInfo = 0x5DFF6B;  // MedalDeck::getCurrentMedalInfo()

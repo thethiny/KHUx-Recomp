@@ -14,18 +14,18 @@ constexpr uint32_t TutorialWidget_create = 0x761431, TutorialWidget_ctor = 0x763
 constexpr uint32_t AdvStageScrollView_setSubMisstionInfo = 0x56B301, AdvStageScrollView_setColosseumInfo = 0x56D65D;
 constexpr uint32_t SceneUtil_settingTitleLabel = 0x45D8D1, SceneUtil_setButtonEnabled = 0x468625;
 constexpr uint32_t SceneUtil_openOkCancelDialog4Line = 0x45C951, SceneUtil_createOpenPopupAnimation = 0x45BC05;
-constexpr uint32_t Widget_setBright = 0x825A09, EaseSineOut_create = 0x860D09, SafeBuffer_read = 0x45A269;
-constexpr uint32_t ArmatureDataManager_getInstance = 0x7AC9B5, ArmatureDataManager_addArmatureFileInfo = 0x7AD7BD;
-constexpr uint32_t Armature_create = 0x79F3C7;
-constexpr uint32_t FileUtils_getInstance = 0xA3F44D, Layout_create = 0x82861D, Size_ctor = 0x8DF027;
-constexpr uint32_t Size_copy = 0x8DF02D, Vec2_copy = 0x8E4C03, Vec2_add = 0x8E4D2D, Rect_setRect = 0x8DF183;
-constexpr uint32_t Rect_containsPoint = 0x8DF2A9, Touch_getLocation = 0x900E57, RectTouchFn_call = 0x7616A1;
-constexpr uint32_t ImageView_isScale9Enabled = 0x839B71, Scale9SpriteR_create = 0x5EC25D;
+constexpr uint32_t Widget_setBright = rwlib::cocos2d::ui::Widget::setBright, EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create, SafeBuffer_read = 0x45A269;
+constexpr uint32_t ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance, ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;
+constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create;
+constexpr uint32_t FileUtils_getInstance = rwlib::cocos2d::FileUtils::getInstance, Layout_create = rwlib::cocos2d::ui::Layout::create, Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;
+constexpr uint32_t Size_copy = rwlib::cocos2d::Size::ctor_base__RKS0_, Vec2_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_, Vec2_add = rwlib::cocos2d::Vec2::add, Rect_setRect = rwlib::cocos2d::Rect::setRect;
+constexpr uint32_t Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint, Touch_getLocation = rwlib::cocos2d::Touch::getLocation, RectTouchFn_call = 0x7616A1;
+constexpr uint32_t ImageView_isScale9Enabled = rwlib::cocos2d::ui::ImageView::isScale9Enabled, Scale9SpriteR_create = 0x5EC25D;
 constexpr uint32_t Scale9SpriteR_setContentCenter = 0x5EC361;
-constexpr uint32_t ActionManagerEx_getInstance = 0x79B535, ActionManagerEx_playActionByName = 0x79BE43;
+constexpr uint32_t ActionManagerEx_getInstance = rwlib::cocostudio::ActionManagerEx::getInstance, ActionManagerEx_playActionByName = rwlib::cocostudio::ActionManagerEx::playActionByName;
 constexpr uint32_t AppGetGrameFrameWidth = 0x799B31, AppGetGrameFrameHeight = 0x799D21;
-constexpr uint32_t Ref_retain = 0x8FD0B5, Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t GestureRecognizer_dtor = 0x4F3621, Layout_dtor = 0x8289C5;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t GestureRecognizer_dtor = 0x4F3621, Layout_dtor = rwlib::cocos2d::ui::Layout::dtor_base;
 constexpr uint32_t function_vb_copy = 0x45C84D;
 constexpr uint32_t GOT_ANCHOR_MIDDLE = 0xFD6054;
 constexpr uint32_t VT_RetireAnswer = 0xF6E568;    // {pad, this, pad, answer at +0x10} (heap 0x28)

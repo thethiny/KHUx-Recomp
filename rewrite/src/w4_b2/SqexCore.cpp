@@ -102,7 +102,7 @@ struct TransferOggVorbis {
     }
     static uint32_t destruct(uint32_t self) {
         st32(self, got(0xFD92BC) + 8);
-        rw::call(0xCEEDB4, {self + 0x20});  // ov_clear
+        rw::call(rwlib::ov_clear, {self + 0x20});  // ov_clear
         free_(ld32(self + 0x10));
         free_(ld32(self + 0x14));
         setObjectVtable(self);
@@ -110,12 +110,12 @@ struct TransferOggVorbis {
     }
     // ov_pcm_seek(vf, pos)
     static void pcmSeek(uint32_t self, int64_t pos) {
-        rw::call(0xCF0BC0, {self + 0x20, 0, uint32_t(uint64_t(pos)), uint32_t(uint64_t(pos) >> 32)});
+        rw::call(rwlib::ov_pcm_seek, {self + 0x20, 0, uint32_t(uint64_t(pos)), uint32_t(uint64_t(pos) >> 32)});
     }
     static int32_t initialize(uint32_t self, uint32_t seekMs) {
         // ov_open_callbacks(this, &vf, NULL, 0, callbacks): the callbacks struct (4 words at 0x1002BE8) by value
         uint32_t cb0 = ld32(0x1002BE8), cb1 = ld32(0x1002BEC), cb2 = ld32(0x1002BF0), cb3 = ld32(0x1002BF4);
-        if (int32_t(rw::call(0xCEFBAC, {self, self + 0x20, 0, 0, cb0, cb1, cb2, cb3})) < 0) {
+        if (int32_t(rw::call(rwlib::ov_open_callbacks, {self, self + 0x20, 0, 0, cb0, cb1, cb2, cb3})) < 0) {
             log(5, 0xEED86C);  // "ov_open_callbacks failed!!"
             return 2;
         }
@@ -145,7 +145,7 @@ struct TransferOggVorbis {
         if (rw::call(0xCDCA04, {ld32(self + 8)}) == 1) {
             // do not read past the loop end
             uint32_t end = rw::call(0xCDCB8C, {ld32(self + 8)});
-            uint32_t tell = rw::call(0xCF11B8, {vf});  // ov_pcm_tell (low word)
+            uint32_t tell = rw::call(rwlib::ov_pcm_tell, {vf});  // ov_pcm_tell (low word)
             int32_t ch = int16_t(uint16_t(rw::call(0xCDC9CC, {ld32(self + 8)})));
             uint32_t frame = uint32_t(ch) << 1;
             int32_t limit = int32_t((end - tell) * frame + frame);
@@ -153,7 +153,7 @@ struct TransferOggVorbis {
         }
         guest::Frame f(0xC);
         uint32_t cur = ld32(self + 0x1C);
-        int32_t n = int32_t(rw::call(0xCF1394, {vf, ld32(self + 0x10 + cur * 4), uint32_t(want), f.addr(4)}));  // ov_read
+        int32_t n = int32_t(rw::call(rwlib::ov_read, {vf, ld32(self + 0x10 + cur * 4), uint32_t(want), f.addr(4)}));  // ov_read
         if (n == 0) {
             if (rw::call(0xCDCA04, {ld32(self + 8)}) != 0) return 0;
             st8(self + 4, 1);
@@ -166,11 +166,11 @@ struct TransferOggVorbis {
         st32(param, buf);
         st32(self + 0x1C, uint32_t(int32_t(cur + 1) % 2));
         if (rw::call(0xCDCA04, {ld32(self + 8)}) == 1) {
-            uint64_t t = rw::call64(0xCF11B8, {vf});
+            uint64_t t = rw::call64(rwlib::ov_pcm_tell, {vf});
             uint32_t end = rw::call(0xCDCB8C, {ld32(self + 8)}) + 1;
             if (int64_t(t) >= int64_t(uint64_t(end))) {
                 uint32_t start = rw::call(0xCDCB70, {ld32(self + 8)});
-                rw::call(0xCF0BC0, {vf, uint32_t(t >> 32), start, 0});  // ov_pcm_seek(vf, loopStart)
+                rw::call(rwlib::ov_pcm_seek, {vf, uint32_t(t >> 32), start, 0});  // ov_pcm_seek(vf, loopStart)
             }
         }
         return 0;

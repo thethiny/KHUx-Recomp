@@ -18,8 +18,8 @@ constexpr uint32_t AudioManager_getInstance = 0x5BECFD, AudioManager_getLayer = 
 constexpr uint32_t SM_getPopupLayer = 0x613E69;
 constexpr uint32_t Mixed_getGuiltFactorValueRange = 0x69A309;
 constexpr uint32_t Mixed_resultLine = 0x6A8909;          // sub_6A8908(context, kind): one result line widget
-constexpr uint32_t FadeTo_create = 0x86B3E1, Node_runAction = 0x894AED;
-constexpr uint32_t Vec2_copy = 0x8E4C03, Vec2_dtor = 0x8E4C17;
+constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create, Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t Vec2_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t aeabi_uidiv = 0xCD5DF9;
 constexpr uint32_t memcpy = 0x40E164;
 constexpr uint32_t GOT_VEC2_ZERO = 0xFD605C;

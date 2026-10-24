@@ -5,7 +5,7 @@
 using namespace scene;
 
 namespace {
-constexpr uint32_t Scene_create = 0x8A5F37, SceneDeckEdit_create = 0x57AFD5;
+constexpr uint32_t Scene_create = rwlib::cocos2d::Scene::create, SceneDeckEdit_create = 0x57AFD5;
 constexpr uint32_t libc_memcpy = 0x40E164;
 constexpr uint32_t function_vb_copy = 0x45C84D;            // std::function<void(bool)>(const&)
 constexpr uint32_t V_addChild = 0xF0, V_setTouchEnabled = 0x29C;

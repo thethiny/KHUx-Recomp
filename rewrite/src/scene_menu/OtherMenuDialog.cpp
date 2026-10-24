@@ -10,13 +10,13 @@ constexpr uint32_t VT_EditBoxDelegate = 0xF8D420;         // _ZTV15OtherMenuDial
 
 // ---- callees
 constexpr uint32_t Memset = 0x40E7A0;                     // __aeabi_memset(dst, n, c) (import)
-constexpr uint32_t Node_ctor = 0x892531;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Size_copy = 0x8DF02D;                  // cocos2d::Size::Size(const Size&)
-constexpr uint32_t Vec2_ctorXY = 0x8E4B9D;
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
-constexpr uint32_t EaseOut_create = 0x8606A5;             // (action, float rate)
-constexpr uint32_t EaseSineOut_create = 0x860D09;
+constexpr uint32_t Node_ctor = rwlib::cocos2d::Node::ctor_base;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Size_copy = rwlib::cocos2d::Size::ctor_base__RKS0_;                  // cocos2d::Size::Size(const Size&)
+constexpr uint32_t Vec2_ctorXY = rwlib::cocos2d::Vec2::ctor_base__ff;
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t EaseOut_create = rwlib::cocos2d::EaseOut::create;             // (action, float rate)
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr uint32_t OtherMenuDialog_updateFacebookButton = 0x59F819;
 
 // ---- data

@@ -11,12 +11,12 @@ namespace g {
 constexpr uint32_t FunctionVB_copy = 0x45C84D;              // std::function<void(bool)>(const&)
 constexpr uint32_t FunctionVB_move = 0x47BC69;              // std::function<void(bool)>(&&)
 constexpr uint32_t SceneManager_openPopup = 0x61524D;       // (sm, function<bool()>, function<void(bool)>, bool)
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t Title_create = 0x78FA8D;                 // master::Title::create(shared_ptr out, id)
 constexpr uint32_t SafeBuffer_read = 0x45A269;              // (sb, dst, src, len, offset)
 constexpr uint32_t TextData_format = 0x492929;              // (string out, type, id, ...)
 constexpr uint32_t String_append = 0x47AC89;                // std::string::append(const char*, size_t)
-constexpr uint32_t ImageView_loadTexture = 0x839731;        // (view, string, TextureResType)
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;        // (view, string, TextureResType)
 constexpr uint32_t STRLEN = 0x40E08C;
 }  // namespace g
 

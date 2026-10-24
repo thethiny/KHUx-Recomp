@@ -2,39 +2,39 @@
 
 namespace {
 namespace fn {
-constexpr uint32_t NODE_CTOR = 0x892531;                 // cocos2d::Node::Node()
-constexpr uint32_t NODE_DTOR = 0x8927ED;                 // cocos2d::Node::~Node()
-constexpr uint32_t NODE_INIT = 0x892B69;                 // cocos2d::Node::init()
-constexpr uint32_t NODE_STOP_ALL_ACTIONS = 0x893815;     // cocos2d::Node::stopAllActions()
-constexpr uint32_t NODE_RUN_ACTION = 0x894AED;           // cocos2d::Node::runAction(Action*)
-constexpr uint32_t NODE_REMOVE_ALL_CHILDREN = 0x894369;  // cocos2d::Node::removeAllChildrenWithCleanup(bool)
-constexpr uint32_t REF_AUTORELEASE = 0x8FD0D5;
-constexpr uint32_t REF_RETAIN = 0x8FD0B5;
-constexpr uint32_t REF_RELEASE = 0x8FD0BD;
+constexpr uint32_t NODE_CTOR = rwlib::cocos2d::Node::ctor_base;                 // cocos2d::Node::Node()
+constexpr uint32_t NODE_DTOR = rwlib::cocos2d::Node::dtor_base;                 // cocos2d::Node::~Node()
+constexpr uint32_t NODE_INIT = rwlib::cocos2d::Node::init;                 // cocos2d::Node::init()
+constexpr uint32_t NODE_STOP_ALL_ACTIONS = rwlib::cocos2d::Node::stopAllActions;     // cocos2d::Node::stopAllActions()
+constexpr uint32_t NODE_RUN_ACTION = rwlib::cocos2d::Node::runAction;           // cocos2d::Node::runAction(Action*)
+constexpr uint32_t NODE_REMOVE_ALL_CHILDREN = rwlib::cocos2d::Node::removeAllChildrenWithCleanup;  // cocos2d::Node::removeAllChildrenWithCleanup(bool)
+constexpr uint32_t REF_AUTORELEASE = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t REF_RETAIN = rwlib::cocos2d::Ref::retain;
+constexpr uint32_t REF_RELEASE = rwlib::cocos2d::Ref::release;
 constexpr uint32_t MEMSET = 0x40E7A0;                    // __aeabi_memset(dst, n, c) (import)
 constexpr uint32_t STRLEN = 0x40E08C;                    // strlen (import)
 constexpr uint32_t MODSI3 = 0xCD6009;                    // __modsi3
 constexpr uint32_t STRING_INIT = 0x47CD93;               // std::string::__init(const char*, size_t)
-constexpr uint32_t FADE_OUT_CREATE = 0x86B25D;           // cocos2d::FadeOut::create(float)
-constexpr uint32_t HIDE_CREATE = 0x8665E9;               // cocos2d::Hide::create()
-constexpr uint32_t SEQUENCE_CREATE = 0x867999;           // cocos2d::Sequence::create(FiniteTimeAction*, ...)
-constexpr uint32_t ARMATURE_CREATE = 0x79F3C7;           // cocostudio::Armature::create(const std::string&)
-constexpr uint32_t GUIREADER_GET_INSTANCE = 0x7BF1E5;    // cocostudio::GUIReader::getInstance()
-constexpr uint32_t GUIREADER_WIDGET_FROM_JSON = 0x7BF9FD;  // GUIReader::widgetFromJsonFile(const char*)
-constexpr uint32_t VEC2_CTOR = 0x8E4B9D;                 // cocos2d::Vec2::Vec2(float, float)
-constexpr uint32_t VEC2_DTOR = 0x8E4C17;                 // cocos2d::Vec2::~Vec2()
+constexpr uint32_t FADE_OUT_CREATE = rwlib::cocos2d::FadeOut::create;           // cocos2d::FadeOut::create(float)
+constexpr uint32_t HIDE_CREATE = rwlib::cocos2d::Hide::create;               // cocos2d::Hide::create()
+constexpr uint32_t SEQUENCE_CREATE = rwlib::cocos2d::Sequence::create;           // cocos2d::Sequence::create(FiniteTimeAction*, ...)
+constexpr uint32_t ARMATURE_CREATE = rwlib::cocostudio::Armature::create;           // cocostudio::Armature::create(const std::string&)
+constexpr uint32_t GUIREADER_GET_INSTANCE = rwlib::cocostudio::GUIReader::getInstance;    // cocostudio::GUIReader::getInstance()
+constexpr uint32_t GUIREADER_WIDGET_FROM_JSON = rwlib::cocostudio::GUIReader::widgetFromJsonFile;  // GUIReader::widgetFromJsonFile(const char*)
+constexpr uint32_t VEC2_CTOR = rwlib::cocos2d::Vec2::ctor_base__ff;                 // cocos2d::Vec2::Vec2(float, float)
+constexpr uint32_t VEC2_DTOR = rwlib::cocos2d::Vec2::dtor_base;                 // cocos2d::Vec2::~Vec2()
 constexpr uint32_t SEARCH_NODE_BY_NAME = 0x45A9F5;       // SceneUtil::searchNodeByName(Node*, const std::string&)
 constexpr uint32_t SET_SHADOW = 0x45BD15;                // SceneUtil::setShadow(ui::Text*)
-constexpr uint32_t TEXT_ENABLE_OUTLINE = 0x83A9C5;       // ui::Text::enableOutline(const Color4B&, int)
-constexpr uint32_t TEXT_SET_STRING = 0x83A2DD;           // ui::Text::setString(const std::string&)
+constexpr uint32_t TEXT_ENABLE_OUTLINE = rwlib::cocos2d::ui::Text::enableOutline;       // ui::Text::enableOutline(const Color4B&, int)
+constexpr uint32_t TEXT_SET_STRING = rwlib::cocos2d::ui::Text::setString;           // ui::Text::setString(const std::string&)
 constexpr uint32_t TEXTDATA_GET = 0x4928AD;              // TextData::get(out shared_ptr, Type, int id)
 constexpr uint32_t STRINGBUFFER_CTOR = 0x49140D;         // StringBuffer::StringBuffer(const char* fmt, ...)
-constexpr uint32_t DIRECTOR_GET_INSTANCE = 0x8EE519;
-constexpr uint32_t TOUCH_LISTENER_CREATE = 0x8FACA5;     // EventListenerTouchOneByOne::create()
-constexpr uint32_t TOUCH_LISTENER_SET_SWALLOW = 0x8FAC99;  // EventListenerTouchOneByOne::setSwallowTouches(bool)
+constexpr uint32_t DIRECTOR_GET_INSTANCE = rwlib::cocos2d::Director::getInstance;
+constexpr uint32_t TOUCH_LISTENER_CREATE = rwlib::cocos2d::EventListenerTouchOneByOne::create;     // EventListenerTouchOneByOne::create()
+constexpr uint32_t TOUCH_LISTENER_SET_SWALLOW = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;  // EventListenerTouchOneByOne::setSwallowTouches(bool)
 constexpr uint32_t FUNCTION_TOUCH_BOOL_SWAP = 0x483E4D;  // std::function<bool(Touch*, Event*)>::swap
 constexpr uint32_t FUNCTION_TOUCH_VOID_SWAP = 0x4F3699;  // std::function<void(Touch*, Event*)>::swap
-constexpr uint32_t ADD_LISTENER_SCENE_GRAPH = 0x8F3649;  // EventDispatcher::addEventListenerWithSceneGraphPriority
+constexpr uint32_t ADD_LISTENER_SCENE_GRAPH = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;  // EventDispatcher::addEventListenerWithSceneGraphPriority
 }  // namespace fn
 
 // cocos2d::Node virtual slots

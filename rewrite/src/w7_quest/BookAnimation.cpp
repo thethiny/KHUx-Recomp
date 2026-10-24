@@ -9,9 +9,9 @@
 using namespace scene;
 
 namespace {
-constexpr uint32_t ArmatureDataManager_getInstance = 0x7AC9B5, ArmatureDataManager_addArmatureFileInfo = 0x7AD7BD;
-constexpr uint32_t Armature_create = 0x79F3C7, ArmatureVector_clear = 0x50A459, ArmatureVector_pushBack = 0x50A48D;
-constexpr uint32_t ArmatureAnimation_setMovementEventCallFunc = 0x7A3C69;
+constexpr uint32_t ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance, ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;
+constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create, ArmatureVector_clear = 0x50A459, ArmatureVector_pushBack = 0x50A48D;
+constexpr uint32_t ArmatureAnimation_setMovementEventCallFunc = rwlib::cocostudio::ArmatureAnimation::setMovementEventCallFunc;
 constexpr uint32_t function_vv_copy = 0x4683CD, function_vv_move = 0x47F905;
 constexpr uint32_t VT_RightPage = 0xF56184, VT_LeftPage = 0xF56158;   // {pad, page, count, this, pad, done} (heap 0x30)
 constexpr uint32_t S_File = 0xDFD500, S_Armature = 0xDFD530, S_RightBottom = 0xDFD542, S_LeftBottom = 0xDFD55A;

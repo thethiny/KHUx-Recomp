@@ -13,10 +13,10 @@ constexpr uint32_t SceneUtil_setShadow = 0x45BD15;
 constexpr uint32_t SceneUtil_updateMedalRarePanel = 0x4619F5;   // (widget, rarity, align, scale, bool, int, int)
 constexpr uint32_t SceneManager_getPopupLayer3 = 0x613E79;
 constexpr uint32_t AvatarParts_create = 0x778DE1, Medal_create = 0x785871, Skill_create = 0x78BDE9;
-constexpr uint32_t Widget_clone = 0x8272B9;
-constexpr uint32_t ImageView_loadTexture = 0x839731;
-constexpr uint32_t Node_convertToWorldSpace = 0x895A39;
-constexpr uint32_t Vec2_copy = 0x8E4C03, Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Widget_clone = rwlib::cocos2d::ui::Widget::clone;
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;
+constexpr uint32_t Node_convertToWorldSpace = rwlib::cocos2d::Node::convertToWorldSpace;
+constexpr uint32_t Vec2_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 // this class
 constexpr uint32_t updateSelectItems = 0x560889, setSelectItem = 0x5613D1, touchEndedBody = 0x561675;
 }  // namespace g

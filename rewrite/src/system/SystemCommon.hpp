@@ -92,7 +92,7 @@ inline uint32_t vcallOff(uint32_t obj, uint32_t offset, std::initializer_list<ui
 namespace lib {
 constexpr uint32_t MALLOC = 0x40FF58;         // malloc (import)
 constexpr uint32_t FREE = 0x40FF64;           // free (import) - check before use
-constexpr uint32_t VSNPRINTF = 0xCA3B25;      // sub_CA3B24: vsnprintf(buf, size, fmt, va_list)
+constexpr uint32_t VSNPRINTF = rwlib::sub_CA3B24;      // sub_CA3B24: vsnprintf(buf, size, fmt, va_list)
 constexpr uint32_t STACK_CHK_FAIL = 0x40DD44; // __stack_chk_fail
 }  // namespace lib
 

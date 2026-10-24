@@ -25,7 +25,7 @@ constexpr uint32_t ApplicantVector_copy = 0x523325, ApplicantVector_dtor = 0x4B4
 constexpr uint32_t AvatarIconCache_find = 0x5CA9A9, AvatarIconCache_add = 0x5CAA57;
 constexpr uint32_t AvatarUtil_makeStyle = 0x497105;      // (Style* out, const Coordinate&, int)
 constexpr uint32_t SafeBuffer_dtor = 0x45A13D;
-constexpr uint32_t Vec2_copy = 0x8E4C03, Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Vec2_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t ImageButton_create = 0x531239;       // (std::string by value, bool)
 constexpr uint32_t ImageButton_setTargetView = 0x5318C1;        // (button, Node*, float)
 constexpr uint32_t ImageButton_setTargetImageView = 0x531631;   // (button, ImageView*)
@@ -33,7 +33,7 @@ constexpr uint32_t ImageButton_addTouchEventListener = 0x5315B1;
 constexpr uint32_t SceneUtil_setShadow = 0x45BD15;
 constexpr uint32_t SceneUtil_numberToAtlasString = 0x466C41;
 constexpr uint32_t SceneUtil_updateUserTitlePanel = 0x46ED85;   // (Node*, const SupportUser&)
-constexpr uint32_t TextAtlas_setString = 0x83AED7;
+constexpr uint32_t TextAtlas_setString = rwlib::cocos2d::ui::TextAtlas::setString;
 constexpr uint32_t String_assignN = 0x48D811;           // std::string::assign(const char*, size_t)
 constexpr uint32_t MedalDataManager_getInstance = 0x76AD69;
 constexpr uint32_t MedalDataManager_getMedalData = 0x76ADB5;      // (sret, mgr, ull id, int, Medal by value)

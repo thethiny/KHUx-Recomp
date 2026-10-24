@@ -5,7 +5,7 @@
 using namespace scene;
 
 namespace {
-constexpr uint32_t Director_getVisibleSize = 0x8F0675, IScrollProtocol_setEnabledScroll = 0x4F73C9;
+constexpr uint32_t Director_getVisibleSize = rwlib::cocos2d::Director::getVisibleSize, IScrollProtocol_setEnabledScroll = 0x4F73C9;
 constexpr uint32_t S_ListName = 0xE06A62;         // "rankingRewardScrollView"
 constexpr uint32_t F_PAGES = 0x290, PAGES_CURRENT = 0x588, F_SWIPING = 0x2A5;
 }  // namespace

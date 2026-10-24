@@ -5,7 +5,7 @@ using namespace scene;
 using Self = SceneSphereBoardSelect;
 
 namespace {
-constexpr uint32_t Layer_init = 0x88A8A1;                  // cocos2d::Layer::init
+constexpr uint32_t Layer_init = rwlib::cocos2d::Layer::init;                  // cocos2d::Layer::init
 constexpr uint32_t SceneManager_hideInfoHeader = 0x612F4D;
 constexpr uint32_t SceneManager_showHeader = 0x6131ED;
 constexpr uint32_t SceneManager_removeBackground = 0x611691;

@@ -10,10 +10,10 @@ using View = ChatScrollView;
 
 namespace {
 namespace g {
-constexpr uint32_t Ref_retain = 0x8FD0B5, Ref_release = 0x8FD0BD, Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Widget_create = 0x825875, Widget_clone = 0x8272B9;
-constexpr uint32_t Size_ctor = 0x8DF027, Size_copy = 0x8DF02D;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_copy = 0x8E4C03, Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain, Ref_release = rwlib::cocos2d::Ref::release, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Widget_create = rwlib::cocos2d::ui::Widget::create, Widget_clone = rwlib::cocos2d::ui::Widget::clone;
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff, Size_copy = rwlib::cocos2d::Size::ctor_base__RKS0_;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t VectorAt_throw = 0x47CCE1;
 constexpr uint32_t MessageVector_dtor = 0x5568AD, MessageVector_assign = 0x55D309;
 constexpr uint32_t IntVector_pushBackSlow = 0x47D709, IntVector_base_dtor = 0x478961;
@@ -21,10 +21,10 @@ constexpr uint32_t AvatarIconCache_makeShared = 0x509899;
 constexpr uint32_t MEMCPY = 0x40E164;
 constexpr uint32_t AvatarMap_find = 0x490275, AvatarIconCache_find = 0x5CA9A9, AvatarIconCache_add = 0x5CAA57;
 constexpr uint32_t AvatarUtil_makeStyle = 0x497105, AvatarIcon_clone = 0x5CA5C1, SafeBuffer_dtor = 0x45A13D;
-constexpr uint32_t Text_setTextAreaSize = 0x83A605, Widget_getCustomSize = 0x8262D1;
-constexpr uint32_t ImageView_loadTexture = 0x839731;
-constexpr uint32_t Director_getTextureCache = 0x8EFE69, TextureCache_addImage = 0x917DA9;
-constexpr uint32_t Texture2D_getContentSize = 0x914ACB;
+constexpr uint32_t Text_setTextAreaSize = rwlib::cocos2d::ui::Text::setTextAreaSize, Widget_getCustomSize = rwlib::cocos2d::ui::Widget::getCustomSize;
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;
+constexpr uint32_t Director_getTextureCache = rwlib::cocos2d::Director::getTextureCache, TextureCache_addImage = rwlib::cocos2d::TextureCache::addImage;
+constexpr uint32_t Texture2D_getContentSize = rwlib::cocos2d::Texture2D::getContentSize;
 constexpr uint32_t master_Stamp_create = 0x7919E5;
 constexpr uint32_t ToString = 0xC95451, String_substr = 0x47CD4D, String_append = 0x47AC89, String_assign = 0x48D811;
 constexpr uint32_t Search = 0x49A42B, CharEqualNoCase = 0x49A419;

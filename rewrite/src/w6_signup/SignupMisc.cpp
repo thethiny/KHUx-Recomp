@@ -16,7 +16,7 @@ constexpr uint32_t function_free_call = 0x4919ED;          // std::function<void
 constexpr uint32_t function_alloc_call = 0x4918A9;         // std::function<void*(unsigned)>::operator()
 constexpr uint32_t function_free_assign = 0x491839;        // std::function<void(void*)>::operator=(const&)
 constexpr uint32_t libc_memcpy = 0x40E164;
-constexpr uint32_t JniHelper_getStaticMethodInfo = 0xA4225D, JNIEnv_CallStaticVoidMethod = 0x4E0D09;
+constexpr uint32_t JniHelper_getStaticMethodInfo = rwlib::cocos2d::JniHelper::getStaticMethodInfo, JNIEnv_CallStaticVoidMethod = 0x4E0D09;
 constexpr uint32_t S_HelperClass = 0xE10FFB, S_SetKeepScreenOn = 0xE1349D, S_SigZV = 0xDFC75E;
 constexpr uint32_t JNI_DELETE_LOCAL_REF = 0x5C;
 // APIManager: the user (+0x44, its control block +0x48; flags +0x34 bit 0 = invitation allowed), the user data

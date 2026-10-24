@@ -8,12 +8,12 @@ using namespace scene;
 using namespace signup;
 
 namespace {
-constexpr uint32_t Layer_ctor = 0x88A7D1, Layer_dtor = 0x88A88D, Scene_create = 0x8A5F37, Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base, Layer_dtor = rwlib::cocos2d::Layer::dtor_base, Scene_create = rwlib::cocos2d::Scene::create, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t function_vv_assign = 0x4EB9CD, function_vb_assign = 0x490109;
 constexpr uint32_t SceneFlashDrama_init = 0x6F34BD, SceneFlashDrama_loadLWF = 0x6F39B1;
 constexpr uint32_t SceneUtil_createNodeWithSceneFile = 0x45AA49, SceneUtil_openTutorialPopup = 0x4684C9;
 constexpr uint32_t SceneUtil_createBottomInAnimation = 0x45B2F9, SceneUtil_createBottomOutAnimation = 0x45B469;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr uint32_t SceneManager_setOnBackKeyCallback = 0x613E5B, SceneManager_hideHeader = 0x61154D;
 constexpr uint32_t SceneManager_changeSceneLayer = 0x612B99, SceneManager_openNoTapScreen = 0x61FB25;
 constexpr uint32_t SafeBuffer_read = 0x45A269;
@@ -21,13 +21,13 @@ constexpr uint32_t APIManager_executeTutorialProgress = 0x4C581D, APIManager_exe
 constexpr uint32_t APIManager_executeUserGet = 0x4C6081, APIManager_executeStageGet = 0x4CADB9;
 constexpr uint32_t APIManager_needsRetry = 0x4C3C63;
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
-constexpr uint32_t Director_getInstance = 0x8EE519;
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5, EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
-constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = 0x8F3649;
+constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create, EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
+constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
 constexpr uint32_t FunctionBTE_swap = 0x483E4D, FunctionVTE_swap = 0x4F3699;
-constexpr uint32_t Touch_getLocation = 0x900E57, Node_convertToNodeSpace = 0x89599D;
-constexpr uint32_t Rect_ctor = 0x8DF18B, Rect_containsPoint = 0x8DF2A9;
-constexpr uint32_t DelayTime_create = 0x86852D, CallFunc_create = 0x866B39, Sequence_create = 0x867999;
+constexpr uint32_t Touch_getLocation = rwlib::cocos2d::Touch::getLocation, Node_convertToNodeSpace = rwlib::cocos2d::Node::convertToNodeSpace;
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff, Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint;
+constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create, CallFunc_create = rwlib::cocos2d::CallFunc::create, Sequence_create = rwlib::cocos2d::Sequence::create;
 constexpr uint32_t SceneUnionRegister_init = 0x71734D, SceneUnionRegister_create = 0x67F73D;
 constexpr uint32_t SceneUnionRegister_startTutorialStage = 0x717A09, SceneUnionRegister_noInvitation = 0x718665;
 constexpr uint32_t SceneUnionRegister_initUnionButtons = 0x719E39, SceneUnionRegister_assignEnded = 0x71A0C5;
@@ -55,7 +55,7 @@ constexpr uint32_t S_EmblemOnFmt = 0xE05930, S_EmblemFmt = 0xE05940;
 constexpr uint32_t SceneUtil_settingTitleLabel = 0x45D8D1, SceneUtil_createUnionImagePath = 0x46968D;
 constexpr uint32_t SceneUtil_createOpenPopupAnimation = 0x45BC05;
 constexpr uint32_t function_vb_copy = 0x45C84D, function_vb_copy2 = 0x47BC69;
-constexpr uint32_t ImageView_loadTexture = 0x839731;
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;
 constexpr uint32_t GOT_POPUP_FADE = 0xFD65C0;              // &float: the shadow's fade time
 constexpr uint32_t VT_JoinOk = 0xF6BBC0;                   // $_8 {Close, OK, root, layer, shadow, this, answer}
 constexpr uint32_t VT_JoinCancel = 0xF6BB94;               // $_9 {Close, OK}

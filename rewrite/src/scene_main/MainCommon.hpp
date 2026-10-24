@@ -11,24 +11,24 @@ using namespace scene;
 
 namespace lib {
 // cocos2d
-constexpr uint32_t Layer_ctor = 0x88A7D1;                  // cocos2d::Layer::Layer()
-constexpr uint32_t Layer_dtor = 0x88A88D;                  // cocos2d::Layer::~Layer()
-constexpr uint32_t Layer_init = 0x88A8A1;                  // cocos2d::Layer::init()
-constexpr uint32_t Layer_create = 0x88A8C3;                // cocos2d::Layer::create()
-constexpr uint32_t LayerColor_create = 0x88B539;           // cocos2d::LayerColor::create(const Color4B&)
-constexpr uint32_t Scene_create = 0x8A5F37;                // cocos2d::Scene::create()
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;             // cocos2d::Ref::autorelease()
-constexpr uint32_t Ref_retain = 0x8FD0B5;                  // cocos2d::Ref::retain()
-constexpr uint32_t Ref_release = 0x8FD0BD;                 // cocos2d::Ref::release()
-constexpr uint32_t Node_getNumberOfRunningActions = 0x894B4F;
-constexpr uint32_t Node_stopAllActions = 0x893815;
-constexpr uint32_t Node_scheduleUpdate = 0x894BA7;
-constexpr uint32_t Node_unscheduleUpdate = 0x894CB3;
-constexpr uint32_t FadeIn_create = 0x86B115;               // (float duration)
-constexpr uint32_t FadeOut_create = 0x86B25D;              // (float duration)
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5;
-constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
-constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = 0x8F3649;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base;                  // cocos2d::Layer::Layer()
+constexpr uint32_t Layer_dtor = rwlib::cocos2d::Layer::dtor_base;                  // cocos2d::Layer::~Layer()
+constexpr uint32_t Layer_init = rwlib::cocos2d::Layer::init;                  // cocos2d::Layer::init()
+constexpr uint32_t Layer_create = rwlib::cocos2d::Layer::create;                // cocos2d::Layer::create()
+constexpr uint32_t LayerColor_create = rwlib::cocos2d::LayerColor::create;           // cocos2d::LayerColor::create(const Color4B&)
+constexpr uint32_t Scene_create = rwlib::cocos2d::Scene::create;                // cocos2d::Scene::create()
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;             // cocos2d::Ref::autorelease()
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain;                  // cocos2d::Ref::retain()
+constexpr uint32_t Ref_release = rwlib::cocos2d::Ref::release;                 // cocos2d::Ref::release()
+constexpr uint32_t Node_getNumberOfRunningActions = rwlib::cocos2d::Node::getNumberOfRunningActions;
+constexpr uint32_t Node_stopAllActions = rwlib::cocos2d::Node::stopAllActions;
+constexpr uint32_t Node_scheduleUpdate = rwlib::cocos2d::Node::scheduleUpdate;
+constexpr uint32_t Node_unscheduleUpdate = rwlib::cocos2d::Node::unscheduleUpdate;
+constexpr uint32_t FadeIn_create = rwlib::cocos2d::FadeIn::create;               // (float duration)
+constexpr uint32_t FadeOut_create = rwlib::cocos2d::FadeOut::create;              // (float duration)
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create;
+constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
+constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
 constexpr uint32_t Director_eventDispatcher = 0x84;        // Director field: EventDispatcher*
 constexpr uint32_t Color4B_BLACK = 0x1007EBC;
 // libc++ std::function
@@ -40,13 +40,13 @@ constexpr uint32_t VT_LayerFactory = 0xF7E130;             // __func<Layer*(*)()
 }  // namespace lib
 
 namespace lib {
-constexpr uint32_t Touch_getLocation = 0x900E57;           // (Vec2* out, Touch*)
-constexpr uint32_t Node_convertToNodeSpace = 0x89599D;     // (Vec2* out, Node*, const Vec2&)
-constexpr uint32_t Rect_ctor = 0x8DF18B;                   // (Rect*, x, y, w, h)
-constexpr uint32_t Rect_containsPoint = 0x8DF2A9;          // (const Rect*, const Vec2&)
-constexpr uint32_t Widget_create = 0x825875;               // cocos2d::ui::Widget::create()
-constexpr uint32_t Widget_setContentSize = 0x825C75;       // ui::Widget::setContentSize(const Size&)
-constexpr uint32_t Widget_clone = 0x8272B9;
+constexpr uint32_t Touch_getLocation = rwlib::cocos2d::Touch::getLocation;           // (Vec2* out, Touch*)
+constexpr uint32_t Node_convertToNodeSpace = rwlib::cocos2d::Node::convertToNodeSpace;     // (Vec2* out, Node*, const Vec2&)
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff;                   // (Rect*, x, y, w, h)
+constexpr uint32_t Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint;          // (const Rect*, const Vec2&)
+constexpr uint32_t Widget_create = rwlib::cocos2d::ui::Widget::create;               // cocos2d::ui::Widget::create()
+constexpr uint32_t Widget_setContentSize = rwlib::cocos2d::ui::Widget::setContentSize;       // ui::Widget::setContentSize(const Size&)
+constexpr uint32_t Widget_clone = rwlib::cocos2d::ui::Widget::clone;
 constexpr uint32_t WidgetVector_pushBack = 0x4F6B5D;       // cocos2d::Vector<ui::Widget*>::pushBack
 constexpr uint32_t WidgetVector_clear = 0x485B45;
 constexpr uint32_t WidgetVector_erase = 0x4F64B1;          // erase(iterator)

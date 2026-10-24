@@ -5,19 +5,19 @@ using namespace social;
 
 namespace {
 namespace g {
-constexpr uint32_t Node_create = 0x89372D;                   // cocos2d::Node::create()
-constexpr uint32_t Node_scheduleUpdate = 0x894BA7;
-constexpr uint32_t Node_unscheduleUpdate = 0x894CB3;
-constexpr uint32_t FadeTo_create = 0x86B3E1;                 // (float duration, uint8 opacity)
-constexpr uint32_t Vec2_ctor = 0x8E4B9D;                     // (Vec2*, float, float)
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Size_ctor = 0x8DF027;                     // (Size*, float, float)
-constexpr uint32_t GUIReader_getInstance = 0x7BF1E5;
-constexpr uint32_t GUIReader_widgetFromJsonFile = 0x7BF9FD;  // (reader, const char*)
-constexpr uint32_t Widget_isTouchEnabled = 0x826665;
-constexpr uint32_t WebView_create = 0x8191B5;                // cocos2d::plugin::WebView::create()
-constexpr uint32_t WebView_loadUrl = 0x819221;               // (webView, const std::string&)
-constexpr uint32_t WebView_setScalesPageToFit = 0x8192AD;    // (webView, bool)
+constexpr uint32_t Node_create = rwlib::cocos2d::Node::create;                   // cocos2d::Node::create()
+constexpr uint32_t Node_scheduleUpdate = rwlib::cocos2d::Node::scheduleUpdate;
+constexpr uint32_t Node_unscheduleUpdate = rwlib::cocos2d::Node::unscheduleUpdate;
+constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create;                 // (float duration, uint8 opacity)
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff;                     // (Vec2*, float, float)
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;                     // (Size*, float, float)
+constexpr uint32_t GUIReader_getInstance = rwlib::cocostudio::GUIReader::getInstance;
+constexpr uint32_t GUIReader_widgetFromJsonFile = rwlib::cocostudio::GUIReader::widgetFromJsonFile;  // (reader, const char*)
+constexpr uint32_t Widget_isTouchEnabled = rwlib::cocos2d::ui::Widget::isTouchEnabled;
+constexpr uint32_t WebView_create = rwlib::cocos2d::plugin::WebView::create;                // cocos2d::plugin::WebView::create()
+constexpr uint32_t WebView_loadUrl = rwlib::cocos2d::plugin::WebView::loadUrl;               // (webView, const std::string&)
+constexpr uint32_t WebView_setScalesPageToFit = rwlib::cocos2d::plugin::WebView::setScalesPageToFit;    // (webView, bool)
 constexpr uint32_t strlen_ = 0x40E08C;                       // strlen (import)
 constexpr uint32_t vector_throw_out_of_range = 0x47CCE1;     // std::__vector_base_common<true>::__throw_out_of_range
 // libc++ std::function

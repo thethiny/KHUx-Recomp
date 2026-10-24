@@ -12,12 +12,12 @@ constexpr uint32_t SafeBuffer_read = 0x45A269;
 constexpr uint32_t SceneUtil_setShadow = 0x45BD15;
 constexpr uint32_t StringAssign = 0x48D811;                // std::string::assign(const char*, size_t)
 constexpr uint32_t throw_out_of_range = 0x47CCE1;
-constexpr uint32_t TextAtlas_setString = 0x83AED7;
-constexpr uint32_t ImageView_loadTextureTex = 0x8398FD;    // ImageView::loadTexture(Texture2D*)
+constexpr uint32_t TextAtlas_setString = rwlib::cocos2d::ui::TextAtlas::setString;
+constexpr uint32_t ImageView_loadTextureTex = rwlib::cocos2d::ui::ImageView::loadTexture__PNS_9Texture2DE;    // ImageView::loadTexture(Texture2D*)
 constexpr uint32_t AudioLWFNode_create = 0x5EB6B5;         // (const char* path, void*)
-constexpr uint32_t LWFMovie_GotoAndStop = 0x815D75;
+constexpr uint32_t LWFMovie_GotoAndStop = rwlib::LWF::Movie::GotoAndStop;
 constexpr uint32_t MovieHandlerMap_insertUnique = 0x530869, MovieHandlerMap_destroy = 0x530811;
-constexpr uint32_t LWF_AddMovieEventHandler = 0x808645;
+constexpr uint32_t LWF_AddMovieEventHandler = rwlib::LWF::LWF::AddMovieEventHandler;
 constexpr uint32_t memcpy = 0x40E164;
 constexpr uint32_t getIncentiveName = 0x6F90E5, getIncentiveNextName = 0x6F9689, getIncentiveId = 0x6F9B51;
 constexpr uint32_t loadAvatarSetTexture = 0x6F9CD9, loadAvatarTexture = 0x6F9DA5, loadMedalTexture = 0x6F9E71;

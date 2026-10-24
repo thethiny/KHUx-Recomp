@@ -9,7 +9,7 @@ using namespace scene;
 using namespace signup;
 
 namespace {
-constexpr uint32_t Layer_ctor = 0x88A7D1, Layer_init = 0x88A8A1, Scene_create = 0x8A5F37, Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base, Layer_init = rwlib::cocos2d::Layer::init, Scene_create = rwlib::cocos2d::Scene::create, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t SceneSelectUnion_create = 0x5AC5D1, SceneSelectUnion_init = 0x6C8E09;
 constexpr uint32_t SceneSelectUnion_runInAnimation = 0x6C9555, SceneSelectUnion_runOutAnimation = 0x6C960D;
 constexpr uint32_t SceneSelectUnion_assignEnded = 0x6C94DD;
@@ -27,14 +27,14 @@ constexpr uint32_t SceneUtil_openOkDialog4Line = 0x45C775, SceneUtil_openOkCance
 constexpr uint32_t SceneUtil_callPrepareMypageAPIs = 0x46F37D;
 constexpr uint32_t SceneUtil_createBottomInAnimation = 0x45B2F9, SceneUtil_createBottomOutAnimation = 0x45B469;
 constexpr uint32_t SceneUtil_createOpenPopupAnimation = 0x45BC05, SceneUtil_createClosePopupAnimation = 0x45BC61;
-constexpr uint32_t EaseSineOut_create = 0x860D09, ImageView_loadTexture = 0x839731;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create, ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;
 constexpr uint32_t SafeBuffer_read = 0x45A269, shared_addRef = 0xC8DBB5;
 constexpr uint32_t APIManager_executeUnionChange = 0x4CE225, APIManager_openErrorDialog = 0x4C3C8D;
 constexpr uint32_t APIManager_needsRetry = 0x4C3C63, BuyMagicStoneDialog_open = 0x588CAD;
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9, AudioPlaySystemSECancel = 0x5C0D81;
-constexpr uint32_t Director_getInstance = 0x8EE519;
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5, EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
-constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = 0x8F3649;
+constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create, EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
+constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
 constexpr uint32_t GOT_VT_SceneSelectUnion = 0xFD66E8, GOT_POPUP_FADE = 0xFD65C0;
 constexpr uint32_t GOT_FUNC_LAYER_VT = 0xFD6074, GOT_CREATE_MYPAGE = 0xFD6078;
 constexpr uint32_t VT_OnEnter = 0xF67700, VT_OnExit = 0xF676D4, VT_BackKey = 0xF676A8;   // {this}

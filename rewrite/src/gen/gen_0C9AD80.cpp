@@ -61,7 +61,7 @@ RW_FUNCTION(0xC9C18E, "sub_C9C18E", forward_to_sub_CA4ADC_C9C18E);
 
 // sub_C9C1C4
 static uint32_t forward_to_sub_CA3B24_C9C1C4(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4) {
-    return rw::call(0xCA3B25, {a0, a1, a3, a4});  // sub_CA3B24
+    return rw::call(rwlib::sub_CA3B24, {a0, a1, a3, a4});  // sub_CA3B24
 }
 RW_FUNCTION(0xC9C1C4, "sub_C9C1C4", forward_to_sub_CA3B24_C9C1C4);
 
@@ -109,7 +109,7 @@ RW_FUNCTION(0xC9C250, "sub_C9C250", forward_to_sub_C9C25A_C9C250);
 // sub_C9C25A
 // IDA: double __fastcall sub_C9C25A(int a1, int a2)
 static uint64_t forward_to_sub_C9CC58_C9C25A(uint32_t a0, uint32_t a1) {
-    return rw::call64(0xC9CC59, {a0, a1});  // sub_C9CC58
+    return rw::call64(rwlib::sub_C9CC58, {a0, a1});  // sub_C9CC58
 }
 RW_FUNCTION(0xC9C25A, "sub_C9C25A", forward_to_sub_C9CC58_C9C25A);
 
@@ -375,14 +375,14 @@ RW_FUNCTION(0xCA4978, "sub_CA4978", forward_to_sub_CA4984_CA4978);
 
 // sub_CA4AB4
 static uint32_t calls_sub_CA1BF4_CA4AB4(uint32_t a0, uint32_t a1) {
-    return rw::call(0xCA1BF5, {rw::load<uint32_t>(0xFD81D8u) + 0x54u, a0, a1, 0xFFFFED8Cu});  // sub_CA1BF4; 0xFD81D8 = __sF_ptr
+    return rw::call(rwlib::sub_CA1BF4, {rw::load<uint32_t>(0xFD81D8u) + 0x54u, a0, a1, 0xFFFFED8Cu});  // sub_CA1BF4; 0xFD81D8 = __sF_ptr
 }
 RW_FUNCTION(0xCA4AB4, "sub_CA4AB4", calls_sub_CA1BF4_CA4AB4);
 
 // sub_CA4ADC
 // IDA: unsigned int __fastcall sub_CA4ADC(_BYTE *a1, int a2, int a3)
 static uint32_t forward_to_sub_CA3B24_CA4ADC(uint32_t a0, uint32_t a1, uint32_t a2) {
-    return rw::call(0xCA3B25, {a0, 0x7FFFFFFFu, a1, a2});  // sub_CA3B24
+    return rw::call(rwlib::sub_CA3B24, {a0, 0x7FFFFFFFu, a1, a2});  // sub_CA3B24
 }
 RW_FUNCTION(0xCA4ADC, "sub_CA4ADC", forward_to_sub_CA3B24_CA4ADC);
 
@@ -3722,14 +3722,14 @@ RW_FUNCTION(0xCEAB3C, "vorbis_comment_init", vorbis_comment_init_CEAB3C);
 // vorbis_synthesis
 // IDA: int __fastcall vorbis_synthesis(int a1, int a2)
 static uint32_t vorbis_synthesis_CED6E4(uint32_t a0, uint32_t a1) {
-    return rw::call_exact(0xCED4F0, {a0, a1, 1u});  // sub_CED4F0
+    return rw::call_exact(rwlib::sub_CED4F0, {a0, a1, 1u});  // sub_CED4F0
 }
 RW_FUNCTION(0xCED6E4, "vorbis_synthesis", vorbis_synthesis_CED6E4);
 
 // vorbis_synthesis_trackonly
 // IDA: int __fastcall vorbis_synthesis_trackonly(int a1, int a2)
 static uint32_t vorbis_synthesis_trackonly_CED6EC(uint32_t a0, uint32_t a1) {
-    return rw::call_exact(0xCED4F0, {a0, a1, 0u});  // sub_CED4F0
+    return rw::call_exact(rwlib::sub_CED4F0, {a0, a1, 0u});  // sub_CED4F0
 }
 RW_FUNCTION(0xCED6EC, "vorbis_synthesis_trackonly", vorbis_synthesis_trackonly_CED6EC);
 
@@ -3761,21 +3761,21 @@ RW_FUNCTION(0xCEF170, "ov_seekable", ov_seekable_CEF170);
 // oggpackB_writeinit
 // IDA: // attributes: thunk _BYTE *__fastcall oggpackB_writeinit(_DWORD *a1)
 static uint32_t oggpackB_writeinit_CF153C(uint32_t a0) {
-    return rw::call_exact(0xCF14F4, {a0});  // oggpack_writeinit
+    return rw::call_exact(rwlib::oggpack_writeinit, {a0});  // oggpack_writeinit
 }
 RW_FUNCTION(0xCF153C, "oggpackB_writeinit", oggpackB_writeinit_CF153C);
 
 // oggpackB_writecheck
 // IDA: // attributes: thunk int __fastcall oggpackB_writecheck(int a1)
 static uint32_t oggpackB_writecheck_CF1568(uint32_t a0) {
-    return rw::call_exact(0xCF1540, {a0});  // oggpack_writecheck
+    return rw::call_exact(rwlib::oggpack_writecheck, {a0});  // oggpack_writecheck
 }
 RW_FUNCTION(0xCF1568, "oggpackB_writecheck", oggpackB_writecheck_CF1568);
 
 // oggpackB_reset
 // IDA: // attributes: thunk _DWORD *__fastcall oggpackB_reset(_DWORD *result)
 static uint32_t oggpackB_reset_CF1638(uint32_t a0) {
-    return rw::call_exact(0xCF1610, {a0});  // oggpack_reset
+    return rw::call_exact(rwlib::oggpack_reset, {a0});  // oggpack_reset
 }
 RW_FUNCTION(0xCF1638, "oggpackB_reset", oggpackB_reset_CF1638);
 
@@ -3786,7 +3786,7 @@ static uint32_t oggpack_writealign_CF17F8(uint32_t a0) {
     if (int32_t(8u - v0) > int32_t(7u)) {
         return a0;
     } else {
-        return rw::call_exact(0xCF1678, {a0, 0u, 8u - v0});  // oggpack_write
+        return rw::call_exact(rwlib::oggpack_write, {a0, 0u, 8u - v0});  // oggpack_write
     }
 }
 RW_FUNCTION(0xCF17F8, "oggpack_writealign", oggpack_writealign_CF17F8);
@@ -3798,7 +3798,7 @@ static uint32_t oggpackB_writealign_CF1998(uint32_t a0) {
     if (int32_t(8u - v0) > int32_t(7u)) {
         return a0;
     } else {
-        return rw::call_exact(0xCF1810, {a0, 0u, 8u - v0});  // oggpackB_write
+        return rw::call_exact(rwlib::oggpackB_write, {a0, 0u, 8u - v0});  // oggpackB_write
     }
 }
 RW_FUNCTION(0xCF1998, "oggpackB_writealign", oggpackB_writealign_CF1998);
@@ -3806,42 +3806,42 @@ RW_FUNCTION(0xCF1998, "oggpackB_writealign", oggpackB_writealign_CF1998);
 // oggpackB_writeclear
 // IDA: // attributes: thunk int __fastcall oggpackB_writeclear(void *a1)
 static uint32_t oggpackB_writeclear_CF1B38(uint32_t a0) {
-    return rw::call_exact(0xCF163C, {a0});  // oggpack_writeclear
+    return rw::call_exact(rwlib::oggpack_writeclear, {a0});  // oggpack_writeclear
 }
 RW_FUNCTION(0xCF1B38, "oggpackB_writeclear", oggpackB_writeclear_CF1B38);
 
 // oggpackB_readinit
 // IDA: // attributes: thunk int __fastcall oggpackB_readinit(int a1, int a2, int a3)
 static uint32_t oggpackB_readinit_CF1B68(uint32_t a0, uint32_t a1, uint32_t a2) {
-    return rw::call_exact(0xCF1B3C, {a0, a1, a2});  // oggpack_readinit
+    return rw::call_exact(rwlib::oggpack_readinit, {a0, a1, a2});  // oggpack_readinit
 }
 RW_FUNCTION(0xCF1B68, "oggpackB_readinit", oggpackB_readinit_CF1B68);
 
 // oggpackB_adv
 // IDA: // attributes: thunk int *__fastcall oggpackB_adv(int *result, int a2)
 static uint32_t oggpackB_adv_CF1DCC(uint32_t a0, uint32_t a1) {
-    return rw::call_exact(0xCF1D5C, {a0, a1});  // oggpack_adv
+    return rw::call_exact(rwlib::oggpack_adv, {a0, a1});  // oggpack_adv
 }
 RW_FUNCTION(0xCF1DCC, "oggpackB_adv", oggpackB_adv_CF1DCC);
 
 // oggpackB_adv1
 // IDA: // attributes: thunk int *__fastcall oggpackB_adv1(int *result)
 static uint32_t oggpackB_adv1_CF1E04(uint32_t a0) {
-    return rw::call_exact(0xCF1DD0, {a0});  // oggpack_adv1
+    return rw::call_exact(rwlib::oggpack_adv1, {a0});  // oggpack_adv1
 }
 RW_FUNCTION(0xCF1E04, "oggpackB_adv1", oggpackB_adv1_CF1E04);
 
 // oggpackB_bytes
 // IDA: // attributes: thunk int __fastcall oggpackB_bytes(int a1)
 static uint32_t oggpackB_bytes_CF2130(uint32_t a0) {
-    return rw::call_exact(0xCF2108, {a0});  // oggpack_bytes
+    return rw::call_exact(rwlib::oggpack_bytes, {a0});  // oggpack_bytes
 }
 RW_FUNCTION(0xCF2130, "oggpackB_bytes", oggpackB_bytes_CF2130);
 
 // oggpackB_bits
 // IDA: // attributes: thunk int __fastcall oggpackB_bits(_DWORD *a1)
 static uint32_t oggpackB_bits_CF2134(uint32_t a0) {
-    return rw::call_exact(0xCF2120, {a0});  // oggpack_bits
+    return rw::call_exact(rwlib::oggpack_bits, {a0});  // oggpack_bits
 }
 RW_FUNCTION(0xCF2134, "oggpackB_bits", oggpackB_bits_CF2134);
 
@@ -3855,7 +3855,7 @@ RW_FUNCTION(0xCF2138, "oggpack_get_buffer", oggpack_get_buffer_CF2138);
 // oggpackB_get_buffer
 // IDA: // attributes: thunk int __fastcall oggpackB_get_buffer(int a1)
 static uint32_t oggpackB_get_buffer_CF2140(uint32_t a0) {
-    return rw::call_exact(0xCF2138, {a0});  // oggpack_get_buffer
+    return rw::call_exact(rwlib::oggpack_get_buffer, {a0});  // oggpack_get_buffer
 }
 RW_FUNCTION(0xCF2140, "oggpackB_get_buffer", oggpackB_get_buffer_CF2140);
 
@@ -3890,21 +3890,21 @@ RW_FUNCTION(0xCF2280, "ogg_page_eos", ogg_page_eos_CF2280);
 // ogg_stream_flush
 // IDA: int __fastcall ogg_stream_flush(int a1, int a2)
 static uint32_t ogg_stream_flush_CF2D6C(uint32_t a0, uint32_t a1) {
-    return rw::call_exact(0xCF279C, {a0, a1, 1u, 0x1000u});  // sub_CF279C
+    return rw::call_exact(rwlib::sub_CF279C, {a0, a1, 1u, 0x1000u});  // sub_CF279C
 }
 RW_FUNCTION(0xCF2D6C, "ogg_stream_flush", ogg_stream_flush_CF2D6C);
 
 // ogg_stream_flush_fill
 // IDA: int __fastcall ogg_stream_flush_fill(int a1, int a2, int a3)
 static uint32_t ogg_stream_flush_fill_CF2D78(uint32_t a0, uint32_t a1, uint32_t a2) {
-    return rw::call_exact(0xCF279C, {a0, a1, 1u, a2});  // sub_CF279C
+    return rw::call_exact(rwlib::sub_CF279C, {a0, a1, 1u, a2});  // sub_CF279C
 }
 RW_FUNCTION(0xCF2D78, "ogg_stream_flush_fill", ogg_stream_flush_fill_CF2D78);
 
 // ogg_stream_eos
 // IDA: int __fastcall ogg_stream_eos(_DWORD *a1)
 static uint32_t ogg_stream_eos_CF2E50(uint32_t a0) {
-    const uint32_t r0 = rw::call(0xCF240C, {a0});  // ogg_stream_check
+    const uint32_t r0 = rw::call(rwlib::ogg_stream_check, {a0});  // ogg_stream_check
     if (r0 == 0u) {
         const uint32_t v1 = rw::load<uint32_t>(a0 + 0x148u);
         if (r0 != 0u) {

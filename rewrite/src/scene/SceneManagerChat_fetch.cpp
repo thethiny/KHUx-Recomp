@@ -7,8 +7,8 @@
 using namespace scene;
 
 namespace {
-constexpr uint32_t Widget_setBright = 0x825A09;
-constexpr uint32_t Widget_isBright = 0x826FA5;
+constexpr uint32_t Widget_setBright = rwlib::cocos2d::ui::Widget::setBright;
+constexpr uint32_t Widget_isBright = rwlib::cocos2d::ui::Widget::isBright;
 constexpr uint32_t SceneUtil_setButtonEnabled = 0x468625;   // (Button*, Text*, bool, bool)
 constexpr uint32_t APIManager_executeUserChatGet = 0x4C6871;
 constexpr uint32_t APIManager_openErrorDialog = 0x4C3C8D;   // (api, const function<void(bool)>&, bool)

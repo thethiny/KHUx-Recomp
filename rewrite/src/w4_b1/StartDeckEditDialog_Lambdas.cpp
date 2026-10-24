@@ -34,13 +34,13 @@ constexpr uint32_t AppState_execTutorialCloseFunc = 0x4EBA5D;
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
 constexpr uint32_t AudioPlaySystemSECancel = 0x5C0D81;
 constexpr uint32_t AudioPlayGameMainSEOneShot = 0x5C1A79;
-constexpr uint32_t Ref_retain = 0x8FD0B5;
-constexpr uint32_t Node_stopAllActions = 0x893815;
-constexpr uint32_t Widget_create = 0x825875;
-constexpr uint32_t Widget_setBright = 0x825A09;
-constexpr uint32_t Widget_isBright = 0x826FA5;
-constexpr uint32_t GUIReader_getInstance = 0x7BF1E5;
-constexpr uint32_t GUIReader_widgetFromJsonFile = 0x7BF9FD;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain;
+constexpr uint32_t Node_stopAllActions = rwlib::cocos2d::Node::stopAllActions;
+constexpr uint32_t Widget_create = rwlib::cocos2d::ui::Widget::create;
+constexpr uint32_t Widget_setBright = rwlib::cocos2d::ui::Widget::setBright;
+constexpr uint32_t Widget_isBright = rwlib::cocos2d::ui::Widget::isBright;
+constexpr uint32_t GUIReader_getInstance = rwlib::cocostudio::GUIReader::getInstance;
+constexpr uint32_t GUIReader_widgetFromJsonFile = rwlib::cocostudio::GUIReader::widgetFromJsonFile;
 constexpr uint32_t FunctionWidgetInt_call = 0x54A065;    // std::function<Widget*(int)>::operator()
 constexpr uint32_t FunctionVB_call = 0x474139;           // std::function<void(bool)>::operator()
 constexpr uint32_t TextData_get = 0x4928AD;
@@ -497,7 +497,7 @@ struct StartDeckEditDialogLambdas {
         Self *s = S(self);
         if (!s->parent) return;
         call(Ref_retain, {self});
-        call(0x8FD0D5, {self});   // Ref::autorelease
+        call(rwlib::cocos2d::Ref::autorelease, {self});   // Ref::autorelease
         uint32_t p = s->parent;
         vcall(p, VS_removeChild, {p, s->shadow, 1});
         s->parent = 0;

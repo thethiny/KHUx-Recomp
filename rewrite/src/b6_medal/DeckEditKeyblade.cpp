@@ -22,9 +22,9 @@ constexpr uint32_t SceneUtil_createShadowSprite = 0x45AD69;
 constexpr uint32_t SceneUtil_createFadeInAnimation = 0x45BCA1, SceneUtil_createFadeOutAnimation = 0x45BCE5;
 constexpr uint32_t SceneUtil_CompleteTutorialPhase = 0x472A75;   // (const function<void()>&, int, int)
 constexpr uint32_t AudioLWFNode_create = 0x5EB6B5;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t HandlerMap_insert_unique = 0x530869, HandlerMap_destroy = 0x530811;
-constexpr uint32_t LWF_AddMovieEventHandler = 0x808645;
+constexpr uint32_t LWF_AddMovieEventHandler = rwlib::LWF::LWF::AddMovieEventHandler;
 constexpr uint32_t SafeBuffer_read = 0x45A269;
 constexpr uint32_t APIManager_openErrorDialog = 0x4C3C8D;  // (api, const function<void(bool)>&, bool)
 constexpr uint32_t APIManager_executeStageGet160310 = 0x4CADB9, APIManager_executeRaidGet = 0x4CBEC5;

@@ -26,13 +26,13 @@ constexpr uint32_t FacebookManager_getInstance = 0x4E5585;
 constexpr uint32_t FacebookManager_getProfileImageUrl = 0x4E5783;   // (mgr, const string& id, const function&)
 constexpr uint32_t ImageDownloader_loadImage = 0x5BD0CB;  // (dl, ImageView*, const char* url, const char* key)
 constexpr uint32_t SceneManager_getFaceImageUrl = 0x621D0D;   // (string out, mgr, const string& id)
-constexpr uint32_t Sprite_create = 0x8A64DD;
-constexpr uint32_t Rect_ctor = 0x8DF18B;                  // (rect, x, y, w, h)
-constexpr uint32_t Vec2_copy = 0x8E4C03;
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Director_getTextureCache = 0x8EFE69;
-constexpr uint32_t Texture2D_getContentSize = 0x914ACB;   // (Size out, texture)
-constexpr uint32_t TextureCache_addImage = 0x917DA9;      // (cache, const string& path)
+constexpr uint32_t Sprite_create = rwlib::cocos2d::Sprite::create__v;
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff;                  // (rect, x, y, w, h)
+constexpr uint32_t Vec2_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_;
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Director_getTextureCache = rwlib::cocos2d::Director::getTextureCache;
+constexpr uint32_t Texture2D_getContentSize = rwlib::cocos2d::Texture2D::getContentSize;   // (Size out, texture)
+constexpr uint32_t TextureCache_addImage = rwlib::cocos2d::TextureCache::addImage;      // (cache, const string& path)
 
 // virtual slots
 constexpr uint32_t VSLOT_removeAllChildrenWithCleanup = 0x13C;

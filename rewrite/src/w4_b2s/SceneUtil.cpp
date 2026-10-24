@@ -18,8 +18,8 @@ constexpr Addr MedalDataManager_getInstance = 0x76AD69;
 constexpr Addr MedalDataManager_getMedalData = 0x76ADB5;
 constexpr Addr KeyBladeDataManager_getInstance = 0x76B60D;
 constexpr Addr KeyBladeDataManager_getKeyBladeData = 0x76B659;   // (sret, mgr, u64, unsigned, UserKeyblade::Keyblade)
-constexpr Addr ImageView_loadTexture = 0x839731;
-constexpr Addr Text_setString = 0x83A2DD;
+constexpr Addr ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;
+constexpr Addr Text_setString = rwlib::cocos2d::ui::Text::setString;
 }  // namespace
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -142,20 +142,20 @@ RW_FUNCTION(0x46BE74, "SceneUtil::changePartnerPanel(Widget*, int, int)", SceneU
 // SceneUtil::openNewLuxPopup(int rank, std::function<void()> callback): the "new Lux rank" popup of the result
 // screen (BattleResult_LB): the sphere reward of rank `rank`, and an Ok button that runs a copy of the callback.
 namespace {
-constexpr Addr FadeTo_create = 0x86B3E1;                 // FadeTo::create(float duration, uint8 opacity)
-constexpr Addr GUIReader_getInstance = 0x7BF1E5;
-constexpr Addr GUIReader_widgetFromJsonFile = 0x7BF9FD;
-constexpr Addr Director_getInstance = 0x8EE519;
-constexpr Addr Director_getVisibleSize = 0x8F0675;       // (Size* out, Director*)
-constexpr Addr Vec2_ctorXY = 0x8E4B9D;
-constexpr Addr Vec2_dtor = 0x8E4C17;
+constexpr Addr FadeTo_create = rwlib::cocos2d::FadeTo::create;                 // FadeTo::create(float duration, uint8 opacity)
+constexpr Addr GUIReader_getInstance = rwlib::cocostudio::GUIReader::getInstance;
+constexpr Addr GUIReader_widgetFromJsonFile = rwlib::cocostudio::GUIReader::widgetFromJsonFile;
+constexpr Addr Director_getInstance = rwlib::cocos2d::Director::getInstance;
+constexpr Addr Director_getVisibleSize = rwlib::cocos2d::Director::getVisibleSize;       // (Size* out, Director*)
+constexpr Addr Vec2_ctorXY = rwlib::cocos2d::Vec2::ctor_base__ff;
+constexpr Addr Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr Addr Sphere_create = 0x78CF21;
 constexpr Addr FunctionVoid_copy = 0x4683CD;
 constexpr Addr FunctionVoid_move = 0x47F905;
-constexpr Addr Widget_addTouchEventListener = 0x826CCF;
+constexpr Addr Widget_addTouchEventListener = rwlib::cocos2d::ui::Widget::addTouchEventListener;
 constexpr Addr createShadowSprite = 0x45AD69;
 constexpr Addr createOpenPopupAnimation = 0x45BC05;
-constexpr Addr EaseSineOut_create = 0x860D09;
+constexpr Addr EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr Addr audio_Manager_getInstance = 0x5BECFD;
 constexpr Addr audio_Manager_load = 0x5BEEF5;
 constexpr Addr VectorThrowOutOfRange = 0x47CCE1;

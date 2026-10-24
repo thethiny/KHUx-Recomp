@@ -37,9 +37,9 @@ constexpr uint32_t DataCallback_call = 0x4DF5E9;            // std::function<boo
 constexpr uint32_t DataCallback_copy = 0x4DFBF5;            // its copy constructor
 constexpr uint32_t ResponseFunction_fromBind = 0x4DF585;    // function<void(HttpClient*, HttpResponse*)>(bind, 0)
 constexpr uint32_t ResponseFunction_assign = 0x49D419;      // operator=(const function&)
-constexpr uint32_t Ref_ctor = 0x8FD025;
-constexpr uint32_t HttpClient_getInstance = 0x7E3FCD;
-constexpr uint32_t HttpClient_send = 0x7E4409;
+constexpr uint32_t Ref_ctor = rwlib::cocos2d::Ref::ctor_base;
+constexpr uint32_t HttpClient_getInstance = rwlib::cocos2d::network::HttpClient::getInstance;
+constexpr uint32_t HttpClient_send = rwlib::cocos2d::network::HttpClient::send;
 constexpr uint32_t string_assign = 0x48D811;                // std::string::assign(const char*, size_t)
 constexpr uint32_t string_reserve = 0x48D705;
 // libc (imports)

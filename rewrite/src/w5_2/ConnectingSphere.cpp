@@ -8,7 +8,7 @@ using namespace scene;
 namespace {
 namespace a {
 constexpr uint32_t AEABI_MEMSET = 0x40E7A0;               // __aeabi_memset(dst, n, c)
-constexpr uint32_t Ref_ctor = 0x8FD025, Ref_dtor = 0x8FD059, Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Ref_ctor = rwlib::cocos2d::Ref::ctor_base, Ref_dtor = rwlib::cocos2d::Ref::dtor_base, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t IntSet_dtor = 0x5C0A99;                // __hash_table<int>::~__hash_table
 constexpr uint32_t IntSet_clear = 0x7998FD;               // __hash_table<int>::clear
 constexpr uint32_t APIManager_getInstance = 0x4BA8C9;

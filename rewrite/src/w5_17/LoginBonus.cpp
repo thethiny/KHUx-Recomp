@@ -8,18 +8,18 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Layer_ctor = 0x88A7D1, Layer_dtor = 0x88A88D;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base, Layer_dtor = rwlib::cocos2d::Layer::dtor_base;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t aeabi_memset = 0x40E7A0;
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
-constexpr uint32_t DelayTime_create = 0x86852D, CallFunc_create = 0x866B39, Sequence_create = 0x867999;
-constexpr uint32_t Director_getInstance = 0x8EE519, Director_getTextureCache = 0x8EFE69;
-constexpr uint32_t TextureCache_addImage = 0x917DA9;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
+constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create, CallFunc_create = rwlib::cocos2d::CallFunc::create, Sequence_create = rwlib::cocos2d::Sequence::create;
+constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance, Director_getTextureCache = rwlib::cocos2d::Director::getTextureCache;
+constexpr uint32_t TextureCache_addImage = rwlib::cocos2d::TextureCache::addImage;
 constexpr uint32_t SafeBuffer_read = 0x45A269;
 constexpr uint32_t StringAssign = 0x48D811;                // std::string::assign(const char*, size_t)
 constexpr uint32_t AudioLWFNode_create = 0x5EB6B5;         // (const char* path, void*)
-constexpr uint32_t LWFMovie_GotoAndPlay = 0x815DCF;
+constexpr uint32_t LWFMovie_GotoAndPlay = rwlib::LWF::Movie::GotoAndPlay__i;
 constexpr uint32_t AudioManager_getInstance = 0x5BECFD, AudioManager_getLayer = 0x5BF33D;   // (out, mgr, int)
 constexpr uint32_t AudioLayer_playSE = 0x5BF785;           // (layer, ResourceID, int, int)
 constexpr uint32_t VectorLoginBonus_dtor = 0x6F6429;
@@ -30,11 +30,11 @@ constexpr uint32_t IInOutAnimation_runOutAnimation = 0x6F24B5;
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
 constexpr uint32_t LoginBonus_init = 0x6F649D, LoginBonus_initMemoryBonus = 0x6F87E1, LoginBonus_stampTotal = 0x6FA581;
 constexpr uint32_t GOT_VT_LoginBonus = 0xFD6958;
-constexpr uint32_t Layer_init = 0x88A8A1;
+constexpr uint32_t Layer_init = rwlib::cocos2d::Layer::init;
 constexpr uint32_t FunctionVV_assign = 0x4EB9CD;           // std::function<void()>::operator=(const function&)
-constexpr uint32_t Vec2_ctorXY = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t ArmatureDataManager_getInstance = 0x7AC9B5, ArmatureDataManager_addArmatureFileInfo = 0x7AD7BD;
-constexpr uint32_t Armature_create = 0x79F3C7;
+constexpr uint32_t Vec2_ctorXY = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance, ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;
+constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create;
 constexpr uint32_t ImageButton_create = 0x531239, ImageButton_setTargetView = 0x5318C1;
 constexpr uint32_t ImageButton_addTouchEventListener = 0x5315B1;
 constexpr uint32_t SM_hideHeader = 0x61154D, SM_removeBackground = 0x611691;

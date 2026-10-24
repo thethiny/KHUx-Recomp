@@ -48,8 +48,8 @@ constexpr Addr APIMANAGER_GETINSTANCE = 0x4BA8C9;
 constexpr Addr APPSTATE_GETINSTANCE = 0x4E66DD;
 constexpr Addr FADD = 0xCD6BD0;                    // __aeabi_fadd
 constexpr Addr FMUL = 0xCD6E14;                    // __mulsf3
-constexpr Addr REF_AUTORELEASE = 0x8FD0D5;
-constexpr Addr RUN_ACTION = 0x894AED;              // cocos2d::Node::runAction
+constexpr Addr REF_AUTORELEASE = rwlib::cocos2d::Ref::autorelease;
+constexpr Addr RUN_ACTION = rwlib::cocos2d::Node::runAction;              // cocos2d::Node::runAction
 
 // ---- cocos2d::Node virtual slots (byte offsets)
 namespace slot {

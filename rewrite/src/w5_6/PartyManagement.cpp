@@ -8,17 +8,17 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Layer_ctor = 0x88A7D1, Layer_init = 0x88A8A1, Layer_dtor = 0x88A88D;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t Sprite_create = 0x8A64DD;
-constexpr uint32_t Color3B_ctor = 0x9062E7;
-constexpr uint32_t Rect_ctor = 0x8DF18B;                   // Rect(x, y, w, h)
-constexpr uint32_t Vec2_ctorXY = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Text_setString = 0x83A2DD;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base, Layer_init = rwlib::cocos2d::Layer::init, Layer_dtor = rwlib::cocos2d::Layer::dtor_base;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t Sprite_create = rwlib::cocos2d::Sprite::create__v;
+constexpr uint32_t Color3B_ctor = rwlib::cocos2d::Color3B::ctor_base;
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff;                   // Rect(x, y, w, h)
+constexpr uint32_t Vec2_ctorXY = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Text_setString = rwlib::cocos2d::ui::Text::setString;
 constexpr uint32_t SafeBuffer_read = 0x45A269;             // (sb, out, src, n, index)
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5, EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
-constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = 0x8F3649;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create, EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
+constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
 constexpr uint32_t FunctionBTE_swap = 0x483E4D;            // std::function<bool(Touch*, Event*)>::swap
 constexpr uint32_t FunctionVV_assign = 0x4EB9CD;           // std::function<void()>::operator=(const function&)
 constexpr uint32_t FunctionVB_assign = 0x490109;           // std::function<void(bool)>::operator=(const function&)

@@ -8,8 +8,8 @@ constexpr uint32_t ActorVector_clear = 0x485BA3, ActorVector_pushBack = 0x6425D5
 constexpr uint32_t MotionVector_pushSlow = 0x64C431;      // vector<Avatar::Motion>::__push_back_slow_path(&&)
 constexpr uint32_t UIntVector_copy = 0x641E91;
 constexpr uint32_t Random_getInstance = 0x492055, Random_generateUniformInt = 0x492225;
-constexpr uint32_t FadeOut_create = 0x86B25D, FadeIn_create = 0x86B115, Spawn_create = 0x8682F5;
-constexpr uint32_t Text_setTextHorizontalAlignment = 0x83A65F;
+constexpr uint32_t FadeOut_create = rwlib::cocos2d::FadeOut::create, FadeIn_create = rwlib::cocos2d::FadeIn::create, Spawn_create = rwlib::cocos2d::Spawn::create;
+constexpr uint32_t Text_setTextHorizontalAlignment = rwlib::cocos2d::ui::Text::setTextHorizontalAlignment;
 constexpr uint32_t MemberIndex_find = 0x490275;          // unordered_map<uint64, int>::find
 constexpr uint32_t M_addChangeMotionEvent = 0x63FA8D, M_moveAvatar = 0x6411CD, M_setCameraPosition = 0x640851;
 constexpr uint32_t M_setAvatarProfileImageVisible = 0x641EF5;
@@ -358,8 +358,8 @@ RW_FUNCTION(0x6412E8, "SceneMyPage::runAvatrAction", SceneMyPage_runAvatrAction)
 namespace {
 constexpr uint32_t AvatarActor_create = 0x73FD21, AvatarActor_setStyle = 0x740635;
 constexpr uint32_t Avatar_preloadResources = 0x5C7ED1;
-constexpr uint32_t Node_create = 0x89372D;
-constexpr uint32_t ImageView_loadTexture = 0x839731;
+constexpr uint32_t Node_create = rwlib::cocos2d::Node::create;
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;
 constexpr uint32_t AvatarUtil_makeStyle = 0x497105;      // (Style* out, const Coordinate&, keyblade)
 constexpr uint32_t SafeBuffer_dtor = 0x45A13D;
 constexpr uint32_t BattleUtil_getCurrentKeybladeIndex = 0x496F4D;

@@ -11,20 +11,20 @@ namespace {
 namespace a {
 constexpr uint32_t STRLEN = 0x40E08C;
 constexpr uint32_t AEABI_MEMSET = 0x40E7A0;               // __aeabi_memset(dst, n, c)
-constexpr uint32_t Ref_ctor = 0x8FD025, Ref_dtor = 0x8FD059, Ref_retain = 0x8FD0B5, Ref_release = 0x8FD0BD;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Ref_ctor = rwlib::cocos2d::Ref::ctor_base, Ref_dtor = rwlib::cocos2d::Ref::dtor_base, Ref_retain = rwlib::cocos2d::Ref::retain, Ref_release = rwlib::cocos2d::Ref::release;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t SafeBuffer_read = 0x45A269;
 constexpr uint32_t SceneUtil_searchNodeByName = 0x45A9F5;
 constexpr uint32_t SceneUtil_setButtonEnabled = 0x468625;
 constexpr uint32_t StringBuffer_ctor = 0x49140D;          // (buf, fmt, ...)
-constexpr uint32_t ArmatureDataManager_getInstance = 0x7AC9B5;
-constexpr uint32_t ArmatureDataManager_addArmatureFileInfo = 0x7AD7BD;
-constexpr uint32_t Armature_create = 0x79F3C7;
+constexpr uint32_t ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance;
+constexpr uint32_t ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;
+constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create;
 constexpr uint32_t ConnectingSphere_create = 0x793A65;
 constexpr uint32_t SceneManager_getInstance = 0x60C26D;
 constexpr uint32_t SphereBlock_create = 0x7936E1;         // (kind, skill, type, cost)
-constexpr uint32_t Node_stopAllActions = 0x893815;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Node_stopAllActions = rwlib::cocos2d::Node::stopAllActions;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t audio_getInstance = 0x5BECFD, audio_load = 0x5BEEF5, audio_getLayer = 0x5BF33D;
 constexpr uint32_t Layer_playSE = 0x5BF785;
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;

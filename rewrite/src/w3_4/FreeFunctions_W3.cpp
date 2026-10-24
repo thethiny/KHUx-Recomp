@@ -20,14 +20,14 @@ constexpr uint32_t SYSTEM_SE_LAYER = 10000;         // the audio layer of the sy
 constexpr uint32_t SE_CANCEL = 0x1E5841A2;          // ResourceID (hash) of the cancel sound
 
 // ---- cocos2d
-constexpr uint32_t VEC2_COPY = 0x8E4C03;            // cocos2d::Vec2::Vec2(const Vec2&)
-constexpr uint32_t VEC2_DTOR = 0x8E4C17;            // cocos2d::Vec2::~Vec2()
+constexpr uint32_t VEC2_COPY = rwlib::cocos2d::Vec2::ctor_base__RKS0_;            // cocos2d::Vec2::Vec2(const Vec2&)
+constexpr uint32_t VEC2_DTOR = rwlib::cocos2d::Vec2::dtor_base;            // cocos2d::Vec2::~Vec2()
 constexpr uint32_t DISP_DMG_NUM = 0x5EB45D;         // DisplayDamageNumber::disp_dmgNum(int, Node*, Vec2, float, bool x4, int, float)
 constexpr uint32_t NODE_GET_PARENT = 0x11C;         // vtable byte offsets
 constexpr uint32_t NODE_GET_POSITION = 0x54;
 
 // ---- JNI
-constexpr uint32_t GET_STATIC_METHOD_INFO = 0xA4225D;    // cocos2d::JniHelper::getStaticMethodInfo(info, cls, name, sig)
+constexpr uint32_t GET_STATIC_METHOD_INFO = rwlib::cocos2d::JniHelper::getStaticMethodInfo;    // cocos2d::JniHelper::getStaticMethodInfo(info, cls, name, sig)
 constexpr uint32_t CALL_STATIC_VOID_METHOD = 0x4E0D09;   // _JNIEnv::CallStaticVoidMethod(env, cls, mid, ...)
 constexpr uint32_t CALL_VIDEO_NO_PARAM = 0x8436A1;       // callVideoNonParameterFun(int index, const char* method)
 constexpr uint32_t JNI_DELETE_LOCAL_REF = 0x5C;          // JNINativeInterface byte offsets

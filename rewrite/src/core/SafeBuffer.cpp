@@ -50,8 +50,8 @@ void SafeBuffer::set32(uint32_t index, int32_t value) {
 // ------------------------------------------------------------------------------------------ lifetime
 namespace {
 
-constexpr uint32_t TIME_SEED = 0xC60645;          // sub_C60644(uint64_t *out): gettimeofday in microseconds
-constexpr uint32_t XXH32 = 0x936E1D;              // XXH32(data, length, seed)
+constexpr uint32_t TIME_SEED = rwlib::sub_C60644;          // sub_C60644(uint64_t *out): gettimeofday in microseconds
+constexpr uint32_t XXH32 = rwlib::XXH32;              // XXH32(data, length, seed)
 constexpr uint32_t UPDATE_LIST_INIT = 0x459FFD;   // sub_459FFC: constructs the update list on first use
 constexpr uint32_t LIST_REMOVE = 0x45A7FD;        // std::list<SafeBuffer*>::remove(const value&)
 constexpr uint32_t INPUT_STREAM_CREATE = 0x8DC5F1;        // bg::InputStreamFactory::create(out, data, size, deleter)
@@ -290,9 +290,9 @@ constexpr uint32_t UPDATE_LIST_GUARD = 0x10033B4;          // the update list's 
 constexpr uint32_t UPDATE_LIST_DTOR = 0x45A879;            // sub_45A878: ~list (registered with __cxa_atexit)
 constexpr uint32_t UPDATE_FUNCTOR_VTABLE = 0xF53858;       // std::function<void(float)> __func of the update lambda
 constexpr uint32_t DSO_HANDLE_GOT = 0xFD604C;              // GOT slot holding &__dso_handle
-constexpr uint32_t DIRECTOR_GET_INSTANCE = 0x8EE519;       // cocos2d::Director::getInstance()
-constexpr uint32_t DIRECTOR_GET_SCHEDULER = 0x8F0CF1;      // cocos2d::Director::getScheduler() const
-constexpr uint32_t SCHEDULER_SCHEDULE_PER_FRAME = 0x8FE851;  // Scheduler::schedulePerFrame(fn, target, priority, paused)
+constexpr uint32_t DIRECTOR_GET_INSTANCE = rwlib::cocos2d::Director::getInstance;       // cocos2d::Director::getInstance()
+constexpr uint32_t DIRECTOR_GET_SCHEDULER = rwlib::cocos2d::Director::getScheduler;      // cocos2d::Director::getScheduler() const
+constexpr uint32_t SCHEDULER_SCHEDULE_PER_FRAME = rwlib::cocos2d::Scheduler::schedulePerFrame;  // Scheduler::schedulePerFrame(fn, target, priority, paused)
 }  // namespace
 
 // The update list's first use (a function-local static): an empty std::list plus a cursor, and a per-frame

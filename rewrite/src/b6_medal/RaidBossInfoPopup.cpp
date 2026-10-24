@@ -13,9 +13,9 @@ constexpr uint32_t AudioPlaySystemSEPopUp = 0x5C0E09;
 constexpr uint32_t SM_getPopupLayer = 0x613E69, SM_openPopup = 0x61524D;
 constexpr uint32_t SceneUtil_createShadowSprite = 0x45AD69, SceneUtil_settingTitleLabel = 0x45D8D1;
 constexpr uint32_t SceneUtil_createOpenPopupAnimation = 0x45BC05;
-constexpr uint32_t FadeTo_create = 0x86B3E1, EaseSineOut_create = 0x860D09;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Widget_addTouchEventListener = 0x826CCF;
+constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create, EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Widget_addTouchEventListener = rwlib::cocos2d::ui::Widget::addTouchEventListener;
 constexpr uint32_t MasterRaidEnemy_create = 0x787745, MasterRaidReward_create = 0x789DF9;
 constexpr uint32_t SafeBuffer_ctor = 0x459F21, SafeBuffer_dtor = 0x45A13D, SafeBuffer_read = 0x45A269;
 constexpr uint32_t RaidParts_setMasterParam = 0x5F1551;     // (parts, shared_ptr<RaidEnemy>, level, 0, 0)

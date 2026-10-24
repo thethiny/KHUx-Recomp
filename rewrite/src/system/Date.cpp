@@ -5,8 +5,8 @@ namespace {
 constexpr uint32_t TIME_OFFSET = 0x1003440;     // int: server time - device time, seconds (hole::time)
 constexpr uint32_t DATE_SEPARATORS = 0xDFA05D;  // "-- ::": the character ending each Date field
 constexpr uint32_t TIME_SEPARATORS = 0xDFA05A;  // the character ending each Time field
-constexpr uint32_t NOW_MICROS = 0xC60645;       // sub_C60644(uint64_t *out): gettimeofday in microseconds
-constexpr uint32_t MICROS_TO_SECONDS = 0xC6067D;  // sub_C6067C(const uint64_t *): seconds
+constexpr uint32_t NOW_MICROS = rwlib::sub_C60644;       // sub_C60644(uint64_t *out): gettimeofday in microseconds
+constexpr uint32_t MICROS_TO_SECONDS = rwlib::sub_C6067C;  // sub_C6067C(const uint64_t *): seconds
 constexpr uint32_t STRCHR = 0x410198;           // strchr (import)
 constexpr uint32_t STRTOL = 0x4101A4;           // strtol (import)
 constexpr uint32_t LOCALTIME = 0x4101B0;        // localtime (import)

@@ -13,17 +13,17 @@ constexpr float LETTER_DELAY = 0.05f;
 
 namespace g {
 constexpr uint32_t aeabi_memset = 0x40E7A0;            // __aeabi_memset(dst, n, c)
-constexpr uint32_t label_ctor = 0x8840D1;              // Label::Label(FontAtlas*, TextHAlignment, TextVAlignment, bool, bool)
-constexpr uint32_t label_dtor = 0x884475;              // Label::~Label()
-constexpr uint32_t label_getStringLength = 0x8869AD;   // Label::getStringLength() const
-constexpr uint32_t spriteBatchNode_init = 0x8A8E21;    // SpriteBatchNode::init()
-constexpr uint32_t ref_autorelease = 0x8FD0D5;
-constexpr uint32_t node_stopAllActions = 0x893815;
-constexpr uint32_t node_runAction = 0x894AED;
-constexpr uint32_t delayTime_create = 0x86852D;        // DelayTime::create(float)
-constexpr uint32_t show_create = 0x866591;             // Show::create()
-constexpr uint32_t sequence_createWithTwoActions = 0x8678BD;
-constexpr uint32_t sequence_create = 0x867999;         // Sequence::create(FiniteTimeAction*, ...) (null-terminated)
+constexpr uint32_t label_ctor = rwlib::cocos2d::Label::ctor_base;              // Label::Label(FontAtlas*, TextHAlignment, TextVAlignment, bool, bool)
+constexpr uint32_t label_dtor = rwlib::cocos2d::Label::dtor_base;              // Label::~Label()
+constexpr uint32_t label_getStringLength = rwlib::cocos2d::Label::getStringLength;   // Label::getStringLength() const
+constexpr uint32_t spriteBatchNode_init = rwlib::cocos2d::SpriteBatchNode::init;    // SpriteBatchNode::init()
+constexpr uint32_t ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t node_stopAllActions = rwlib::cocos2d::Node::stopAllActions;
+constexpr uint32_t node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t delayTime_create = rwlib::cocos2d::DelayTime::create;        // DelayTime::create(float)
+constexpr uint32_t show_create = rwlib::cocos2d::Show::create;             // Show::create()
+constexpr uint32_t sequence_createWithTwoActions = rwlib::cocos2d::Sequence::createWithTwoActions;
+constexpr uint32_t sequence_create = rwlib::cocos2d::Sequence::create;         // Sequence::create(FiniteTimeAction*, ...) (null-terminated)
 }  // namespace g
 
 constexpr uint32_t GET_LETTER = 0x2C8;   // Label::getLetter(int) (virtual, byte offset)

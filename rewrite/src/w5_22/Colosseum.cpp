@@ -21,7 +21,7 @@ constexpr uint32_t SceneManager_changeTickerMessage = 0x610B39, SceneManager_set
 constexpr uint32_t SceneManager_changeSceneLayer = 0x612B99;
 constexpr uint32_t ImageButton_create = 0x531239, ImageButton_setTargetImageView = 0x531631;
 constexpr uint32_t ImageButton_addTouchEventListener = 0x5315B1;
-constexpr uint32_t ImageView_loadTexture = 0x839731;
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;
 constexpr uint32_t FunctionVV_copy = 0x4683CD, FunctionVV_call = 0x470E69, FunctionVB_assign = 0x490109;
 constexpr uint32_t FunctionWI_call = 0x54A065;     // std::function<Widget*(int)>::operator()
 constexpr uint32_t ThrowOutOfRange = 0x47CCE1;
@@ -36,8 +36,8 @@ constexpr uint32_t runRightInAnimation = 0x726115, scrollRunInAnimation = 0x7262
 constexpr uint32_t buttonListener = 0x724769;       // sub_724768(button, function): the button's touch lambda
 constexpr uint32_t setColosseumTitle = 0x56F429, setColosseumInfo = 0x56D65D;
 constexpr uint32_t CampaignAnimationView_show = 0x598D59;
-constexpr uint32_t Ref_retain = 0x8FD0B5;
-constexpr uint32_t FileUtils_getInstance = 0xA3F44D, Data_getBytes = 0x8ED90B, Data_dtor = 0x8ED89B;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain;
+constexpr uint32_t FileUtils_getInstance = rwlib::cocos2d::FileUtils::getInstance, Data_getBytes = rwlib::cocos2d::Data::getBytes, Data_dtor = rwlib::cocos2d::Data::dtor_base;
 constexpr uint32_t StageManager_int32LE = 0x75992B, Enemy_create = 0x77F7DD;
 constexpr uint32_t VecInt_dtor = 0x478961;
 constexpr uint32_t plate = 0x572E05;

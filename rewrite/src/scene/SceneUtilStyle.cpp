@@ -6,15 +6,15 @@
 using namespace scene;
 
 namespace {
-constexpr uint32_t TintTo_create = 0x86B569;              // (duration, r, g, b)
-constexpr uint32_t RepeatForever_create = 0x86815D;
-constexpr uint32_t Node_stopAllActions = 0x893815;
-constexpr uint32_t Widget_setBright = 0x825A09;
+constexpr uint32_t TintTo_create = rwlib::cocos2d::TintTo::create;              // (duration, r, g, b)
+constexpr uint32_t RepeatForever_create = rwlib::cocos2d::RepeatForever::create;
+constexpr uint32_t Node_stopAllActions = rwlib::cocos2d::Node::stopAllActions;
+constexpr uint32_t Widget_setBright = rwlib::cocos2d::ui::Widget::setBright;
 constexpr uint32_t ImageButton_setIsDisabled = 0x5318E1;
 constexpr uint32_t ButtonLabelColor = 0x4744F5;           // static helper: label colour / shadow for a button state
-constexpr uint32_t Label_getAdditionalKerning = 0x8869A5;
-constexpr uint32_t Label_setAdditionalKerning = 0x88697D;
-constexpr uint32_t LWFNode_create = 0x7EDF31;             // (file, void*)
+constexpr uint32_t Label_getAdditionalKerning = rwlib::cocos2d::Label::getAdditionalKerning;
+constexpr uint32_t Label_setAdditionalKerning = rwlib::cocos2d::Label::setAdditionalKerning;
+constexpr uint32_t LWFNode_create = rwlib::cocos2d::LWFNode::create;             // (file, void*)
 constexpr uint32_t String_concat = 0x470EAD;              // std::operator+(const string&, const string&) (sret)
 
 constexpr uint32_t COLOR3B_WHITE = 0x1007E88, COLOR3B_RED = 0x1007E94;

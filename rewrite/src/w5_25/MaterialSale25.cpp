@@ -28,7 +28,7 @@ constexpr uint32_t SceneUtil_setShadowText = 0x45BD15;
 constexpr uint32_t Scene_updateListField = 0x6869B1;       // SceneSellOutMaterialItem::updateListField
 constexpr uint32_t audio_Manager_getInstance = 0x5BECFD, audio_Manager_getLayer = 0x5BF33D;
 constexpr uint32_t audio_Layer_playSE = 0x5BF785;
-constexpr uint32_t Widget_addTouchEventListener = 0x826CCF;
+constexpr uint32_t Widget_addTouchEventListener = rwlib::cocos2d::ui::Widget::addTouchEventListener;
 // the instantiation init uses (w5_13/MaterialSale.cpp)
 constexpr uint32_t MaterialSort = 0x68AED9, MaterialSort3 = 0x68B495, MaterialLess = 0x68B319;
 }  // namespace g

@@ -10,39 +10,39 @@ using namespace scene;
 
 namespace {
 namespace lib {
-constexpr uint32_t FileUtils_getInstance = 0xA3F44D;
-constexpr uint32_t Data_getBytes = 0x8ED90B;
-constexpr uint32_t Data_dtor = 0x8ED89B;
+constexpr uint32_t FileUtils_getInstance = rwlib::cocos2d::FileUtils::getInstance;
+constexpr uint32_t Data_getBytes = rwlib::cocos2d::Data::getBytes;
+constexpr uint32_t Data_dtor = rwlib::cocos2d::Data::dtor_base;
 constexpr uint32_t getInt32LE = 0x75992B;            // StageManager::getInteger32bitFromLittleEndianBytes(uint8_t*)
 constexpr uint32_t MasterEnemy_create = 0x77F7DD;    // master::Enemy::create(shared_ptr out, int id)
 constexpr uint32_t Enemy_create = 0x5CBE25;          // Enemy::create(int): the battle enemy actor
 constexpr uint32_t setBossTypeImage = 0x46C4C5;      // SceneUtil::setBossTypeImage(ImageView*, int, bool)
 constexpr uint32_t setShadow = 0x45BD15;             // SceneUtil::setShadow(ui::Text*)
 constexpr uint32_t getMoneyStr = 0x461DC5;           // SceneUtil::getMoneyStr(string out, unsigned long long)
-constexpr uint32_t Layout_create = 0x82861D;
-constexpr uint32_t Sprite_create = 0x8A64DD;
-constexpr uint32_t ClippingNode_create = 0x874711;
-constexpr uint32_t ClippingNode_setAlphaThreshold = 0x875003;
-constexpr uint32_t ClippingNode_setStencil = 0x874FD1;
-constexpr uint32_t Size_copy = 0x8DF02D;             // Size::Size(const Size&)
-constexpr uint32_t Size_div = 0x8DF0D5;              // Size::operator/(float) const (sret)
-constexpr uint32_t Rect_ctor = 0x8DF18B;             // Rect::Rect(x, y, w, h)
-constexpr uint32_t Vec2_ctor = 0x8E4B9D;             // Vec2::Vec2(x, y)
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Layout_create = rwlib::cocos2d::ui::Layout::create;
+constexpr uint32_t Sprite_create = rwlib::cocos2d::Sprite::create__v;
+constexpr uint32_t ClippingNode_create = rwlib::cocos2d::ClippingNode::create;
+constexpr uint32_t ClippingNode_setAlphaThreshold = rwlib::cocos2d::ClippingNode::setAlphaThreshold;
+constexpr uint32_t ClippingNode_setStencil = rwlib::cocos2d::ClippingNode::setStencil;
+constexpr uint32_t Size_copy = rwlib::cocos2d::Size::ctor_base__RKS0_;             // Size::Size(const Size&)
+constexpr uint32_t Size_div = rwlib::cocos2d::Size::op_div;              // Size::operator/(float) const (sret)
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff;             // Rect::Rect(x, y, w, h)
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff;             // Vec2::Vec2(x, y)
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t APIManager_getInstance = 0x4BA8C9;
 constexpr uint32_t MasterRaidEnemy_create = 0x787745;  // master::RaidEnemy::create(shared_ptr out, int id)
 constexpr uint32_t SafeBuffer_ctor = 0x459F21;       // SafeBuffer::SafeBuffer(unsigned size, bool)
 constexpr uint32_t SafeBuffer_dtor = 0x45A13D;       // SafeBuffer::~SafeBuffer()
 constexpr uint32_t shared_add = 0xC8DBB5;            // __shared_weak_count::__add_shared
 constexpr uint32_t RaidParts_setMasterParam = 0x5F1551;  // RaidParts::set_master_param(shared_ptr<const RaidEnemy>, int, int, int)
-constexpr uint32_t ImageView_loadTexture = 0x839731; // (image, const string&, TextureResType)
-constexpr uint32_t LoadingBar_setPercent = 0x83BB05; // (bar, float)
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE; // (image, const string&, TextureResType)
+constexpr uint32_t LoadingBar_setPercent = rwlib::cocos2d::ui::LoadingBar::setPercent; // (bar, float)
 constexpr uint32_t Date_intervalSinceNow = 0x4922D5; // Date::calculateIntervalSinceNow() const: seconds
 constexpr uint32_t PartArray_at = 0x56CB51;          // std::array<RaidBase::Info::Part, 6>::at(i) const
 constexpr uint32_t getCampaignPoint = 0x4741BD;      // SceneUtil::getCampaignPoint(int, int, int, const vector<int>&, int, bool)
 constexpr uint32_t pointToString = 0x506B61;         // AdvStageScrollView::pointToString(string out, int, int, bool)
-constexpr uint32_t TextAtlas_setString = 0x83AED7;
-constexpr uint32_t Vec2_copy = 0x8E4C03;             // Vec2::Vec2(const Vec2&)
+constexpr uint32_t TextAtlas_setString = rwlib::cocos2d::ui::TextAtlas::setString;
+constexpr uint32_t Vec2_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_;             // Vec2::Vec2(const Vec2&)
 }  // namespace lib
 
 // raid boss box

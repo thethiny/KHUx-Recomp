@@ -4,8 +4,8 @@
 using namespace mypage;
 
 namespace {
-constexpr uint32_t EaseSineOut_create = 0x860D09;
-constexpr uint32_t FadeOut_create = 0x86B25D;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
+constexpr uint32_t FadeOut_create = rwlib::cocos2d::FadeOut::create;
 constexpr uint32_t FunctionVV_swap = 0x4EE86D;
 constexpr uint32_t String_compareC = 0x47CBD5, String_assign = 0x498A1D;
 constexpr uint32_t SceneManager_getFaceImageUrl = 0x621D0D;
@@ -232,7 +232,7 @@ void SceneMyPage_setAvatarProfileImageVisible(uint32_t self, uint32_t actor, uin
 // ------------------------------------------------------------------------------------------------ back to walking
 namespace {
 constexpr uint32_t M_zoomOutCamera = 0x643839;
-constexpr uint32_t FadeIn_create = 0x86B115;
+constexpr uint32_t FadeIn_create = rwlib::cocos2d::FadeIn::create;
 constexpr uint32_t VT_walk_26 = 0xF614FC, VT_walk_27 = 0xF614D0;
 constexpr uint32_t S_AVATAR_LLU = 0xE03794;
 

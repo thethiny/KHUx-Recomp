@@ -5,9 +5,9 @@
 namespace w4b2 {
 using namespace scene;
 
-constexpr uint32_t REF_AUTORELEASE = 0x8FD0D5;
-constexpr uint32_t NODE_CTOR = 0x892531, NODE_DTOR = 0x8927ED;
-constexpr uint32_t VEC2_CTOR = 0x8E4B95, VEC2_DTOR = 0x8E4C17;
+constexpr uint32_t REF_AUTORELEASE = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t NODE_CTOR = rwlib::cocos2d::Node::ctor_base, NODE_DTOR = rwlib::cocos2d::Node::dtor_base;
+constexpr uint32_t VEC2_CTOR = rwlib::cocos2d::Vec2::ctor_base__v, VEC2_DTOR = rwlib::cocos2d::Vec2::dtor_base;
 
 // ============================================================================================ LuxBoard
 // (a cocos2d::Node) two LWF-backed panels +0x270 / +0x274, +0x278, positions +0x27C / +0x284 (Vec2)
@@ -34,7 +34,7 @@ struct LuxBoard {
     }
     static uint32_t destruct(uint32_t self) {
         st32(self, ld32(0xFD6794) + 8);
-        call(0x894369, {self, 1});  // Node::removeAllChildrenWithCleanup(true)
+        call(rwlib::cocos2d::Node::removeAllChildrenWithCleanup, {self, 1});  // Node::removeAllChildrenWithCleanup(true)
         call(VEC2_DTOR, {self + 0x284});
         call(VEC2_DTOR, {self + 0x27C});
         call(NODE_DTOR, {self});
@@ -51,22 +51,22 @@ struct LuxBoard {
         strFree(s);
         vcall(lwf, 0x80, {lwf, 0});
         uint32_t a = newFunction(f, vtA, {self});
-        call(0x7A3C69, {lwf, a});
+        call(rwlib::cocostudio::ArmatureAnimation::setMovementEventCallFunc, {lwf, a});
         functionDestroy(a);
         uint32_t b = newFunction(f, vtB, {self});
-        call(0x7A3CE5, {lwf, b});
+        call(rwlib::cocostudio::ArmatureAnimation::setFrameEventCallFunc, {lwf, b});
         functionDestroy(b);
     }
     static uint32_t init(uint32_t self) {
         Frame f;
-        if (call(0x892B69, {self}) != 1) return 0;  // Node::init
+        if (call(rwlib::cocos2d::Node::init, {self}) != 1) return 0;  // Node::init
         uint32_t s = f.alloc(12);
         strInit(s, 0xE01F45, 0x13);
-        st32(self + 0x270, call(0x79F3C7, {s}));  // the panel node for that LWF
+        st32(self + 0x270, call(rwlib::cocostudio::Armature::create, {s}));  // the panel node for that LWF
         strFree(s);
         uint32_t s2 = f.alloc(12);
         strInit(s2, 0xE01F45, 0x13);
-        st32(self + 0x274, call(0x79F3C7, {s2}));
+        st32(self + 0x274, call(rwlib::cocostudio::Armature::create, {s2}));
         strFree(s2);
         setupPanel(f, self, ld32(self + 0x270), 0xE01F36, 0xE, 0xF5D490, 0xF5D464);
         setupPanel(f, self, ld32(self + 0x274), 0xE01F25, 0x10, 0xF5D438, 0xF5D40C);
@@ -84,11 +84,11 @@ struct LuxBoard {
     }
     static uint32_t firstCall() {
         guest::Frame f(0x424);
-        uint32_t mgr = call(0x7AC9B5, {});
+        uint32_t mgr = call(rwlib::cocostudio::ArmatureDataManager::getInstance, {});
         const uint32_t buf = f.addr(0x1C), s = f.addr(0x10);
         call(0x49140D, {buf, 0xE01EED, 0xE01F45});  // StringBuffer(fmt, name)
         strInit(s, buf, host_strlen(buf));
-        call(0x7AD7BD, {mgr, s});
+        call(rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo, {mgr, s});
         strFree(s);
         return 0;
     }
@@ -97,7 +97,7 @@ struct LuxBoard {
     // the armature shifted right by the digit count
     static constexpr uint32_t L_NUMBER = 0x270, L_TEXT = 0x274;   // cocostudio::Armature*
     static constexpr uint32_t ARMATURE_GET_BONE = 0x27C, ARMATURE_GET_ANIMATION = 0x298;
-    static constexpr uint32_t BONE_CHANGE_DISPLAY_WITH_INDEX = 0x7A2681;   // Bone::changeDisplayWithIndex(int, bool)
+    static constexpr uint32_t BONE_CHANGE_DISPLAY_WITH_INDEX = rwlib::cocostudio::Bone::changeDisplayWithIndex;   // Bone::changeDisplayWithIndex(int, bool)
     static constexpr uint32_t LOG10 = 0x419E7C, DIV = 0x419E88;            // imports: log10(double), div(int, int)
     static constexpr uint32_t S_TURN_BONE = 0xE01F0E;                      // "LuxTurnNum%d"
     static constexpr uint32_t DIGITS_X = 0xE4B3D0;                         // float[5]: 75, 98, 121, 144, 167
@@ -168,7 +168,7 @@ struct LuxBoard {
     static uint32_t getUIPos(uint32_t self) {
         Frame f;
         const uint32_t p = f.alloc(8);
-        call(0x895A39, {p, self, ld32(0xFD605C)});   // convertToWorldSpace(Vec2::ZERO)
+        call(rwlib::cocos2d::Node::convertToWorldSpace, {p, self, ld32(0xFD605C)});   // convertToWorldSpace(Vec2::ZERO)
         st32(self + 0x288, ld32(p + 4));
         st32(self + 0x284, ld32(p));
         call(VEC2_DTOR, {p});
@@ -259,7 +259,7 @@ struct Field {
     }
     static uint32_t destruct(uint32_t self) {
         st32(self, ld32(0xFD6784) + 8);
-        if (ld32(self + 0x270) != 0) call(0x8FD0BD, {ld32(self + 0x270)});  // Ref::release
+        if (ld32(self + 0x270) != 0) call(rwlib::cocos2d::Ref::release, {ld32(self + 0x270)});  // Ref::release
         call(NODE_DTOR, {self});
         return self;
     }
@@ -301,7 +301,7 @@ struct Field {
         float ry = float(py - floor2048(py));
         int32_t viewW = rw::load<int32_t>(self + 0x294);
         uint32_t rect = f.alloc(16);
-        call(0x8DF18B, {rect, fbits(rx), fbits(ry), fbits(float(viewW)), fbits(fViewH)});  // Rect::Rect
+        call(rwlib::cocos2d::Rect::ctor_base__ffff, {rect, fbits(rx), fbits(ry), fbits(float(viewW)), fbits(fViewH)});  // Rect::Rect
         int32_t lastRow = div256(viewH + py + 0xFF) + 1;
         if (rows >= lastRow) rows = lastRow;
         int32_t lastCol = div256(viewW + px + 0xFF) + 1;
@@ -313,7 +313,7 @@ struct Field {
         if (ld8(self + 0x2A4) == 0) {
             st8(self + 0x2A4, 1);
             call(0x5CD549, {self, uint32_t(firstCol), uint32_t(cols), uint32_t(firstRow), uint32_t(rows)});  // load
-            uint32_t sprite = call(0x8A62FD, {ld32(self + 0x270), rect, 0});  // Sprite::createWithTexture
+            uint32_t sprite = call(rwlib::cocos2d::Sprite::createWithTexture__PNS_9Texture2DERKNS_4RectEb, {ld32(self + 0x270), rect, 0});  // Sprite::createWithTexture
             st32(self + 0x274, sprite);
             vcall(self, 0xF0, {self, sprite});  // addChild
         } else {
@@ -340,7 +340,7 @@ struct Field {
         bool created = false;
         if (tex == 0) {
             tex = call(fn::operator_new, {0x40});
-            call(0x9149FD, {tex});  // Texture2D::Texture2D
+            call(rwlib::cocos2d::Texture2D::ctor_base, {tex});  // Texture2D::Texture2D
             st32(self + 0x270, tex);
             if (endCol + firstCol < rw::load<int32_t>(self + 0x27C)) endCol--;
             else firstCol++;
@@ -380,16 +380,16 @@ struct Field {
         }
         if (created) {
             uint32_t size = f.alloc(8);
-            uint32_t sz = call(0x8DF027, {size, fbits(2048.0f), fbits(2048.0f)});  // Size::Size
-            call(0x914B49, {tex, buf, 0x1000000, 2, 2048, 2048, sz, 1});           // Texture2D::initWithData
+            uint32_t sz = call(rwlib::cocos2d::Size::ctor_base__ff, {size, fbits(2048.0f), fbits(2048.0f)});  // Size::Size
+            call(rwlib::cocos2d::Texture2D::initWithData, {tex, buf, 0x1000000, 2, 2048, 2048, sz, 1});           // Texture2D::initWithData
             uint32_t params = f.alloc(16);
             st32(params, 0x2600);       // GL_NEAREST
             st32(params + 4, 0x2600);
             st32(params + 8, 0x2901);   // GL_REPEAT
             st32(params + 12, 0x2901);
-            call(0x915D29, {ld32(self + 0x270), params});  // setTexParameters
+            call(rwlib::cocos2d::Texture2D::setTexParameters, {ld32(self + 0x270), params});  // setTexParameters
         } else {
-            call(0x914F25, {tex, buf, 0, 0, 2048, 2048});  // Texture2D::updateWithData
+            call(rwlib::cocos2d::Texture2D::updateWithData, {tex, buf, 0, 0, 2048, 2048});  // Texture2D::updateWithData
         }
         call(0xC98FB3, {buf});  // operator delete[]
         return 0;
@@ -404,7 +404,7 @@ struct Field {
         uint32_t idx = uint32_t(rw::load<int32_t>(self + 0x27C) * row) + uint32_t(col) + 1;
         if (idx == cur) return 0;
         uint32_t img = call(0x5CD7F5, {self, idx});
-        call(0x914F25, {ld32(self + 0x270), ld32(img + 0x14), uint32_t(colMod) << 8, uint32_t(rowMod) << 8,
+        call(rwlib::cocos2d::Texture2D::updateWithData, {ld32(self + 0x270), ld32(img + 0x14), uint32_t(colMod) << 8, uint32_t(rowMod) << 8,
                         ld32(img + 0x1C), ld32(img + 0x20)});  // updateWithData
         if (img != 0) vcall(img, 4, {img});
         st32(slot, idx);
@@ -418,7 +418,7 @@ struct Field {
         st32(name + 0x400, 0);
         st8(name, 0);
         call(0x491501, {name, ld32(self + 0x278), index});  // StringBuffer::format(fmt, index)
-        uint32_t fu = call(0xA3F44D, {});                     // FileUtils::getInstance
+        uint32_t fu = call(rwlib::cocos2d::FileUtils::getInstance, {});                     // FileUtils::getInstance
         uint32_t fullPath = ld32(ld32(fu) + 0x1C);
         strInit(tmp, name, host_strlen(name));
         call(fullPath, {path, fu, tmp});
@@ -426,8 +426,8 @@ struct Field {
         uint32_t img = 0;
         if (strSize(path) != 0) {
             img = call(fn::operator_new, {0xC4});
-            call(0x8D967D, {img});          // Image::Image
-            call(0x8D9721, {img, path});    // Image::initWithImageFile
+            call(rwlib::cocos2d::Image::ctor_base, {img});          // Image::Image
+            call(rwlib::cocos2d::Image::initWithImageFile, {img, path});    // Image::initWithImageFile
         }
         strFree(path);
         return img;

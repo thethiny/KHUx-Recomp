@@ -25,10 +25,10 @@ constexpr uint32_t AvatarPartsScrollView_setSelectedID = 0x554EF1;
 constexpr uint32_t AvatarSent = 0x70B291;                 // the avatar-sent callback (sub_70B290), called directly
 constexpr uint32_t SceneUtil_settingTitleLabel = 0x45D8D1, SceneUtil_openOkDialog4Line = 0x45C775;
 constexpr uint32_t SceneUtil_createOpenPopupAnimation = 0x45BC05, SceneUtil_createClosePopupAnimation = 0x45BC61;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
-constexpr uint32_t CheckBox_addEventListener = 0x8389AB, CheckBox_setSelectedState = 0x8382E7;
-constexpr uint32_t ArmatureDataManager_getInstance = 0x7AC9B5, ArmatureDataManager_addArmatureFileInfo = 0x7AD7BD;
-constexpr uint32_t Armature_create = 0x79F3C7;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
+constexpr uint32_t CheckBox_addEventListener = rwlib::cocos2d::ui::CheckBox::addEventListener, CheckBox_setSelectedState = rwlib::cocos2d::ui::CheckBox::setSelectedState;
+constexpr uint32_t ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance, ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;
+constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create;
 constexpr uint32_t ImageButton_create = 0x531239, ImageButton_setTargetView = 0x5318C1;
 constexpr uint32_t ImageButton_addTouchEventListener = 0x5315B1;
 constexpr uint32_t AvatarActor_create = 0x73FD21, AvatarActor_setStyle = 0x740635, AvatarUtil_makeStyle = 0x497105;

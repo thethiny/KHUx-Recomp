@@ -29,7 +29,7 @@ struct Lib {
         uint32_t p = rw::call(0x40FF58, {f2u(size)});  // malloc
         st32(out, p);
         if (p == 0) return 0;
-        if (int32_t(rw::call(0x90585D, {in, len, p, f.addr(0xC)})) > 0) {  // cocos2d::_base64Decode
+        if (int32_t(rw::call(rwlib::cocos2d::_base64Decode, {in, len, p, f.addr(0xC)})) > 0) {  // cocos2d::_base64Decode
             rw::call(0x40FF64, {ld32(out)});  // free
             st32(out, 0);
             *f.at<uint32_t>(0xC) = 0;
@@ -43,7 +43,7 @@ struct Lib {
         uint32_t outLen = r == 0 ? q : q + 4;
         uint32_t p = rw::call(0x40FF58, {outLen + 1});
         st32(out, p);
-        if (p != 0) rw::call(0x905991, {in, len, p});  // cocos2d::_base64Encode
+        if (p != 0) rw::call(rwlib::cocos2d::_base64Encode, {in, len, p});  // cocos2d::_base64Encode
         return outLen;
     }
 
@@ -138,42 +138,42 @@ struct Lib {
 
     // ------------------------------------------------------------------------------------------ OpenSSL
     static uint32_t registerPmethGost(int32_t id, uint32_t pmeth, uint32_t flags) {
-        uint32_t m = rw::call(0xBB3790, {uint32_t(id), flags});  // EVP_PKEY_meth_new
+        uint32_t m = rw::call(rwlib::EVP_PKEY_meth_new, {uint32_t(id), flags});  // EVP_PKEY_meth_new
         st32(pmeth, m);
         if (m == 0) return 0;
         auto P = [&]() { return ld32(pmeth); };
         if (id == 812) {  // GOST R 34.10-94
-            rw::call(0xBB41D4, {m, 0xBF74F4, 0xBF7970});           // set_ctrl
-            rw::call(0xBB4168, {P(), 0, 0xBF7F54});                // set_keygen
-            rw::call(0xBB4174, {P(), 0, 0xBF7760});                // set_sign
-            rw::call(0xBB4180, {P(), 0, 0xBF76F4});                // set_verify
-            rw::call(0xBB41B0, {P(), 0xBF71C8, got(0xFD8F58)});    // set_encrypt
-            rw::call(0xBB41BC, {P(), 0, got(0xFD8F5C)});           // set_decrypt
-            rw::call(0xBB41C8, {P(), 0xBF71D0, got(0xFD8F60)});    // set_derive
-            rw::call(0xBB415C, {P(), 0xBF71C0, 0xBF78E8});         // set_paramgen
+            rw::call(rwlib::EVP_PKEY_meth_set_ctrl, {m, rwlib::sub_BF74F4, rwlib::sub_BF7970});           // set_ctrl
+            rw::call(rwlib::EVP_PKEY_meth_set_keygen, {P(), 0, rwlib::sub_BF7F54});                // set_keygen
+            rw::call(rwlib::EVP_PKEY_meth_set_sign, {P(), 0, rwlib::sub_BF7760});                // set_sign
+            rw::call(rwlib::EVP_PKEY_meth_set_verify, {P(), 0, rwlib::sub_BF76F4});                // set_verify
+            rw::call(rwlib::EVP_PKEY_meth_set_encrypt, {P(), rwlib::sub_BF71C8, got(0xFD8F58)});    // set_encrypt
+            rw::call(rwlib::EVP_PKEY_meth_set_decrypt, {P(), 0, got(0xFD8F5C)});           // set_decrypt
+            rw::call(rwlib::EVP_PKEY_meth_set_derive, {P(), rwlib::sub_BF71D0, got(0xFD8F60)});    // set_derive
+            rw::call(rwlib::EVP_PKEY_meth_set_paramgen, {P(), rwlib::sub_BF71C0, rwlib::sub_BF78E8});         // set_paramgen
         } else if (id == 815) {  // GOST 28147-89 MAC
-            rw::call(0xBB41D4, {m, 0xBF7364, 0xBF7CEC});
-            rw::call(0xBB4198, {P(), 0xBF71D8, 0xBF7320});         // set_signctx
-            rw::call(0xBB4168, {P(), 0, 0xBF77D0});
-            rw::call(0xBB4144, {P(), 0xBF72D0});                   // set_init
-            rw::call(0xBB4154, {P(), 0xBF7208});                   // set_cleanup
-            rw::call(0xBB414C, {P(), 0xBF7E34});                   // set_copy
+            rw::call(rwlib::EVP_PKEY_meth_set_ctrl, {m, rwlib::sub_BF7364, rwlib::sub_BF7CEC});
+            rw::call(rwlib::EVP_PKEY_meth_set_signctx, {P(), rwlib::sub_BF71D8, rwlib::sub_BF7320});         // set_signctx
+            rw::call(rwlib::EVP_PKEY_meth_set_keygen, {P(), 0, rwlib::sub_BF77D0});
+            rw::call(rwlib::EVP_PKEY_meth_set_init, {P(), rwlib::sub_BF72D0});                   // set_init
+            rw::call(rwlib::EVP_PKEY_meth_set_cleanup, {P(), rwlib::sub_BF7208});                   // set_cleanup
+            rw::call(rwlib::EVP_PKEY_meth_set_copy, {P(), rwlib::sub_BF7E34});                   // set_copy
             return 1;
         } else if (id == 811) {  // GOST R 34.10-2001
-            rw::call(0xBB41D4, {m, 0xBF74F4, 0xBF7B18});
-            rw::call(0xBB4174, {P(), 0, 0xBF7684});
-            rw::call(0xBB4180, {P(), 0, 0xBF7618});
-            rw::call(0xBB4168, {P(), 0, 0xBF7EC0});
-            rw::call(0xBB41B0, {P(), 0xBF71C8, got(0xFD8F64)});
-            rw::call(0xBB41BC, {P(), 0, got(0xFD8F68)});
-            rw::call(0xBB41C8, {P(), 0xBF71D0, got(0xFD8F6C)});
-            rw::call(0xBB415C, {P(), 0xBF71C0, 0xBF785C});
+            rw::call(rwlib::EVP_PKEY_meth_set_ctrl, {m, rwlib::sub_BF74F4, rwlib::sub_BF7B18});
+            rw::call(rwlib::EVP_PKEY_meth_set_sign, {P(), 0, rwlib::sub_BF7684});
+            rw::call(rwlib::EVP_PKEY_meth_set_verify, {P(), 0, rwlib::sub_BF7618});
+            rw::call(rwlib::EVP_PKEY_meth_set_keygen, {P(), 0, rwlib::sub_BF7EC0});
+            rw::call(rwlib::EVP_PKEY_meth_set_encrypt, {P(), rwlib::sub_BF71C8, got(0xFD8F64)});
+            rw::call(rwlib::EVP_PKEY_meth_set_decrypt, {P(), 0, got(0xFD8F68)});
+            rw::call(rwlib::EVP_PKEY_meth_set_derive, {P(), rwlib::sub_BF71D0, got(0xFD8F6C)});
+            rw::call(rwlib::EVP_PKEY_meth_set_paramgen, {P(), rwlib::sub_BF71C0, rwlib::sub_BF785C});
         } else {
             return 0;
         }
-        rw::call(0xBB4144, {P(), 0xBF7218});
-        rw::call(0xBB4154, {P(), 0xBF71E0});
-        rw::call(0xBB414C, {P(), 0xBF7FE4});
+        rw::call(rwlib::EVP_PKEY_meth_set_init, {P(), rwlib::sub_BF7218});
+        rw::call(rwlib::EVP_PKEY_meth_set_cleanup, {P(), rwlib::sub_BF71E0});
+        rw::call(rwlib::EVP_PKEY_meth_set_copy, {P(), rwlib::sub_BF7FE4});
         return 1;
     }
     static uint32_t confFreeData(uint32_t conf) {
@@ -181,9 +181,9 @@ struct Lib {
         uint32_t data = ld32(conf + 8);
         if (data == 0) return conf;
         st32(data + 0x20, 0);
-        rw::call(0xBA864C, {ld32(conf + 8), 0xC349BC, ld32(conf + 8)});  // lh_doall_arg(data, value_free_hash)
-        rw::call(0xBA85E8, {ld32(conf + 8), 0xC34938});                  // lh_doall(data, value_free_stack)
-        return rw::call(0xBA7FF8, {ld32(conf + 8)});                     // lh_free
+        rw::call(rwlib::lh_doall_arg, {ld32(conf + 8), rwlib::sub_C349BC, ld32(conf + 8)});  // lh_doall_arg(data, value_free_hash)
+        rw::call(rwlib::lh_doall, {ld32(conf + 8), rwlib::sub_C34938});                  // lh_doall(data, value_free_stack)
+        return rw::call(rwlib::lh_free, {ld32(conf + 8)});                     // lh_free
     }
     // obj_cleanup_defer = 1 for objects 920+ while it is clear
     static uint32_t checkDefer(int32_t nid) {

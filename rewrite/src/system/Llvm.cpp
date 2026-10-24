@@ -5,11 +5,11 @@
 namespace llvm_utf {
 
 namespace {
-constexpr uint32_t IS_LEGAL_UTF8_STRING = 0x92E551;   // isLegalUTF8String(const UTF8** src, const UTF8* end)
-constexpr uint32_t CONVERT_UTF8_TO_UTF16 = 0x92E5B1;  // ConvertUTF8toUTF16(src**, srcEnd, dst**, dstEnd, flags)
-constexpr uint32_t CONVERT_UTF8_TO_UTF32 = 0x92E705;  // ConvertUTF8toUTF32(...)
-constexpr uint32_t CONVERT_UTF32_TO_UTF8 = 0x92E2F1;  // ConvertUTF32toUTF8(...)
-constexpr uint32_t CONVERT_UTF16_TO_UTF8 = 0x92E199;  // ConvertUTF16toUTF8(...)
+constexpr uint32_t IS_LEGAL_UTF8_STRING = rwlib::isLegalUTF8String;   // isLegalUTF8String(const UTF8** src, const UTF8* end)
+constexpr uint32_t CONVERT_UTF8_TO_UTF16 = rwlib::ConvertUTF8toUTF16;  // ConvertUTF8toUTF16(src**, srcEnd, dst**, dstEnd, flags)
+constexpr uint32_t CONVERT_UTF8_TO_UTF32 = rwlib::ConvertUTF8toUTF32;  // ConvertUTF8toUTF32(...)
+constexpr uint32_t CONVERT_UTF32_TO_UTF8 = rwlib::ConvertUTF32toUTF8;  // ConvertUTF32toUTF8(...)
+constexpr uint32_t CONVERT_UTF16_TO_UTF8 = rwlib::ConvertUTF16toUTF8;  // ConvertUTF16toUTF8(...)
 constexpr uint32_t MEMCPY = 0x40E164;                 // memcpy (import)
 constexpr uint32_t STRING_RESIZE = 0x7EA449;          // sub_7EA448: std::string::resize(n, ch)
 constexpr uint32_t U16VECTOR_INSERT = 0x92DE49;       // std::vector<unsigned short>::insert(pos, first, last)

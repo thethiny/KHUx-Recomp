@@ -12,13 +12,13 @@ constexpr uint32_t CanCloseVector_pushBackSlow = 0x622D01; // vector<function<bo
 constexpr uint32_t OnCloseVector_pushBackSlow = 0x622B65;  // vector<function<void(bool)>>::__push_back_slow_path
 constexpr uint32_t BoolVector_pushBack = 0x62161D;         // vector<bool>::push_back(const bool&)
 constexpr uint32_t LayerFactory_assign = 0x612E29;         // std::function<Layer*()>::operator=(const function&)
-constexpr uint32_t EventDispatcher_pauseEventListenersForTarget = 0x8F2CCD;
+constexpr uint32_t EventDispatcher_pauseEventListenersForTarget = rwlib::cocos2d::EventDispatcher::pauseEventListenersForTarget;
 constexpr uint32_t AppState_getNewAvatarBoardIDs = 0x4EBE3B;
 constexpr uint32_t AppState_removeNewAvatarBoardIDs = 0x4EBF6D;
 constexpr uint32_t IntVector_copy = 0x4AF707, IntVector_dtor = 0x478961;
 constexpr uint32_t Sphere_create = 0x78CF21;
-constexpr uint32_t ImageView_create = 0x8394C1;
-constexpr uint32_t LWFNode_create = 0x7EDF31;
+constexpr uint32_t ImageView_create = rwlib::cocos2d::ui::ImageView::create;
+constexpr uint32_t LWFNode_create = rwlib::cocos2d::LWFNode::create;
 constexpr uint32_t String_assign = 0x498A1D;               // std::string::operator=(const string&)
 constexpr uint32_t COLOR3B_BLACK = 0x1007E9A;
 

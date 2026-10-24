@@ -4,7 +4,7 @@ using namespace scene;
 
 namespace {
 constexpr uint32_t FunctionVV_assign = 0x4EB9CD;   // std::function<void()>::operator=(const function&)
-constexpr uint32_t Text_setString = 0x83A2DD;
+constexpr uint32_t Text_setString = rwlib::cocos2d::ui::Text::setString;
 constexpr uint32_t StringBuffer_ctor = 0x49140D;   // StringBuffer(this, fmt, ...)
 constexpr uint32_t STR_d = 0xDF86DE;               // "%d"
 // libgcc conversions between float and uint64 (called rather than re-derived: their rounding and the

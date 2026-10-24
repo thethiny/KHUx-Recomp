@@ -7,19 +7,19 @@
 using namespace scene;
 
 namespace {
-constexpr uint32_t Layer_init = 0x88A8A1;
-constexpr uint32_t Layer_ctor = 0x88A7D1;
-constexpr uint32_t Scene_create = 0x8A5F37;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Layer_init = rwlib::cocos2d::Layer::init;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base;
+constexpr uint32_t Scene_create = rwlib::cocos2d::Scene::create;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t function_vv_assign = 0x4EB9CD;          // std::function<void()>::operator=(const function&)
 constexpr uint32_t SceneManager_setOnBackKeyCallback = 0x613E5B;
 constexpr uint32_t SceneManager_openPopup = 0x61524D;      // (sm, function<bool()>&, function<void(bool)>&, bool)
 constexpr uint32_t SceneManager_closeCurrentPopup = 0x6216A1;
 constexpr uint32_t SceneUtil_getSideMargin = 0x45AD0D, SceneUtil_getSideHeightMargin = 0x45AF59;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17, Size_ctor = 0x8DF027;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base, Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;
 constexpr uint32_t fmul = 0xCD6E14;                        // __aeabi_fmul
-constexpr uint32_t WebView_create = 0x8191B5, WebView_setScalesPageToFit = 0x8192AD;
-constexpr uint32_t WebView_loadUrl = 0x819221, WebView_stopLoading = 0x81924B;
+constexpr uint32_t WebView_create = rwlib::cocos2d::plugin::WebView::create, WebView_setScalesPageToFit = rwlib::cocos2d::plugin::WebView::setScalesPageToFit;
+constexpr uint32_t WebView_loadUrl = rwlib::cocos2d::plugin::WebView::loadUrl, WebView_stopLoading = rwlib::cocos2d::plugin::WebView::stopLoading;
 constexpr uint32_t function_webview_swap = 0x4821B5;       // std::function<void(WebView*, string)>::swap
 constexpr uint32_t SceneAgreement_runInAnimation = 0x71576D, SceneAgreement_create = 0x67F7F5;
 constexpr uint32_t SceneBirthRegister_changeSceneLayer = 0x711CD5;

@@ -9,18 +9,18 @@ using Self = MagicStoneScrollView;
 
 namespace {
 namespace g {
-constexpr uint32_t Layout_ctor = 0x828671;                 // cocos2d::ui::Layout::Layout()
+constexpr uint32_t Layout_ctor = rwlib::cocos2d::ui::Layout::ctor_base;                 // cocos2d::ui::Layout::Layout()
 constexpr uint32_t aeabi_memset = 0x40E7A0;                // __aeabi_memset(dst, n, c)
-constexpr uint32_t Ref_retain = 0x8FD0B5;
-constexpr uint32_t Ref_release = 0x8FD0BD;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain;
+constexpr uint32_t Ref_release = rwlib::cocos2d::Ref::release;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t VectorBaseInt_dtor = 0x478961;          // std::__vector_base<int>::~__vector_base
 constexpr uint32_t ThrowOutOfRange = 0x47CCE1;             // vector::at out of range (throws)
-constexpr uint32_t Widget_create = 0x825875;
-constexpr uint32_t Widget_clone = 0x8272B9;
-constexpr uint32_t Size_ctor = 0x8DF027;                   // Size(out, float w, float h)
-constexpr uint32_t Text_setFontName = 0x83A499;            // (text, const string&)
-constexpr uint32_t Text_setFontSize = 0x83A35D;            // (text, int)
+constexpr uint32_t Widget_create = rwlib::cocos2d::ui::Widget::create;
+constexpr uint32_t Widget_clone = rwlib::cocos2d::ui::Widget::clone;
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;                   // Size(out, float w, float h)
+constexpr uint32_t Text_setFontName = rwlib::cocos2d::ui::Text::setFontName;            // (text, const string&)
+constexpr uint32_t Text_setFontSize = rwlib::cocos2d::ui::Text::setFontSize;            // (text, int)
 constexpr uint32_t Shop_create = 0x790951;                 // master::Shop::create(shared_ptr out, int id)
 constexpr uint32_t ImageButton_create = 0x531239;          // (std::string file, bool)
 constexpr uint32_t ImageButton_addTouchEventListener = 0x5315B1;   // (button, std::function by value)
@@ -30,10 +30,10 @@ constexpr uint32_t ProductMap_dtor = 0x4DABC7;             // __hash_table::~__h
 constexpr uint32_t ProductMap_clear = 0x4FBB73;            // __hash_table::clear
 constexpr uint32_t ProductMap_insert = 0x4FB9A1;           // __insert_unique(pair<iterator,bool>* out, table, const value&)
 constexpr uint32_t ProductMap_find = 0x4DA18F;             // find(table, const string&) -> node (0: end)
-constexpr uint32_t Director_getInstance = 0x8EE519;
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5;
-constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
-constexpr uint32_t EventDispatcher_addListenerWithSceneGraphPriority = 0x8F3649;
+constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create;
+constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
+constexpr uint32_t EventDispatcher_addListenerWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
 constexpr uint32_t FunctionTouchBool_swap = 0x483E4D;      // std::function<bool(Touch*, Event*)>::swap
 constexpr uint32_t FunctionTouchVoid_swap = 0x4F3699;      // std::function<void(Touch*, Event*)>::swap
 }  // namespace g

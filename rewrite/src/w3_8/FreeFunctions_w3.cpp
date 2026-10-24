@@ -5,7 +5,7 @@
 namespace {
 
 namespace g {
-constexpr uint32_t fileUtils_getInstance = 0xA3F44D;   // cocos2d::FileUtils::getInstance()
+constexpr uint32_t fileUtils_getInstance = rwlib::cocos2d::FileUtils::getInstance;   // cocos2d::FileUtils::getInstance()
 constexpr uint32_t string_append = 0x47AC89;           // std::string::append(const char*, size_t)
 constexpr uint32_t string_init = 0x47CD93;             // std::string::__init(const char*, size_t)
 constexpr uint32_t string_reserve = 0x48D705;          // std::string::reserve(size_t)
@@ -16,12 +16,12 @@ constexpr uint32_t fclose_ = 0x414170;
 constexpr uint32_t memcmp_ = 0x40EF2C;
 constexpr uint32_t audioStopGameMainBGM = 0x5C0F59;    // AudioStopGameMainBGM(int fadeTime)
 constexpr uint32_t audioPlayGameMainBGM = 0x5C0E91;    // AudioPlayGameMainBGM(audio::ResourceID, int fadeTime)
-constexpr uint32_t director_getInstance = 0x8EE519;
-constexpr uint32_t director_getWinSize = 0x8F0625;     // Director::getWinSize() const (const Size&)
-constexpr uint32_t size_copy = 0x8DF02D;               // Size::Size(const Size&)
+constexpr uint32_t director_getInstance = rwlib::cocos2d::Director::getInstance;
+constexpr uint32_t director_getWinSize = rwlib::cocos2d::Director::getWinSize;     // Director::getWinSize() const (const Size&)
+constexpr uint32_t size_copy = rwlib::cocos2d::Size::ctor_base__RKS0_;               // Size::Size(const Size&)
 constexpr uint32_t callVideoNonParameterFun = 0x8436A1;   // callVideoNonParameterFun(int, const char*)
-constexpr uint32_t jni_getStaticMethodInfo = 0xA4225D; // JniHelper::getStaticMethodInfo(JniMethodInfo&, cls, name, sig)
-constexpr uint32_t jni_jstring2string = 0xA423E9;      // JniHelper::jstring2string(jstring) (sret std::string)
+constexpr uint32_t jni_getStaticMethodInfo = rwlib::cocos2d::JniHelper::getStaticMethodInfo; // JniHelper::getStaticMethodInfo(JniMethodInfo&, cls, name, sig)
+constexpr uint32_t jni_jstring2string = rwlib::cocos2d::JniHelper::jstring2string;      // JniHelper::jstring2string(jstring) (sret std::string)
 constexpr uint32_t env_callStaticObjectMethod = 0x4E0939;   // _JNIEnv::CallStaticObjectMethod(cls, method, ...)
 constexpr uint32_t env_callStaticFloatMethod = 0x937E75;    // _JNIEnv::CallStaticFloatMethod(cls, method, ...)
 // strings

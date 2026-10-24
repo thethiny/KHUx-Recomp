@@ -20,10 +20,10 @@ constexpr uint32_t StringBuffer_ctor = 0x49140D;
 constexpr uint32_t Date_makeLocalDate = 0x4927CD, TextData_format = 0x492929;
 constexpr uint32_t UserAssign = 0x55204D;          // ColosseumRanking::User::operator=
 constexpr uint32_t ColosseumStage_create = 0x77CF95, Colosseum_create = 0x77C4E9;
-constexpr uint32_t Armature_create = 0x79F3C7, Ref_retain = 0x8FD0B5;
-constexpr uint32_t ImageView_loadTexture = 0x839731, TextAtlas_setString = 0x83AED7;
-constexpr uint32_t Widget_create = 0x825875, Widget_clone = 0x8272B9, Size_ctor = 0x8DF027;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_copy = 0x8E4C03, Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create, Ref_retain = rwlib::cocos2d::Ref::retain;
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE, TextAtlas_setString = rwlib::cocos2d::ui::TextAtlas::setString;
+constexpr uint32_t Widget_create = rwlib::cocos2d::ui::Widget::create, Widget_clone = rwlib::cocos2d::ui::Widget::clone, Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t ImageButton_create = 0x531239, ImageButton_setTargetView = 0x5318C1;
 constexpr uint32_t ImageButton_addTouchEventListener = 0x5315B1;
 constexpr uint32_t AvatarIconCache_find = 0x5CA9A9, AvatarIconCache_add = 0x5CAA57, AvatarUtil_makeStyle = 0x497105;

@@ -17,7 +17,7 @@ constexpr uint32_t SAS_openTutorial33 = 0x727E95;           // (scene, std::func
 constexpr uint32_t BuyMagicStoneDialog_open = 0x588CAD;     // (const function<void()>&, bool)
 constexpr uint32_t FunctionVB_assign = 0x490109;            // std::function<void(bool)>::operator=(const function&)
 constexpr uint32_t SceneManager_changeSceneLayer = 0x612B99;   // (mgr, function<Layer*()>*, bool, bool, FadeType)
-constexpr uint32_t Widget_addTouchEventListener = 0x826CCF;    // (widget, std::function<void(Ref*, TouchEventType)>)
+constexpr uint32_t Widget_addTouchEventListener = rwlib::cocos2d::ui::Widget::addTouchEventListener;    // (widget, std::function<void(Ref*, TouchEventType)>)
 constexpr uint32_t SceneUtil_callPrepareMypageAPIs = 0x46F37D;
 
 // __func<Layer*(*)(), ...> holding createSceneLayer<SceneMyPage> (the My Page factory)

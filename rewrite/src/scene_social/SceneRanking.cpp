@@ -10,16 +10,16 @@ using Self = SceneRanking;
 
 namespace {
 namespace g {
-constexpr uint32_t Layer_ctor = 0x88A7D1;
-constexpr uint32_t Layer_init = 0x88A8A1;
-constexpr uint32_t Layer_dtor = 0x88A88D;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base;
+constexpr uint32_t Layer_init = rwlib::cocos2d::Layer::init;
+constexpr uint32_t Layer_dtor = rwlib::cocos2d::Layer::dtor_base;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t aeabi_memset = 0x40E7A0;                // __aeabi_memset(dst, n, c)
-constexpr uint32_t Vec2_ctor = 0x8E4B95;                   // Vec2::Vec2()
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
-constexpr uint32_t ImageView_loadTexture = 0x839731;       // (image, const string&, TextureResType)
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__v;                   // Vec2::Vec2()
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;       // (image, const string&, TextureResType)
 constexpr uint32_t String_assign = 0x48D811;               // std::string::assign(const char*, size_t)
 constexpr uint32_t SafeBuffer_read = 0x45A269;             // (sb, out, src, n, index)
 constexpr uint32_t TextData_format = 0x492929;             // (string out, Type, id, ...)

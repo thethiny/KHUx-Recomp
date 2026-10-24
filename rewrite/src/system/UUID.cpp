@@ -5,8 +5,8 @@
 namespace uuid {
 
 namespace {
-constexpr uint32_t GET_STATIC_METHOD_INFO = 0xA4225D;   // cocos2d::JniHelper::getStaticMethodInfo(info, cls, name, sig)
-constexpr uint32_t GET_METHOD_INFO = 0xA422DD;          // cocos2d::JniHelper::getMethodInfo(info, cls, name, sig)
+constexpr uint32_t GET_STATIC_METHOD_INFO = rwlib::cocos2d::JniHelper::getStaticMethodInfo;   // cocos2d::JniHelper::getStaticMethodInfo(info, cls, name, sig)
+constexpr uint32_t GET_METHOD_INFO = rwlib::cocos2d::JniHelper::getMethodInfo;          // cocos2d::JniHelper::getMethodInfo(info, cls, name, sig)
 constexpr uint32_t CALL_STATIC_OBJECT_METHOD = 0x4E0939;   // _JNIEnv::CallStaticObjectMethod(env, cls, mid, ...)
 constexpr uint32_t CALL_LONG_METHOD = 0x4E098D;            // _JNIEnv::CallLongMethod(env, obj, mid, ...)
 constexpr uint32_t MAKE_SHARED_DATA = 0x4E0A3D;            // std::make_shared<bg::Data>() (sret)

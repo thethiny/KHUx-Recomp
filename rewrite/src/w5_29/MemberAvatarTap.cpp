@@ -11,8 +11,8 @@ namespace {
 namespace g {
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
 constexpr uint32_t SM_openNoTapScreen = 0x61FB25;          // (sm, float seconds)
-constexpr uint32_t DelayTime_create = 0x86852D, CallFunc_create = 0x866B39, Sequence_create = 0x867999;
-constexpr uint32_t Node_runAction = 0x894AED;
+constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create, CallFunc_create = rwlib::cocos2d::CallFunc::create, Sequence_create = rwlib::cocos2d::Sequence::create;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
 }  // namespace g
 
 constexpr uint32_t SM_NO_TAP_TIME = 0x300;     // SceneManager: float, the no-tap screen's seconds

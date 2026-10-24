@@ -6,21 +6,21 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Scene_create = 0x8A5F37;
+constexpr uint32_t Scene_create = rwlib::cocos2d::Scene::create;
 constexpr uint32_t SceneAlbum_create = 0x5AC9FD;
-constexpr uint32_t Touch_getLocation = 0x900E57;
-constexpr uint32_t Node_convertToNodeSpace = 0x89599D;
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t Rect_ctor = 0x8DF18B;
-constexpr uint32_t Rect_containsPoint = 0x8DF2A9;
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Touch_getLocation = rwlib::cocos2d::Touch::getLocation;
+constexpr uint32_t Node_convertToNodeSpace = rwlib::cocos2d::Node::convertToNodeSpace;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff;
+constexpr uint32_t Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint;
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
 constexpr uint32_t AudioPlaySystemSECancel = 0x5C0D81;
 constexpr uint32_t SceneManager_getInstance = 0x60C26D;
 constexpr uint32_t SceneManager_openNoTapScreen = 0x61FB25;
-constexpr uint32_t DelayTime_create = 0x86852D;
-constexpr uint32_t CallFunc_create = 0x866B39;
-constexpr uint32_t Sequence_create = 0x867999;
+constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create;
+constexpr uint32_t CallFunc_create = rwlib::cocos2d::CallFunc::create;
+constexpr uint32_t Sequence_create = rwlib::cocos2d::Sequence::create;
 constexpr uint32_t SceneUtil_createClosePopupAnimation = 0x45BC61;
 constexpr uint32_t FunctionVB_copy = 0x45C84D;             // std::function<void(bool)>(const function&)
 constexpr uint32_t MEMCPY = 0x40E164;
@@ -188,13 +188,13 @@ void openAlbumMedalPopup(uint32_t self, uint32_t index) {
     constexpr uint32_t SceneUtil_createNodeWithSceneFile = 0x45AA49;
     constexpr uint32_t SceneUtil_updateMedalInfo = 0x462195;
     constexpr uint32_t SceneUtil_createOpenPopupAnimation = 0x45BC05;
-    constexpr uint32_t Vec2_ctor = 0x8E4B9D;
+    constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff;
     constexpr uint32_t MedalDataManager_getInstance = 0x76AD69, MedalDataManager_getMedalData = 0x76ADB5;
     constexpr uint32_t APIManager_getInstance = 0x4BA8C9;
     constexpr uint32_t SafeBuffer_read = 0x45A269;
     constexpr uint32_t AEABI_MEMSET = 0x40E7A0;
-    constexpr uint32_t ArmatureDataManager_getInstance = 0x7AC9B5, ArmatureDataManager_addArmatureFileInfo = 0x7AD7BD;
-    constexpr uint32_t Armature_create = 0x79F3C7;
+    constexpr uint32_t ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance, ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;
+    constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create;
     constexpr uint32_t ImageButton_create = 0x531239, ImageButton_setTargetView = 0x5318C1;
     constexpr uint32_t ImageButton_addTouchEventListener = 0x5315B1;
     constexpr uint32_t shared_add = 0xC8DBB5, shared_release = 0xC8DBD1;

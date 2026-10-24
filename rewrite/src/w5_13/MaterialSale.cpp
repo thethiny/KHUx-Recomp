@@ -13,21 +13,21 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Layout_ctor = 0x828671;
-constexpr uint32_t Layer_ctor = 0x88A7D1, Layer_init = 0x88A8A1, Layer_dtor = 0x88A88D;
-constexpr uint32_t Ref_retain = 0x8FD0B5, Ref_release = 0x8FD0BD, Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Size_ctor = 0x8DF027, Rect_ctor = 0x8DF18B, Rect_containsPoint = 0x8DF2A9;
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Widget_create = 0x825875, Widget_clone = 0x8272B9;
-constexpr uint32_t Text_setString = 0x83A2DD;
-constexpr uint32_t ImageView_loadTextureTex = 0x8398FD;     // (image, Texture2D*)
-constexpr uint32_t Node_runAction = 0x894AED, Node_convertToNodeSpace = 0x89599D;
-constexpr uint32_t Touch_getLocation = 0x900E57;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
-constexpr uint32_t Director_getInstance = 0x8EE519, Director_getTextureCache = 0x8EFE69;
-constexpr uint32_t TextureCache_addImage = 0x917DA9;
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5, EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
-constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = 0x8F3649;
+constexpr uint32_t Layout_ctor = rwlib::cocos2d::ui::Layout::ctor_base;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base, Layer_init = rwlib::cocos2d::Layer::init, Layer_dtor = rwlib::cocos2d::Layer::dtor_base;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain, Ref_release = rwlib::cocos2d::Ref::release, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff, Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff, Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint;
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Widget_create = rwlib::cocos2d::ui::Widget::create, Widget_clone = rwlib::cocos2d::ui::Widget::clone;
+constexpr uint32_t Text_setString = rwlib::cocos2d::ui::Text::setString;
+constexpr uint32_t ImageView_loadTextureTex = rwlib::cocos2d::ui::ImageView::loadTexture__PNS_9Texture2DE;     // (image, Texture2D*)
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction, Node_convertToNodeSpace = rwlib::cocos2d::Node::convertToNodeSpace;
+constexpr uint32_t Touch_getLocation = rwlib::cocos2d::Touch::getLocation;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
+constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance, Director_getTextureCache = rwlib::cocos2d::Director::getTextureCache;
+constexpr uint32_t TextureCache_addImage = rwlib::cocos2d::TextureCache::addImage;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create, EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
+constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
 constexpr uint32_t FunctionBTE_swap = 0x483E4D;            // std::function<bool(Touch*, Event*)>::swap
 constexpr uint32_t FunctionVTE_swap = 0x4F3699;            // std::function<void(Touch*, Event*)>::swap
 constexpr uint32_t FunctionVI_call = 0x4F321D;             // std::function<void(int)>::operator()(int)

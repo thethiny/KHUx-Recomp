@@ -15,7 +15,7 @@ constexpr uint32_t VT_Close = 0xF59EB4;              // close $_20
 constexpr uint32_t VT_SkillPopupIn = 0xF59E30;       // popUpSkillLevelUp $_22
 constexpr uint32_t VT_SubMissionEnd = 0xF59E88;      // initSubMissionLwf $_21 (heap: self + std::function)
 
-constexpr uint32_t Movie_GotoAndPlay = 0x815DCF;
+constexpr uint32_t Movie_GotoAndPlay = rwlib::LWF::Movie::GotoAndPlay__i;
 constexpr uint32_t Audio_getLayer = 0x5BF33D;        // audio::Manager::getLayer(shared_ptr out, int)
 constexpr uint32_t AudioLayer_playSE = 0x5BF785;     // audio::Layer::playSE(ResourceID, int, int)
 constexpr uint32_t Vector_throwOutOfRange = 0x47CCE1; // __vector_base_common::__throw_out_of_range

@@ -6,7 +6,7 @@
 using namespace scene;
 
 namespace {
-constexpr uint32_t Layer_ctor = 0x88A7D1, Scene_create = 0x8A5F37, Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base, Scene_create = rwlib::cocos2d::Scene::create, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t function_vv_assign = 0x4EB9CD;
 constexpr uint32_t SceneManager_setOnBackKeyCallback = 0x613E5B, SceneManager_hideHeader = 0x61154D;
 constexpr uint32_t SceneManager_changeBackground = 0x6128ED, SceneManager_removeBackground = 0x611691;

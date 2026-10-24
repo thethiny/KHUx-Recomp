@@ -21,10 +21,10 @@ constexpr uint32_t sd_isExist = 0xCDADB0;             // SdSoundSystem_SoundCtrl
 constexpr uint32_t sd_setPause = 0xCDADE0;            // SdSoundSystem_SoundCtrl_SetPause(sound, pause, fadeTime)
 constexpr uint32_t sd_setVolume = 0xCDAE90;           // SdSoundSystem_SoundCtrl_SetVolume(sound, volume, fadeTime)
 // cocos2d
-constexpr uint32_t director_getInstance = 0x8EE519;
-constexpr uint32_t director_getScheduler = 0x8F0CF1;  // Director::getScheduler() const
+constexpr uint32_t director_getInstance = rwlib::cocos2d::Director::getInstance;
+constexpr uint32_t director_getScheduler = rwlib::cocos2d::Director::getScheduler;  // Director::getScheduler() const
 constexpr uint32_t scheduler_scheduleUpdate = 0x5BEE19;   // Scheduler::scheduleUpdate<audio::Manager>(target, priority, paused)
-constexpr uint32_t scheduler_unscheduleUpdate = 0x8FE9E5; // Scheduler::unscheduleUpdate(void*)
+constexpr uint32_t scheduler_unscheduleUpdate = rwlib::cocos2d::Scheduler::unscheduleUpdate; // Scheduler::unscheduleUpdate(void*)
 // game / library
 constexpr uint32_t stringBuffer_ctor = 0x49140D;      // StringBuffer::StringBuffer(const char* fmt, ...)
 constexpr uint32_t stringBuffer_fset = 0x491501;      // StringBuffer::fset(const char* fmt, ...)

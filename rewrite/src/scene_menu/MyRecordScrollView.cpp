@@ -11,17 +11,17 @@ constexpr uint32_t VT2 = 0xF84A98, VT3 = 0xF84AAC;        // the +0x280 and +0x3
 
 // ---- callees
 constexpr uint32_t Memset = 0x40E7A0;                     // __aeabi_memset(dst, n, c) (import)
-constexpr uint32_t Layout_ctor = 0x828671, Layout_dtor = 0x8289C5;
-constexpr uint32_t Ref_retain = 0x8FD0B5, Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Widget_clone = 0x8272B9;
-constexpr uint32_t Widget_setContentSize = 0x825C75;
-constexpr uint32_t Size_ctorWH = 0x8DF027, Size_copy = 0x8DF02D;
-constexpr uint32_t Vec2_ctorXY = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t ScrollView_create = 0x856EA1;          // (const Size&, Node* container)
-constexpr uint32_t ScrollView_getContentOffset = 0x8574B1;   // (Vec2 out, view)
-constexpr uint32_t ScrollView_setContentOffset = 0x857661;   // (view, const Vec2&, bool animated)
-constexpr uint32_t Node_stopAllActions = 0x893815;
-constexpr uint32_t DelayTime_create = 0x86852D;
+constexpr uint32_t Layout_ctor = rwlib::cocos2d::ui::Layout::ctor_base, Layout_dtor = rwlib::cocos2d::ui::Layout::dtor_base;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Widget_clone = rwlib::cocos2d::ui::Widget::clone;
+constexpr uint32_t Widget_setContentSize = rwlib::cocos2d::ui::Widget::setContentSize;
+constexpr uint32_t Size_ctorWH = rwlib::cocos2d::Size::ctor_base__ff, Size_copy = rwlib::cocos2d::Size::ctor_base__RKS0_;
+constexpr uint32_t Vec2_ctorXY = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t ScrollView_create = rwlib::cocos2d::extension::ScrollView::create;          // (const Size&, Node* container)
+constexpr uint32_t ScrollView_getContentOffset = rwlib::cocos2d::extension::ScrollView::getContentOffset;   // (Vec2 out, view)
+constexpr uint32_t ScrollView_setContentOffset = rwlib::cocos2d::extension::ScrollView::setContentOffset;   // (view, const Vec2&, bool animated)
+constexpr uint32_t Node_stopAllActions = rwlib::cocos2d::Node::stopAllActions;
+constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create;
 constexpr uint32_t function_vv_assign = 0x4EB9CD;         // std::function<void()>::operator=(const function&)
 constexpr uint32_t MyRecordScrollBar_create = 0x51B111;   // (ScrollBarType, const Size&)
 constexpr uint32_t MyRecordScrollBar_updateLayout = 0x51B1D5;

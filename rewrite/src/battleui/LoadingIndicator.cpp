@@ -5,23 +5,23 @@
 using namespace scene;
 
 namespace {
-constexpr uint32_t Node_ctor = 0x892531;
-constexpr uint32_t Node_dtor = 0x8927ED;
-constexpr uint32_t Node_stopAllActions = 0x893815;
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t LayerColor_create = 0x88B539;                 // (const Color4B&)
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5;
-constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
+constexpr uint32_t Node_ctor = rwlib::cocos2d::Node::ctor_base;
+constexpr uint32_t Node_dtor = rwlib::cocos2d::Node::dtor_base;
+constexpr uint32_t Node_stopAllActions = rwlib::cocos2d::Node::stopAllActions;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t LayerColor_create = rwlib::cocos2d::LayerColor::create;                 // (const Color4B&)
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create;
+constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
 constexpr uint32_t TouchFunction_swap = 0x483E4D;               // std::function<bool(Touch*,Event*)>::swap
-constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = 0x8F3649;
-constexpr uint32_t ArmatureDataManager_getInstance = 0x7AC9B5;
-constexpr uint32_t ArmatureDataManager_addArmatureFileInfo = 0x7AD7BD;
-constexpr uint32_t Armature_create = 0x79F3C7;
-constexpr uint32_t FadeTo_create = 0x86B3E1;                    // (float duration, uint8 opacity)
-constexpr uint32_t DelayTime_create = 0x86852D;
-constexpr uint32_t Sequence_create = 0x867999;
-constexpr uint32_t CallFunc_create = 0x866B39;
+constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
+constexpr uint32_t ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance;
+constexpr uint32_t ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;
+constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create;
+constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create;                    // (float duration, uint8 opacity)
+constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create;
+constexpr uint32_t Sequence_create = rwlib::cocos2d::Sequence::create;
+constexpr uint32_t CallFunc_create = rwlib::cocos2d::CallFunc::create;
 
 constexpr uint32_t COLOR4B_BLACK = 0x1007EBC;                    // cocos2d::Color4B::BLACK
 constexpr uint32_t VEC2_ANCHOR_BOTTOM_LEFT = 0x1006958;          // cocos2d::Vec2::ANCHOR_BOTTOM_LEFT

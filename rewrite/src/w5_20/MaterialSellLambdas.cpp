@@ -16,8 +16,8 @@ constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9, AudioPlaySystemSECancel =
 constexpr uint32_t SceneManager_60D169 = 0x60D169;        // (mgr, bool): before a request
 constexpr uint32_t APIManager_sellMaterial = 0x4C986D;     // (api, u64 user material id, count, function<...>)
 constexpr uint32_t MaterialScrollView_clearSelect = 0x501D99, IScrollProtocol_updateLayout = 0x4F6CF5;
-constexpr uint32_t Slider_getPercent = 0x83D3ED, Slider_setPercent = 0x83CEED;
-constexpr uint32_t FadeTo_create = 0x86B3E1, Node_runAction = 0x894AED;
+constexpr uint32_t Slider_getPercent = rwlib::cocos2d::ui::Slider::getPercent, Slider_setPercent = rwlib::cocos2d::ui::Slider::setPercent;
+constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create, Node_runAction = rwlib::cocos2d::Node::runAction;
 constexpr uint32_t openSellCheckDialog = 0x688105;
 constexpr uint32_t aeabi_idiv = 0xCD5E8D;
 constexpr uint32_t floatsisf = 0xCD6D68, divsf3 = 0xCD6FAC, mulsf3 = 0xCD6E14, fixsfsi = 0xCD7240;

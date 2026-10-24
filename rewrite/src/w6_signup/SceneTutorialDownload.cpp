@@ -8,12 +8,12 @@
 using namespace scene;
 
 namespace {
-constexpr uint32_t Layer_ctor = 0x88A7D1, Scene_create = 0x8A5F37, Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Node_create = 0x89372D;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base, Scene_create = rwlib::cocos2d::Scene::create, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Node_create = rwlib::cocos2d::Node::create;
 constexpr uint32_t function_vv_assign = 0x4EB9CD;
-constexpr uint32_t Director_getInstance = 0x8EE519, Director_getVisibleSize = 0x8F0675;
-constexpr uint32_t Size_ctor = 0x8DF027, Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t VideoPlayer_create = 0x5A358D;
+constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance, Director_getVisibleSize = rwlib::cocos2d::Director::getVisibleSize;
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff, Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t VideoPlayer_create = rwlib::cocos2d::experimental::ui::VideoPlayer::create;
 constexpr uint32_t SceneUtil_getSideMargin = 0x45AD0D;
 constexpr uint32_t SM_setEnabledTouchEffect = 0x60CF65;
 constexpr uint32_t ResourceDataManager_getInstance = 0x7728AD, ResourceDataManager_mount = 0x773355;

@@ -8,11 +8,11 @@ using Self = RaidBossScrollView;
 
 namespace {
 namespace g {
-constexpr uint32_t Layout_ctor = 0x828671;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Layout_ctor = rwlib::cocos2d::ui::Layout::ctor_base;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t AEABI_MEMSET = 0x40E7A0;
-constexpr uint32_t GUIReader_getInstance = 0x7BF1E5;
-constexpr uint32_t GUIReader_widgetFromJsonFile = 0x7BF9FD;
+constexpr uint32_t GUIReader_getInstance = rwlib::cocostudio::GUIReader::getInstance;
+constexpr uint32_t GUIReader_widgetFromJsonFile = rwlib::cocostudio::GUIReader::widgetFromJsonFile;
 constexpr uint32_t VectorBaseInt_dtor = 0x478961;          // std::__vector_base<int>::~__vector_base
 constexpr uint32_t VectorBaseRaid_dtor = 0x4BA87D;         // std::__vector_base<RaidBase>::~__vector_base
 constexpr uint32_t VectorRaid_assign = 0x5095C5;           // std::vector<RaidBase>::assign(first, last)
@@ -22,16 +22,16 @@ constexpr uint32_t popUpRaidBossInfo = 0x5072F5;           // (const RaidBase::I
 constexpr uint32_t FunctionVI_call = 0x4F321D;             // std::function<void(int)>::operator()(int)
 constexpr uint32_t FunctionTouchBool_swap = 0x483E4D;
 constexpr uint32_t FunctionTouchVoid_swap = 0x4F3699;
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5;
-constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
-constexpr uint32_t EventDispatcher_addListenerWithSceneGraphPriority = 0x8F3649;
-constexpr uint32_t Director_getInstance = 0x8EE519;
-constexpr uint32_t Touch_getLocation = 0x900E57;           // (Vec2 out, touch)
-constexpr uint32_t Node_convertToNodeSpace = 0x89599D;     // (Vec2 out, node, const Vec2&)
-constexpr uint32_t Rect_ctor = 0x8DF18B;
-constexpr uint32_t Rect_containsPoint = 0x8DF2A9;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D;
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create;
+constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
+constexpr uint32_t EventDispatcher_addListenerWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
+constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance;
+constexpr uint32_t Touch_getLocation = rwlib::cocos2d::Touch::getLocation;           // (Vec2 out, touch)
+constexpr uint32_t Node_convertToNodeSpace = rwlib::cocos2d::Node::convertToNodeSpace;     // (Vec2 out, node, const Vec2&)
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff;
+constexpr uint32_t Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff;
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t SceneUtil_setAdditionalKerning = 0x466BA9;
 constexpr uint32_t SceneUtil_setShadow = 0x45BD15;
 constexpr uint32_t SceneUtil_setBossTypeImage = 0x46C4C5;  // (ImageView*, int, bool)
@@ -44,9 +44,9 @@ constexpr uint32_t MasterRaidEnemy_create = 0x787745;
 constexpr uint32_t SafeBuffer_ctor = 0x459F21;
 constexpr uint32_t SafeBuffer_dtor = 0x45A13D;
 constexpr uint32_t RaidParts_setMasterParam = 0x5F1551;
-constexpr uint32_t ImageView_loadTexture = 0x839731;
-constexpr uint32_t LoadingBar_setPercent = 0x83BB05;
-constexpr uint32_t TextAtlas_setString = 0x83AED7;
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;
+constexpr uint32_t LoadingBar_setPercent = rwlib::cocos2d::ui::LoadingBar::setPercent;
+constexpr uint32_t TextAtlas_setString = rwlib::cocos2d::ui::TextAtlas::setString;
 constexpr uint32_t AvatarIconCache_makeShared = 0x509899;  // make_shared<AvatarIconCache>(Texture2D*&, Vec2, float, float)
 constexpr uint32_t AvatarIconCache_find = 0x5CA9A9;        // (cache, unsigned long long)
 constexpr uint32_t AvatarIconCache_add = 0x5CAA57;         // (cache, unsigned long long, const Style&)
@@ -597,12 +597,12 @@ void infoPopupClosed(uint32_t functor, uint32_t argRef) {
         Frame f;
         uint32_t fo = newFunction(f, 0xF55FCC, {ld32(functor + 0xC), ld32(functor + 0x10), popup});
         uint32_t anim = call(0x45BC61, {popup, fo});          // SceneUtil::createClosePopupAnimation
-        call(0x894AED, {popup, call(0x860D09, {anim})});      // runAction(EaseSineOut::create)
+        call(rwlib::cocos2d::Node::runAction, {popup, call(rwlib::cocos2d::EaseSineOut::create, {anim})});      // runAction(EaseSineOut::create)
         functionDestroy(fo);
     }
     if (ld32(functor + 0x28)) call(0x470E69, {functor + 0x18});   // std::function<void()>::operator()
-    uint32_t fade = call(0x86B3E1, {ld32(ld32(0xFD65C0)), 0});     // FadeTo(popup fade time, 0)
-    call(0x894AED, {ld32(functor + 0x10), fade});
+    uint32_t fade = call(rwlib::cocos2d::FadeTo::create, {ld32(ld32(0xFD65C0)), 0});     // FadeTo(popup fade time, 0)
+    call(rwlib::cocos2d::Node::runAction, {ld32(functor + 0x10), fade});
 }
 }  // namespace
 RW_FUNCTION(0x508C9C, "popUpRaidBossInfo $_8 operator() (sub_508C9C)", infoPopupClosed);

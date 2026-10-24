@@ -2,23 +2,23 @@
 
 namespace {
 namespace g {
-constexpr uint32_t director_getInstance = 0x8EE519;     // cocos2d::Director::getInstance()
-constexpr uint32_t director_visibleSize = 0x8F0675;     // Director::getVisibleSize() (sret Size)
-constexpr uint32_t director_visibleOrigin = 0x8F06A1;   // Director::getVisibleOrigin() (sret Vec2)
-constexpr uint32_t vec2_ctor_xy = 0x8E4B9D;             // cocos2d::Vec2::Vec2(float, float)
-constexpr uint32_t vec2_ctor_copy = 0x8E4C03;           // cocos2d::Vec2::Vec2(const Vec2&)
-constexpr uint32_t vec2_dtor = 0x8E4C17;                // cocos2d::Vec2::~Vec2()
-constexpr uint32_t vec2_subtract = 0x8E530F;            // cocos2d::Vec2::subtract(const Vec2&)
-constexpr uint32_t vec2_equals = 0x8E53F5;              // cocos2d::Vec2::equals(const Vec2&) const
-constexpr uint32_t rect_ctor = 0x8DF171;                // cocos2d::Rect::Rect()
-constexpr uint32_t rect_setRect = 0x8DF183;             // Rect::setRect(float x, float y, float w, float h)
-constexpr uint32_t rect_getMinX = 0x8DF275;
-constexpr uint32_t rect_getMinY = 0x8DF2A5;
-constexpr uint32_t rect_getMaxX = 0x8DF249;
-constexpr uint32_t rect_getMaxY = 0x8DF279;
-constexpr uint32_t size_ctor = 0x8DF01F;                // cocos2d::Size::Size()
-constexpr uint32_t size_setSize = 0x8DF04B;             // Size::setSize(float, float)
-constexpr uint32_t size_equals = 0x8DF101;              // Size::equals(const Size&) const
+constexpr uint32_t director_getInstance = rwlib::cocos2d::Director::getInstance;     // cocos2d::Director::getInstance()
+constexpr uint32_t director_visibleSize = rwlib::cocos2d::Director::getVisibleSize;     // Director::getVisibleSize() (sret Size)
+constexpr uint32_t director_visibleOrigin = rwlib::cocos2d::Director::getVisibleOrigin;   // Director::getVisibleOrigin() (sret Vec2)
+constexpr uint32_t vec2_ctor_xy = rwlib::cocos2d::Vec2::ctor_base__ff;             // cocos2d::Vec2::Vec2(float, float)
+constexpr uint32_t vec2_ctor_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_;           // cocos2d::Vec2::Vec2(const Vec2&)
+constexpr uint32_t vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;                // cocos2d::Vec2::~Vec2()
+constexpr uint32_t vec2_subtract = rwlib::cocos2d::Vec2::subtract;            // cocos2d::Vec2::subtract(const Vec2&)
+constexpr uint32_t vec2_equals = rwlib::cocos2d::Vec2::equals;              // cocos2d::Vec2::equals(const Vec2&) const
+constexpr uint32_t rect_ctor = rwlib::cocos2d::Rect::ctor_base__v;                // cocos2d::Rect::Rect()
+constexpr uint32_t rect_setRect = rwlib::cocos2d::Rect::setRect;             // Rect::setRect(float x, float y, float w, float h)
+constexpr uint32_t rect_getMinX = rwlib::cocos2d::Rect::getMinX;
+constexpr uint32_t rect_getMinY = rwlib::cocos2d::Rect::getMinY;
+constexpr uint32_t rect_getMaxX = rwlib::cocos2d::Rect::getMaxX;
+constexpr uint32_t rect_getMaxY = rwlib::cocos2d::Rect::getMaxY;
+constexpr uint32_t size_ctor = rwlib::cocos2d::Size::ctor_base__v;                // cocos2d::Size::Size()
+constexpr uint32_t size_setSize = rwlib::cocos2d::Size::setSize;             // Size::setSize(float, float)
+constexpr uint32_t size_equals = rwlib::cocos2d::Size::equals;              // Size::equals(const Size&) const
 constexpr uint32_t stringBuffer_fset = 0x491501;        // StringBuffer::fset(const char* fmt, ...) -> text
 constexpr uint32_t field_create = 0x5CD0B1;             // Field::create(int, int, const MapInfo&)
 constexpr uint32_t field_preloadResources = 0x5CD9A5;   // Field::preloadResources() const

@@ -9,13 +9,13 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Layer_ctor = 0x88A7D1, Layer_init = 0x88A8A1, Layer_dtor = 0x88A88D;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base, Layer_init = rwlib::cocos2d::Layer::init, Layer_dtor = rwlib::cocos2d::Layer::dtor_base;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t aeabi_memset = 0x40E7A0;                // __aeabi_memset(dst, n, c)
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr uint32_t SafeBuffer_read = 0x45A269;             // (sb, out, src, n, index)
-constexpr uint32_t Text_setString = 0x83A2DD;
+constexpr uint32_t Text_setString = rwlib::cocos2d::ui::Text::setString;
 constexpr uint32_t MedalVector_dtor = 0x46B119;            // __vector_base<shared_ptr<UserMedalData>>::~__vector_base
 constexpr uint32_t MedalVector_pushSlow = 0x487A39;        // vector<shared_ptr<UserMedalData>>::__push_back_slow_path
 constexpr uint32_t VectorULL_dtor = 0x468499;

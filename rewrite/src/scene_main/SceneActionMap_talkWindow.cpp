@@ -23,17 +23,17 @@ constexpr float KEY_X = 336.0f, WINDOW_HEIGHT = 108.0f;
 constexpr uint32_t POP_IN_SECONDS = 0x3E888889;   // 4/15 s (float bits)
 
 constexpr uint32_t TextData_get = 0x4928AD;
-constexpr uint32_t Sprite_create = 0x8A64DD, Sprite_setFlippedX = 0x8A81C5, Sprite_setFlippedY = 0x8A8201;
-constexpr uint32_t Director_getTextureCache = 0x8EFE69, TextureCache_addImage = 0x917DA9;
-constexpr uint32_t Texture2D_getContentSize = 0x914ACB;   // (Size* out, texture)
-constexpr uint32_t Rect_ctor = 0x8DF18B, Size_ctor = 0x8DF027, Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Ref_retain = 0x8FD0B5, Ref_release = 0x8FD0BD;
+constexpr uint32_t Sprite_create = rwlib::cocos2d::Sprite::create__v, Sprite_setFlippedX = rwlib::cocos2d::Sprite::setFlippedX, Sprite_setFlippedY = rwlib::cocos2d::Sprite::setFlippedY;
+constexpr uint32_t Director_getTextureCache = rwlib::cocos2d::Director::getTextureCache, TextureCache_addImage = rwlib::cocos2d::TextureCache::addImage;
+constexpr uint32_t Texture2D_getContentSize = rwlib::cocos2d::Texture2D::getContentSize;   // (Size* out, texture)
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff, Size_ctor = rwlib::cocos2d::Size::ctor_base__ff, Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain, Ref_release = rwlib::cocos2d::Ref::release;
 constexpr uint32_t SpeechDisp_create = 0x601C21, SceneActionMap_setTalkText = 0x601A15;
-constexpr uint32_t Label_setLineHeight = 0x88693D, Label_setDimensions = 0x883A8D;
-constexpr uint32_t Scale9Sprite_create = 0x8543E9;   // (file, Rect rect, Rect capInsets)
-constexpr uint32_t JumpBy_create = 0x869B79, RepeatForever_create = 0x86815D;
-constexpr uint32_t ScaleTo_create = 0x86A8CD, EaseBackOut_create = 0x8616CD;
-constexpr uint32_t CallFunc_create = 0x866B39, Sequence_create = 0x867999, Node_runAction = 0x894AED;
+constexpr uint32_t Label_setLineHeight = rwlib::cocos2d::Label::setLineHeight, Label_setDimensions = rwlib::cocos2d::Label::setDimensions;
+constexpr uint32_t Scale9Sprite_create = rwlib::cocos2d::extension::Scale9Sprite::create__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEERKNS_4RectESD_;   // (file, Rect rect, Rect capInsets)
+constexpr uint32_t JumpBy_create = rwlib::cocos2d::JumpBy::create, RepeatForever_create = rwlib::cocos2d::RepeatForever::create;
+constexpr uint32_t ScaleTo_create = rwlib::cocos2d::ScaleTo::create__ff, EaseBackOut_create = rwlib::cocos2d::EaseBackOut::create;
+constexpr uint32_t CallFunc_create = rwlib::cocos2d::CallFunc::create, Sequence_create = rwlib::cocos2d::Sequence::create, Node_runAction = rwlib::cocos2d::Node::runAction;
 constexpr uint32_t Sprite_setTexture = 0x27C, Sprite_setTextureRect = 0x284;   // virtual slots (byte offsets)
 constexpr uint32_t Label_setTextColor = 0x2B0, Label_setTTFConfig = 0x280;
 

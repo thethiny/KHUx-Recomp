@@ -1140,11 +1140,11 @@ constexpr uint32_t FunctionVB_assign = 0x490109;            // std::function<voi
 constexpr uint32_t FunctionVB_call = 0x474139;              // std::function<void(bool)>::operator()(bool)
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
 constexpr uint32_t AudioPlaySystemSECancel = 0x5C0D81;
-constexpr uint32_t FadeTo_create = 0x86B3E1;                // (float duration, uint8 opacity)
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t Node_scheduleUpdate = 0x894BA7;
-constexpr uint32_t Node_unscheduleUpdate = 0x894CB3;
-constexpr uint32_t Widget_isTouchEnabled = 0x826665;
+constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create;                // (float duration, uint8 opacity)
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t Node_scheduleUpdate = rwlib::cocos2d::Node::scheduleUpdate;
+constexpr uint32_t Node_unscheduleUpdate = rwlib::cocos2d::Node::unscheduleUpdate;
+constexpr uint32_t Widget_isTouchEnabled = rwlib::cocos2d::ui::Widget::isTouchEnabled;
 constexpr uint32_t start_movie = 0x6C4A55;                  // Layer* start_movie(int, bool)
 
 constexpr uint32_t SUR_nextState = 0x7176ED;

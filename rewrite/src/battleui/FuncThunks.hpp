@@ -41,7 +41,7 @@ inline uint32_t target(uint32_t self, uint32_t typeInfo, uint32_t typeName) {
 namespace lwf {
 constexpr uint32_t HandlerMap_insert_unique = 0x530869;  // map<string,function<void(Movie*)>>::__insert_unique(hint, pair)
 constexpr uint32_t HandlerMap_destroy = 0x530811;        // map<...>::destroy(node)
-constexpr uint32_t LWF_AddMovieEventHandler = 0x808645;  // (lwf, const string& name, const map<string,function>&)
+constexpr uint32_t LWF_AddMovieEventHandler = rwlib::LWF::LWF::AddMovieEventHandler;  // (lwf, const string& name, const map<string,function>&)
 constexpr uint32_t STRING_BUFFER_SIZE = 1028;            // StringBuffer: char[1024] + length
 
 // A temporary StringBuffer on the guest stack (empty)

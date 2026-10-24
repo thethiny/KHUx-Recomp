@@ -6,11 +6,11 @@ using namespace mypage;
 namespace {
 constexpr uint32_t MypageBackground_create = 0x7924E1;   // master::MypageBackground::create(shared_ptr out, id)
 constexpr uint32_t Random_getInstance = 0x492055, Random_generateUniformInt = 0x492225;
-constexpr uint32_t Node_create = 0x89372D;
+constexpr uint32_t Node_create = rwlib::cocos2d::Node::create;
 constexpr uint32_t AudioLWFNode_create = 0x5EB6B5;      // (const char*, void*)
-constexpr uint32_t ImageView_loadTexture = 0x839731;    // (view, const string&, TextureResType)
-constexpr uint32_t FileUtils_getInstance = 0xA3F44D;
-constexpr uint32_t ParticleSystemQuad_create = 0x8A0B3D;
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;    // (view, const string&, TextureResType)
+constexpr uint32_t FileUtils_getInstance = rwlib::cocos2d::FileUtils::getInstance;
+constexpr uint32_t ParticleSystemQuad_create = rwlib::cocos2d::ParticleSystemQuad::create;
 constexpr uint32_t ValueMap_dtor = 0x65253D;
 constexpr uint32_t ANCHOR_BOTTOM_LEFT = 0x1006958, ANCHOR_MIDDLE = 0xFEF5C0;
 constexpr uint32_t S_LWF = 0xE03969;       // lwf/home/%d/%d.lwf

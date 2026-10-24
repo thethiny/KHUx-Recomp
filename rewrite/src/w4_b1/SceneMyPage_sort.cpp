@@ -8,8 +8,8 @@ constexpr uint32_t ActorVector_clear = 0x485BA3, ActorVector_pushBack = 0x6425D5
 constexpr uint32_t U64Vector_pushBackSlow = 0x4ECB6D;     // std::vector<unsigned long long>::__push_back_slow_path
 constexpr uint32_t UIntVector_pushBackSlow = 0x4ED6F1;    // std::vector<unsigned>::__push_back_slow_path(unsigned&&)
 constexpr uint32_t Random_getInstance = 0x492055, Random_generateUniformInt = 0x492225;
-constexpr uint32_t FadeOut_create = 0x86B25D, FadeIn_create = 0x86B115;
-constexpr uint32_t Vec2_copy = 0x8E4C03;
+constexpr uint32_t FadeOut_create = rwlib::cocos2d::FadeOut::create, FadeIn_create = rwlib::cocos2d::FadeIn::create;
+constexpr uint32_t Vec2_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_;
 constexpr uint32_t SortIds = 0x64CA31;                    // std::sort internals over the ids with the mode comparator
 constexpr uint32_t BuildFadeOutDone = 0x6461E5, BuildMoveDone = 0x646291;   // sub_6461E4 / sub_646290 below
 constexpr uint32_t M_getAvatarLineupStartX = 0x6460F5, M_createPartyAvatar = 0x642395;

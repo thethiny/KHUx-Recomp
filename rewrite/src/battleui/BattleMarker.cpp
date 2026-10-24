@@ -5,26 +5,26 @@
 using namespace scene;
 
 namespace {
-constexpr uint32_t Node_ctor = 0x892531;
-constexpr uint32_t Node_dtor = 0x8927ED;
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t Node_convertToNodeSpace = 0x89599D;          // (Vec2 out, node, const Vec2&)
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Touch_getLocation = 0x900E57;                // (Vec2 out, touch)
-constexpr uint32_t Touch_getPreviousLocation = 0x900E79;
-constexpr uint32_t Rect_ctor = 0x8DF18B;                        // (rect, x, y, w, h)
-constexpr uint32_t Rect_containsPoint = 0x8DF2A9;
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5;
-constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
+constexpr uint32_t Node_ctor = rwlib::cocos2d::Node::ctor_base;
+constexpr uint32_t Node_dtor = rwlib::cocos2d::Node::dtor_base;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t Node_convertToNodeSpace = rwlib::cocos2d::Node::convertToNodeSpace;          // (Vec2 out, node, const Vec2&)
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Touch_getLocation = rwlib::cocos2d::Touch::getLocation;                // (Vec2 out, touch)
+constexpr uint32_t Touch_getPreviousLocation = rwlib::cocos2d::Touch::getPreviousLocation;
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff;                        // (rect, x, y, w, h)
+constexpr uint32_t Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create;
+constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
 constexpr uint32_t TouchBoolFunction_swap = 0x483E4D;           // std::function<bool(Touch*,Event*)>::swap
 constexpr uint32_t TouchVoidFunction_swap = 0x4F3699;           // std::function<void(Touch*,Event*)>::swap
-constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = 0x8F3649;
-constexpr uint32_t ArmatureDataManager_getInstance = 0x7AC9B5;
-constexpr uint32_t ArmatureDataManager_addArmatureFileInfo = 0x7AD7BD;
-constexpr uint32_t Armature_create = 0x79F3C7;
-constexpr uint32_t DelayTime_create = 0x86852D;
-constexpr uint32_t Sequence_create = 0x867999;
-constexpr uint32_t CallFunc_create = 0x866B39;
+constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
+constexpr uint32_t ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance;
+constexpr uint32_t ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;
+constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create;
+constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create;
+constexpr uint32_t Sequence_create = rwlib::cocos2d::Sequence::create;
+constexpr uint32_t CallFunc_create = rwlib::cocos2d::CallFunc::create;
 constexpr uint32_t Misc_create = 0x786D5D;                      // master::Misc::create(shared_ptr out, id)
 constexpr uint32_t RaidBossHPIndicator_create = 0x5E5165;       // (Enemy_Type, Type, hp, misc value)
 constexpr uint32_t RaidBossHPIndicator_setHP = 0x5E6305;

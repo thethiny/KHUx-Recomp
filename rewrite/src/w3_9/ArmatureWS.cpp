@@ -4,13 +4,13 @@
 
 namespace {
 namespace g {
-constexpr uint32_t armature_ctor = 0x79F489;          // cocostudio::Armature::Armature()
-constexpr uint32_t armature_dtor = 0x79F5C1;          // cocostudio::Armature::~Armature()
-constexpr uint32_t armature_init = 0x79F721;          // cocostudio::Armature::init()
-constexpr uint32_t armature_initName = 0x79F7BD;      // cocostudio::Armature::init(const std::string&)
-constexpr uint32_t armature_initNameBone = 0x79FFD1;  // cocostudio::Armature::init(const std::string&, Bone*)
-constexpr uint32_t armature_update = 0x7A07CD;        // cocostudio::Armature::update(float)
-constexpr uint32_t ref_autorelease = 0x8FD0D5;        // cocos2d::Ref::autorelease()
+constexpr uint32_t armature_ctor = rwlib::cocostudio::Armature::ctor_base;          // cocostudio::Armature::Armature()
+constexpr uint32_t armature_dtor = rwlib::cocostudio::Armature::dtor_base;          // cocostudio::Armature::~Armature()
+constexpr uint32_t armature_init = rwlib::cocostudio::Armature::init__v;          // cocostudio::Armature::init()
+constexpr uint32_t armature_initName = rwlib::cocostudio::Armature::init__RKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE;      // cocostudio::Armature::init(const std::string&)
+constexpr uint32_t armature_initNameBone = rwlib::cocostudio::Armature::init__RKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEEPNS_4BoneE;  // cocostudio::Armature::init(const std::string&, Bone*)
+constexpr uint32_t armature_update = rwlib::cocostudio::Armature::update;        // cocostudio::Armature::update(float)
+constexpr uint32_t ref_autorelease = rwlib::cocos2d::Ref::autorelease;        // cocos2d::Ref::autorelease()
 }  // namespace g
 
 constexpr float ONE = 1.0f;

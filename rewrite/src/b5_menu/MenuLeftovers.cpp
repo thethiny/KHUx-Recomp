@@ -7,8 +7,8 @@ using namespace scene;
 namespace {
 namespace g {
 constexpr uint32_t MEMCPY = 0x40E164;                      // memcpy (import)
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t ScrollView_setContentOffset = 0x857661; // (view, const Vec2&, bool animated)
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t ScrollView_setContentOffset = rwlib::cocos2d::extension::ScrollView::setContentOffset; // (view, const Vec2&, bool animated)
 constexpr uint32_t SceneManager_getInstance = 0x60C26D;
 constexpr uint32_t SceneManager_changeSceneLayer = 0x612B99;
 constexpr uint32_t APIManager_getInstance = 0x4BA8C9;

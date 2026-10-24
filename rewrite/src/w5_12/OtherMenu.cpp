@@ -11,21 +11,21 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
-constexpr uint32_t FadeTo_create = 0x86B3E1;               // FadeTo::create(float duration, uint8 opacity)
-constexpr uint32_t Vec2_ctorXY = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Size_ctor = 0x8DF027;                   // Size(float, float)
-constexpr uint32_t GUIReader_getInstance = 0x7BF1E5, GUIReader_widgetFromJsonFile = 0x7BF9FD;
-constexpr uint32_t ScrollView_create = 0x830E0D, ScrollView_setInnerContainerSize = 0x831355;
-constexpr uint32_t Slider_setPercent = 0x83CEED, Slider_addEventListener = 0x83D2EB;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
+constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create;               // FadeTo::create(float duration, uint8 opacity)
+constexpr uint32_t Vec2_ctorXY = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;                   // Size(float, float)
+constexpr uint32_t GUIReader_getInstance = rwlib::cocostudio::GUIReader::getInstance, GUIReader_widgetFromJsonFile = rwlib::cocostudio::GUIReader::widgetFromJsonFile;
+constexpr uint32_t ScrollView_create = rwlib::cocos2d::ui::ScrollView::create, ScrollView_setInnerContainerSize = rwlib::cocos2d::ui::ScrollView::setInnerContainerSize;
+constexpr uint32_t Slider_setPercent = rwlib::cocos2d::ui::Slider::setPercent, Slider_addEventListener = rwlib::cocos2d::ui::Slider::addEventListener;
 constexpr uint32_t ImageButton_create = 0x531239;          // (std::string by value, bool)
 constexpr uint32_t ImageButton_setTargetImageView = 0x531631;
 constexpr uint32_t ImageButton_addTouchEventListener = 0x5315B1;   // (button, std::function by value)
 constexpr uint32_t ImageButton_setSelectEnabled = 0x5318F1, ImageButton_setIsSelected = 0x5318FD;
-constexpr uint32_t WebView_create = 0x8191B5, WebView_setScalesPageToFit = 0x8192AD;
-constexpr uint32_t WebView_loadUrl = 0x819221, WebView_loadPostUrl = 0x81922F;
-constexpr uint32_t WebViewImpl_shouldStartLoading = 0x819FF9;      // (index, const string&)
+constexpr uint32_t WebView_create = rwlib::cocos2d::plugin::WebView::create, WebView_setScalesPageToFit = rwlib::cocos2d::plugin::WebView::setScalesPageToFit;
+constexpr uint32_t WebView_loadUrl = rwlib::cocos2d::plugin::WebView::loadUrl, WebView_loadPostUrl = rwlib::cocos2d::plugin::WebView::loadPostUrl;
+constexpr uint32_t WebViewImpl_shouldStartLoading = rwlib::cocos2d::plugin::WebViewImpl::shouldStartLoading;      // (index, const string&)
 constexpr uint32_t FunctionWebView_swap = 0x4821B5;        // std::function<void(WebView*, string)>::swap
 constexpr uint32_t FunctionNode_copy = 0x474D99;           // std::function<void(Node*)>(const function&)
 constexpr uint32_t FunctionNode_move = 0x481F0D;           // std::function<void(Node*)>(function&&)

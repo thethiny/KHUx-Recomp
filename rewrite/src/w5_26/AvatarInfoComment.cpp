@@ -11,8 +11,8 @@ namespace g {
 constexpr uint32_t FunctionVB_copy = 0x45C84D;              // std::function<void(bool)>(const&)
 constexpr uint32_t FunctionVB_move = 0x47BC69;              // std::function<void(bool)>(&&)
 constexpr uint32_t SceneManager_openPopup = 0x61524D;       // (sm, function<bool()>, function<void(bool)>, bool)
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Size_ctor = 0x8DF027;                    // (size, float w, float h)
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;                    // (size, float w, float h)
 constexpr uint32_t String_assignCopy = 0x498A1D;            // std::string::operator=(const string&)
 constexpr uint32_t Misc_create = 0x786D5D;                  // master::Misc::create(shared_ptr out, id)
 constexpr uint32_t SafeBuffer_read = 0x45A269;              // (sb, dst, src, len, offset)
@@ -20,10 +20,10 @@ constexpr uint32_t StringBuffer_ctor = 0x49140D;            // (buf, fmt, ...)
 constexpr uint32_t SceneUtil_settingTitleLabelText = 0x46E8D9;   // (root, string name, string text)
 constexpr uint32_t SceneUtil_textFieldToEditBox = 0x45C0A1;
 constexpr uint32_t SceneUtil_textFieldToUiText = 0x45C465;  // (field, const char* text, const char* font)
-constexpr uint32_t EaseSineOut_create = 0x860D09;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr uint32_t String_compare = 0x47CBD5;              // std::string::compare(const char*): 0 = equal
 constexpr uint32_t String_assignN = 0x48D811;              // std::string::assign(const char*, size_t)
-constexpr uint32_t EditBox_getText = 0x85520D;
+constexpr uint32_t EditBox_getText = rwlib::cocos2d::extension::EditBox::getText;
 constexpr uint32_t SceneUtil_editBoxEditingDidEnd = 0x45C61D;   // (EditBox** box, Label* label, const char* text)
 constexpr uint32_t SceneManager_enableLoadingIndicator = 0x60D169;
 constexpr uint32_t APIManager_openErrorDialog = 0x4C3C8D;  // (api, const function<void(bool)>&, bool)

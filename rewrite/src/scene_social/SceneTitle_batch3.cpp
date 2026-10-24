@@ -29,11 +29,11 @@ constexpr uint32_t ResourceDataManager_mount = 0x773355;
 constexpr uint32_t FunctionLayer_assign = 0x612E29;                // std::function<Layer*()>::operator=(const function&)
 constexpr uint32_t FunctionVB_assign = 0x490109;                   // std::function<void(bool)>::operator=
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
-constexpr uint32_t FadeTo_create = 0x86B3E1;                       // (float duration, uint8 opacity)
-constexpr uint32_t EaseSineOut_create = 0x860D09;
-constexpr uint32_t CallFunc_create = 0x866B39;                     // (const std::function<void()>&)
-constexpr uint32_t Sequence_create = 0x867999;                     // (action, ..., nullptr)
-constexpr uint32_t Node_runAction = 0x894AED;
+constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create;                       // (float duration, uint8 opacity)
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
+constexpr uint32_t CallFunc_create = rwlib::cocos2d::CallFunc::create;                     // (const std::function<void()>&)
+constexpr uint32_t Sequence_create = rwlib::cocos2d::Sequence::create;                     // (action, ..., nullptr)
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
 constexpr uint32_t start_movie = 0x6C4A55;                         // (int, bool): the intro movie layer
 constexpr uint32_t SHARED_ADD_REF = 0xC8DBB5, SHARED_RELEASE = 0xC8DBD1;
 constexpr uint32_t GOT_COLOR3B = 0xFD6060;                         // the tap overlay's color (a Color3B in the GOT)

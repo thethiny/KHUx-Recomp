@@ -11,10 +11,10 @@ constexpr uint32_t RECTANGLE = 1, CIRCLE = 2;
 // cocos2d::Rect: origin x, y, size width +8, height +0xC
 constexpr uint32_t R_WIDTH = 8, R_HEIGHT = 0xC;
 
-constexpr uint32_t Rect_ctor = 0x8DF18B, Rect_getMinX = 0x8DF275, Rect_getMinY = 0x8DF2A5;
-constexpr uint32_t Rect_getMaxX = 0x8DF249, Rect_getMaxY = 0x8DF279;
-constexpr uint32_t Rect_containsPoint = 0x8DF2A9, Rect_intersectsRect = 0x8DF375;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17, Vec2_distanceSquared = 0x8E4F45;
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff, Rect_getMinX = rwlib::cocos2d::Rect::getMinX, Rect_getMinY = rwlib::cocos2d::Rect::getMinY;
+constexpr uint32_t Rect_getMaxX = rwlib::cocos2d::Rect::getMaxX, Rect_getMaxY = rwlib::cocos2d::Rect::getMaxY;
+constexpr uint32_t Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint, Rect_intersectsRect = rwlib::cocos2d::Rect::intersectsRect;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base, Vec2_distanceSquared = rwlib::cocos2d::Vec2::distanceSquared;
 
 float callFloat(uint32_t fn, uint32_t arg) { return bitsf(call(fn, {arg})); }
 

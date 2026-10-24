@@ -25,15 +25,15 @@ constexpr uint32_t ISCROLL_SET_ENABLED_SCROLL_BAR = 0x4F6FE9;
 constexpr uint32_t INT_VECTOR_DTOR = 0x478961;              // std::__vector_base<int>::~__vector_base
 constexpr uint32_t INT_VECTOR_PUSH_BACK_SLOW = 0x47D709;    // vector<int>::__push_back_slow_path(int&&)
 constexpr uint32_t VECTOR_THROW_OUT_OF_RANGE = 0x47CCE1;
-constexpr uint32_t REF_RETAIN = 0x8FD0B5, REF_RELEASE = 0x8FD0BD, REF_AUTORELEASE = 0x8FD0D5;
-constexpr uint32_t WIDGET_CREATE = 0x825875;                // ui::Widget::create()
-constexpr uint32_t WIDGET_CLONE = 0x8272B9;                 // ui::Widget::clone()
-constexpr uint32_t SIZE_CTOR = 0x8DF027;                    // cocos2d::Size::Size(float, float)
-constexpr uint32_t GUIREADER_GET_INSTANCE = 0x7BF1E5;
-constexpr uint32_t GUIREADER_WIDGET_FROM_JSON = 0x7BF9FD;   // GUIReader::widgetFromJsonFile(const char*)
+constexpr uint32_t REF_RETAIN = rwlib::cocos2d::Ref::retain, REF_RELEASE = rwlib::cocos2d::Ref::release, REF_AUTORELEASE = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t WIDGET_CREATE = rwlib::cocos2d::ui::Widget::create;                // ui::Widget::create()
+constexpr uint32_t WIDGET_CLONE = rwlib::cocos2d::ui::Widget::clone;                 // ui::Widget::clone()
+constexpr uint32_t SIZE_CTOR = rwlib::cocos2d::Size::ctor_base__ff;                    // cocos2d::Size::Size(float, float)
+constexpr uint32_t GUIREADER_GET_INSTANCE = rwlib::cocostudio::GUIReader::getInstance;
+constexpr uint32_t GUIREADER_WIDGET_FROM_JSON = rwlib::cocostudio::GUIReader::widgetFromJsonFile;   // GUIReader::widgetFromJsonFile(const char*)
 constexpr uint32_t SEARCH_NODE_BY_NAME = 0x45A9F5;          // SceneUtil::searchNodeByName(Node*, const string&)
 constexpr uint32_t SET_SHADOW = 0x45BD15;                   // SceneUtil::setShadow(ui::Text*)
-constexpr uint32_t TEXT_SET_STRING = 0x83A2DD;
+constexpr uint32_t TEXT_SET_STRING = rwlib::cocos2d::ui::Text::setString;
 constexpr uint32_t IMAGE_BUTTON_CREATE = 0x531239;          // ImageButton::create(std::string, bool)
 constexpr uint32_t IMAGE_BUTTON_SET_TARGET_VIEW = 0x5318C1; // ImageButton::setTargetView(Node*, float)
 constexpr uint32_t IMAGE_BUTTON_ADD_TOUCH_LISTENER = 0x5315B1;  // ImageButton::addTouchEventListener(std::function)

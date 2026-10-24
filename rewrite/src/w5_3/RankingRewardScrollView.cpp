@@ -9,15 +9,15 @@ using namespace scene;
 namespace {
 namespace a {
 constexpr uint32_t STRLEN = 0x40E08C;
-constexpr uint32_t Layout_ctor = 0x828671;
-constexpr uint32_t Ref_retain = 0x8FD0B5, Ref_release = 0x8FD0BD, Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Layout_ctor = rwlib::cocos2d::ui::Layout::ctor_base;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain, Ref_release = rwlib::cocos2d::Ref::release, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t VectorBaseInt_dtor = 0x478961;
 constexpr uint32_t IScrollProtocol_dtor = 0x4F57E1;
 constexpr uint32_t IScrollProtocol_setEnabledScrollBar = 0x4F6FE9;
 constexpr uint32_t BaseScrollViewInt_init = 0x4FA8A1;
-constexpr uint32_t GUIReader_getInstance = 0x7BF1E5, GUIReader_widgetFromJsonFile = 0x7BF9FD;
-constexpr uint32_t Widget_create = 0x825875, Widget_clone = 0x8272B9;
-constexpr uint32_t Size_ctor = 0x8DF027;
+constexpr uint32_t GUIReader_getInstance = rwlib::cocostudio::GUIReader::getInstance, GUIReader_widgetFromJsonFile = rwlib::cocostudio::GUIReader::widgetFromJsonFile;
+constexpr uint32_t Widget_create = rwlib::cocos2d::ui::Widget::create, Widget_clone = rwlib::cocos2d::ui::Widget::clone;
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;
 constexpr uint32_t StringBuffer_ctor = 0x49140D;
 constexpr uint32_t SceneUtil_searchNodeByName = 0x45A9F5;
 constexpr uint32_t SceneUtil_setShadow = 0x45BD15;
@@ -28,17 +28,17 @@ constexpr uint32_t TextData_format = 0x492929;              // (string out, type
 constexpr uint32_t RankingReward_create = 0x78ADB9;
 constexpr uint32_t SafeBuffer_read = 0x45A269;
 constexpr uint32_t IntArray10_at = 0x561179;                 // std::array<int, 10>::at
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t ImageView_loadTexture = 0x839731;         // (const string&, TextureResType)
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;         // (const string&, TextureResType)
 constexpr uint32_t ImageButton_create = 0x531239, ImageButton_setTargetView = 0x5318C1;
 constexpr uint32_t ImageButton_addTouchEventListener = 0x5315B1;
 constexpr uint32_t AvatarParts_create = 0x778DE1;
-constexpr uint32_t Director_getInstance = 0x8EE519;
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5, EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
+constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create, EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
 constexpr uint32_t FunctionBTE_swap = 0x483E4D;             // function<bool(Touch*, Event*)>::swap
 constexpr uint32_t FunctionVTE_swap = 0x4F3699;             // function<void(Touch*, Event*)>::swap
 constexpr uint32_t FunctionVTE_assignLambda = 0x561335;     // sub_561334: function<void(Touch*, Event*)> = lambda
-constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = 0x8F3649;
+constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
 constexpr uint32_t initColosseumRewardLayout = 0x560019, initLayout = 0x560A09, updateSelectItems = 0x560889;
 constexpr uint32_t createIncentivePanel = 0x55E295, getLayoutPanel = 0x55E3AD, setIncentiveItem = 0x55E4D1;
 }  // namespace a

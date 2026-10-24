@@ -9,21 +9,21 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Touch_getLocation = 0x900E57;           // (Vec2 out, touch)
-constexpr uint32_t Node_convertToNodeSpace = 0x89599D;     // (Vec2 out, node, const Vec2&)
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t Rect_ctor = 0x8DF18B;
-constexpr uint32_t Rect_containsPoint = 0x8DF2A9;
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Touch_getLocation = rwlib::cocos2d::Touch::getLocation;           // (Vec2 out, touch)
+constexpr uint32_t Node_convertToNodeSpace = rwlib::cocos2d::Node::convertToNodeSpace;     // (Vec2 out, node, const Vec2&)
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff;
+constexpr uint32_t Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint;
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t FunctionVV_call = 0x470E69;             // std::function<void()>::operator()
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
 constexpr uint32_t MEMCPY = 0x40E164;
 constexpr uint32_t SceneManager_getInstance = 0x60C26D;
 constexpr uint32_t SceneManager_enableLoadingIndicator = 0x60D169;
 constexpr uint32_t SceneManager_openNoTapScreen = 0x61FB25;    // (mgr, float)
-constexpr uint32_t DelayTime_create = 0x86852D;
-constexpr uint32_t CallFunc_create = 0x866B39;
-constexpr uint32_t Sequence_create = 0x867999;
+constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create;
+constexpr uint32_t CallFunc_create = rwlib::cocos2d::CallFunc::create;
+constexpr uint32_t Sequence_create = rwlib::cocos2d::Sequence::create;
 constexpr uint32_t APIManager_getInstance = 0x4BA8C9;
 constexpr uint32_t APIManager_executeUserDetailGet = 0x4C7DB9;  // (api, u64 user, const function<void(bool)>&)
 constexpr uint32_t APIManager_openErrorDialog = 0x4C3C8D;       // (api, const function<void(bool)>&, bool)

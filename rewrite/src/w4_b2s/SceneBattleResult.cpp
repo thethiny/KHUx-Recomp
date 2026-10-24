@@ -8,9 +8,9 @@ using namespace b2s;
 
 namespace {
 constexpr Addr GOT_vtable = 0xFD686C;                // vtable block of SceneBattleResult (+8: the vtable)
-constexpr Addr Layer_ctor = 0x88A7D1;                // cocos2d::Layer::Layer()
-constexpr Addr Layer_dtor = 0x88A88D;                // cocos2d::Layer::~Layer()
-constexpr Addr Layer_init = 0x88A8A1;                // cocos2d::Layer::init()
+constexpr Addr Layer_ctor = rwlib::cocos2d::Layer::ctor_base;                // cocos2d::Layer::Layer()
+constexpr Addr Layer_dtor = rwlib::cocos2d::Layer::dtor_base;                // cocos2d::Layer::~Layer()
+constexpr Addr Layer_init = rwlib::cocos2d::Layer::init;                // cocos2d::Layer::init()
 constexpr Addr VectorBase_ResutData_dtor = 0x511C85; // std::__vector_base<BattleResultScrollView::ResutData>::~__vector_base
 constexpr Addr ResutData_pushBackSlow = 0x51517D;    // std::vector<ResutData>::__push_back_slow_path
 constexpr Addr ResutData_copyCtor = 0x5153E7;        // BattleResultScrollView::ResutData::ResutData(const ResutData&)
@@ -35,9 +35,9 @@ constexpr Addr SceneUtil_getNexTutorialphase = 0x472B31;
 constexpr Addr SceneUtil_openTutorialPopup = 0x4684C9;
 constexpr Addr SceneAdventureSelect_callAdventureSelectAPI = 0x71D261;
 constexpr Addr APIManager_executeUserSphereCheck = 0x4CCBC1;
-constexpr Addr DelayTime_create = 0x86852D;
-constexpr Addr CallFunc_create = 0x866B39;
-constexpr Addr Sequence_create = 0x867999;
+constexpr Addr DelayTime_create = rwlib::cocos2d::DelayTime::create;
+constexpr Addr CallFunc_create = rwlib::cocos2d::CallFunc::create;
+constexpr Addr Sequence_create = rwlib::cocos2d::Sequence::create;
 constexpr Addr Reward_create = 0x78B5C1;             // master::Reward::create(shared_ptr out, id)
 constexpr Addr SceneUtil_setItemImageData = 0x46C71D;
 

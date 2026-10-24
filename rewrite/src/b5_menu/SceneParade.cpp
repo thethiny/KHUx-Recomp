@@ -7,14 +7,14 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Layer_ctor = 0x88A7D1, Layer_dtor = 0x88A88D;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base, Layer_dtor = rwlib::cocos2d::Layer::dtor_base;
 constexpr uint32_t AEABI_MEMSET = 0x40E7A0;
 constexpr uint32_t SafeBuffer_ctor = 0x459F21, SafeBuffer_dtor = 0x45A13D, SafeBuffer_assign = 0x45A2C9;
 constexpr uint32_t SafeBuffer_read = 0x45A269;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t SceneFlashDrama_init = 0x6F34BD;      // (self, bool)
 constexpr uint32_t FunctionVV_assign = 0x4EB9CD;         // std::function<void()>::operator=(function&&)
-constexpr uint32_t GUIReader_getInstance = 0x7BF1E5, GUIReader_widgetFromJsonFile = 0x7BF9FD;
+constexpr uint32_t GUIReader_getInstance = rwlib::cocostudio::GUIReader::getInstance, GUIReader_widgetFromJsonFile = rwlib::cocostudio::GUIReader::widgetFromJsonFile;
 constexpr uint32_t APIManager_getInstance = 0x4BA8C9;
 constexpr uint32_t VectorRanker_copy = 0x735FB1;          // vector<UnionRanking::Ranker>(const vector&)
 constexpr uint32_t VectorRanker_dtor = 0x4AE8D9;
@@ -23,14 +23,14 @@ constexpr uint32_t Ranker_stableSort = 0x736859;         // __stable_sort(first,
 constexpr uint32_t AvatarUtil_makeStyle = 0x497105;
 constexpr uint32_t VectorStyle_range = 0x736605;          // vector<Avatar::Style>(first, last)
 constexpr uint32_t VectorStyle_dtor = 0x736655;
-constexpr uint32_t Director_getInstance = 0x8EE519;
-constexpr uint32_t Director_getVisibleSize = 0x8F0675, Director_getVisibleOrigin = 0x8F06A1;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_copy = 0x8E4C03, Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance;
+constexpr uint32_t Director_getVisibleSize = rwlib::cocos2d::Director::getVisibleSize, Director_getVisibleOrigin = rwlib::cocos2d::Director::getVisibleOrigin;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t SceneUtil_createUnionImagePath = 0x46968D;   // (string out, union, int, bool)
 constexpr uint32_t SceneUtil_getMoneyStr = 0x461DC5;     // (string out, long long)
 constexpr uint32_t SceneUtil_setShadow = 0x45BD15;
-constexpr uint32_t ImageView_loadTexture = 0x839731;      // (view, const string&, TextureResType)
-constexpr uint32_t Text_setString = 0x83A2DD;
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;      // (view, const string&, TextureResType)
+constexpr uint32_t Text_setString = rwlib::cocos2d::ui::Text::setString;
 constexpr uint32_t AudioLWFNode_create = 0x5EB6B5;
 constexpr uint32_t FlashDrama_ctor = 0x6F2565;
 constexpr uint32_t Avatar_addInstance = 0x5C7385, Avatar_setInstanceName = 0x5C7359;

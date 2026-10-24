@@ -9,12 +9,12 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Touch_getLocation = 0x900E57;          // (Vec2 out, touch)
-constexpr uint32_t Node_convertToNodeSpace = 0x89599D;    // (Vec2 out, node, const Vec2&)
-constexpr uint32_t Rect_ctor = 0x8DF18B;                  // (out, x, y, w, h)
-constexpr uint32_t Rect_containsPoint = 0x8DF2A9;
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Node_stopAllActions = 0x893815;
+constexpr uint32_t Touch_getLocation = rwlib::cocos2d::Touch::getLocation;          // (Vec2 out, touch)
+constexpr uint32_t Node_convertToNodeSpace = rwlib::cocos2d::Node::convertToNodeSpace;    // (Vec2 out, node, const Vec2&)
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff;                  // (out, x, y, w, h)
+constexpr uint32_t Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint;
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Node_stopAllActions = rwlib::cocos2d::Node::stopAllActions;
 constexpr uint32_t SceneUtil_createTapAnimation = 0x45BBA9;   // (node, std::function<void()> by value)
 constexpr uint32_t MedalDataManager_getInstance = 0x76AD69;
 constexpr uint32_t MedalDataManager_getMedalData = 0x76ADB5;  // (sret, mgr, u64 user medal id, int, Medal)

@@ -65,11 +65,11 @@ constexpr uint32_t SceneUtil_createNodeWithSceneFile = 0x45AA49;
 constexpr uint32_t SceneUtil_getSideHeightMargin = 0x45AF59;
 constexpr uint32_t SceneUtil_setBlackOutline = 0x45BE95;
 constexpr uint32_t SceneUtil_setShadow = 0x45BD15;
-constexpr uint32_t Widget_create = 0x825875;
-constexpr uint32_t Widget_addTouchEventListener = 0x826CCF;
-constexpr uint32_t ImageView_create = 0x8394C1;
-constexpr uint32_t Size_ctor = 0x8DF027;                  // Size(float, float)
-constexpr uint32_t GUIReader_getInstance = 0x7BF1E5, GUIReader_widgetFromJsonFile = 0x7BF9FD;
+constexpr uint32_t Widget_create = rwlib::cocos2d::ui::Widget::create;
+constexpr uint32_t Widget_addTouchEventListener = rwlib::cocos2d::ui::Widget::addTouchEventListener;
+constexpr uint32_t ImageView_create = rwlib::cocos2d::ui::ImageView::create;
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;                  // Size(float, float)
+constexpr uint32_t GUIReader_getInstance = rwlib::cocostudio::GUIReader::getInstance, GUIReader_widgetFromJsonFile = rwlib::cocostudio::GUIReader::widgetFromJsonFile;
 constexpr uint32_t WidgetVector_pushBack = 0x4F6B5D;
 constexpr uint32_t BoolVector_pushBack = 0x62161D;        // std::vector<bool>::push_back(const bool&)
 constexpr uint32_t ImageButton_create = 0x531239;         // (std::string, bool)

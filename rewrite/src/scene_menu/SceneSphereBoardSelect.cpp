@@ -5,11 +5,11 @@ using namespace scene;
 using Self = SceneSphereBoardSelect;
 
 namespace {
-constexpr uint32_t Layer_ctor = 0x88A7D1;                // cocos2d::Layer::Layer
-constexpr uint32_t Layer_dtor = 0x88A88D;                // cocos2d::Layer::~Layer
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Scene_create = 0x8A5F37;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base;                // cocos2d::Layer::Layer
+constexpr uint32_t Layer_dtor = rwlib::cocos2d::Layer::dtor_base;                // cocos2d::Layer::~Layer
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Scene_create = rwlib::cocos2d::Scene::create;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr uint32_t IntSet_destroy = 0x48D9B5;            // std::__tree<int>::destroy(node)
 constexpr uint32_t SphereVector_dtor = 0x50248D;         // __vector_base<shared_ptr<const master::Sphere>> dtor
 constexpr uint32_t IntVector_copy = 0x4AF707;            // std::vector<int>::vector(const vector&)

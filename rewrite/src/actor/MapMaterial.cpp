@@ -4,9 +4,9 @@
 
 namespace {
 namespace g {
-constexpr uint32_t armature_create = 0x79F3C7;       // cocostudio::Armature::create(const std::string&)
-constexpr uint32_t adm_getInstance = 0x7AC9B5;       // cocostudio::ArmatureDataManager::getInstance()
-constexpr uint32_t adm_addArmatureFileInfo = 0x7AD7BD;  // ArmatureDataManager::addArmatureFileInfo(const std::string&)
+constexpr uint32_t armature_create = rwlib::cocostudio::Armature::create;       // cocostudio::Armature::create(const std::string&)
+constexpr uint32_t adm_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance;       // cocostudio::ArmatureDataManager::getInstance()
+constexpr uint32_t adm_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;  // ArmatureDataManager::addArmatureFileInfo(const std::string&)
 constexpr uint32_t audio_getInstance = 0x5BECFD;     // audio::Manager::getInstance()
 constexpr uint32_t audio_load = 0x5BEEF5;            // audio::Manager::load(ResourceID)
 constexpr uint32_t audio_getLayer = 0x5BF33D;        // audio::Manager::getLayer(int) (sret shared_ptr<Layer>)

@@ -7,26 +7,26 @@
 using namespace scene;
 
 namespace {
-constexpr uint32_t Scene_create = 0x8A5F37, SceneMovie_create = 0x638CE1;
+constexpr uint32_t Scene_create = rwlib::cocos2d::Scene::create, SceneMovie_create = 0x638CE1;
 constexpr uint32_t SceneManager_changeSceneLayer = 0x612B99, SceneManager_closeCurrentPopup = 0x6216A1;
 constexpr uint32_t function_vv_copy = 0x4683CD, function_vv_copy2 = 0x47F905;
-constexpr uint32_t SceneUtil_createLeftOutAnimation = 0x45B735, EaseSineOut_create = 0x860D09;
+constexpr uint32_t SceneUtil_createLeftOutAnimation = 0x45B735, EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9, AudioPlaySystemSECancel = 0x5C0D81;
 constexpr uint32_t AudioPlaySystemSEPopUp = 0x5C0E09;
 constexpr uint32_t IScrollProtocol_setEnabledScroll = 0x4F73C9;
-constexpr uint32_t StringBuffer_ctor = 0x49140D, Text_setString = 0x83A2DD, S_FmtCount = 0xDFF1AD;   // "%d%s"
-constexpr uint32_t Node_ctor = 0x892531, aeabi_memclr = 0x40E7A0, LWFButton_init = 0x4F4B2D;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5, LWFNode_create = 0x7EDF31, Director_getInstance = 0x8EE519;
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5, EventListener_setSwallowTouches = 0x8FAC99;
+constexpr uint32_t StringBuffer_ctor = 0x49140D, Text_setString = rwlib::cocos2d::ui::Text::setString, S_FmtCount = 0xDFF1AD;   // "%d%s"
+constexpr uint32_t Node_ctor = rwlib::cocos2d::Node::ctor_base, aeabi_memclr = 0x40E7A0, LWFButton_init = 0x4F4B2D;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease, LWFNode_create = rwlib::cocos2d::LWFNode::create, Director_getInstance = rwlib::cocos2d::Director::getInstance;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create, EventListener_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
 constexpr uint32_t function_bte_swap = 0x483E4D, function_vte_swap = 0x4F3699;
-constexpr uint32_t EventDispatcher_addWithSceneGraphPriority = 0x8F3649;
-constexpr uint32_t LWF_SearchMovieInstance = 0x7FE1B9, LWF_Movie_GotoAndPlay = 0x815D91, function_vv_call = 0x470E69;
-constexpr uint32_t Node_getGLProgramState = 0x89360F, GLProgram_updateUniforms = 0x90A9F5;
-constexpr uint32_t Size_copy = 0x8DF02D, GLProgram_getUniformLocationForName = 0x90BCA5;
-constexpr uint32_t GLProgram_setUniform1f = 0x90BE81, GLProgram_setUniform2f = 0x90BEE1;
+constexpr uint32_t EventDispatcher_addWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
+constexpr uint32_t LWF_SearchMovieInstance = rwlib::LWF::LWF::SearchMovieInstance, LWF_Movie_GotoAndPlay = rwlib::LWF::Movie::GotoAndPlay__RKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE, function_vv_call = 0x470E69;
+constexpr uint32_t Node_getGLProgramState = rwlib::cocos2d::Node::getGLProgramState, GLProgram_updateUniforms = rwlib::cocos2d::GLProgram::updateUniforms;
+constexpr uint32_t Size_copy = rwlib::cocos2d::Size::ctor_base__RKS0_, GLProgram_getUniformLocationForName = rwlib::cocos2d::GLProgram::getUniformLocationForName;
+constexpr uint32_t GLProgram_setUniform1f = rwlib::cocos2d::GLProgram::setUniformLocationWith1f, GLProgram_setUniform2f = rwlib::cocos2d::GLProgram::setUniformLocationWith2f;
 constexpr uint32_t S_time = 0xDFA257, S_fade = 0xDFA25C, S_resolution = 0xDFA261, S_basePos = 0xDFA2AF;
-constexpr uint32_t ParticleSystem_update = 0x89FF29, Rect_ctor = 0x8DF18B, Rect_containsPoint = 0x8DF2A9;
-constexpr uint32_t Vec2_dtor_ = 0x8E4C17;
+constexpr uint32_t ParticleSystem_update = rwlib::cocos2d::ParticleSystem::update, Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff, Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint;
+constexpr uint32_t Vec2_dtor_ = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t GOT_LWFButton_vtable = 0xFD657C;
 constexpr uint32_t VT_OutDone = 0xF60A28;                  // runOutAnimation's lambda {function<void()>} (heap 0x20)
 constexpr uint32_t VT_CountCanClose = 0xF59044, VT_CountClosed = 0xF59018;

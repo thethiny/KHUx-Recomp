@@ -14,7 +14,7 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Layer_init = 0x88A8A1;
+constexpr uint32_t Layer_init = rwlib::cocos2d::Layer::init;
 constexpr uint32_t function_vv_assign = 0x4EB9CD;          // std::function<void()>::operator=(const function&)
 constexpr uint32_t SceneManager_showHeader = 0x6131ED;
 constexpr uint32_t SceneManager_changeBackground = 0x6128ED;
@@ -49,11 +49,11 @@ constexpr uint32_t MedalDataManager_getMedalLargeImagePath = 0x76B1E5;
 constexpr uint32_t MedalDataManager_isFavoriteMedal = 0x76B249;
 constexpr uint32_t ImageButton_create = 0x531239, ImageButton_addTouchEventListener = 0x5315B1;
 constexpr uint32_t ImageButton_setTargetImageView = 0x531631, ImageButton_setTargetView = 0x5318C1;
-constexpr uint32_t ImageView_loadTexture = 0x839731;
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;
 constexpr uint32_t initEvolutLayer = 0x6AC519, createMaterialMedal = 0x6AD681;
-constexpr uint32_t Rect_ctor = 0x8DF18B, Rect_copy = 0x8DF1A9, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5, EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
-constexpr uint32_t EventDispatcher_addSceneGraph = 0x8F3649;
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff, Rect_copy = rwlib::cocos2d::Rect::ctor_base__RKS0_, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create, EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
+constexpr uint32_t EventDispatcher_addSceneGraph = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
 constexpr uint32_t function_touchBegan_swap = 0x483E4D, function_touchEnded_swap = 0x4F3699;
 constexpr uint32_t operator_new_array = 0xC98F6F, operator_delete_array = 0xC98FB3;
 constexpr uint32_t floatsisf = 0xCD6D68;

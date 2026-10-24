@@ -19,7 +19,7 @@ constexpr uint32_t map_sphere_find = 0x503479, vector_int_copy = 0x4AF707, vecto
 constexpr uint32_t avaterBoardDispCheck = 0x6B8551;
 constexpr uint32_t vector_sphere_push_back_slow = 0x6BC885, vector_sphere_copy = 0x6B8929;
 constexpr uint32_t vector_sphere_dtor = 0x50248D, SphereScrollView_setSphereBoard = 0x502F99;
-constexpr uint32_t StringBuffer_ctor = 0x49140D, Text_setString = 0x83A2DD;
+constexpr uint32_t StringBuffer_ctor = 0x49140D, Text_setString = rwlib::cocos2d::ui::Text::setString;
 constexpr uint32_t S_FmtD = 0xDF86DE, S_LeftArrow = 0xE05629, S_RightUI = 0xDF85F7;
 constexpr uint32_t V_setVisible = 0xB0;
 // SceneSphereBoardSelect: +0x2A0 / +0x2A4 the two counters, +0x2A8 the filter label, +0x2AC the remembered board,

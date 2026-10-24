@@ -20,9 +20,9 @@ constexpr uint32_t U64Vector_assign = 0x4D7461;            // vector<unsigned lo
 constexpr uint32_t U64Vector_dtor = 0x468499;
 constexpr uint32_t Party_copy = 0x4B2E63;                  // hole::network::api::Party(const Party&)
 constexpr uint32_t LuxUser_assign = 0x5525B9;              // LuxRanking::User::operator=
-constexpr uint32_t Armature_create = 0x79F3C7, Ref_retain = 0x8FD0B5;
-constexpr uint32_t ImageView_loadTexture = 0x839731, TextAtlas_setString = 0x83AED7;
-constexpr uint32_t Vec2_copy = 0x8E4C03, Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create, Ref_retain = rwlib::cocos2d::Ref::retain;
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE, TextAtlas_setString = rwlib::cocos2d::ui::TextAtlas::setString;
+constexpr uint32_t Vec2_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t ImageButton_create = 0x531239, ImageButton_setTargetView = 0x5318C1;
 constexpr uint32_t ImageButton_addTouchEventListener = 0x5315B1;
 constexpr uint32_t SceneManager_getPopupLayer3 = 0x613E79;

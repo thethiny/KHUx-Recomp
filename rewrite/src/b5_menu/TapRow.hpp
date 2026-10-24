@@ -22,8 +22,8 @@ struct Layout {
 inline void touchEnded(const Layout &l, uint32_t captures, uint32_t touch) {
     using namespace scene;
     constexpr uint32_t THROW_OUT_OF_RANGE = 0x47CCE1, DIVSI3 = 0xCD5E8D;
-    constexpr uint32_t Touch_getLocation = 0x900E57, Vec2_dtor = 0x8E4C17;
-    constexpr uint32_t SceneUtil_createTapAnimation = 0x45BBA9, Node_runAction = 0x894AED;
+    constexpr uint32_t Touch_getLocation = rwlib::cocos2d::Touch::getLocation, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+    constexpr uint32_t SceneUtil_createTapAnimation = 0x45BBA9, Node_runAction = rwlib::cocos2d::Node::runAction;
     constexpr uint32_t V_retain = 0x0C;
 
     uint32_t me = ld32(captures);

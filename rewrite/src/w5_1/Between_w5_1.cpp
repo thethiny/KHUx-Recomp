@@ -20,15 +20,15 @@ constexpr uint32_t SceneManager_getInstance = 0x60C26D;
 constexpr uint32_t SceneManager_isOpenedPopup = 0x621519;
 constexpr uint32_t SceneManager_closeCurrentPopup = 0x6216A1;  // (bool)
 constexpr uint32_t SceneManager_closeGlobalMenu = 0x611BD5;
-constexpr uint32_t Director_getInstance = 0x8EE519;
+constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance;
 constexpr uint32_t KeyCodeMap_find = 0xA428A5;            // unordered_map<int, EventKeyboard::KeyCode>::find(const int&)
-constexpr uint32_t EventKeyboard_ctor = 0x8F8B81;         // (KeyCode, bool pressed)
-constexpr uint32_t EventDispatcher_dispatchEvent = 0x8F3995;
-constexpr uint32_t Event_dtor = 0x8F2241;
-constexpr uint32_t Bitmap_reset = 0xA3ED7D;               // sub_A3ED7C: frees the previous bitmap buffer
+constexpr uint32_t EventKeyboard_ctor = rwlib::cocos2d::EventKeyboard::ctor_base;         // (KeyCode, bool pressed)
+constexpr uint32_t EventDispatcher_dispatchEvent = rwlib::cocos2d::EventDispatcher::dispatchEvent;
+constexpr uint32_t Event_dtor = rwlib::cocos2d::Event::dtor_base;
+constexpr uint32_t Bitmap_reset = rwlib::sub_A3ED7C;               // sub_A3ED7C: frees the previous bitmap buffer
 constexpr uint32_t DCMPEQ = 0xCD69D8;                     // __aeabi_dcmpeq
 constexpr uint32_t MULDF3 = 0xCD64A0;                     // __muldf3
-constexpr uint32_t VSNPRINTF = 0xCA3B25;                  // sub_CA3B24: vsnprintf(buf, size, fmt, va_list)
+constexpr uint32_t VSNPRINTF = rwlib::sub_CA3B24;                  // sub_CA3B24: vsnprintf(buf, size, fmt, va_list)
 }  // namespace a
 
 // Android key code -> cocos2d key code (cocos2d's g_keyCodeMap)

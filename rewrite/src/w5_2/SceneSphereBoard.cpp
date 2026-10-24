@@ -7,8 +7,8 @@ using namespace scene;
 namespace {
 namespace a {
 constexpr uint32_t STRLEN = 0x40E08C;
-constexpr uint32_t Layer_ctor = 0x88A7D1, Layer_dtor = 0x88A88D, Layer_init = 0x88A8A1;
-constexpr uint32_t Ref_retain = 0x8FD0B5, Ref_release = 0x8FD0BD, Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base, Layer_dtor = rwlib::cocos2d::Layer::dtor_base, Layer_init = rwlib::cocos2d::Layer::init;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain, Ref_release = rwlib::cocos2d::Ref::release, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t FunctionVV_assign = 0x4EB9CD;          // function<void()>::operator=(const function&)
 constexpr uint32_t FunctionVB_move = 0x47BC69;            // function<void(bool)>::function(function&&)
 constexpr uint32_t SceneManager_getInstance = 0x60C26D;
@@ -36,14 +36,14 @@ constexpr uint32_t SceneUtil_openTutorialPopup = 0x4684C9;   // (sret function, 
 constexpr uint32_t SphereUI_create = 0x6BF039, SphereUI_SetGrid = 0x793ABD;
 constexpr uint32_t SphereUI_isOpenIncentive = 0x79597D, SphereUI_createBoard = 0x793E39;
 constexpr uint32_t ConnectingSphere_getUserData = 0x798B99, ConnectingSphere_executeSphereOpenlist = 0x798EC9;
-constexpr uint32_t Widget_addTouchEventListener = 0x826CCF;
-constexpr uint32_t ImageView_loadTexture = 0x8398FD;        // (Texture2D*)
-constexpr uint32_t Director_getTextureCache = 0x8EFE69;
-constexpr uint32_t TextureCache_addImage = 0x917DA9;
+constexpr uint32_t Widget_addTouchEventListener = rwlib::cocos2d::ui::Widget::addTouchEventListener;
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__PNS_9Texture2DE;        // (Texture2D*)
+constexpr uint32_t Director_getTextureCache = rwlib::cocos2d::Director::getTextureCache;
+constexpr uint32_t TextureCache_addImage = rwlib::cocos2d::TextureCache::addImage;
 constexpr uint32_t StringBuffer_ctor = 0x49140D;
 constexpr uint32_t SafeBuffer_read = 0x45A269;
 constexpr uint32_t Sphere_create = 0x78CF21;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr uint32_t IInOutAnimation_runOutAnimation = 0x6F24B5;
 constexpr uint32_t loadTextureIncentive = 0x6BF121, loadTextureBoard = 0x6BF1ED, loadTextureKind = 0x6BF2B9;
 constexpr uint32_t openTutorial30 = 0x6BF781;

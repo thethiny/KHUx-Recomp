@@ -19,16 +19,16 @@ constexpr uint32_t BAR = 0x284;                  // Scale9Sprite*
 constexpr uint32_t BACKGROUND = 0x288;           // Scale9Sprite*
 
 constexpr uint32_t AEABI_MEMSET = 0x40E7A0;
-constexpr uint32_t NODE_CTOR = 0x892531;
-constexpr uint32_t NODE_DTOR = 0x8927ED;
-constexpr uint32_t REF_AUTORELEASE = 0x8FD0D5;
-constexpr uint32_t SIZE_CTOR_DEFAULT = 0x8DF01F;            // cocos2d::Size::Size()
-constexpr uint32_t SIZE_CTOR = 0x8DF027;                    // cocos2d::Size::Size(float, float)
-constexpr uint32_t SIZE_ASSIGN = 0x8DF041;                  // cocos2d::Size::operator=(const Size&)
-constexpr uint32_t RECT_CTOR = 0x8DF18B;                    // cocos2d::Rect::Rect(x, y, w, h)
-constexpr uint32_t VEC2_DTOR = 0x8E4C17;                    // cocos2d::Vec2::~Vec2 (Rect's inlined destructor)
-constexpr uint32_t SCALE9_CREATE = 0x854589;                // Scale9Sprite::create(const string&)
-constexpr uint32_t SCALE9_CREATE_CAP = 0x8543E9;            // Scale9Sprite::create(const string&, const Rect&, const Rect& capInsets)
+constexpr uint32_t NODE_CTOR = rwlib::cocos2d::Node::ctor_base;
+constexpr uint32_t NODE_DTOR = rwlib::cocos2d::Node::dtor_base;
+constexpr uint32_t REF_AUTORELEASE = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t SIZE_CTOR_DEFAULT = rwlib::cocos2d::Size::ctor_base__v;            // cocos2d::Size::Size()
+constexpr uint32_t SIZE_CTOR = rwlib::cocos2d::Size::ctor_base__ff;                    // cocos2d::Size::Size(float, float)
+constexpr uint32_t SIZE_ASSIGN = rwlib::cocos2d::Size::op_assign__RKS0_;                  // cocos2d::Size::operator=(const Size&)
+constexpr uint32_t RECT_CTOR = rwlib::cocos2d::Rect::ctor_base__ffff;                    // cocos2d::Rect::Rect(x, y, w, h)
+constexpr uint32_t VEC2_DTOR = rwlib::cocos2d::Vec2::dtor_base;                    // cocos2d::Vec2::~Vec2 (Rect's inlined destructor)
+constexpr uint32_t SCALE9_CREATE = rwlib::cocos2d::extension::Scale9Sprite::create__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEE;                // Scale9Sprite::create(const string&)
+constexpr uint32_t SCALE9_CREATE_CAP = rwlib::cocos2d::extension::Scale9Sprite::create__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEERKNS_4RectESD_;            // Scale9Sprite::create(const string&, const Rect&, const Rect& capInsets)
 constexpr uint32_t STR_BG = 0xDFD8EA;                       // "img/ui/scrollbar_bg.png"
 constexpr uint32_t STR_BAR = 0xDFCF02;                      // "img/ui/scrl_bar.png"
 

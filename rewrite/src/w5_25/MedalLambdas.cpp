@@ -15,8 +15,8 @@ constexpr uint32_t SceneUtil_openMedalInfoPopup = 0x466EF5;   // (shared_ptr med
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
 constexpr uint32_t MedalDataManager_getInstance = 0x76AD69;
 constexpr uint32_t MedalDataManager_getMedalData = 0x76ADB5;  // (sret, mgr, u64 id, int, UserMedal::Medal)
-constexpr uint32_t Touch_getLocation = 0x900E57, Node_convertToNodeSpace = 0x89599D;
-constexpr uint32_t Rect_ctor = 0x8DF18B, Rect_containsPoint = 0x8DF2A9, Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Touch_getLocation = rwlib::cocos2d::Touch::getLocation, Node_convertToNodeSpace = rwlib::cocos2d::Node::convertToNodeSpace;
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff, Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 }  // namespace g
 
 constexpr int32_t TUTORIAL_DONE_PHASE = 0x3E3;   // 995

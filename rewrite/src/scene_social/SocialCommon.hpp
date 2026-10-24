@@ -14,35 +14,35 @@ using Addr = uint32_t;
 // ------------------------------------------------------------------------------------------------ functions
 namespace sfn {
 // cocos2d
-constexpr uint32_t Layer_ctor = 0x88A7D1;              // cocos2d::Layer::Layer()
-constexpr uint32_t Layer_dtor = 0x88A88D;              // cocos2d::Layer::~Layer() (returns this)
-constexpr uint32_t Layer_init = 0x88A8A1;              // cocos2d::Layer::init()
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Ref_retain = 0x8FD0B5;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base;              // cocos2d::Layer::Layer()
+constexpr uint32_t Layer_dtor = rwlib::cocos2d::Layer::dtor_base;              // cocos2d::Layer::~Layer() (returns this)
+constexpr uint32_t Layer_init = rwlib::cocos2d::Layer::init;              // cocos2d::Layer::init()
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain;
 constexpr uint32_t Ref_release = 0x8FD0C1;
-constexpr uint32_t Scene_create = 0x8A5F37;            // cocos2d::Scene::create()
-constexpr uint32_t Size_ctor = 0x8DF027;               // cocos2d::Size::Size(float, float)
-constexpr uint32_t Vec2_ctor = 0x8E4B9D;               // cocos2d::Vec2::Vec2(float, float)
-constexpr uint32_t Vec2_dtor = 0x8E4C17;               // cocos2d::Vec2::~Vec2()
-constexpr uint32_t LayerColor_create = 0x88B539;       // cocos2d::LayerColor::create(const Color4B&)
-constexpr uint32_t Director_getInstance = 0x8EE519;
-constexpr uint32_t Director_getVisibleSize = 0x8F0675;  // (Size* out, Director*)
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t Sequence_create = 0x867999;         // (FiniteTimeAction*, ..., nullptr)
-constexpr uint32_t DelayTime_create = 0x86852D;        // (float)
-constexpr uint32_t CallFunc_create = 0x866B39;         // (const std::function<void()>&)
-constexpr uint32_t EaseSineOut_create = 0x860D09;      // (ActionInterval*)
-constexpr uint32_t Label_createWithTTF = 0x883825;     // (text, font, float size, const Size&, hAlign, vAlign)
-constexpr uint32_t Text_setString = 0x83A2DD;
-constexpr uint32_t Widget_addTouchEventListener = 0x826CCF;
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5;
-constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
-constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = 0x8F3649;
+constexpr uint32_t Scene_create = rwlib::cocos2d::Scene::create;            // cocos2d::Scene::create()
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;               // cocos2d::Size::Size(float, float)
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff;               // cocos2d::Vec2::Vec2(float, float)
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;               // cocos2d::Vec2::~Vec2()
+constexpr uint32_t LayerColor_create = rwlib::cocos2d::LayerColor::create;       // cocos2d::LayerColor::create(const Color4B&)
+constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance;
+constexpr uint32_t Director_getVisibleSize = rwlib::cocos2d::Director::getVisibleSize;  // (Size* out, Director*)
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t Sequence_create = rwlib::cocos2d::Sequence::create;         // (FiniteTimeAction*, ..., nullptr)
+constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create;        // (float)
+constexpr uint32_t CallFunc_create = rwlib::cocos2d::CallFunc::create;         // (const std::function<void()>&)
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;      // (ActionInterval*)
+constexpr uint32_t Label_createWithTTF = rwlib::cocos2d::Label::createWithTTF__RKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_fRKNS_4SizeENS_14TextHAlignmentENS_14TextVAlignmentE;     // (text, font, float size, const Size&, hAlign, vAlign)
+constexpr uint32_t Text_setString = rwlib::cocos2d::ui::Text::setString;
+constexpr uint32_t Widget_addTouchEventListener = rwlib::cocos2d::ui::Widget::addTouchEventListener;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create;
+constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
+constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
 // cocostudio
-constexpr uint32_t ArmatureDataManager_getInstance = 0x7AC9B5;
-constexpr uint32_t ArmatureDataManager_addArmatureFileInfo = 0x7AD7BD;   // (mgr, const string&)
-constexpr uint32_t Armature_create = 0x79F3C7;         // (const string&)
-constexpr uint32_t AnimationData_getMovement = 0x7A767D;  // (data, const string&) -> MovementData*
+constexpr uint32_t ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance;
+constexpr uint32_t ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;   // (mgr, const string&)
+constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create;         // (const string&)
+constexpr uint32_t AnimationData_getMovement = rwlib::cocostudio::AnimationData::getMovement;  // (data, const string&) -> MovementData*
 // libc++
 constexpr uint32_t function_vv_assign = 0x4EB9CD;      // std::function<void()>::operator=(const function&)
 constexpr uint32_t function_vb_assign = 0x490109;      // std::function<void(bool)>::operator=(const function&)

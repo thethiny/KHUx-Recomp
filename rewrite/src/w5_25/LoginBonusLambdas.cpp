@@ -7,7 +7,7 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t LWF_Movie_GotoAndStop = 0x815D75;
+constexpr uint32_t LWF_Movie_GotoAndStop = rwlib::LWF::Movie::GotoAndStop;
 constexpr uint32_t SceneManager_changeSceneLayer = 0x612B99;
 constexpr uint32_t SceneUtil_moveToMyPageOrResumeStage = 0x46F161;
 constexpr uint32_t SceneLoginBonus_openLoginBonus = 0x6FA1A1;     // (scene, function<void()>)

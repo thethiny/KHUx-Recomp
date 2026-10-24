@@ -48,34 +48,34 @@ constexpr int32_t AVATAR_TEXTURE = 40000;       // textures from here on are the
 constexpr int32_t TEXT_ID_BASE = 200000000;
 
 // guest functions
-constexpr uint32_t Director_getInstance = 0x8EE519;
-constexpr uint32_t Director_getTextureCache = 0x8EFE69;
-constexpr uint32_t Director_getVisibleSize = 0x8F0675;      // (Size* out, Director*)
-constexpr uint32_t Director_getVisibleOrigin = 0x8F06A1;    // (Vec2* out, Director*)
-constexpr uint32_t TextureCache_addImage = 0x917DA9;        // (cache, const string&)
-constexpr uint32_t Texture2D_getContentSize = 0x914ACB;     // (Size* out, Texture2D*)
+constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance;
+constexpr uint32_t Director_getTextureCache = rwlib::cocos2d::Director::getTextureCache;
+constexpr uint32_t Director_getVisibleSize = rwlib::cocos2d::Director::getVisibleSize;      // (Size* out, Director*)
+constexpr uint32_t Director_getVisibleOrigin = rwlib::cocos2d::Director::getVisibleOrigin;    // (Vec2* out, Director*)
+constexpr uint32_t TextureCache_addImage = rwlib::cocos2d::TextureCache::addImage;        // (cache, const string&)
+constexpr uint32_t Texture2D_getContentSize = rwlib::cocos2d::Texture2D::getContentSize;     // (Size* out, Texture2D*)
 constexpr uint32_t StringBuffer_fset = 0x491501;
 constexpr uint32_t bg_vfs_readData = 0x8DD46D;              // (shared_ptr<bg::Data>* out, const char*)
-constexpr uint32_t Scene_create = 0x8A5F37;
-constexpr uint32_t Sprite_create = 0x8A64DD;
-constexpr uint32_t Sprite_setFlippedX = 0x8A81C5;
-constexpr uint32_t Sprite_setFlippedY = 0x8A8201;
+constexpr uint32_t Scene_create = rwlib::cocos2d::Scene::create;
+constexpr uint32_t Sprite_create = rwlib::cocos2d::Sprite::create__v;
+constexpr uint32_t Sprite_setFlippedX = rwlib::cocos2d::Sprite::setFlippedX;
+constexpr uint32_t Sprite_setFlippedY = rwlib::cocos2d::Sprite::setFlippedY;
 constexpr uint32_t SpriteVector_pushBack = 0x5E4551;
 constexpr uint32_t SpriteVector_dtor = 0x5E4761;
-constexpr uint32_t Color3B_ctor = 0x9062E7;
+constexpr uint32_t Color3B_ctor = rwlib::cocos2d::Color3B::ctor_base;
 constexpr uint32_t Color3B_BLACK = 0x1007E9A, Color4B_BLACK = 0x1007EBC, Color4B_WHITE = 0x1007EA4;
 constexpr uint32_t ANCHOR_TOP_LEFT = 0xFEF5C8;
-constexpr uint32_t Size_copy = 0x8DF02D, Size_assign = 0x8DF041, Vec2_copy = 0x8E4C03;
-constexpr uint32_t Label_create = 0x883789;
-constexpr uint32_t Label_setLineHeight = 0x88693D;
-constexpr uint32_t Label_setDimensions = 0x883A8D;
-constexpr uint32_t Label_setAlignment = 0x884CB9;
+constexpr uint32_t Size_copy = rwlib::cocos2d::Size::ctor_base__RKS0_, Size_assign = rwlib::cocos2d::Size::op_assign__RKS0_, Vec2_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_;
+constexpr uint32_t Label_create = rwlib::cocos2d::Label::create;
+constexpr uint32_t Label_setLineHeight = rwlib::cocos2d::Label::setLineHeight;
+constexpr uint32_t Label_setDimensions = rwlib::cocos2d::Label::setDimensions;
+constexpr uint32_t Label_setAlignment = rwlib::cocos2d::Label::setAlignment;
 constexpr uint32_t SpeechDisp_create = 0x601C21;
 constexpr uint32_t SpeechDisp_runSpeechSet = 0x492A4D;      // (disp, CallFunc*)
 constexpr uint32_t SpeechDisp_toEndSpeech = 0x4929F5;
-constexpr uint32_t ArmatureDataManager_getInstance = 0x7AC9B5;
-constexpr uint32_t ArmatureDataManager_addArmatureFileInfo = 0x7AD7BD;
-constexpr uint32_t Armature_create = 0x79F3C7;
+constexpr uint32_t ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance;
+constexpr uint32_t ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;
+constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create;
 constexpr uint32_t AvatarIcon_create = 0x5C9DB5;            // (style, texture, pos, float, float, expressions)
 constexpr uint32_t AvatarIcon_changeExpression = 0x5CA459;  // (icon, expression, float)
 constexpr uint32_t AvatarUtil_getCurrentStyle = 0x4977AD;   // (Style* out, bool)
@@ -107,17 +107,17 @@ constexpr uint32_t audio_Layer_playSE = 0x5BF785;           // (layer, ResourceI
 constexpr uint32_t AudioReplaceGameMainBGM = 0x5C0FA1;
 constexpr uint32_t AudioPlaySystemSEPopUp = 0x5C0E09;
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
-constexpr uint32_t ScaleTo_create = 0x86A8CD;               // (float, float)
-constexpr uint32_t FadeTo_create = 0x86B3E1;                // (float, uint8)
-constexpr uint32_t JumpBy_create = 0x869B79;                // (float, const Vec2&, float, int)
-constexpr uint32_t JumpTo_create = 0x869F39;
-constexpr uint32_t RepeatForever_create = 0x86815D;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
-constexpr uint32_t EaseBackOut_create = 0x8616CD;
-constexpr uint32_t EaseBackIn_create = 0x8615C9;
-constexpr uint32_t EaseExponentialIn_create = 0x8608F9;
-constexpr uint32_t EaseOut_create = 0x8606A5;               // (action, float rate)
-constexpr uint32_t Spawn_createWithTwoActions = 0x86838D;
+constexpr uint32_t ScaleTo_create = rwlib::cocos2d::ScaleTo::create__ff;               // (float, float)
+constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create;                // (float, uint8)
+constexpr uint32_t JumpBy_create = rwlib::cocos2d::JumpBy::create;                // (float, const Vec2&, float, int)
+constexpr uint32_t JumpTo_create = rwlib::cocos2d::JumpTo::create;
+constexpr uint32_t RepeatForever_create = rwlib::cocos2d::RepeatForever::create;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
+constexpr uint32_t EaseBackOut_create = rwlib::cocos2d::EaseBackOut::create;
+constexpr uint32_t EaseBackIn_create = rwlib::cocos2d::EaseBackIn::create;
+constexpr uint32_t EaseExponentialIn_create = rwlib::cocos2d::EaseExponentialIn::create;
+constexpr uint32_t EaseOut_create = rwlib::cocos2d::EaseOut::create;               // (action, float rate)
+constexpr uint32_t Spawn_createWithTwoActions = rwlib::cocos2d::Spawn::createWithTwoActions;
 
 // virtual slots
 constexpr uint32_t VS_scaleX = 0x28, VS_setScale = 0x40, VS_setScaleXY = 0x48, VS_setPositionV = 0x4C;

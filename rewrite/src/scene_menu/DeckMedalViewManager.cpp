@@ -7,8 +7,8 @@ using namespace scene;
 
 namespace {
 constexpr uint32_t Memset = 0x40E7A0;                    // __aeabi_memset(dst, n, c)
-constexpr uint32_t Ref_retain = 0x8FD0B5;
-constexpr uint32_t Ref_release = 0x8FD0BD;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain;
+constexpr uint32_t Ref_release = rwlib::cocos2d::Ref::release;
 constexpr uint32_t Vector_dtor = 0x5271DD;               // cocos2d::Vector<DeckMedalView*>::~Vector
 constexpr uint32_t Vector_pushBack = 0x527565;           // cocos2d::Vector<DeckMedalView*>::pushBack
 constexpr uint32_t Vector_eraseObject = 0x5275D9;        // cocos2d::Vector<DeckMedalView*>::eraseObject(obj, all)

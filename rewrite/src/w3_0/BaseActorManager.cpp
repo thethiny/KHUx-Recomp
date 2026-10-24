@@ -6,7 +6,7 @@
 using namespace scene;
 
 namespace {
-constexpr uint32_t Ref_ctor = 0x8FD025, Ref_dtor = 0x8FD059;
+constexpr uint32_t Ref_ctor = rwlib::cocos2d::Ref::ctor_base, Ref_dtor = rwlib::cocos2d::Ref::dtor_base;
 constexpr uint32_t AvatarVector_clear = 0x485BA3;      // cocos2d::Vector<AvatarActor*>::clear
 constexpr uint32_t AvatarVector_dtor = 0x485A63;       // cocos2d::Vector<AvatarActor*>::~Vector
 constexpr uint32_t AvatarVector_pushBack = 0x6425D5;   // cocos2d::Vector<AvatarActor*>::pushBack

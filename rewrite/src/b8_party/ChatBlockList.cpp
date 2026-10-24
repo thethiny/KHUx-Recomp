@@ -13,20 +13,20 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Ref_retain = 0x8FD0B5, Ref_release = 0x8FD0BD, Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Widget_create = 0x825875, Widget_clone = 0x8272B9;
-constexpr uint32_t Size_ctor = 0x8DF027, Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain, Ref_release = rwlib::cocos2d::Ref::release, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Widget_create = rwlib::cocos2d::ui::Widget::create, Widget_clone = rwlib::cocos2d::ui::Widget::clone;
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff, Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t VectorAt_throw = 0x47CCE1;
 constexpr uint32_t BlockVector_dtor = 0x55A989, BlockVector_assign = 0x55CD61;
 constexpr uint32_t IntVector_pushBackSlow = 0x47D709, IntVector_base_dtor = 0x478961;
 constexpr uint32_t AvatarIconCache_makeShared = 0x509899;
 constexpr uint32_t AvatarMap_find = 0x490275, AvatarIconCache_find = 0x5CA9A9, AvatarIconCache_add = 0x5CAA57;
 constexpr uint32_t AvatarUtil_makeStyle = 0x497105, AvatarIcon_clone = 0x5CA5C1, SafeBuffer_dtor = 0x45A13D;
-constexpr uint32_t Text_setTextAreaSize = 0x83A605;
+constexpr uint32_t Text_setTextAreaSize = rwlib::cocos2d::ui::Text::setTextAreaSize;
 constexpr uint32_t ImageButton_create = 0x531239, ImageButton_setTargetView = 0x5318C1;
 constexpr uint32_t ImageButton_addTouchEventListener = 0x5315B1;
 constexpr uint32_t Date_makeLocalDate = 0x4927CD, TextData_format = 0x492929;
-constexpr uint32_t EditBox_getText = 0x85520D, SceneUtil_editBoxEditingDidEnd = 0x45C61D;
+constexpr uint32_t EditBox_getText = rwlib::cocos2d::extension::EditBox::getText, SceneUtil_editBoxEditingDidEnd = 0x45C61D;
 }  // namespace g
 
 constexpr uint32_t VTABLE = 0xF88FDC, VTABLE2 = 0xF89334, VTABLE3 = 0xF89348;

@@ -5,23 +5,23 @@ using namespace scene;
 
 namespace {
 // cocos2d / cocostudio / library
-constexpr uint32_t Ref_ctor = 0x8FD025;
-constexpr uint32_t Ref_dtor = 0x8FD059;
-constexpr uint32_t Ref_retain = 0x8FD0B5;
-constexpr uint32_t Ref_release = 0x8FD0BD;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Vec2_ctor = 0x8E4B95;                  // Vec2::Vec2(): (0, 0)
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
-constexpr uint32_t GUIReader_getInstance = 0x7BF1E5;
-constexpr uint32_t GUIReader_widgetFromJsonFile = 0x7BF9FD;
-constexpr uint32_t Widget_getCustomSize = 0x8262D1;      // -> const Size&
-constexpr uint32_t ActionObject_stop = 0x79F115;
-constexpr uint32_t Node_stopAllActions = 0x893815;
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t ScaleTo_create = 0x86A8CD;            // (float duration, float scale)
-constexpr uint32_t EaseBackOut_create = 0x8616CD;
-constexpr uint32_t Sequence_create = 0x867999;
-constexpr uint32_t LWFNode_create = 0x7EDF31;            // (const char* path, void*)
+constexpr uint32_t Ref_ctor = rwlib::cocos2d::Ref::ctor_base;
+constexpr uint32_t Ref_dtor = rwlib::cocos2d::Ref::dtor_base;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain;
+constexpr uint32_t Ref_release = rwlib::cocos2d::Ref::release;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__v;                  // Vec2::Vec2(): (0, 0)
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t GUIReader_getInstance = rwlib::cocostudio::GUIReader::getInstance;
+constexpr uint32_t GUIReader_widgetFromJsonFile = rwlib::cocostudio::GUIReader::widgetFromJsonFile;
+constexpr uint32_t Widget_getCustomSize = rwlib::cocos2d::ui::Widget::getCustomSize;      // -> const Size&
+constexpr uint32_t ActionObject_stop = rwlib::cocostudio::ActionObject::stop;
+constexpr uint32_t Node_stopAllActions = rwlib::cocos2d::Node::stopAllActions;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t ScaleTo_create = rwlib::cocos2d::ScaleTo::create__ff;            // (float duration, float scale)
+constexpr uint32_t EaseBackOut_create = rwlib::cocos2d::EaseBackOut::create;
+constexpr uint32_t Sequence_create = rwlib::cocos2d::Sequence::create;
+constexpr uint32_t LWFNode_create = rwlib::cocos2d::LWFNode::create;            // (const char* path, void*)
 constexpr uint32_t AppGetGrameFrameHeight = 0x799D21;
 constexpr uint32_t LWFUtil_preloadResources = 0x491361;  // (const std::string&)
 // game

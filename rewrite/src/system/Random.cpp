@@ -1,7 +1,7 @@
 #include "Random.hpp"
 
 namespace {
-constexpr uint32_t NOW_MICROS = 0xC60645;        // sub_C60644(uint64_t *out): gettimeofday in microseconds
+constexpr uint32_t NOW_MICROS = rwlib::sub_C60644;        // sub_C60644(uint64_t *out): gettimeofday in microseconds
 constexpr uint32_t UDIVSI3 = 0xCD5DF9;           // __udivsi3 (used for a zero divisor)
 constexpr uint32_t GOT_SAFEBUFFER_DTOR = 0xFD6104;   // &SafeBuffer::~SafeBuffer
 constexpr uint32_t GOT_RANDOM_VTABLE = 0xFD6108;     // &_ZTV6Random

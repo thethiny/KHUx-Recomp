@@ -6,17 +6,17 @@
 using namespace scene;
 
 namespace {
-constexpr uint32_t Node_ctor = 0x892531, Node_dtor = 0x8927ED, Node_init = 0x892B69;
-constexpr uint32_t Node_removeAllChildrenWithCleanup = 0x894369;
-constexpr uint32_t Node_convertToWorldSpace = 0x895A39;   // (Vec2* out, node, const Vec2&)
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Vec2_ctor = 0x8E4B95, Vec2_ctor_copy = 0x8E4C03, Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Node_ctor = rwlib::cocos2d::Node::ctor_base, Node_dtor = rwlib::cocos2d::Node::dtor_base, Node_init = rwlib::cocos2d::Node::init;
+constexpr uint32_t Node_removeAllChildrenWithCleanup = rwlib::cocos2d::Node::removeAllChildrenWithCleanup;
+constexpr uint32_t Node_convertToWorldSpace = rwlib::cocos2d::Node::convertToWorldSpace;   // (Vec2* out, node, const Vec2&)
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__v, Vec2_ctor_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t VEC2_ZERO = 0x1006950;
-constexpr uint32_t Armature_create = 0x79F3C7;            // (const std::string&)
-constexpr uint32_t ArmatureDataManager_getInstance = 0x7AC9B5;
-constexpr uint32_t ArmatureDataManager_addArmatureFileInfo = 0x7AD7BD;
-constexpr uint32_t ArmatureAnimation_setMovementEventCallFunc = 0x7A3C69;
-constexpr uint32_t ArmatureAnimation_setFrameEventCallFunc = 0x7A3CE5;
+constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create;            // (const std::string&)
+constexpr uint32_t ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance;
+constexpr uint32_t ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;
+constexpr uint32_t ArmatureAnimation_setMovementEventCallFunc = rwlib::cocostudio::ArmatureAnimation::setMovementEventCallFunc;
+constexpr uint32_t ArmatureAnimation_setFrameEventCallFunc = rwlib::cocostudio::ArmatureAnimation::setFrameEventCallFunc;
 
 constexpr uint32_t STR_ActionMapLuxNumAnim = 0xE01F45;
 constexpr uint32_t STR_SkillMiss = 0xE01EE3;

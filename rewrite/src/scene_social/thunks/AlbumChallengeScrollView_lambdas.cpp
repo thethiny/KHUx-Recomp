@@ -9,18 +9,18 @@ using namespace social;
 
 namespace {
 namespace g {
-constexpr uint32_t Vec2_dtor = 0x8E4C17;                   // cocos2d::Vec2::~Vec2
-constexpr uint32_t Rect_copy = 0x8DF1A9;                   // cocos2d::Rect::Rect(const Rect&)
-constexpr uint32_t Rect_containsPoint = 0x8DF2A9;
-constexpr uint32_t Touch_getLocation = 0x900E57;           // (Vec2* out, Touch*)
-constexpr uint32_t Node_convertToNodeSpace = 0x89599D;     // (Vec2* out, Node*, const Vec2&)
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;                   // cocos2d::Vec2::~Vec2
+constexpr uint32_t Rect_copy = rwlib::cocos2d::Rect::ctor_base__RKS0_;                   // cocos2d::Rect::Rect(const Rect&)
+constexpr uint32_t Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint;
+constexpr uint32_t Touch_getLocation = rwlib::cocos2d::Touch::getLocation;           // (Vec2* out, Touch*)
+constexpr uint32_t Node_convertToNodeSpace = rwlib::cocos2d::Node::convertToNodeSpace;     // (Vec2* out, Node*, const Vec2&)
 constexpr uint32_t IScrollProtocol_getItemPixel = 0x4F6751;
 constexpr uint32_t divsi3 = 0xCD5E8D;                      // __divsi3
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
 constexpr uint32_t AudioLWFNode_create = 0x5EB6B5;         // AudioLWFNode::create(const char* path, void*)
 constexpr uint32_t SceneUtil_createClosePopupAnimation = 0x45BC61;   // (node, std::function<void()> by value)
-constexpr uint32_t EaseSineOut_create = 0x860D09;
-constexpr uint32_t Node_runAction = 0x894AED;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
 constexpr uint32_t AlbumChallenge_openRewardPopup = 0x5BBB8D;
 }  // namespace g
 

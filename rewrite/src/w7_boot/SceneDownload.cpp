@@ -8,12 +8,12 @@ using namespace scene;
 
 namespace {
 constexpr uint32_t SceneDownload_ctor = 0x67F961, SceneDownload_create = 0x67F36D, SceneDownload_finalize = 0x6C8221;
-constexpr uint32_t Scene_create = 0x8A5F37, Layer_init = 0x88A8A1, Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Scene_create = rwlib::cocos2d::Scene::create, Layer_init = rwlib::cocos2d::Layer::init, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t DataDownloader_init = 0x776B25, DataDownloader_update = 0x776C99;
 constexpr uint32_t DataDownloader_getNumberOfDownloadedResources = 0x77719D;
-constexpr uint32_t Director_getInstance = 0x8EE519, Director_getVisibleOrigin = 0x8F06A1;
-constexpr uint32_t Director_getVisibleSize = 0x8F0675;
-constexpr uint32_t Label_createWithTTF = 0x883AE5, Vec2_ctor_ = 0x8E4B9D, Vec2_dtor_ = 0x8E4C17;
+constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance, Director_getVisibleOrigin = rwlib::cocos2d::Director::getVisibleOrigin;
+constexpr uint32_t Director_getVisibleSize = rwlib::cocos2d::Director::getVisibleSize;
+constexpr uint32_t Label_createWithTTF = rwlib::cocos2d::Label::createWithTTF__RKNS_10_ttfConfigERKNSt3__112basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEENS_14TextHAlignmentEi, Vec2_ctor_ = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor_ = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t FunctionV_assign = 0x4EB9CD;            // std::function<void()>::operator=(function&&)
 constexpr uint32_t FunctionLayer_assign = 0x612E29;        // std::function<cocos2d::Layer*()>::operator=
 constexpr uint32_t FunctionB_assign = 0x490109;            // std::function<void(bool)>::operator=

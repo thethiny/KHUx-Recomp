@@ -8,7 +8,7 @@ using namespace scene;
 
 namespace {
 constexpr uint32_t StageSkipActionMap_ctor = 0x75DD55, StageSkipActionMap_takeTreasureContent = 0x75E37D;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t SM_removeBackground = 0x611691, SM_changeSceneLayer = 0x612B99;
 constexpr uint32_t AppState_createStageState = 0x4EA861, AvatarUtil_getCurrentKeyblade = 0x4976FD;
 constexpr uint32_t StageState_setCpMax = 0x4EF859, StageState_addCP = 0x4EEC29, StageState_addLUX = 0x4EECD9;

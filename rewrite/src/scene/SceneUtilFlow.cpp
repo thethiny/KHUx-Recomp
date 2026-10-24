@@ -25,9 +25,9 @@ constexpr uint32_t PrepareMypage_next = 0x471201;          // the lambda's body:
 constexpr uint32_t APIManager_executePartyMemberList = 0x4C7AA5;
 constexpr uint32_t VT_PrepareMypage_66 = 0xF54668;
 
-constexpr uint32_t EventListenerKeyboard_create = 0x8FA325;
+constexpr uint32_t EventListenerKeyboard_create = rwlib::cocos2d::EventListenerKeyboard::create;
 constexpr uint32_t KeyFunction_swap = 0x47C949;            // std::function<void(KeyCode, Event*)>::swap
-constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = 0x8F3649;
+constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
 constexpr uint32_t VT_BackKey = 0xF53BC0;                  // addBackKeyCallback $_122 (heap)
 constexpr uint32_t Listener_onKeyReleased = 0x68;
 
@@ -42,9 +42,9 @@ constexpr uint32_t APIManager_executeUserMedalLock = 0x4C91F5;
 constexpr uint32_t VT_LockMedal_76 = 0xF543D4;
 
 constexpr uint32_t RaidEnemy_create = 0x787745, Enemy_create = 0x77F7DD;
-constexpr uint32_t FileUtils_getInstance = 0xA3F44D;
+constexpr uint32_t FileUtils_getInstance = rwlib::cocos2d::FileUtils::getInstance;
 constexpr uint32_t FileUtils_getDataFromFile = 0x10;       // vtable slot (sret Data, utils, const string&)
-constexpr uint32_t Data_getBytes = 0x8ED90B, Data_dtor = 0x8ED89B;
+constexpr uint32_t Data_getBytes = rwlib::cocos2d::Data::getBytes, Data_dtor = rwlib::cocos2d::Data::dtor_base;
 constexpr uint32_t StageManager_getInteger32bitFromLittleEndianBytes = 0x75992B;
 constexpr uint32_t STR_KeyBladeTypePng = 0xDF905F;         // "cocostudio/publish/KeyBlade_type_%02d.png"
 constexpr uint32_t STR_MappoiBin = 0xDF9089;               // "stage/mappoi_stg%05d.bin"

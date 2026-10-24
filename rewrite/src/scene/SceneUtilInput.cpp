@@ -4,21 +4,21 @@
 using namespace scene;
 
 namespace {
-constexpr uint32_t TextField_getMaxLength = 0x83F7DD;
-constexpr uint32_t TextField_getFontSize = 0x83F72D;
-constexpr uint32_t TextField_getTextHorizontalAlignment = 0x83FF59;
-constexpr uint32_t Layer_create = 0x88A8C3;
-constexpr uint32_t Label_createWithTTF = 0x883825;   // (text, fontFile, size, const Size& dims, hAlign, vAlign)
-constexpr uint32_t Label_setDimensions = 0x883A8D;   // (label, width, height)
-constexpr uint32_t Label_setAlignment = 0x884CB9;    // (label, hAlign, vAlign)
-constexpr uint32_t Text_create = 0x839DED;
-constexpr uint32_t Text_setFontName = 0x83A499;
-constexpr uint32_t Text_setFontSize = 0x83A35D;
-constexpr uint32_t Text_setTextAreaSize = 0x83A605;
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5;
-constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
+constexpr uint32_t TextField_getMaxLength = rwlib::cocos2d::ui::TextField::getMaxLength;
+constexpr uint32_t TextField_getFontSize = rwlib::cocos2d::ui::TextField::getFontSize;
+constexpr uint32_t TextField_getTextHorizontalAlignment = rwlib::cocos2d::ui::TextField::getTextHorizontalAlignment;
+constexpr uint32_t Layer_create = rwlib::cocos2d::Layer::create;
+constexpr uint32_t Label_createWithTTF = rwlib::cocos2d::Label::createWithTTF__RKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEES9_fRKNS_4SizeENS_14TextHAlignmentENS_14TextVAlignmentE;   // (text, fontFile, size, const Size& dims, hAlign, vAlign)
+constexpr uint32_t Label_setDimensions = rwlib::cocos2d::Label::setDimensions;   // (label, width, height)
+constexpr uint32_t Label_setAlignment = rwlib::cocos2d::Label::setAlignment;    // (label, hAlign, vAlign)
+constexpr uint32_t Text_create = rwlib::cocos2d::ui::Text::create;
+constexpr uint32_t Text_setFontName = rwlib::cocos2d::ui::Text::setFontName;
+constexpr uint32_t Text_setFontSize = rwlib::cocos2d::ui::Text::setFontSize;
+constexpr uint32_t Text_setTextAreaSize = rwlib::cocos2d::ui::Text::setTextAreaSize;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create;
+constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
 constexpr uint32_t TouchFunction_swap = 0x483E4D;    // std::function<bool(Touch*,Event*)>::swap
-constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = 0x8F3649;
+constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
 
 constexpr uint32_t SIZE_ZERO = 0x10068C0;            // cocos2d::Size::ZERO
 constexpr uint32_t VT_EditBoxTouchLambda = 0xF55218; // __func<textFieldToEditBox(...)::$_1> (heap stored)

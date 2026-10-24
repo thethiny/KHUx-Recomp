@@ -25,10 +25,10 @@ constexpr uint32_t SceneUtil_createClosePopupAnimation = 0x45BC61;
 constexpr uint32_t SceneUtil_openOkDialog4Line = 0x45C775;      // (const string&, const function<void()>&, bool)
 constexpr uint32_t SceneUtil_openOkCancelDialog4Line = 0x45C951;
 constexpr uint32_t CustomTextView_setXml = 0x4F931D;
-constexpr uint32_t Director_getInstance = 0x8EE519, Director_getTextureCache = 0x8EFE69;
-constexpr uint32_t TextureCache_addImage = 0x917DA9;       // (cache, const string&)
-constexpr uint32_t ImageView_loadTextureTex = 0x8398FD;    // ImageView::loadTexture(Texture2D*)
-constexpr uint32_t Size_ctor = 0x8DF027;
+constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance, Director_getTextureCache = rwlib::cocos2d::Director::getTextureCache;
+constexpr uint32_t TextureCache_addImage = rwlib::cocos2d::TextureCache::addImage;       // (cache, const string&)
+constexpr uint32_t ImageView_loadTextureTex = rwlib::cocos2d::ui::ImageView::loadTexture__PNS_9Texture2DE;    // ImageView::loadTexture(Texture2D*)
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;
 constexpr uint32_t SM_getPopupLayer2 = 0x613E71, SM_openPopup = 0x61524D, SM_closeCurrentPopup = 0x6216A1;
 constexpr uint32_t SM_enableLoadingIndicator = 0x60D169, SM_updateHeader = 0x611169;
 constexpr uint32_t APIManager_executeUserSphereBuy = 0x4CE07D;  // (api, int board, const function<void(bool)>&)

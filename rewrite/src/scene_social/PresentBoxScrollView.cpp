@@ -9,28 +9,28 @@ using Self = PresentBoxScrollView;
 
 namespace {
 namespace g {
-constexpr uint32_t Layout_ctor = 0x828671;
-constexpr uint32_t Ref_retain = 0x8FD0B5;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Widget_create = 0x825875;
-constexpr uint32_t Widget_clone = 0x8272B9;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D;
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Size_ctor = 0x8DF027;                    // Size(float, float)
+constexpr uint32_t Layout_ctor = rwlib::cocos2d::ui::Layout::ctor_base;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Widget_create = rwlib::cocos2d::ui::Widget::create;
+constexpr uint32_t Widget_clone = rwlib::cocos2d::ui::Widget::clone;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff;
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;                    // Size(float, float)
 constexpr uint32_t VectorAt_throw = 0x47CCE1;               // vector::at's out_of_range (does not return)
 constexpr uint32_t PresentMap_insertHint = 0x5105FD;        // __tree<ull, Present>::__insert_unique(hint, const pair&)
 constexpr uint32_t PresentMap_at = 0x50DC75;                // map<ull, Present>::operator[](const ull&)
 constexpr uint32_t PresentMap_destroy = 0x4B5381;           // __tree<ull, Present>::destroy(node)
 constexpr uint32_t SceneUtil_setItemImageData = 0x46C71D;   // (string& name, string& image, type, id, bool)
-constexpr uint32_t ImageView_loadTexture = 0x839731;        // (image, const string&, TextureResType)
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;        // (image, const string&, TextureResType)
 constexpr uint32_t Date_makeLocalDate = 0x4927CD;           // (Date out, const Date*)
 constexpr uint32_t TextData_format = 0x492929;              // (string out, Type, id, ...)
 constexpr uint32_t ImageButton_create = 0x531239;           // (std::string by value, bool)
 constexpr uint32_t ImageButton_setTargetImageView = 0x531631;
 constexpr uint32_t ImageButton_addTouchEventListener = 0x5315B1;   // (button, std::function by value)
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5;
-constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
-constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = 0x8F3649;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create;
+constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
+constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
 constexpr uint32_t TouchBoolFunction_swap = 0x483E4D;
 constexpr uint32_t TouchVoidFunction_swap = 0x4F3699;
 constexpr uint32_t TouchVoidFunction_assignPair = 0x50DE49; // sub_50DE48: listener fn = lambda {this, row, this, row}

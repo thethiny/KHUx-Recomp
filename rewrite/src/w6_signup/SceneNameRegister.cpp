@@ -6,13 +6,13 @@
 using namespace scene;
 
 namespace {
-constexpr uint32_t Layer_ctor = 0x88A7D1, Scene_create = 0x8A5F37, Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base, Scene_create = rwlib::cocos2d::Scene::create, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t function_vv_assign = 0x4EB9CD;
 constexpr uint32_t SceneManager_hideHeader = 0x61154D, SceneManager_changeBackground = 0x6128ED;
 constexpr uint32_t SceneManager_removeBackground = 0x611691;
 constexpr uint32_t PopupRegister_openNameRegisterPopup = 0x56549D;   // (function<void()> by value, scene)
 constexpr uint32_t SceneUtil_editBoxEditingDidEnd = 0x45C61D;        // (layerRef, label, text)
-constexpr uint32_t EditBox_getText = 0x85520D;
+constexpr uint32_t EditBox_getText = rwlib::cocos2d::extension::EditBox::getText;
 constexpr uint32_t SceneNameRegister_create = 0x67F6AD;
 constexpr uint32_t GOT_VT_SceneNameRegister = 0xFD6900, GOT_AVATAR_EDIT_FACTORY = 0xFD662C;
 constexpr uint32_t VT_OnEnter = 0xF6B748, VT_OnExit = 0xF6B71C;   // {this}

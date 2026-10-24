@@ -9,7 +9,7 @@ constexpr uint32_t FunctionVV_copy = 0x4683CD;           // std::function<void()
 constexpr uint32_t FunctionVV_move = 0x47F905;           // std::function<void()>::function(function&&)
 constexpr uint32_t SceneUtil_createRightInAnimation = 0x45B8BD;    // (node, float, float, std::function)
 constexpr uint32_t SceneUtil_createRightOutAnimation = 0x45BA3D;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr uint32_t Npc_create = 0x5CC965;
 constexpr uint32_t Audio_getInstance = 0x5BECFD, Audio_getLayer = 0x5BF33D, AudioLayer_playSE = 0x5BF785;
 constexpr uint32_t SE_JEWEL = 0x1E56BAE4;

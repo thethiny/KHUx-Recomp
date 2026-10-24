@@ -7,7 +7,7 @@
 using namespace scene;
 
 namespace {
-constexpr uint32_t Layer_ctor = 0x88A7D1, Layer_init = 0x88A8A1, Scene_create = 0x8A5F37, Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base, Layer_init = rwlib::cocos2d::Layer::init, Scene_create = rwlib::cocos2d::Scene::create, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t SceneTakeOver_create = 0x71244D, SceneTakeOver_init = 0x712501;
 constexpr uint32_t SceneTakeOver_openWebViewInfoPopup = 0x712CED;
 constexpr uint32_t function_vv_assign = 0x4EB9CD, SceneManager_setOnBackKeyCallback = 0x613E5B;
@@ -16,15 +16,15 @@ constexpr uint32_t SceneUtil_getSideMargin = 0x45AD0D, SceneUtil_getSideHeightMa
 constexpr uint32_t SceneUtil_createShadowSprite = 0x45AD69, SceneUtil_createOpenPopupAnimation = 0x45BC05;
 constexpr uint32_t SceneUtil_createClosePopupAnimation = 0x45BC61, SceneUtil_isLoggedInFacebook = 0x4697E9;
 constexpr uint32_t AppState_getInstance = 0x4E66DD, AppState_getUUIDString = 0x4EA8E1;
-constexpr uint32_t StringBuffer_ctor = 0x49140D, Text_setString = 0x83A2DD, libc_memcpy = 0x40E164;
-constexpr uint32_t WebView_create = 0x8191B5, WebView_setScalesPageToFit = 0x8192AD, WebView_loadUrl = 0x819221;
-constexpr uint32_t WebView_stopLoading = 0x81924B, function_webview_swap = 0x4821B5;
+constexpr uint32_t StringBuffer_ctor = 0x49140D, Text_setString = rwlib::cocos2d::ui::Text::setString, libc_memcpy = 0x40E164;
+constexpr uint32_t WebView_create = rwlib::cocos2d::plugin::WebView::create, WebView_setScalesPageToFit = rwlib::cocos2d::plugin::WebView::setScalesPageToFit, WebView_loadUrl = rwlib::cocos2d::plugin::WebView::loadUrl;
+constexpr uint32_t WebView_stopLoading = rwlib::cocos2d::plugin::WebView::stopLoading, function_webview_swap = 0x4821B5;
 constexpr uint32_t function_node_copy = 0x474D99, function_node_copy2 = 0x481F0D;   // function<void(Node*)>
 constexpr uint32_t FacebookManager_getInstance = 0x4E5585, FacebookManager_logout = 0x4E5751;
 constexpr uint32_t SceneBirthRegister_changeSceneLayer = 0x711CD5;
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9, AudioPlaySystemSECancel = 0x5C0D81;
 constexpr uint32_t AudioPlaySystemSEPopUp = 0x5C0E09;
-constexpr uint32_t Vec2_ctor_ = 0x8E4B9D, Vec2_dtor_ = 0x8E4C17, Size_ctor = 0x8DF027;
+constexpr uint32_t Vec2_ctor_ = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor_ = rwlib::cocos2d::Vec2::dtor_base, Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;
 constexpr uint32_t GOT_SceneTakeOver_vtable = 0xFD697C, GOT_POPUP_FADE = 0xFD65C0;
 constexpr uint32_t S_Json = 0xE06A87, S_InfoJson = 0xDF9B2F, S_TxtTitle = 0xDFF142, S_TxtWording = 0xDF862F;
 constexpr uint32_t S_ButtonTakeover = 0xE06ABA, S_TxtTakeover = 0xE06ACA, S_ButtonIntro = 0xE06AD7;

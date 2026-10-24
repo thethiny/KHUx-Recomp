@@ -7,11 +7,11 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
-constexpr uint32_t FadeTo_create = 0x86B3E1;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t GUIReader_getInstance = 0x7BF1E5, GUIReader_widgetFromJsonFile = 0x7BF9FD;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
+constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t GUIReader_getInstance = rwlib::cocostudio::GUIReader::getInstance, GUIReader_widgetFromJsonFile = rwlib::cocostudio::GUIReader::widgetFromJsonFile;
 constexpr uint32_t SceneUtil_createShadowSprite = 0x45AD69;
 constexpr uint32_t SceneUtil_createOpenPopupAnimation = 0x45BC05, SceneUtil_createClosePopupAnimation = 0x45BC61;
 constexpr uint32_t SceneUtil_setShadow = 0x45BD15;
@@ -24,8 +24,8 @@ constexpr uint32_t AudioPlaySystemSEPopUp = 0x5C0E09, AudioPlaySystemSEDecide = 
 constexpr uint32_t APIManager_getInstance = 0x4BA8C9, APIManager_openErrorDialog = 0x4C3C8D;
 constexpr uint32_t TextData_get = 0x4928AD;
 constexpr uint32_t SafeBuffer_read = 0x45A269;
-constexpr uint32_t Text_setString = 0x83A2DD;
-constexpr uint32_t Widget_addTouchEventListener = 0x826CCF;
+constexpr uint32_t Text_setString = rwlib::cocos2d::ui::Text::setString;
+constexpr uint32_t Widget_addTouchEventListener = rwlib::cocos2d::ui::Widget::addTouchEventListener;
 constexpr uint32_t PurchaseManager_getInstance = 0x4D7A71;
 constexpr uint32_t PurchaseManager_purchase = 0x4D831D;          // (pm, const char*, function)
 constexpr uint32_t PurchaseManager_resumeTransaction = 0x4D8009; // (pm, function)

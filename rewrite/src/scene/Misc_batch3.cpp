@@ -17,7 +17,7 @@ constexpr uint32_t PLAYING_SOUNDS = 0x1003C30;              // AudioSystemInit's
 constexpr uint32_t String_compare = 0x47CBD5;               // std::string::compare(const char*): 0 = equal
 constexpr uint32_t CarouselDeck_setDeckMedal = 0x5D17A1;    // (deck, bool)
 constexpr uint32_t SafeBuffer_read = 0x45A269;              // (buffer, dst, src, n, index)
-constexpr uint32_t Vec2_copy = 0x8E4C03;
+constexpr uint32_t Vec2_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_;
 constexpr uint32_t MEMCPY = 0x40E164;
 constexpr uint32_t V_getAnimation = 0x298;                  // cocostudio::Armature::getAnimation
 constexpr uint32_t V_animStop = 0xC;                        // ArmatureAnimation slot 0xC

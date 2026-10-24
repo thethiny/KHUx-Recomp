@@ -7,14 +7,14 @@
 using namespace scene;
 
 namespace {
-constexpr uint32_t Layer_init = 0x88A8A1, Layer_ctor = 0x88A7D1, Scene_create = 0x8A5F37, Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Layer_init = rwlib::cocos2d::Layer::init, Layer_ctor = rwlib::cocos2d::Layer::ctor_base, Scene_create = rwlib::cocos2d::Scene::create, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t function_vv_assign = 0x4EB9CD;
-constexpr uint32_t Size_ctor = 0x8DF027;
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;
 constexpr uint32_t SceneUtil_getSideMargin = 0x45AD0D;
 constexpr uint32_t SM_enableLoadingIndicator = 0x60D169;
 constexpr uint32_t APIManager_executeTutorialProgress = 0x4C581D, APIManager_openErrorDialog = 0x4C3C8D;
 constexpr uint32_t APIManager_needsRetry = 0x4C3C63;
-constexpr uint32_t EditBox_getText = 0x85520D;
+constexpr uint32_t EditBox_getText = rwlib::cocos2d::extension::EditBox::getText;
 constexpr uint32_t string_compare_cstr = 0x47CBD5, string_assign = 0x48D811;   // string::compare(char*), assign(p, n)
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
 constexpr uint32_t SceneInvitation_create = 0x67F619;

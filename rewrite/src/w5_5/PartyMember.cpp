@@ -10,17 +10,17 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Layout_ctor = 0x828671;
-constexpr uint32_t Layer_ctor = 0x88A7D1, Layer_init = 0x88A8A1, Layer_dtor = 0x88A88D;
-constexpr uint32_t Ref_retain = 0x8FD0B5, Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Layout_ctor = rwlib::cocos2d::ui::Layout::ctor_base;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base, Layer_init = rwlib::cocos2d::Layer::init, Layer_dtor = rwlib::cocos2d::Layer::dtor_base;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t MEMCPY = 0x40E164;                      // __aeabi_memcpy(dst, src, n)
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t Widget_create = 0x825875, Widget_clone = 0x8272B9;
-constexpr uint32_t Size_ctor = 0x8DF027;                   // Size(float, float)
-constexpr uint32_t Vec2_ctorXY = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Text_setString = 0x83A2DD;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t Widget_create = rwlib::cocos2d::ui::Widget::create, Widget_clone = rwlib::cocos2d::ui::Widget::clone;
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;                   // Size(float, float)
+constexpr uint32_t Vec2_ctorXY = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Text_setString = rwlib::cocos2d::ui::Text::setString;
 constexpr uint32_t SafeBuffer_read = 0x45A269;             // (sb, out, src, n, index)
-constexpr uint32_t GUIReader_getInstance = 0x7BF1E5, GUIReader_widgetFromJsonFile = 0x7BF9FD;
+constexpr uint32_t GUIReader_getInstance = rwlib::cocostudio::GUIReader::getInstance, GUIReader_widgetFromJsonFile = rwlib::cocostudio::GUIReader::widgetFromJsonFile;
 constexpr uint32_t ExpressionVector_allocate = 0x487635;   // vector<Avatar::Expression>::allocate(n)
 constexpr uint32_t ExpressionVector_destroy = 0x46BE0D;
 constexpr uint32_t AvatarIconCache_ctor = 0x5CA741;        // (Texture2D*, const Vec2&, float, float, const vector<Expression>&)
@@ -35,9 +35,9 @@ constexpr uint32_t FunctionBTE_swap = 0x483E4D;            // std::function<bool
 constexpr uint32_t FunctionVTE_swap = 0x4F3699;            // std::function<void(Touch*, Event*)>::swap
 constexpr uint32_t MemberTouchEnded_assign = 0x5234C1;     // sub_5234C0: function<void(Touch*, Event*)> = $_2
 constexpr uint32_t Swap_ull = 0x65F595;                    // std::function<void(ull)>::swap
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5, EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
-constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = 0x8F3649;
-constexpr uint32_t Director_getInstance = 0x8EE519;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create, EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
+constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
+constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance;
 constexpr uint32_t SceneUtil_setAdditionalKerningForAtlasLabel = 0x466BA9;
 constexpr uint32_t SceneUtil_settingTitleLabel = 0x45D8D1;  // (node, const string& name, text id)
 constexpr uint32_t FunctionVV_assign = 0x4EB9CD;           // std::function<void()>::operator=(const function&)

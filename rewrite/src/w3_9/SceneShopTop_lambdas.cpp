@@ -7,8 +7,8 @@ using namespace shop_top;
 using Self = SceneShopTop;
 
 namespace {
-constexpr uint32_t Node_scheduleUpdate = 0x894BA7;
-constexpr uint32_t Node_unscheduleUpdate = 0x894CB3;
+constexpr uint32_t Node_scheduleUpdate = rwlib::cocos2d::Node::scheduleUpdate;
+constexpr uint32_t Node_unscheduleUpdate = rwlib::cocos2d::Node::unscheduleUpdate;
 constexpr uint32_t AudioReplaceGameMainBGM = 0x5C0FA1;    // (bgm id, fade ms)
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
 constexpr uint32_t DrawScrollView_setCanTouch = 0x5B13AD;
@@ -25,11 +25,11 @@ constexpr uint32_t BuyMagicStoneDialog_open = 0x588CAD;        // (const functio
 constexpr uint32_t BuyMagicStoneDialog_openDiscount = 0x589005;   // (const function<void()>&, const function<void()>&)
 constexpr uint32_t InOut_runOutAnimation = 0x6F24B5;
 constexpr uint32_t ImageButton_setIsDisabled = 0x5318E1;
-constexpr uint32_t Text_enableShadow = 0x83A9B1;          // (text, const Color4B&, const Size&, int blur)
-constexpr uint32_t Text_enableOutline = 0x83A9C5;         // (text, const Color4B&, int size)
-constexpr uint32_t Label_setAdditionalKerning = 0x88697D;
-constexpr uint32_t Size_ctor = 0x8DF027;                  // cocos2d::Size::Size(float, float)
-constexpr uint32_t Color4B_ctor = 0x9064D3;               // (out, r, g, b, a)
+constexpr uint32_t Text_enableShadow = rwlib::cocos2d::ui::Text::enableShadow;          // (text, const Color4B&, const Size&, int blur)
+constexpr uint32_t Text_enableOutline = rwlib::cocos2d::ui::Text::enableOutline;         // (text, const Color4B&, int size)
+constexpr uint32_t Label_setAdditionalKerning = rwlib::cocos2d::Label::setAdditionalKerning;
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;                  // cocos2d::Size::Size(float, float)
+constexpr uint32_t Color4B_ctor = rwlib::cocos2d::Color4B::ctor_base;               // (out, r, g, b, a)
 constexpr uint32_t SafeBuffer_read = 0x45A269;            // (sb, dst, src, n, index)
 constexpr uint32_t MedalDataManager_getInstance = 0x76AD69;
 constexpr uint32_t MedalDataManager_getMedalData = 0x76ADB5;  // (out, mgr, uint64 uid, int, UserMedal::Medal)

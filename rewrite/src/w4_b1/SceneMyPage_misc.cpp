@@ -144,7 +144,7 @@ constexpr uint32_t M_clearMotionEvents = 0x63FA5B, M_addChangeMotionEvent = 0x63
 constexpr uint32_t ImageMap_index = 0x6469B1;           // std::map<int, Image*>::operator[]
 constexpr uint32_t UIntMap_index = 0x5AF52D;            // std::map<int, unsigned>::operator[]
 constexpr uint32_t DownloadManager_start = 0x4DED65;    // (dm, url, const function&, ?, ?)
-constexpr uint32_t Texture2D_ctor = 0x9149FD, Texture2D_initWithImage = 0x91501D, Texture2D_getContentSize = 0x914ACB;
+constexpr uint32_t Texture2D_ctor = rwlib::cocos2d::Texture2D::ctor_base, Texture2D_initWithImage = rwlib::cocos2d::Texture2D::initWithImage, Texture2D_getContentSize = rwlib::cocos2d::Texture2D::getContentSize;
 constexpr uint32_t VT_banner_36 = 0xF61370;
 
 // queue motion `motion` for every line-up actor

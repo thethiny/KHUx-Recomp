@@ -6,22 +6,22 @@ using Self = RaidSubdueScrollView;
 
 namespace {
 namespace g {
-constexpr uint32_t Layout_ctor = 0x828671;                 // cocos2d::ui::Layout::Layout()
-constexpr uint32_t Ref_retain = 0x8FD0B5;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t GUIReader_getInstance = 0x7BF1E5;
-constexpr uint32_t GUIReader_widgetFromJsonFile = 0x7BF9FD;
+constexpr uint32_t Layout_ctor = rwlib::cocos2d::ui::Layout::ctor_base;                 // cocos2d::ui::Layout::Layout()
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t GUIReader_getInstance = rwlib::cocostudio::GUIReader::getInstance;
+constexpr uint32_t GUIReader_widgetFromJsonFile = rwlib::cocostudio::GUIReader::widgetFromJsonFile;
 constexpr uint32_t VectorBaseInt_dtor = 0x478961;          // std::__vector_base<int>::~__vector_base
 constexpr uint32_t VectorInt_pushBackSlow = 0x4D6CC1;      // std::vector<int>::__push_back_slow_path(const int&)
 constexpr uint32_t VectorBaseActor_dtor = 0x485BD7;        // std::__vector_base<AvatarActor*>::~__vector_base
 constexpr uint32_t SubdueTree_destroy = 0x5BAB11;          // __tree<int, SubdueData>::destroy(node)
 constexpr uint32_t SubdueMap_at = 0x5B5721;                // std::map<int, SubdueData>::operator[](const int&)
 constexpr uint32_t String_assign = 0x498A1D;               // std::string::operator=(const string&) (sub_498A1C)
-constexpr uint32_t Texture2D_getContentSize = 0x914ACB;    // (Size* out, Texture2D*)
-constexpr uint32_t Vec2_ctor = 0x8E4B9D;                   // Vec2::Vec2(float, float)
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Rect_ctor = 0x8DF18B;                   // Rect::Rect(x, y, w, h)
-constexpr uint32_t Rect_copy = 0x8DF1A9;                   // Rect::Rect(const Rect&)
+constexpr uint32_t Texture2D_getContentSize = rwlib::cocos2d::Texture2D::getContentSize;    // (Size* out, Texture2D*)
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff;                   // Vec2::Vec2(float, float)
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff;                   // Rect::Rect(x, y, w, h)
+constexpr uint32_t Rect_copy = rwlib::cocos2d::Rect::ctor_base__RKS0_;                   // Rect::Rect(const Rect&)
 constexpr uint32_t AvatarIconCache_makeShared = 0x509899;  // make_shared<AvatarIconCache>(Texture2D*&, Vec2, float, float)
 constexpr uint32_t AvatarIconCache_find = 0x5CA9A9;        // AvatarIconCache::find(unsigned long long)
 constexpr uint32_t AvatarIconCache_add = 0x5CAA57;         // AvatarIconCache::add(unsigned long long, const Style&)
@@ -31,11 +31,11 @@ constexpr uint32_t SceneUtil_setShadow = 0x45BD15;         // (Text*)
 constexpr uint32_t SceneUtil_getMoneyStr = 0x461DC5;       // (string* out, unsigned long long)
 constexpr uint32_t SceneUtil_numberToAtlasString = 0x466C41;   // (string* out, int)
 constexpr uint32_t SceneUtil_setAdditionalKerning = 0x466BA9;  // (TextAtlas*, int)
-constexpr uint32_t TextAtlas_setString = 0x83AED7;
-constexpr uint32_t ImageView_loadTexture = 0x839731;       // (image, const string&, TextureResType)
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5;
-constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
-constexpr uint32_t EventDispatcher_addListenerWithSceneGraphPriority = 0x8F3649;
+constexpr uint32_t TextAtlas_setString = rwlib::cocos2d::ui::TextAtlas::setString;
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;       // (image, const string&, TextureResType)
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create;
+constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
+constexpr uint32_t EventDispatcher_addListenerWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
 constexpr uint32_t FunctionTouchBool_swap = 0x483E4D;      // std::function<bool(Touch*, Event*)>::swap
 constexpr uint32_t FunctionTouchVoid_swap = 0x4F3699;      // std::function<void(Touch*, Event*)>::swap
 constexpr uint32_t FunctionVI_call = 0x4F321D;             // std::function<void(int)>::operator()(int)
@@ -561,7 +561,7 @@ void Self::registItemTouchEvent(Self *self, Addr widget, int32_t index) {
         assignTouchEnded(listener + 0x80, caps);
         assignTouchEnded(listener + 0x98, caps);
     }
-    uint32_t dispatcher = ld32(call(0x8EE519, {}) + 0x84);   // Director::getInstance()->getEventDispatcher()
+    uint32_t dispatcher = ld32(call(rwlib::cocos2d::Director::getInstance, {}) + 0x84);   // Director::getInstance()->getEventDispatcher()
     call(g::EventDispatcher_addListenerWithSceneGraphPriority, {dispatcher, listener, widget});
     call(g::Vec2_dtor, {rect});
 }
@@ -772,10 +772,10 @@ void Self::onTouchMoved(Addr functor, Addr touchRef, Addr) {
     uint32_t parent = vcall(view, IScrollProtocol::V_getParent, {view});
     Frame f;
     uint32_t loc = f.alloc(8), p = f.alloc(8);
-    call(0x900E57, {loc, touch});                  // Touch::getLocation
-    call(0x89599D, {p, parent, loc});              // Node::convertToNodeSpace
+    call(rwlib::cocos2d::Touch::getLocation, {loc, touch});                  // Touch::getLocation
+    call(rwlib::cocos2d::Node::convertToNodeSpace, {p, parent, loc});              // Node::convertToNodeSpace
     call(g::Vec2_dtor, {loc});
-    call(0x8DF2A9, {functor + 8, p});              // Rect::containsPoint
+    call(rwlib::cocos2d::Rect::containsPoint, {functor + 8, p});              // Rect::containsPoint
     call(g::Vec2_dtor, {p});
 }
 RW_FUNCTION(0x5BA7F8, "RaidSubdueScrollView::registItemTouchEvent $_1 operator() (sub_5BA7F8)", RaidSubdueScrollView::onTouchMoved);

@@ -8,8 +8,8 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Scene_create = 0x8A5F37, SceneSellOutMaterialItem_create = 0x6861AD;
-constexpr uint32_t DelayTime_create = 0x86852D, CallFunc_create = 0x866B39, Sequence_create = 0x867999;
+constexpr uint32_t Scene_create = rwlib::cocos2d::Scene::create, SceneSellOutMaterialItem_create = 0x6861AD;
+constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create, CallFunc_create = rwlib::cocos2d::CallFunc::create, Sequence_create = rwlib::cocos2d::Sequence::create;
 constexpr uint32_t SM_changeSceneLayer = 0x612B99, SM_enableLoadingIndicator = 0x60D169;
 constexpr uint32_t FunctionVB_assign = 0x490109;                 // std::function<void(bool)>::operator=(function&&)
 constexpr uint32_t APIManager_executeUserSphereCheck = 0x4CCBC1, APIManager_openErrorDialog = 0x4C3C8D;

@@ -11,11 +11,11 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Rect_ctor = 0x8DF18B, Rect_containsPoint = 0x8DF2A9;
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Node_runAction = 0x894AED, Node_convertToNodeSpace = 0x89599D;
-constexpr uint32_t Touch_getLocation = 0x900E57;
-constexpr uint32_t Text_setString = 0x83A2DD;
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff, Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint;
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction, Node_convertToNodeSpace = rwlib::cocos2d::Node::convertToNodeSpace;
+constexpr uint32_t Touch_getLocation = rwlib::cocos2d::Touch::getLocation;
+constexpr uint32_t Text_setString = rwlib::cocos2d::ui::Text::setString;
 constexpr uint32_t FunctionVI_call = 0x4F321D;             // std::function<void(int)>::operator()(int)
 constexpr uint32_t FunctionVB_assign = 0x490109;           // std::function<void(bool)>::operator=(const function&)
 constexpr uint32_t ThrowOutOfRange = 0x47CCE1;
@@ -36,7 +36,7 @@ constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
 constexpr uint32_t MedalDataManager_getInstance = 0x76AD69, MedalDataManager_getMedalData = 0x76ADB5;
 constexpr uint32_t AudioPlaySystemSEPopUp = 0x5C0E09;
 constexpr uint32_t SM_getPopupLayer2 = 0x613E71, SM_openPopup = 0x61524D;   // openPopup(sm, fn<bool()>, fn<void(bool)>, bool)
-constexpr uint32_t FadeTo_create = 0x86B3E1;
+constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create;
 constexpr uint32_t SceneUtil_updateMedalInfo = 0x462195;
 constexpr uint32_t SceneUtil_openTutorialPopup = 0x4684C9;
 constexpr uint32_t SceneUtil_setTextDisabled = 0x4744F5;     // sub_4744F4(text, a, b): the greyed-out label style
@@ -52,8 +52,8 @@ constexpr uint32_t ImageButton_create = 0x531239, ImageButton_addTouchEventListe
 constexpr uint32_t ImageButton_setTargetImageView = 0x531631, ImageButton_setSelectEnabled = 0x5318F1;
 constexpr uint32_t ImageButton_setIsSelected = 0x5318FD;
 constexpr uint32_t TutorialMisc_create = 0x777BB5;
-constexpr uint32_t Widget_setBright = 0x825A09, Widget_addTouchEventListener = 0x826CCF;
-constexpr uint32_t CheckBox_setSelectedState = 0x8382E7, CheckBox_addEventListener = 0x8389AB;
+constexpr uint32_t Widget_setBright = rwlib::cocos2d::ui::Widget::setBright, Widget_addTouchEventListener = rwlib::cocos2d::ui::Widget::addTouchEventListener;
+constexpr uint32_t CheckBox_setSelectedState = rwlib::cocos2d::ui::CheckBox::setSelectedState, CheckBox_addEventListener = rwlib::cocos2d::ui::CheckBox::addEventListener;
 constexpr uint32_t GOT_VEC2_ZERO = 0xFD605C, GOT_COLOR3B_WHITE = 0xFD6060;
 constexpr uint32_t aeabi_fixsfsi = 0xCD7240, aeabi_idiv = 0xCD5E8D;
 constexpr uint32_t GOT_ROW_SPACING = 0xFD659C;              // &float added to the cell height (row step)

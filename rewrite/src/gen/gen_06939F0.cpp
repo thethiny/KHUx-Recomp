@@ -2454,7 +2454,7 @@ RW_FUNCTION(0x6A547A, "sub_6A547A", forward_to_delete_6A547A);
 
 // sub_6A5482
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_6A5482(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x6A5482, "sub_6A5482", calls_cocos2d_ui_Widget_isTouchEnabled_6A5482);
 
@@ -2722,7 +2722,7 @@ RW_FUNCTION(0x6A5B76, "sub_6A5B76", forward_to_delete_6A5B76);
 
 // sub_6A5B7E
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_6A5B7E(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x6A5B7E, "sub_6A5B7E", calls_cocos2d_ui_Widget_isTouchEnabled_6A5B7E);
 
@@ -3873,7 +3873,7 @@ RW_FUNCTION(0x6A86B6, "sub_6A86B6", forward_to_delete_6A86B6);
 
 // sub_6A86BE
 static uint32_t calls_cocos2d_Node_unscheduleUpdate_6A86BE(uint32_t a0) {
-    return rw::call(0x894CB3, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::unscheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
 }
 RW_FUNCTION(0x6A86BE, "sub_6A86BE", calls_cocos2d_Node_unscheduleUpdate_6A86BE);
 
@@ -3926,7 +3926,7 @@ RW_FUNCTION(0x6A8752, "sub_6A8752", forward_to_delete_6A8752);
 
 // sub_6A875A
 static uint32_t calls_cocos2d_Node_scheduleUpdate_6A875A(uint32_t a0) {
-    return rw::call(0x894BA7, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::scheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
 }
 RW_FUNCTION(0x6A875A, "sub_6A875A", calls_cocos2d_Node_scheduleUpdate_6A875A);
 
@@ -4287,7 +4287,7 @@ RW_FUNCTION(0x6B1192, "sub_6B1192", forward_to_delete_6B1192);
 
 // sub_6B119A
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_6B119A(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x6B119A, "sub_6B119A", calls_cocos2d_ui_Widget_isTouchEnabled_6B119A);
 
@@ -5720,7 +5720,7 @@ RW_FUNCTION(0x6B36CC, "sub_6B36CC", return_constant_6B36CC);
 // IDA: _DWORD *__fastcall sub_6B36E0(_DWORD *a1)
 static uint32_t fn_6B36E0(uint32_t a0) {
     rw::save<uint32_t>(a0, 0xF66440u);
-    rw::call(0x8E4C17, {a0 + 8u});  // cocos2d::Vec2::~Vec2 [base destructor]
+    rw::call(rwlib::cocos2d::Vec2::dtor_base, {a0 + 8u});  // cocos2d::Vec2::~Vec2 [base destructor]
     return a0;
 }
 RW_FUNCTION(0x6B36E0, "sub_6B36E0", fn_6B36E0);
@@ -5728,7 +5728,7 @@ RW_FUNCTION(0x6B36E0, "sub_6B36E0", fn_6B36E0);
 // sub_6B370C
 static void fn_6B370C(uint32_t a0) {
     rw::save<uint32_t>(a0, 0xF66440u);
-    rw::call(0x8E4C17, {a0 + 8u});  // cocos2d::Vec2::~Vec2 [base destructor]
+    rw::call(rwlib::cocos2d::Vec2::dtor_base, {a0 + 8u});  // cocos2d::Vec2::~Vec2 [base destructor]
     const uint32_t r1 = rw::call(0xC98F9B, {a0});  // delete
 }
 RW_FUNCTION(0x6B370C, "sub_6B370C", fn_6B370C);
@@ -5742,7 +5742,7 @@ static uint32_t fn_6B373C(uint32_t a0) {
     } else {
         rw::save<uint32_t>(r0, 0xF66440u);
         rw::save<uint32_t>(r0 + 4u, rw::load<uint32_t>(a0 + 4u));
-        rw::call(0x8DF1A9, {r0 + 8u, a0 + 8u, 0xFFF8CFECu});  // cocos2d::Rect::Rect [base constructor]
+        rw::call(rwlib::cocos2d::Rect::ctor_base__RKS0_, {r0 + 8u, a0 + 8u, 0xFFF8CFECu});  // cocos2d::Rect::Rect [base constructor]
         rw::save<uint32_t>(r0 + 4u, rw::load<uint32_t>(a0 + 4u));
         return r0;
     }
@@ -5756,7 +5756,7 @@ static uint32_t fn_6B3794(uint32_t a0, uint32_t a1) {
     } else {
         rw::save<uint32_t>(a1, 0xF66440u);
         rw::save<uint32_t>(a1 + 4u, rw::load<uint32_t>(a0 + 4u));
-        rw::call(0x8DF1A9, {a1 + 8u, a0 + 8u});  // cocos2d::Rect::Rect [base constructor]
+        rw::call(rwlib::cocos2d::Rect::ctor_base__RKS0_, {a1 + 8u, a0 + 8u});  // cocos2d::Rect::Rect [base constructor]
         const uint32_t v2 = rw::load<uint32_t>(a0 + 4u);
         rw::save<uint32_t>(a1 + 4u, v2);
         return v2;
@@ -5766,13 +5766,13 @@ RW_FUNCTION(0x6B3794, "sub_6B3794", fn_6B3794);
 
 // sub_6B37D0
 static void forward_to_cocos2d_Vec2_Vec2_dtor_6B37D0(uint32_t a0) {
-    const uint32_t r0 = rw::call(0x8E4C17, {a0 + 8u});  // cocos2d::Vec2::~Vec2 [base destructor]
+    const uint32_t r0 = rw::call(rwlib::cocos2d::Vec2::dtor_base, {a0 + 8u});  // cocos2d::Vec2::~Vec2 [base destructor]
 }
 RW_FUNCTION(0x6B37D0, "sub_6B37D0", forward_to_cocos2d_Vec2_Vec2_dtor_6B37D0);
 
 // sub_6B37DA
 static void calls_delete_6B37DA(uint32_t a0) {
-    rw::call(0x8E4C17, {a0 + 8u});  // cocos2d::Vec2::~Vec2 [base destructor]
+    rw::call(rwlib::cocos2d::Vec2::dtor_base, {a0 + 8u});  // cocos2d::Vec2::~Vec2 [base destructor]
     const uint32_t r1 = rw::call(0xC98F9B, {a0});  // delete
 }
 RW_FUNCTION(0x6B37DA, "sub_6B37DA", calls_delete_6B37DA);
@@ -6085,7 +6085,7 @@ RW_FUNCTION(0x6B632A, "sub_6B632A", forward_to_delete_6B632A);
 
 // sub_6B6332
 static uint32_t calls_cocos2d_Node_unscheduleUpdate_6B6332(uint32_t a0) {
-    return rw::call(0x894CB3, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::unscheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
 }
 RW_FUNCTION(0x6B6332, "sub_6B6332", calls_cocos2d_Node_unscheduleUpdate_6B6332);
 
@@ -6138,7 +6138,7 @@ RW_FUNCTION(0x6B63C6, "sub_6B63C6", forward_to_delete_6B63C6);
 
 // sub_6B63CE
 static uint32_t calls_cocos2d_Node_scheduleUpdate_6B63CE(uint32_t a0) {
-    return rw::call(0x894BA7, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::scheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
 }
 RW_FUNCTION(0x6B63CE, "sub_6B63CE", calls_cocos2d_Node_scheduleUpdate_6B63CE);
 
@@ -6227,13 +6227,13 @@ RW_FUNCTION(0x6BBD82, "sub_6BBD82", fn_6BBD82);
 
 // sub_6BBE5A
 static uint32_t calls_cocos2d_Node_unscheduleUpdate_6BBE5A(uint32_t a0) {
-    return rw::call(0x894CB3, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::unscheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
 }
 RW_FUNCTION(0x6BBE5A, "sub_6BBE5A", calls_cocos2d_Node_unscheduleUpdate_6BBE5A);
 
 // sub_6BBEF8
 static uint32_t calls_AudioReplaceGameMainBGM_6BBEF8(uint32_t a0) {
-    rw::call(0x894BA7, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
+    rw::call(rwlib::cocos2d::Node::scheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
     return rw::call(0x5C0FA1, {0x1DDCAAD8u, 0x1F4u});  // AudioReplaceGameMainBGM
 }
 RW_FUNCTION(0x6BBEF8, "sub_6BBEF8", calls_AudioReplaceGameMainBGM_6BBEF8);
@@ -6308,7 +6308,7 @@ RW_FUNCTION(0x6BD3B4, "sub_6BD3B4", fn_6BD3B4);
 
 // sub_6BD7EA
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_6BD7EA(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x6BD7EA, "sub_6BD7EA", calls_cocos2d_ui_Widget_isTouchEnabled_6BD7EA);
 

@@ -23,9 +23,9 @@ constexpr uint32_t STAMPS_BUFFER = 0x38, BUFFER_COUNT = 0x20;
 constexpr uint32_t STAMP_KIND = 4, STAMP_NUMBER = 8, STAMP_ENABLED = 0x1C;
 constexpr int32_t STAMP_KIND_MEDAL = 3;
 
-constexpr uint32_t ArmatureDataManager_getInstance = 0x7AC9B5;
-constexpr uint32_t ArmatureDataManager_addArmatureFileInfo = 0x7AD7BD;
-constexpr uint32_t Armature_create = 0x79F3C7;
+constexpr uint32_t ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance;
+constexpr uint32_t ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;
+constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create;
 constexpr uint32_t ARMATURE_GET_ANIMATION = 0x298;     // vtable byte offset
 constexpr uint32_t ANIMATION_PLAY = 0x68;              // ArmatureAnimation::play(name, durationTo, loop)
 constexpr uint32_t ChatStampListScrollView_create = 0x55B9D9;
@@ -42,10 +42,10 @@ constexpr uint32_t StampVector_pushSlow = 0x630181, StampVector_copy = 0x6190F1,
 constexpr uint32_t ImageButton_create = 0x531239;               // (string by value, bool)
 constexpr uint32_t ImageButton_setTargetView = 0x5318C1;        // (button, node, float scale)
 constexpr uint32_t ImageButton_addTouchEventListener = 0x5315B1;
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5, EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
-constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = 0x8F3649;
-constexpr uint32_t Widget_setBright = 0x825A09;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17, Size_ctor = 0x8DF027;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create, EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
+constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
+constexpr uint32_t Widget_setBright = rwlib::cocos2d::ui::Widget::setBright;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base, Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;
 constexpr uint32_t ThrowOutOfRange = 0x47CCE1;
 
 // lambdas

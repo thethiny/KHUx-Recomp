@@ -9,10 +9,10 @@ using Self = DrawScrollView;
 
 namespace {
 namespace g {
-constexpr uint32_t Layout_ctor = 0x828671;
-constexpr uint32_t Ref_retain = 0x8FD0B5;
-constexpr uint32_t Ref_release = 0x8FD0BD;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Layout_ctor = rwlib::cocos2d::ui::Layout::ctor_base;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain;
+constexpr uint32_t Ref_release = rwlib::cocos2d::Ref::release;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t VectorAt_throw = 0x47CCE1;               // vector::at's out_of_range (does not return)
 constexpr uint32_t String_assignString = 0x498A1D;          // std::string::operator=(const string&)
 constexpr uint32_t String_assign = 0x48D811;                // std::string::assign(const char*, size_t)
@@ -35,14 +35,14 @@ constexpr uint32_t WidgetVector_pushBack = 0x4F6B5D;
 constexpr uint32_t DownloadManager_getInstance = 0x4DECB1;
 constexpr uint32_t DownloadManager_start = 0x4DED65;        // (dm, url, const function&, long ttl, key)
 constexpr uint32_t DownloadManager_cancel = 0x4DF62D;
-constexpr uint32_t ImageView_loadTextureTexture = 0x8398FD;
-constexpr uint32_t Rect_ctor = 0x8DF18B;                    // Rect(x, y, w, h)
-constexpr uint32_t Rect_copy = 0x8DF1A9;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D;
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5;
-constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
-constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = 0x8F3649;
+constexpr uint32_t ImageView_loadTextureTexture = rwlib::cocos2d::ui::ImageView::loadTexture__PNS_9Texture2DE;
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff;                    // Rect(x, y, w, h)
+constexpr uint32_t Rect_copy = rwlib::cocos2d::Rect::ctor_base__RKS0_;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff;
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create;
+constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
+constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
 constexpr uint32_t TouchBoolFunction_swap = 0x483E4D;
 constexpr uint32_t TouchVoidFunction_swap = 0x4F3699;
 constexpr uint32_t FunctionVI_call = 0x4F321D;

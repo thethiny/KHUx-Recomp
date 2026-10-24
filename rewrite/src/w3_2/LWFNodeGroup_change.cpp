@@ -13,7 +13,7 @@ constexpr uint32_t VT_ENTER_FRAME = 0xF5D51C;   // changeInternal $_?: the root 
 constexpr uint32_t S_ROOT = 0xDFE0ED, S_ENTER_FRAME = 0xDFE0F3;   // "_root", "enterFrame"
 
 constexpr uint32_t AudioLWFNode_create = 0x5EB6B5;   // (const char* path, void*)
-constexpr uint32_t LWF_AddMovieEventHandler = 0x808645;   // (lwf, const string& instance, const map<string, function>&)
+constexpr uint32_t LWF_AddMovieEventHandler = rwlib::LWF::LWF::AddMovieEventHandler;   // (lwf, const string& instance, const map<string, function>&)
 constexpr uint32_t HandlerMap_insertUnique = 0x530869;    // map<string, function<void(Movie*)>>::__insert_unique(hint, pair)
 constexpr uint32_t HandlerMap_destroy = 0x530811;
 constexpr uint32_t AEABI_MEMCPY = 0x40E164;               // import
@@ -56,7 +56,7 @@ void changeInternal(uint32_t self, int32_t index) {
 void onEnterFrame(uint32_t, uint32_t moviePtr) {
     const uint32_t movie = ld32(moviePtr);
     if (ld32(movie + 0x9C) != ld32(movie + 0x98)) return;
-    call(0x815C33, {movie});   // LWF::Movie::Stop
+    call(rwlib::LWF::Movie::Stop, {movie});   // LWF::Movie::Stop
     st8(movie + 0xAE, 0);
 }
 }  // namespace lwf_node_group

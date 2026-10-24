@@ -8,11 +8,11 @@ using namespace scene;
 namespace {
 constexpr uint32_t Scale9SpriteR_ctor = 0x5EC079, Scale9SpriteR_initWithBatchNode = 0x5EC111;
 constexpr uint32_t Scale9SpriteR_initWithWidgetVirtualRenderer = 0x5EC2C7, Scale9SpriteR_updatePositions = 0x5EC401;
-constexpr uint32_t SpriteBatchNode_create = 0x8A8C69, SpriteBatchNode_createWithTexture = 0x8A8AB5;
-constexpr uint32_t TextureAtlas_getTexture = 0x916359, Texture2D_getContentSize = 0x914ACB;
-constexpr uint32_t Scale9Sprite_initWithBatchNode = 0x853081, Scale9Sprite_setContentSize = 0x853E05;
-constexpr uint32_t Rect_ctor = 0x8DF18B, Vec2_ctor_ = 0x8E4B9D, Vec2_dtor_ = 0x8E4C17, Vec2_set = 0x8E530B;
-constexpr uint32_t Size_copy = 0x8DF02D, Size_assign = 0x8DF041, Node_visit = 0x894711, Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t SpriteBatchNode_create = rwlib::cocos2d::SpriteBatchNode::create, SpriteBatchNode_createWithTexture = rwlib::cocos2d::SpriteBatchNode::createWithTexture;
+constexpr uint32_t TextureAtlas_getTexture = rwlib::cocos2d::TextureAtlas::getTexture, Texture2D_getContentSize = rwlib::cocos2d::Texture2D::getContentSize;
+constexpr uint32_t Scale9Sprite_initWithBatchNode = rwlib::cocos2d::extension::Scale9Sprite::initWithBatchNode, Scale9Sprite_setContentSize = rwlib::cocos2d::extension::Scale9Sprite::setContentSize;
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff, Vec2_ctor_ = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor_ = rwlib::cocos2d::Vec2::dtor_base, Vec2_set = rwlib::cocos2d::Vec2::set__ff;
+constexpr uint32_t Size_copy = rwlib::cocos2d::Size::ctor_base__RKS0_, Size_assign = rwlib::cocos2d::Size::op_assign__RKS0_, Node_visit = rwlib::cocos2d::Node::visit__PNS_8RendererERKNS_4Mat4Ej, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t GOT_Vec2_ZERO = 0xFD605C;
 constexpr uint32_t V_release = 4, V_setScale = 0x48, V_setPosition = 0x5C, V_setAnchorPoint = 0x9C;
 constexpr uint32_t V_getContentSize = 0xAC, V_getTexture640 = 0x280, V_getTexture624 = 0x270;

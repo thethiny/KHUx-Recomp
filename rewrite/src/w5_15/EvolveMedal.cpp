@@ -9,12 +9,12 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Layer_ctor = 0x88A7D1, Layer_dtor = 0x88A88D;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base, Layer_dtor = rwlib::cocos2d::Layer::dtor_base;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t aeabi_memset = 0x40E7A0;
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
-constexpr uint32_t Color3B_ctor = 0x9062E7;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
+constexpr uint32_t Color3B_ctor = rwlib::cocos2d::Color3B::ctor_base;
 constexpr uint32_t DeckMedalView_create = 0x52BA71, DeckMedalView_setData = 0x52BEE5;
 constexpr uint32_t DeckMedalViewManager_getInstance = 0x527131;
 constexpr uint32_t DeckMedalViewManager_addDeckMedalView = 0x527559, DeckMedalViewManager_removeDeckMedalView = 0x5275CD;

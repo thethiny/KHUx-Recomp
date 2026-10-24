@@ -11,8 +11,8 @@ using namespace scene;
 namespace {
 constexpr uint32_t SetShadow = 0x45BD15;                  // SceneUtil::setShadow(Text*)
 constexpr uint32_t SetButtonEnabled = 0x468625;           // SceneUtil::setButtonEnabled(Button*, Text*, bool, bool)
-constexpr uint32_t CheckBox_setSelectedState = 0x8382E7;
-constexpr uint32_t CheckBox_addEventListener = 0x8389AB;  // (box, std::function<void(Ref*, EventType)>)
+constexpr uint32_t CheckBox_setSelectedState = rwlib::cocos2d::ui::CheckBox::setSelectedState;
+constexpr uint32_t CheckBox_addEventListener = rwlib::cocos2d::ui::CheckBox::addEventListener;  // (box, std::function<void(Ref*, EventType)>)
 constexpr uint32_t ImageButton_create = 0x531239;         // (std::string by value, bool)
 constexpr uint32_t ImageButton_setTargetView = 0x5318C1;  // (button, Node*, float scale)
 constexpr uint32_t ImageButton_addTouchEventListener = 0x5315B1;

@@ -71,7 +71,7 @@ constexpr uint32_t LIT_RESOURCE_ID = 0xDFB267;    // "resourceId"
 // functions
 constexpr uint32_t STRING_APPEND = 0x47AC89;         // std::string::append(const char*, size_t) -> string&
 constexpr uint32_t TO_STRING_UINT = 0xC95595;        // std::to_string(unsigned) (sret)
-constexpr uint32_t FILEUTILS_GET_INSTANCE = 0xA3F44D;
+constexpr uint32_t FILEUTILS_GET_INSTANCE = rwlib::cocos2d::FileUtils::getInstance;
 constexpr uint32_t FILEUTILS_GET_WRITABLE_PATH = 0x44;   // vtable byte offset: getWritablePath() (sret)
 constexpr uint32_t FOPEN = 0x414158, FSEEK = 0x4146D4, FTELL = 0x4146E0, FCLOSE = 0x414170;   // PLT
 constexpr uint32_t REMOVE = 0x413C84;                // remove (PLT)
@@ -102,9 +102,9 @@ constexpr uint32_t STREAM_TELL = 0x0C, STREAM_SEEK = 0x10;   // IInputStream vta
 constexpr uint32_t VFS_MOUNT = 0x8DD6AD;             // bg::vfs::mount(unsigned slot, const char* data, const char* index)
 constexpr uint32_t VFS_UNMOUNT = 0x8DD791;           // bg::vfs::unmount(unsigned slot)
 constexpr uint32_t AUDIO_INIT_RESOURCE_ID_MAP = 0x5C227D;
-constexpr uint32_t DIRECTOR_GET_INSTANCE = 0x8EE519;
-constexpr uint32_t DIRECTOR_GET_TEXTURE_CACHE = 0x8EFE69;
-constexpr uint32_t TEXTURE_CACHE_REMOVE_ALL = 0x9181FD;
+constexpr uint32_t DIRECTOR_GET_INSTANCE = rwlib::cocos2d::Director::getInstance;
+constexpr uint32_t DIRECTOR_GET_TEXTURE_CACHE = rwlib::cocos2d::Director::getTextureCache;
+constexpr uint32_t TEXTURE_CACHE_REMOVE_ALL = rwlib::cocos2d::TextureCache::removeAllTextures;
 constexpr uint32_t EV_RESOURCE_CREATE = 0x792D95;    // master::EvResource::create(int) (sret)
 constexpr uint32_t SAFEBUFFER_READ = 0x45A269;
 constexpr uint32_t DATE_INTERVAL_SINCE_NOW = 0x4922D5;

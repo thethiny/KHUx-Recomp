@@ -14,8 +14,8 @@ constexpr uint32_t SceneUtil_createUserTitleImagePath = 0x46ED99;   // (string o
 constexpr uint32_t SceneUtil_setShadow = 0x45BD15;
 constexpr uint32_t SceneUtil_createOpenPopupAnimation = 0x45BC05;
 constexpr uint32_t Title_create = 0x78FA8D;                         // master::Title::create(shared_ptr out, id)
-constexpr uint32_t Widget_addTouchEventListener = 0x826CCF;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
+constexpr uint32_t Widget_addTouchEventListener = rwlib::cocos2d::ui::Widget::addTouchEventListener;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr uint32_t audio_Manager_getInstance = 0x5BECFD, audio_Manager_load = 0x5BEEF5;
 }  // namespace g
 

@@ -74,9 +74,9 @@ constexpr uint32_t Stoi = 0xC93E8B;                         // std::stoi(const s
 constexpr uint32_t StringCompare = 0x47CBD5;                // std::string::compare(const char*)
 constexpr uint32_t StringReplace = 0x4B6DCD;                // std::string::replace(pos, n, const char*, n2)
 constexpr uint32_t ThrowOutOfRange = 0x47CCE1;
-constexpr uint32_t ImageView_getCapInsets = 0x839BAD;
-constexpr uint32_t Widget_getCustomSize = 0x8262D1;
-constexpr uint32_t Size_copy = 0x8DF02D, Size_assign = 0x8DF041;
+constexpr uint32_t ImageView_getCapInsets = rwlib::cocos2d::ui::ImageView::getCapInsets;
+constexpr uint32_t Widget_getCustomSize = rwlib::cocos2d::ui::Widget::getCustomSize;
+constexpr uint32_t Size_copy = rwlib::cocos2d::Size::ctor_base__RKS0_, Size_assign = rwlib::cocos2d::Size::op_assign__RKS0_;
 constexpr uint32_t SceneManager_getChatSpMessageCheck = 0x615B19;
 constexpr uint32_t SceneManager_getChatStampMessageCheck = 0x615EA5;
 constexpr uint32_t SceneManager_getChatStampId = 0x616249;

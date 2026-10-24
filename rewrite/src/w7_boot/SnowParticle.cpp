@@ -10,14 +10,14 @@ namespace {
 constexpr uint32_t SnowParticle_ctor = 0x5EC9E1, SnowParticle_setAnimationSnowStorm = 0x5ED3AD;
 constexpr uint32_t SnowParticle_updateSubtractionGravity = 0x5ED7AD;
 constexpr uint32_t newSystem_ = 0x5ECDF1, setupSystem_ = 0x5ECF3D;
-constexpr uint32_t Node_create = 0x89372D, Sprite_create = 0x8A64DD, Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Node_create = rwlib::cocos2d::Node::create, Sprite_create = rwlib::cocos2d::Sprite::create__v, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t AppGetGrameFrameWidth = 0x799B31, AppGetGrameFrameHeight = 0x799D21;
-constexpr uint32_t Rect_ctor = 0x8DF18B, Color3B_ctor = 0x9062E7, StringBuffer_ctor = 0x49140D;
-constexpr uint32_t Vec2_ctor_ = 0x8E4B9D, Vec2_ctor_default = 0x8E4B95, Vec2_copy = 0x8E4C03, Vec2_dtor_ = 0x8E4C17;
-constexpr uint32_t Vec2_scale = 0x8E50F5, Vec2_subtract = 0x8E530F, Size_ctor = 0x8DF01F, Size_assignVec2 = 0x8DF04F;
-constexpr uint32_t ParticleSystemQuad_ctor = 0x8A09F9, ParticleSystem_initWithFile = 0x89D981;
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff, Color3B_ctor = rwlib::cocos2d::Color3B::ctor_base, StringBuffer_ctor = 0x49140D;
+constexpr uint32_t Vec2_ctor_ = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_ctor_default = rwlib::cocos2d::Vec2::ctor_base__v, Vec2_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_, Vec2_dtor_ = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Vec2_scale = rwlib::cocos2d::Vec2::scale__RKS0_, Vec2_subtract = rwlib::cocos2d::Vec2::subtract, Size_ctor = rwlib::cocos2d::Size::ctor_base__v, Size_assignVec2 = rwlib::cocos2d::Size::op_assign__RKNS_4Vec2E;
+constexpr uint32_t ParticleSystemQuad_ctor = rwlib::cocos2d::ParticleSystemQuad::ctor_base, ParticleSystem_initWithFile = rwlib::cocos2d::ParticleSystem::initWithFile;
 constexpr uint32_t Random_getInstance = 0x492055, Random_generateUniformInt = 0x492225;
-constexpr uint32_t DelayTime_create = 0x86852D, CallFunc_create = 0x866B39, Sequence_create = 0x867999;
+constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create, CallFunc_create = rwlib::cocos2d::CallFunc::create, Sequence_create = rwlib::cocos2d::Sequence::create;
 constexpr uint32_t GOT_Vec2_ZERO = 0xFD605C;
 constexpr uint32_t S_root = 0xE02D8B, S_PlistFmt = 0xE02D78;   // "img/stage/%s.plist"
 // per style: the plist name and the 12 parameter words (style 0 one entry at 0x1003E18; style 1 four entries of

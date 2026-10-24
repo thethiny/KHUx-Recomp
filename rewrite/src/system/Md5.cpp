@@ -4,10 +4,10 @@
 namespace md5 {
 
 namespace {
-constexpr uint32_t MD5 = 0xB80CF0;           // MD5(data, len, digest[16])
-constexpr uint32_t MD5_INIT = 0xB7FE10;      // MD5_Init(ctx)
-constexpr uint32_t MD5_UPDATE = 0xB80A8C;    // MD5_Update(ctx, data, len)
-constexpr uint32_t MD5_FINAL = 0xB80BA4;     // MD5_Final(digest, ctx)
+constexpr uint32_t MD5 = rwlib::MD5;           // MD5(data, len, digest[16])
+constexpr uint32_t MD5_INIT = rwlib::MD5_Init;      // MD5_Init(ctx)
+constexpr uint32_t MD5_UPDATE = rwlib::MD5_Update;    // MD5_Update(ctx, data, len)
+constexpr uint32_t MD5_FINAL = rwlib::MD5_Final;     // MD5_Final(digest, ctx)
 constexpr uint32_t STRLEN = 0x40E08C;        // strlen (import)
 constexpr uint32_t FOPEN = 0x414158;         // fopen (import)
 constexpr uint32_t FCLOSE = 0x414170;        // fclose (import)

@@ -83,7 +83,7 @@ constexpr uint32_t EnemyActor_isDied = 0x6008ED, EnemyActor_changeMotion = 0x74B
 constexpr uint32_t Badstatus_create = 0x779525, SafeBuffer_read = 0x45A269;
 constexpr uint32_t Random_getInstance = 0x492055, Random_generateUniformInt = 0x492225;
 constexpr uint32_t FlashNode_reflection_status = 0x5C3171, DisplayDamageNumber_disp_dmgNum = 0x5EB45D;
-constexpr uint32_t Vec2_ctor_copy = 0x8E4C03, Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Vec2_ctor_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t E_STATUS = 0x2C8;          // EnemyActor: IStatusProtocol (getCondition at vtable slot 0)
 constexpr uint32_t E_PROPERTY = 0x2A8;        // EnemyActor: its Property (a SafeBuffer; data pointer at +0x2B4)
 constexpr uint32_t E_FLASH = 0x330;           // EnemyActor: FlashNode*

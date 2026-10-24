@@ -2,13 +2,13 @@
 #include "core/Guest.hpp"
 
 namespace {
-constexpr uint32_t VEC2_COPY = 0x8E4C03;        // cocos2d::Vec2::Vec2(const Vec2&)
-constexpr uint32_t VEC2_DTOR = 0x8E4C17;        // cocos2d::Vec2::~Vec2()
-constexpr uint32_t VEC2_SET = 0x8E530B;         // cocos2d::Vec2::set(float, float)
-constexpr uint32_t RECT_GET_MIN_X = 0x8DF275;   // cocos2d::Rect::getMinX() const
-constexpr uint32_t RECT_GET_MAX_X = 0x8DF249;
-constexpr uint32_t RECT_GET_MIN_Y = 0x8DF2A5;
-constexpr uint32_t RECT_GET_MAX_Y = 0x8DF279;
+constexpr uint32_t VEC2_COPY = rwlib::cocos2d::Vec2::ctor_base__RKS0_;        // cocos2d::Vec2::Vec2(const Vec2&)
+constexpr uint32_t VEC2_DTOR = rwlib::cocos2d::Vec2::dtor_base;        // cocos2d::Vec2::~Vec2()
+constexpr uint32_t VEC2_SET = rwlib::cocos2d::Vec2::set__ff;         // cocos2d::Vec2::set(float, float)
+constexpr uint32_t RECT_GET_MIN_X = rwlib::cocos2d::Rect::getMinX;   // cocos2d::Rect::getMinX() const
+constexpr uint32_t RECT_GET_MAX_X = rwlib::cocos2d::Rect::getMaxX;
+constexpr uint32_t RECT_GET_MIN_Y = rwlib::cocos2d::Rect::getMinY;
+constexpr uint32_t RECT_GET_MAX_Y = rwlib::cocos2d::Rect::getMaxY;
 constexpr uint32_t HIT_SHAPE_IS_INTERSECTS = 0x758009;   // HitShapeInfo::isIntersects(Vec2&, Rect&) const
 constexpr uint32_t VEC2_ZERO_GOT = 0xFD605C;    // GOT slot: &cocos2d::Vec2::ZERO
 constexpr uint32_t HIT_SHAPE_INFO_SIZE = 20;

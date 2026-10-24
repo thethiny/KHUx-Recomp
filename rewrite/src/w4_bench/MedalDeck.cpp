@@ -1,9 +1,9 @@
 #include "MedalDeck.hpp"
 
 namespace {
-constexpr uint32_t Node_ctor = 0x892531;               // cocos2d::Node::Node()
-constexpr uint32_t Node_dtor = 0x8927ED;               // cocos2d::Node::~Node()
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;         // cocos2d::Ref::autorelease()
+constexpr uint32_t Node_ctor = rwlib::cocos2d::Node::ctor_base;               // cocos2d::Node::Node()
+constexpr uint32_t Node_dtor = rwlib::cocos2d::Node::dtor_base;               // cocos2d::Node::~Node()
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;         // cocos2d::Ref::autorelease()
 constexpr uint32_t SafeBuffer_ctor = 0x459F21;         // SafeBuffer::SafeBuffer(size, registerForUpdate)
 constexpr uint32_t SafeBuffer_dtor = 0x45A13D;         // SafeBuffer::~SafeBuffer()
 constexpr uint32_t SafeBuffer_read = 0x45A269;         // SafeBuffer::read(dst, src, n, index) const

@@ -75,32 +75,32 @@ RW_SIZE(StageDirection, 0x2C0);
 
 // Guest addresses shared by the StageDirection files.
 namespace sdir {
-constexpr uint32_t Node_ctor = 0x892531, Node_dtor = 0x8927ED;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Node_runAction = 0x894AED, Node_unscheduleUpdate = 0x894CB3;
-constexpr uint32_t Director_getTextureCache = 0x8EFE69;
-constexpr uint32_t TextureCache_addImage = 0x917DA9;      // (cache, const std::string&)
-constexpr uint32_t Texture2D_getContentSize = 0x914ACB;   // (Size* out, texture)
-constexpr uint32_t Sprite_create = 0x8A64DD;              // Sprite::create()
-constexpr uint32_t LayerColor_create = 0x88B539;          // (const Color4B&)
-constexpr uint32_t ParticleSystemQuad_create = 0x8A0B3D;  // (const std::string& plist)
-constexpr uint32_t Label_createWithTTF = 0x883AE5;        // (const TTFConfig&, const std::string&, hAlign, maxWidth)
-constexpr uint32_t Label_setAdditionalKerning = 0x88697D; // (label, float)
-constexpr uint32_t Size_ctor = 0x8DF027;                  // Size(out, w, h)
-constexpr uint32_t Size_assign = 0x8DF041;                // Size::operator=(const Size&)
-constexpr uint32_t Rect_ctor = 0x8DF18B;                  // Rect(out, x, y, w, h)
-constexpr uint32_t Vec2_ctor_xy = 0x8E4B9D, Vec2_ctor_copy = 0x8E4C03, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Color4B_ctor = 0x9064D3;               // (out, r, g, b, a)
-constexpr uint32_t DelayTime_create = 0x86852D, FadeTo_create = 0x86B3E1, MoveTo_create = 0x86941D;
-constexpr uint32_t ScaleTo_create = 0x86A8CD, Spawn_create = 0x8682F5, Sequence_create = 0x867999;
-constexpr uint32_t CallFunc_create = 0x866B39;
-constexpr uint32_t EaseSineIn_create = 0x860C05, EaseSineOut_create = 0x860D09;
-constexpr uint32_t EaseCubicActionIn_create = 0x862669;
-constexpr uint32_t Armature_create = 0x79F3C7;            // (const std::string&)
-constexpr uint32_t AnimationData_getMovement = 0x7A767D;  // (data, const std::string&)
-constexpr uint32_t Bone_addDisplay = 0x7A2657;            // (bone, Node*, index)
-constexpr uint32_t ArmatureDataManager_getInstance = 0x7AC9B5;
-constexpr uint32_t ArmatureDataManager_addArmatureFileInfo = 0x7AD7BD;
+constexpr uint32_t Node_ctor = rwlib::cocos2d::Node::ctor_base, Node_dtor = rwlib::cocos2d::Node::dtor_base;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction, Node_unscheduleUpdate = rwlib::cocos2d::Node::unscheduleUpdate;
+constexpr uint32_t Director_getTextureCache = rwlib::cocos2d::Director::getTextureCache;
+constexpr uint32_t TextureCache_addImage = rwlib::cocos2d::TextureCache::addImage;      // (cache, const std::string&)
+constexpr uint32_t Texture2D_getContentSize = rwlib::cocos2d::Texture2D::getContentSize;   // (Size* out, texture)
+constexpr uint32_t Sprite_create = rwlib::cocos2d::Sprite::create__v;              // Sprite::create()
+constexpr uint32_t LayerColor_create = rwlib::cocos2d::LayerColor::create;          // (const Color4B&)
+constexpr uint32_t ParticleSystemQuad_create = rwlib::cocos2d::ParticleSystemQuad::create;  // (const std::string& plist)
+constexpr uint32_t Label_createWithTTF = rwlib::cocos2d::Label::createWithTTF__RKNS_10_ttfConfigERKNSt3__112basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEENS_14TextHAlignmentEi;        // (const TTFConfig&, const std::string&, hAlign, maxWidth)
+constexpr uint32_t Label_setAdditionalKerning = rwlib::cocos2d::Label::setAdditionalKerning; // (label, float)
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;                  // Size(out, w, h)
+constexpr uint32_t Size_assign = rwlib::cocos2d::Size::op_assign__RKS0_;                // Size::operator=(const Size&)
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff;                  // Rect(out, x, y, w, h)
+constexpr uint32_t Vec2_ctor_xy = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_ctor_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Color4B_ctor = rwlib::cocos2d::Color4B::ctor_base;               // (out, r, g, b, a)
+constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create, FadeTo_create = rwlib::cocos2d::FadeTo::create, MoveTo_create = rwlib::cocos2d::MoveTo::create;
+constexpr uint32_t ScaleTo_create = rwlib::cocos2d::ScaleTo::create__ff, Spawn_create = rwlib::cocos2d::Spawn::create, Sequence_create = rwlib::cocos2d::Sequence::create;
+constexpr uint32_t CallFunc_create = rwlib::cocos2d::CallFunc::create;
+constexpr uint32_t EaseSineIn_create = rwlib::cocos2d::EaseSineIn::create, EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
+constexpr uint32_t EaseCubicActionIn_create = rwlib::cocos2d::EaseCubicActionIn::create;
+constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create;            // (const std::string&)
+constexpr uint32_t AnimationData_getMovement = rwlib::cocostudio::AnimationData::getMovement;  // (data, const std::string&)
+constexpr uint32_t Bone_addDisplay = rwlib::cocostudio::Bone::addDisplay;            // (bone, Node*, index)
+constexpr uint32_t ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance;
+constexpr uint32_t ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;
 constexpr uint32_t function_vv_assign = 0x4EB9CD;         // std::function<void()>::operator=(const&)
 constexpr uint32_t audio_Manager_getInstance = 0x5BECFD;
 constexpr uint32_t audio_Manager_getLayer = 0x5BF33D;     // (sret shared_ptr<Layer>, mgr, int)

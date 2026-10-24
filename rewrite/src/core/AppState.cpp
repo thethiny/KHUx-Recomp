@@ -20,9 +20,9 @@ constexpr uint32_t STRING_INIT = 0x47CD93;         // std::string::__init(const 
 constexpr uint32_t MUTEX_LOCK = 0xC8DE15;          // std::mutex::lock (sub_C8DE14)
 constexpr uint32_t MUTEX_UNLOCK = 0xC8DE59;        // std::mutex::unlock (sub_C8DE58)
 constexpr uint32_t MUTEX_DTOR = 0xC8DDFD;          // std::mutex::~mutex (sub_C8DDFC)
-constexpr uint32_t COND_WAIT = 0xC60735;           // std::condition_variable::wait(unique_lock&) (sub_C60734)
-constexpr uint32_t COND_NOTIFY = 0xC60725;         // std::condition_variable::notify_all (sub_C60724)
-constexpr uint32_t COND_DTOR = 0xC60701;           // std::condition_variable::~condition_variable (sub_C60700)
+constexpr uint32_t COND_WAIT = rwlib::sub_C60734;           // std::condition_variable::wait(unique_lock&) (sub_C60734)
+constexpr uint32_t COND_NOTIFY = rwlib::sub_C60724;         // std::condition_variable::notify_all (sub_C60724)
+constexpr uint32_t COND_DTOR = rwlib::sub_C60700;           // std::condition_variable::~condition_variable (sub_C60700)
 constexpr uint32_t VECTOR_INT_ASSIGN = 0x47D5BD;   // std::vector<int>::assign(int*, int*)
 constexpr uint32_t VECTOR_U64_ASSIGN = 0x4D7461;   // std::vector<unsigned long long>::assign(u64*, u64*)
 constexpr uint32_t SORT_INT = 0x4EC65D;            // std::__sort<__less<int>, int*>(first, last, less&)
@@ -108,18 +108,18 @@ constexpr uint32_t AUDIO_GET_INSTANCE = 0x5BECFD;        // audio::Manager::getI
 constexpr uint32_t AUDIO_GET_LAYER = 0x5BF33D;           // audio::Manager::getLayer(out shared_ptr, mgr, int)
 constexpr uint32_t AUDIO_SET_VOLUME = 0x5BF825;          // audio::Layer::setVolume(float, int)
 // cocos2d
-constexpr uint32_t USERDEFAULT_GET_INSTANCE = 0x901A25;
-constexpr uint32_t USERDEFAULT_GET_DATA = 0x901805;      // UserDefault::getDataForKey(out Data, ud, key)
-constexpr uint32_t USERDEFAULT_SET_DATA = 0x901989;      // UserDefault::setDataForKey(ud, key, const Data&)
-constexpr uint32_t USERDEFAULT_FLUSH = 0x90129D;
-constexpr uint32_t DATA_CTOR = 0x8ED815, DATA_DTOR = 0x8ED89B;
-constexpr uint32_t DATA_IS_NULL = 0x8ED8EF, DATA_GET_BYTES = 0x8ED90B, DATA_GET_SIZE = 0x8ED90F;
-constexpr uint32_t DATA_FAST_SET = 0x8ED913;             // cocos2d::Data::fastSet(bytes, size)
-constexpr uint32_t DIRECTOR_GET_INSTANCE = 0x8EE519;
-constexpr uint32_t DIRECTOR_GET_SCHEDULER = 0x8F0CF1;    // Director::getScheduler(int)
+constexpr uint32_t USERDEFAULT_GET_INSTANCE = rwlib::cocos2d::UserDefault::getInstance;
+constexpr uint32_t USERDEFAULT_GET_DATA = rwlib::cocos2d::UserDefault::getDataForKey;      // UserDefault::getDataForKey(out Data, ud, key)
+constexpr uint32_t USERDEFAULT_SET_DATA = rwlib::cocos2d::UserDefault::setDataForKey;      // UserDefault::setDataForKey(ud, key, const Data&)
+constexpr uint32_t USERDEFAULT_FLUSH = rwlib::cocos2d::UserDefault::flush;
+constexpr uint32_t DATA_CTOR = rwlib::cocos2d::Data::ctor_base__v, DATA_DTOR = rwlib::cocos2d::Data::dtor_base;
+constexpr uint32_t DATA_IS_NULL = rwlib::cocos2d::Data::isNull, DATA_GET_BYTES = rwlib::cocos2d::Data::getBytes, DATA_GET_SIZE = rwlib::cocos2d::Data::getSize;
+constexpr uint32_t DATA_FAST_SET = rwlib::cocos2d::Data::fastSet;             // cocos2d::Data::fastSet(bytes, size)
+constexpr uint32_t DIRECTOR_GET_INSTANCE = rwlib::cocos2d::Director::getInstance;
+constexpr uint32_t DIRECTOR_GET_SCHEDULER = rwlib::cocos2d::Director::getScheduler;    // Director::getScheduler(int)
 constexpr uint32_t SCHEDULER_SCHEDULE_UPDATE = 0x4E7495; // Scheduler::scheduleUpdate<AppState>(target, priority, paused)
-constexpr uint32_t SCHEDULER_UNSCHEDULE_UPDATE = 0x8FE9E5;
-constexpr uint32_t FILEUTILS_GET_INSTANCE = 0xA3F44D;
+constexpr uint32_t SCHEDULER_UNSCHEDULE_UPDATE = rwlib::cocos2d::Scheduler::unscheduleUpdate;
+constexpr uint32_t FILEUTILS_GET_INSTANCE = rwlib::cocos2d::FileUtils::getInstance;
 constexpr uint32_t FILEUTILS_VSLOT_PATH = 19;            // FileUtils virtual at +0x4C: a path (sret std::string)
 
 // ------------------------------------------------------------------------------------------ guest data

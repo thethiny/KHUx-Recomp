@@ -7,10 +7,10 @@ namespace {
 constexpr Addr SceneUtil_setShadow = 0x45BD15;
 constexpr Addr StringBuffer_ctor = 0x49140D;
 constexpr Addr TextData_get = 0x4928AD;
-constexpr Addr ImageView_loadTexture = 0x839731;
-constexpr Addr Text_setString = 0x83A2DD;
-constexpr Addr Vec2_ctorXY = 0x8E4B9D;
-constexpr Addr Vec2_dtor = 0x8E4C17;
+constexpr Addr ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;
+constexpr Addr Text_setString = rwlib::cocos2d::ui::Text::setString;
+constexpr Addr Vec2_ctorXY = rwlib::cocos2d::Vec2::ctor_base__ff;
+constexpr Addr Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 }  // namespace
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -23,13 +23,13 @@ namespace {
 constexpr Addr Burst_create = 0x77A491;
 constexpr Addr SceneMixedMedal_getGuiltFactorValueRange = 0x69A309;     // (int guiltId, unsigned (&range)[2])
 constexpr Addr SceneUtil_setParameterUpEffect = 0x465995;
-constexpr Addr Sprite_create = 0x8A637D;
-constexpr Addr FadeIn_create = 0x86B115;
-constexpr Addr FadeOut_create = 0x86B25D;
-constexpr Addr Sequence_create = 0x867999;
-constexpr Addr RepeatForever_create = 0x86815D;
-constexpr Addr Node_stopAllActions = 0x893815;
-constexpr Addr Color3B_ctor = 0x9062E7;
+constexpr Addr Sprite_create = rwlib::cocos2d::Sprite::create__RKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE;
+constexpr Addr FadeIn_create = rwlib::cocos2d::FadeIn::create;
+constexpr Addr FadeOut_create = rwlib::cocos2d::FadeOut::create;
+constexpr Addr Sequence_create = rwlib::cocos2d::Sequence::create;
+constexpr Addr RepeatForever_create = rwlib::cocos2d::RepeatForever::create;
+constexpr Addr Node_stopAllActions = rwlib::cocos2d::Node::stopAllActions;
+constexpr Addr Color3B_ctor = rwlib::cocos2d::Color3B::ctor_base;
 constexpr Addr aeabi_udivsi3 = 0xCD5DF9;
 constexpr Addr floatsisf = 0xCD6D68;
 constexpr Addr subsf3 = 0xCD6BCC;

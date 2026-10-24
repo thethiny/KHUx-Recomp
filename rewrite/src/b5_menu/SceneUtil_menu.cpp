@@ -5,17 +5,17 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t FadeTo_create = 0x86B3E1;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t GUIReader_getInstance = 0x7BF1E5, GUIReader_widgetFromJsonFile = 0x7BF9FD;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t GUIReader_getInstance = rwlib::cocostudio::GUIReader::getInstance, GUIReader_widgetFromJsonFile = rwlib::cocostudio::GUIReader::widgetFromJsonFile;
 constexpr uint32_t SceneUtil_createShadowSprite = 0x45AD69, SceneUtil_createOpenPopupAnimation = 0x45BC05;
 constexpr uint32_t SceneUtil_setShadow = 0x45BD15;
 constexpr uint32_t SM_getInstance = 0x60C26D, SM_getPopupLayer = 0x613E69, SM_openPopup = 0x61524D;
 constexpr uint32_t AudioPlaySystemSEPopUp = 0x5C0E09;
 constexpr uint32_t TextData_get = 0x4928AD;
-constexpr uint32_t Text_setString = 0x83A2DD;
-constexpr uint32_t Widget_addTouchEventListener = 0x826CCF;
+constexpr uint32_t Text_setString = rwlib::cocos2d::ui::Text::setString;
+constexpr uint32_t Widget_addTouchEventListener = rwlib::cocos2d::ui::Widget::addTouchEventListener;
 constexpr uint32_t VectorInt_pushBackSlow = 0x47D709;      // vector<int>::__push_back_slow_path(int&&)
 constexpr uint32_t VectorInt_dtor = 0x478961;
 constexpr uint32_t AlbumChallengeScrollView_create = 0x5BAD8D;
@@ -136,14 +136,14 @@ void shareScreenShot(uint32_t node, uint32_t done) {
     constexpr uint32_t FacebookManager_getInstance = 0x4E5585, FacebookManager_hasPermissions = 0x4E56C9;
     constexpr uint32_t FacebookManager_refreshCurrentAccessToken = 0x4E573D;
     constexpr uint32_t SceneUtil_isLoggedInFacebook = 0x4697E9;
-    constexpr uint32_t FileUtils_getInstance = 0xA3F44D;
+    constexpr uint32_t FileUtils_getInstance = rwlib::cocos2d::FileUtils::getInstance;
     constexpr uint32_t String_append = 0x47AC89;            // (string&, const char*, size_t) -> string&
-    constexpr uint32_t Director_getInstance = 0x8EE519, Director_getTextureCache = 0x8EFE69;
-    constexpr uint32_t TextureCache_removeTextureForKey = 0x918259;
+    constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance, Director_getTextureCache = rwlib::cocos2d::Director::getTextureCache;
+    constexpr uint32_t TextureCache_removeTextureForKey = rwlib::cocos2d::TextureCache::removeTextureForKey;
     constexpr uint32_t SM_setEnabledTouchEffect = 0x60CF65;
     constexpr uint32_t SceneUtil_generateScreenShotTexture = 0x47A449;
-    constexpr uint32_t Ref_retain = 0x8FD0B5, Ref_release = 0x8FD0BD;
-    constexpr uint32_t RenderTexture_saveToFile = 0x8A4C49;  // (rt, const string&, Format, bool)
+    constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain, Ref_release = rwlib::cocos2d::Ref::release;
+    constexpr uint32_t RenderTexture_saveToFile = rwlib::cocos2d::RenderTexture::saveToFile;  // (rt, const string&, Format, bool)
     constexpr uint32_t FunctionShare_call = 0x47AA2D;        // function<void(RenderTexture*, const string&)>()
     constexpr uint32_t FunctionShare_copy = 0x47A9F9, FunctionShare_copyHeap = 0x47B5C5;
     constexpr uint32_t SceneUtil_openOkDialog4Line = 0x45C775;
@@ -257,7 +257,7 @@ uint32_t openFBSharePhotoPopup(uint32_t editing, uint32_t editNode, uint32_t edi
     constexpr uint32_t SM_getPopupLayer2 = 0x613E71;
     constexpr uint32_t MasterMisc_create = 0x786D5D;
     constexpr uint32_t SafeBuffer_read = 0x45A269;
-    constexpr uint32_t TextField_setMaxLengthEnabled = 0x83F79D, TextField_setMaxLength = 0x83F7AD;
+    constexpr uint32_t TextField_setMaxLengthEnabled = rwlib::cocos2d::ui::TextField::setMaxLengthEnabled, TextField_setMaxLength = rwlib::cocos2d::ui::TextField::setMaxLength;
     constexpr uint32_t SceneUtil_textFieldToUiText = 0x45C465, SceneUtil_textFieldToEditBox = 0x45C0A1;
     constexpr uint32_t FunctionVB_copy = 0x45C84D, FunctionVB_move = 0x47BC69;
     constexpr uint32_t S_CALLIGRAPHY = 0xDF9F1F, S_SOGEI = 0xDF9F4D, S_EMPTY = 0xDF8A1A;
@@ -409,7 +409,7 @@ uint32_t openFBSharePhotoPopup(uint32_t editing, uint32_t editNode, uint32_t edi
 // popup nodes. The shared_ptr copies are made and released in the original's order.
 uint32_t openAdventureSelectFilterPopup(uint32_t done) {
     constexpr uint32_t AppState_getInstance = 0x4E66DD, AppState_getAdventureSelectFilterState = 0x4EB1A1;
-    constexpr uint32_t CheckBox_setSelectedState = 0x8382E7, Widget_setBright = 0x825A09;
+    constexpr uint32_t CheckBox_setSelectedState = rwlib::cocos2d::ui::CheckBox::setSelectedState, Widget_setBright = rwlib::cocos2d::ui::Widget::setBright;
     constexpr uint32_t SetTextEnabledColor = 0x4744F5;      // sub_4744F4(text, bool, bool)
     constexpr uint32_t FunctionVB_copy = 0x45C84D, FunctionVB_move = 0x47BC69;
     auto addRef = [](uint32_t c) { if (c) call(0xC8DBB5, {c}); };

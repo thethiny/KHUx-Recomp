@@ -18,11 +18,11 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Layer_ctor = 0x88A7D1, Layer_dtor = 0x88A88D, Layer_init = 0x88A8A1;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base, Layer_dtor = rwlib::cocos2d::Layer::dtor_base, Layer_init = rwlib::cocos2d::Layer::init;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t MEMSET = 0x40E7A0;                       // __aeabi_memset(dest, n, c) (PLT)
 constexpr uint32_t MEMCPY = 0x40E164;
-constexpr uint32_t Vec2_ctor = 0x8E4B95, Vec2_ctorXY = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__v, Vec2_ctorXY = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t WidgetVector_dtor = 0x485A8F;            // cocos2d::Vector<ui::Widget*>::~Vector
 constexpr uint32_t KeybladeVector_baseDtor = 0x4C50FF;
 constexpr uint32_t KeybladeVector_pushSlow = 0x4D4FCD;
@@ -44,12 +44,12 @@ constexpr uint32_t SceneManager_closeCurrentPopup = 0x6216A1;
 constexpr uint32_t SceneManager_enableLoadingIndicator = 0x60D169;
 constexpr uint32_t SceneUtil_calcDeckStatus = 0x469CB5;     // (shared_ptr kb, medals&, int* out[3], medals*)
 constexpr uint32_t SceneUtil_setNormalColor = 0x468669, SceneUtil_setWarningColor = 0x4686A9;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr uint32_t BaseSlideView_create = 0x534E79, BaseSlideView_setIndex = 0x526141;
 constexpr uint32_t BaseSlideView_setItemIDs = 0x5260AD, BaseSlideView_getItemIDs = 0x525EA5;
 constexpr uint32_t ImageButton_create = 0x531239, ImageButton_setTargetView = 0x5318C1;
 constexpr uint32_t ImageButton_setTargetAnchorPoint = 0x5318CF, ImageButton_addTouchEventListener = 0x5315B1;
-constexpr uint32_t ImageView_loadTexture = 0x839731;
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;
 constexpr uint32_t MedalDataManager_getInstance = 0x76AD69, MedalDataManager_getMedalData = 0x76ADB5;
 constexpr uint32_t KeyBladeDataManager_getInstance = 0x76B60D, KeyBladeDataManager_getKeyBladeData = 0x76B659;
 constexpr uint32_t KeyBladeDataManager_getKeyBladeImagePath = 0x76B809;

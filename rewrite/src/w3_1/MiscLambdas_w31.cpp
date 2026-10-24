@@ -6,14 +6,14 @@ namespace misc_lambdas_w31 {
 
 using scene::ld32;
 
-constexpr uint32_t NODE_SCHEDULE_UPDATE = 0x894BA7;    // cocos2d::Node::scheduleUpdate()
-constexpr uint32_t DIRECTOR_GET_INSTANCE = 0x8EE519;
-constexpr uint32_t LOG = 0xCA4A3D;                     // cocos2d::log(const char*, ...)
+constexpr uint32_t NODE_SCHEDULE_UPDATE = rwlib::cocos2d::Node::scheduleUpdate;    // cocos2d::Node::scheduleUpdate()
+constexpr uint32_t DIRECTOR_GET_INSTANCE = rwlib::cocos2d::Director::getInstance;
+constexpr uint32_t LOG = rwlib::sub_CA4A3C;                     // cocos2d::log(const char*, ...)
 constexpr uint32_t LIT_FRAME_LOG = 0xE02193;           // "frame: %d\n"
 constexpr uint32_t DIRECTOR_TOTAL_FRAMES = 0xD4;       // Director::_totalFrames
 constexpr uint32_t FUNCTION_VV_CALL = 0x470E69;        // std::function<void()>::operator()
-constexpr uint32_t SPRITE_CREATE = 0x8A64DD;           // cocos2d::Sprite::create()
-constexpr uint32_t CLIPPING_SET_STENCIL = 0x874FD1;    // cocos2d::ClippingNode::setStencil(Node*)
+constexpr uint32_t SPRITE_CREATE = rwlib::cocos2d::Sprite::create__v;           // cocos2d::Sprite::create()
+constexpr uint32_t CLIPPING_SET_STENCIL = rwlib::cocos2d::ClippingNode::setStencil;    // cocos2d::ClippingNode::setStencil(Node*)
 
 // AimTarget::AimMarker::init $_0 (captures the marker): clear its +648 field and start its update
 uint32_t aimMarkerInitLambda(uint32_t lambda) {

@@ -8,8 +8,8 @@ constexpr uint32_t AudioManager_getInstance = 0x5BECFD;
 constexpr uint32_t AudioManager_getLayer = 0x5BF33D;
 constexpr uint32_t AudioLayer_playSE = 0x5BF785;
 constexpr uint32_t SE_POPUP_OPEN = 0x1E56B954;
-constexpr uint32_t GUIReader_getInstance = 0x7BF1E5;
-constexpr uint32_t GUIReader_widgetFromJsonFile = 0x7BF9FD;
+constexpr uint32_t GUIReader_getInstance = rwlib::cocostudio::GUIReader::getInstance;
+constexpr uint32_t GUIReader_widgetFromJsonFile = rwlib::cocostudio::GUIReader::widgetFromJsonFile;
 
 // a touch listener lambda {self, extra} on a widget
 void addTouch2(uint32_t widget, uint32_t vtable, uint32_t self, uint32_t extra) {

@@ -10,8 +10,8 @@
 using namespace b2s;
 
 namespace {
-constexpr Addr ArmatureDataManager_getInstance = 0x7AC9B5;
-constexpr Addr ArmatureDataManager_addArmatureFileInfo = 0x7AD7BD;
+constexpr Addr ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance;
+constexpr Addr ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;
 constexpr Addr SceneUtil_createShadowSprite = 0x45AD69;
 constexpr Addr SceneUtil_createNodeWithSceneFile = 0x45AA49;
 constexpr Addr SceneUtil_getSideMargin = 0x45AD0D;
@@ -20,16 +20,16 @@ constexpr Addr SceneUtil_setShadow = 0x45BD15;
 constexpr Addr SceneUtil_settingTitleLabel = 0x45D8D1;
 constexpr Addr SceneUtil_setAdditionalKerningForAtlasLabel = 0x466BA9;
 constexpr Addr SceneUtil_createOpenPopupAnimation = 0x45BC05;
-constexpr Addr GUIReader_getInstance = 0x7BF1E5;
-constexpr Addr GUIReader_widgetFromJsonFile = 0x7BF9FD;
-constexpr Addr Vec2_ctorXY = 0x8E4B9D;               // cocos2d::Vec2::Vec2(float, float)
-constexpr Addr Vec2_ctorCopy = 0x8E4C03;
-constexpr Addr Vec2_dtor = 0x8E4C17;
-constexpr Addr Vec2_add = 0x8E4D2D;                  // Vec2 += Vec2
-constexpr Addr Armature_create = 0x79F3C7;
+constexpr Addr GUIReader_getInstance = rwlib::cocostudio::GUIReader::getInstance;
+constexpr Addr GUIReader_widgetFromJsonFile = rwlib::cocostudio::GUIReader::widgetFromJsonFile;
+constexpr Addr Vec2_ctorXY = rwlib::cocos2d::Vec2::ctor_base__ff;               // cocos2d::Vec2::Vec2(float, float)
+constexpr Addr Vec2_ctorCopy = rwlib::cocos2d::Vec2::ctor_base__RKS0_;
+constexpr Addr Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr Addr Vec2_add = rwlib::cocos2d::Vec2::add;                  // Vec2 += Vec2
+constexpr Addr Armature_create = rwlib::cocostudio::Armature::create;
 constexpr Addr StringBuffer_ctor = 0x49140D;
-constexpr Addr TextAtlas_setStringBlend = 0x83AF1F;
-constexpr Addr Text_setString = 0x83A2DD;
+constexpr Addr TextAtlas_setStringBlend = rwlib::cocos2d::ui::TextAtlas::setStringBlend;
+constexpr Addr Text_setString = rwlib::cocos2d::ui::Text::setString;
 constexpr Addr TextData_get = 0x4928AD;
 constexpr Addr Player_create = 0x7871A9;             // master::Player::create(shared_ptr out, int level)
 constexpr Addr HashTable_find_u64 = 0x490275;
@@ -40,7 +40,7 @@ constexpr Addr SafeBuffer_dtor = 0x45A13D;
 constexpr Addr ImageButton_create = 0x531239;
 constexpr Addr ImageButton_addTouchEventListener = 0x5315B1;
 constexpr Addr ImageButton_setTargetView = 0x5318C1;
-constexpr Addr EaseSineOut_create = 0x860D09;
+constexpr Addr EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 
 constexpr Addr GOT_ANCHOR_MIDDLE = 0xFD6054;         // &cocos2d::Vec2::ANCHOR_MIDDLE
 constexpr Addr GOT_BLEND_FUNC = 0xFD6918;            // &BlendFunc used for the atlas labels

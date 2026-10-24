@@ -23,10 +23,10 @@ constexpr uint32_t FacebookImpl_onRefreshCurrentAccessToken = 0x4E5451;
 constexpr uint32_t StringVector_pushBackSlow = 0x484465;  // vector<string>::__push_back_slow_path(string&&)
 constexpr uint32_t StringVector_dtor = 0x47363F;
 constexpr uint32_t SPRINTF = 0xCA4A95;
-constexpr uint32_t EventCustom_ctor = 0x8F2331;           // (event, const string& name)
-constexpr uint32_t Event_dtor = 0x8F2241;
-constexpr uint32_t TriggerMng_getInstance = 0x7C9739;
-constexpr uint32_t TriggerMng_dispatchEvent = 0x7CAAAD;   // (mgr, EventCustom*)
+constexpr uint32_t EventCustom_ctor = rwlib::cocos2d::EventCustom::ctor_base;           // (event, const string& name)
+constexpr uint32_t Event_dtor = rwlib::cocos2d::Event::dtor_base;
+constexpr uint32_t TriggerMng_getInstance = rwlib::cocostudio::TriggerMng::getInstance;
+constexpr uint32_t TriggerMng_dispatchEvent = rwlib::cocostudio::TriggerMng::dispatchEvent;   // (mgr, EventCustom*)
 }  // namespace g
 
 // JNINativeInterface offsets

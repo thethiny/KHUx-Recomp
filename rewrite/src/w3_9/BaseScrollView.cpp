@@ -4,7 +4,7 @@
 using namespace scene;
 
 namespace {
-constexpr uint32_t Layout_ctor = 0x828671;               // cocos2d::ui::Layout::Layout()
+constexpr uint32_t Layout_ctor = rwlib::cocos2d::ui::Layout::ctor_base;               // cocos2d::ui::Layout::Layout()
 constexpr uint32_t AEABI_MEMSET = 0x40E7A0;                    // __aeabi_memset(dst, n, c)
 constexpr uint32_t VectorInt_assign = 0x47D5BD;          // std::vector<int>::assign(int*, int*)
 constexpr uint32_t VectorUll_assign = 0x4D7461;          // std::vector<unsigned long long>::assign(ull*, ull*)

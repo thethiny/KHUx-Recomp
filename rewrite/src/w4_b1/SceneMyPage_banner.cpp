@@ -8,10 +8,10 @@ constexpr uint32_t BaseSlideView_create = 0x534E79, BaseSlideView_setScreenWidth
 constexpr uint32_t BaseSlideView_setIndex = 0x526141, BaseSlideView_setItemIDs = 0x5260AD;
 constexpr uint32_t BaseSlideView_setSlideEnabled = 0x526111, BaseSlideView_updateLayout = 0x525EB5;
 constexpr uint32_t IntVector_pushSlow = 0x4D6CC1, IntVector_copy = 0x4AF707;
-constexpr uint32_t Sprite_createFile = 0x8A637D;          // Sprite::create(const string&)
+constexpr uint32_t Sprite_createFile = rwlib::cocos2d::Sprite::create__RKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE;          // Sprite::create(const string&)
 constexpr uint32_t FunctionWidgetInt_swap = 0x54B1C5, FunctionWidgetW_swap = 0x547159, FunctionVV_swap = 0x4EE86D;
-constexpr uint32_t ArmatureDataManager_getInstance = 0x7AC9B5, ArmatureDataManager_addArmatureFileInfo = 0x7AD7BD;
-constexpr uint32_t Armature_create = 0x79F3C7;
+constexpr uint32_t ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance, ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;
+constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create;
 constexpr uint32_t ImageButton_setTargetAnchorPoint = 0x5318CF;
 constexpr uint32_t VT_banner_37 = 0xF61344, VT_banner_38 = 0xF61268, VT_banner_39 = 0xF6123C;
 constexpr uint32_t VT_banner_40 = 0xF61210, VT_banner_41 = 0xF611E4;

@@ -13,25 +13,25 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Node_ctor = 0x892531, Node_init = 0x892B69, Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Node_ctor = rwlib::cocos2d::Node::ctor_base, Node_init = rwlib::cocos2d::Node::init, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t AEABI_MEMSET = 0x40E7A0;
 constexpr uint32_t FunctionVB_assign = 0x490109;
 constexpr uint32_t SceneUtil_getSideMargin = 0x45AD0D, SceneUtil_getSideHeightMargin = 0x45AF59;
 constexpr uint32_t SceneUtil_createOpenPopupAnimation = 0x45BC05, SceneUtil_createClosePopupAnimation = 0x45BC61;
 constexpr uint32_t SceneUtil_setButtonEnabled = 0x468625, SceneUtil_createPartyRankImagePath = 0x46F08D;
 constexpr uint32_t SceneUtil_settingTitleLabel = 0x45D8D1;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr uint32_t SM_openPopup = 0x61524D, SM_enableLoadingIndicator = 0x60D169, SM_updateHeader = 0x611169;
 constexpr uint32_t SM_closeCurrentPopup = 0x6216A1;
 constexpr uint32_t APIManager_executePartyGet = 0x4C69BD, APIManager_executePaymentInfo = 0x4CE74D;
 constexpr uint32_t APIManager_openErrorDialog = 0x4C3C8D;
-constexpr uint32_t Text_setTextHorizontalAlignment = 0x83A65F;
-constexpr uint32_t ImageView_loadTexture = 0x839731;
+constexpr uint32_t Text_setTextHorizontalAlignment = rwlib::cocos2d::ui::Text::setTextHorizontalAlignment;
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;
 constexpr uint32_t String_assign = 0x48D811;
 constexpr uint32_t AvatarUtil_makeStyle = 0x497105, Avatar_create = 0x5C5883, Avatar_changeMotion = 0x5C63C5;
 constexpr uint32_t SafeBuffer_dtor = 0x45A13D, SafeBuffer_read = 0x45A269;
-constexpr uint32_t Node_unscheduleUpdate = 0x894CB3;
+constexpr uint32_t Node_unscheduleUpdate = rwlib::cocos2d::Node::unscheduleUpdate;
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9, AudioPlaySystemSECancel = 0x5C0D81;
 constexpr uint32_t PartyInfoDialog_close = 0x596081, PartyInfoDialog_createAlertLayout = 0x594D61;
 constexpr uint32_t GOT_VTABLE = 0xFD66C8;

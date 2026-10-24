@@ -12,19 +12,19 @@ inline void st16(uint32_t a, uint16_t v) { rw::save<uint16_t>(a, v); }
 
 namespace wfn {
 constexpr uint32_t StringBuffer_fset = 0x491501;         // StringBuffer::fset(this, fmt, ...)
-constexpr uint32_t LWFNode_create = 0x7EDF31;            // cocos2d::LWFNode::create(const char*, void*)
+constexpr uint32_t LWFNode_create = rwlib::cocos2d::LWFNode::create;            // cocos2d::LWFNode::create(const char*, void*)
 constexpr uint32_t LWFNODE_LWF = 0x3E0;                  // cocos2d::LWFNode::_lwf (LWF::LWF*)
 constexpr uint32_t LWF_ROOT_MOVIE = 0x18;                // LWF::LWF::rootMovie
-constexpr uint32_t Movie_GotoAndPlay = 0x815DCF;         // LWF::Movie::GotoAndPlay(int)
-constexpr uint32_t Movie_GotoAndStop = 0x815D75;         // LWF::Movie::GotoAndStop(int)
+constexpr uint32_t Movie_GotoAndPlay = rwlib::LWF::Movie::GotoAndPlay__i;         // LWF::Movie::GotoAndPlay(int)
+constexpr uint32_t Movie_GotoAndStop = rwlib::LWF::Movie::GotoAndStop;         // LWF::Movie::GotoAndStop(int)
 constexpr uint32_t MOVIE_TOTAL_FRAMES = 0x98;            // LWF::Movie: total frames
 constexpr uint32_t MOVIE_CURRENT_FRAME = 0x9C;           // LWF::Movie: current frame (0-based)
 constexpr uint32_t LWFUtil_preloadResources = 0x491361;  // (const std::string&)
 constexpr uint32_t HandlerMap_insert_unique = 0x530869;  // map<string,function<void(Movie*)>>::__insert_unique(hint, pair)
 constexpr uint32_t HandlerMap_destroy = 0x530811;        // map<...>::destroy(node)
-constexpr uint32_t LWF_AddMovieEventHandler = 0x808645;  // (lwf, const string& name, const map<string,function>&)
-constexpr uint32_t Node_scheduleUpdate = 0x894BA7;
-constexpr uint32_t Node_unscheduleUpdate = 0x894CB3;
+constexpr uint32_t LWF_AddMovieEventHandler = rwlib::LWF::LWF::AddMovieEventHandler;  // (lwf, const string& name, const map<string,function>&)
+constexpr uint32_t Node_scheduleUpdate = rwlib::cocos2d::Node::scheduleUpdate;
+constexpr uint32_t Node_unscheduleUpdate = rwlib::cocos2d::Node::unscheduleUpdate;
 constexpr uint32_t STRLEN = 0x40E08C;                    // strlen (import)
 }  // namespace wfn
 

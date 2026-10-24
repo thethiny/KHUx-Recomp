@@ -10,7 +10,7 @@ using namespace signup;
 namespace {
 constexpr uint32_t SceneUtil_settingTitleLabel = 0x45D8D1;
 constexpr uint32_t SceneUtil_createOpenPopupAnimation = 0x45BC05, SceneUtil_createClosePopupAnimation = 0x45BC61;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr uint32_t AvatarActor_create = 0x73FD21, AvatarActor_setStyle = 0x740635;
 constexpr uint32_t AvatarUtil_makeStyle = 0x497105, SafeBuffer_dtor = 0x45A13D, Avatar_preloadResources = 0x5C7ED1;
 constexpr uint32_t SceneAvatarEdit_getEquipKeybladeID = 0x70715D;

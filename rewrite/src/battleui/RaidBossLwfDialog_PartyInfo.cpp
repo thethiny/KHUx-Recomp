@@ -20,10 +20,10 @@ constexpr uint32_t APIManager_needsRetry = 0x4C3C63;
 constexpr uint32_t APIManager_openErrorDialog = 0x4C3C8D;             // (api, const function<void(bool)>&, bool)
 constexpr uint32_t SceneUtil_createFadeOutAnimation = 0x45BCE5;      // (node, std::function<void()> by value)
 constexpr uint32_t AudioPlaySystemSECancel = 0x5C0D81;
-constexpr uint32_t Widget_isTouchEnabled = 0x826665;
-constexpr uint32_t Ref_retain = 0x8FD0B5;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Node_runAction = 0x894AED;
+constexpr uint32_t Widget_isTouchEnabled = rwlib::cocos2d::ui::Widget::isTouchEnabled;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
 
 constexpr uint32_t APIMANAGER_ERROR = 20;            // uint8: the last request failed with an error to show
 constexpr uint32_t DIALOG_SHADOW = 628;              // PartyInfoDialog: the shadow node it was opened on

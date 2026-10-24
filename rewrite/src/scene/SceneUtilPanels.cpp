@@ -8,7 +8,7 @@ constexpr uint32_t KeyBladeDataManager_getInstance = 0x76B60D;
 constexpr uint32_t KeyBladeDataManager_getKeyBladeImagePath = 0x76B809;   // (mgr, shared_ptr<UserKeyBladeData>)
 constexpr uint32_t Keyblade_create = 0x783F9D;            // master::Keyblade::create(out, id)
 constexpr uint32_t Medal_create = 0x785871;               // master::Medal::create(out, id)
-constexpr uint32_t Sprite_createWithFile = 0x8A637D;      // Sprite::create(const string&)
+constexpr uint32_t Sprite_createWithFile = rwlib::cocos2d::Sprite::create__RKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE;      // Sprite::create(const string&)
 constexpr uint32_t String_concatCStr = 0x461FCD;          // std::operator+(const char*, const string&) (sret)
 
 // UserKeyBladeData: the keyblade's SafeBuffer at +0x20

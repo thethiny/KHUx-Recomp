@@ -138,7 +138,7 @@ struct CarouselDeck {
         uint32_t btn = call(0x5CF9A1, {self, uint32_t(medal)});  // createMadalButton
         if (btn == 0) return 0;
         st32(self + 0x36C, btn);
-        call(0x8FD0B5, {btn});  // Ref::retain
+        call(rwlib::cocos2d::Ref::retain, {btn});  // Ref::retain
         int32_t m = int32_t(call(0xCD6009, {uint32_t(medal), 10}));  // __modsi3
         int32_t id = (m == 4 || m == 2) ? medal - 1 : medal;
         uint32_t c = ld32(self + 0x354);
@@ -268,7 +268,7 @@ struct CarouselDeck {
             uint32_t atlas = ld32(self + 0x2E0);
             uint32_t s = f.alloc(12);
             strInitC(s, text);
-            call(0x83AED7, {atlas, s});  // TextAtlas::setString
+            call(rwlib::cocos2d::ui::TextAtlas::setString, {atlas, s});  // TextAtlas::setString
             strFree(s);
         }
         return 0;

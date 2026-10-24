@@ -10,15 +10,15 @@ using namespace scene;
 
 namespace lib {
 // cocos2d / cocostudio
-constexpr uint32_t Layer_ctor = 0x88A7D1;
-constexpr uint32_t Layer_dtor = 0x88A88D;
-constexpr uint32_t Layer_init = 0x88A8A1;
-constexpr uint32_t Scene_create = 0x8A5F37;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Vec2_ctor = 0x8E4B95;                  // Vec2::Vec2() (0, 0)
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Node_stopAllActions = 0x893815;
-constexpr uint32_t Node_scheduleUpdate = 0x894BA7;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base;
+constexpr uint32_t Layer_dtor = rwlib::cocos2d::Layer::dtor_base;
+constexpr uint32_t Layer_init = rwlib::cocos2d::Layer::init;
+constexpr uint32_t Scene_create = rwlib::cocos2d::Scene::create;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__v;                  // Vec2::Vec2() (0, 0)
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Node_stopAllActions = rwlib::cocos2d::Node::stopAllActions;
+constexpr uint32_t Node_scheduleUpdate = rwlib::cocos2d::Node::scheduleUpdate;
 constexpr uint32_t MEMSET = 0x40E7A0;                     // __aeabi_memset(dst, n, c) (import)
 constexpr uint32_t THROW_OUT_OF_RANGE = 0x47CCE1;         // std::vector .at() failure (never returns)
 // libc++ containers
@@ -59,7 +59,7 @@ constexpr uint32_t init = 0x248;                          // Node::init()
 
 // libraries used by init() and the panels
 namespace lib {
-constexpr uint32_t Vec2_ctorXY = 0x8E4B9D;                // Vec2::Vec2(float, float)
+constexpr uint32_t Vec2_ctorXY = rwlib::cocos2d::Vec2::ctor_base__ff;                // Vec2::Vec2(float, float)
 constexpr uint32_t FunctionVV_assign = 0x4EB9CD;          // std::function<void()>::operator=(const function&)
 constexpr uint32_t SceneManager_setOnBackKeyCallback = 0x613E5B;
 constexpr uint32_t SceneManager_setBackButtonType = 0x613E27;
@@ -70,9 +70,9 @@ constexpr uint32_t ImageButton_create = 0x531239;         // (string file, bool)
 constexpr uint32_t ImageButton_setTargetView = 0x5318C1;  // (button, Node*, float scale)
 constexpr uint32_t ImageButton_setTargetAnchorPoint = 0x5318CF;
 constexpr uint32_t ImageButton_addTouchEventListener = 0x5315B1;
-constexpr uint32_t ArmatureDataManager_getInstance = 0x7AC9B5;
-constexpr uint32_t ArmatureDataManager_addArmatureFileInfo = 0x7AD7BD;
-constexpr uint32_t Armature_create = 0x79F3C7;            // (const string& name)
+constexpr uint32_t ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance;
+constexpr uint32_t ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;
+constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create;            // (const string& name)
 }  // namespace lib
 
 // virtual slots (byte offsets from the vtable pointer) beyond scene::node
@@ -106,7 +106,7 @@ constexpr uint32_t AdvStageScrollView_initNewStage = 0x570BDD;          // (view
 constexpr uint32_t AdvStageScrollView_resetScrollPosition = 0x570A91;
 constexpr uint32_t AdvStageScrollView_initRaidBoss = 0x570E7D;
 constexpr uint32_t BaseStageScrollView_migrationMaxPosition = 0x59DAC9;
-constexpr uint32_t Size_ctor = 0x8DF027;                  // Size::Size(float, float)
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;                  // Size::Size(float, float)
 constexpr uint32_t FunctionVI_swap = 0x5428E1;            // std::function<void(int)>::swap
 constexpr uint32_t FunctionVV_swap = 0x4EE86D;            // std::function<void()>::swap
 constexpr uint32_t FunctionVF_swap = 0x5E40BD;            // std::function<void(float)>::swap
@@ -121,7 +121,7 @@ constexpr uint32_t VIEW_CALLBACK_530 = 0x530;             // function<void(float
 
 // initAdvSelect
 namespace lib {
-constexpr uint32_t Widget_setBright = 0x825A09;           // ui::Widget::setBright(bool)
+constexpr uint32_t Widget_setBright = rwlib::cocos2d::ui::Widget::setBright;           // ui::Widget::setBright(bool)
 constexpr uint32_t BaseStageScrollView_setEnabledScroll = 0x59D63D;
 }  // namespace lib
 constexpr uint32_t API_USER = 0x94;                       // SafeBuffer* of the user's data (+0x40: rank)
@@ -146,7 +146,7 @@ inline uint32_t heapLambda(uint32_t dst, uint32_t vtable, uint32_t size, std::in
 
 // animations
 namespace lib {
-constexpr uint32_t EaseSineOut_create = 0x860D09;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr uint32_t BaseStageScrollView_getItemIDs = 0x59D341;   // (vector<int> out, view)
 constexpr uint32_t IntVector_dtor = 0x478961;             // std::__vector_base<int>::~__vector_base
 }  // namespace lib
@@ -206,9 +206,9 @@ constexpr uint32_t AdvStageScrollView_setSelectItem = 0x5708D1;
 constexpr uint32_t AdvStageScrollView_setStageType = 0x57186D;   // (view, StageType 0 story / 1 event / 2 colosseum)
 constexpr uint32_t IntVector_copy = 0x4AF707;             // std::vector<int>(const vector&)
 constexpr uint32_t IntVector_pushBackSlow = 0x4D6CC1;     // std::vector<int>::__push_back_slow_path(const int&)
-constexpr uint32_t FileUtils_getInstance = 0xA3F44D;
-constexpr uint32_t Data_getBytes = 0x8ED90B;
-constexpr uint32_t Data_dtor = 0x8ED89B;
+constexpr uint32_t FileUtils_getInstance = rwlib::cocos2d::FileUtils::getInstance;
+constexpr uint32_t Data_getBytes = rwlib::cocos2d::Data::getBytes;
+constexpr uint32_t Data_dtor = rwlib::cocos2d::Data::dtor_base;
 constexpr uint32_t StageManager_getInteger32bitFromLittleEndianBytes = 0x75992B;
 constexpr uint32_t ColosseumStageVector_copy = 0x54E489;
 constexpr uint32_t ColosseumStageVector_dtor = 0x4B3A95;

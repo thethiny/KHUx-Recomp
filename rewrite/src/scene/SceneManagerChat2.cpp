@@ -43,13 +43,13 @@ constexpr uint32_t ChatScrollView_create = 0x556961;
 constexpr uint32_t ChatEditBoxMessageSend_create = 0x55C6E9;
 constexpr uint32_t FunctionV_swap = 0x4EE86D;    // std::function<void()>::swap
 constexpr uint32_t FunctionB_assign = 0x490109;  // std::function<void(bool)>::operator=
-constexpr uint32_t TextField_setMaxLength = 0x83F7AD;
-constexpr uint32_t Label_setAlignment = 0x884CB9;
-constexpr uint32_t Widget_setBright = 0x825A09, Widget_isBright = 0x826FA5;
-constexpr uint32_t Text_setTextHorizontalAlignment = 0x83A65F;
-constexpr uint32_t Text_getStringLength = 0x83A34F;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;   // Vec2(float, float), ~Vec2
-constexpr uint32_t Size_ctor = 0x8DF027;                         // Size(float, float)
+constexpr uint32_t TextField_setMaxLength = rwlib::cocos2d::ui::TextField::setMaxLength;
+constexpr uint32_t Label_setAlignment = rwlib::cocos2d::Label::setAlignment;
+constexpr uint32_t Widget_setBright = rwlib::cocos2d::ui::Widget::setBright, Widget_isBright = rwlib::cocos2d::ui::Widget::isBright;
+constexpr uint32_t Text_setTextHorizontalAlignment = rwlib::cocos2d::ui::Text::setTextHorizontalAlignment;
+constexpr uint32_t Text_getStringLength = rwlib::cocos2d::ui::Text::getStringLength;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;   // Vec2(float, float), ~Vec2
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;                         // Size(float, float)
 constexpr uint32_t APIManager_executePaymentInfo = 0x4CE74D;
 constexpr uint32_t ChatPopup_fetch = 0x61507D;   // openChatPopup $_43::operator() (on the captures, called directly)
 constexpr uint32_t ChatPopup_show = 0x631931;    // openChatPopup lambda body: shows the popup ({this, root, layer, shadow})

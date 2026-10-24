@@ -16,9 +16,9 @@ namespace g {
 constexpr uint32_t SceneManager_getPopupLayer = 0x613E69;
 constexpr uint32_t SceneUtil_createShadowSprite = 0x45AD69;
 constexpr uint32_t SceneUtil_createNodeWithSceneFile = 0x45AA49;
-constexpr uint32_t ImageView_create = 0x8394C1;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Size_div = 0x8DF0D5;                       // Size::operator/(Size out, const Size*, float)
+constexpr uint32_t ImageView_create = rwlib::cocos2d::ui::ImageView::create;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Size_div = rwlib::cocos2d::Size::op_div;                       // Size::operator/(Size out, const Size*, float)
 constexpr uint32_t VectorULL_copy = 0x468431, VectorULL_dtor = 0x468499;
 constexpr uint32_t MedalDataManager_getInstance = 0x76AD69;
 constexpr uint32_t MedalDataManager_getMedalData = 0x76ADB5;   // (sret, mgr, u64 id, int, Medal by value)
@@ -28,7 +28,7 @@ constexpr uint32_t AudioLWFNode_create = 0x5EB6B5;
 constexpr uint32_t ImageButton_create = 0x531239;              // (std::string by value, bool)
 constexpr uint32_t ImageButton_setTargetView = 0x5318C1;
 constexpr uint32_t ImageButton_addTouchEventListener = 0x5315B1;
-constexpr uint32_t Widget_addTouchEventListener = 0x826CCF;
+constexpr uint32_t Widget_addTouchEventListener = rwlib::cocos2d::ui::Widget::addTouchEventListener;
 constexpr uint32_t SafeBuffer_read = 0x45A269;
 constexpr uint32_t aeabi_memset = 0x40E7A0;
 constexpr uint32_t modsi3 = 0xCD6009;

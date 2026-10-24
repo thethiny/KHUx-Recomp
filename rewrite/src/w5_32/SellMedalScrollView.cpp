@@ -14,14 +14,14 @@ using namespace scene;
 
 namespace {
 namespace a {
-constexpr uint32_t Layout_ctor = 0x828671;
-constexpr uint32_t Vec2_ctor = 0x8E4B95, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Size_ctor = 0x8DF027;                     // Size(float, float)
-constexpr uint32_t Color3B_ctor = 0x9062E7;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Widget_create = 0x825875;
-constexpr uint32_t ArmatureDataManager_getInstance = 0x7AC9B5, ArmatureDataManager_addArmatureFileInfo = 0x7AD7BD;
-constexpr uint32_t Armature_create = 0x79F3C7;
+constexpr uint32_t Layout_ctor = rwlib::cocos2d::ui::Layout::ctor_base;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__v, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;                     // Size(float, float)
+constexpr uint32_t Color3B_ctor = rwlib::cocos2d::Color3B::ctor_base;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Widget_create = rwlib::cocos2d::ui::Widget::create;
+constexpr uint32_t ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance, ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;
+constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create;
 constexpr uint32_t ThrowOutOfRange = 0x47CCE1;              // vector::at failure (does not return)
 constexpr uint32_t VectorULL_dtor = 0x468499;
 constexpr uint32_t VectorULL_pushBackSlow = 0x4ECB6D;       // vector<ull>::__push_back_slow_path(const ull&)
@@ -35,9 +35,9 @@ constexpr uint32_t BaseScrollViewULL_init = 0x4FC969, BaseScrollViewULL_setItemI
 constexpr uint32_t FunctionVUll_call = 0x4FF3C9;            // std::function<void(ull)>::operator()(ull)
 constexpr uint32_t FunctionBTE_swap = 0x483E4D;             // std::function<bool(Touch*, Event*)>::swap
 constexpr uint32_t FunctionVTE_swap = 0x4F3699;             // std::function<void(Touch*, Event*)>::swap
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5, EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
-constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = 0x8F3649;
-constexpr uint32_t Director_getInstance = 0x8EE519;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create, EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
+constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
+constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance;
 constexpr uint32_t MedalDataManager_getInstance = 0x76AD69;
 constexpr uint32_t MedalDataManager_getMedalData = 0x76ADB5;   // (sret, mgr, u64 id, int, UserMedal::Medal by value)
 constexpr uint32_t MedalDataManager_isFavoriteMedal = 0x76B249;

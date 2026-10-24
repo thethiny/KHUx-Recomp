@@ -25,12 +25,12 @@ constexpr uint32_t SceneUtil_setParameterUpEffect = 0x465995;
 constexpr uint32_t SceneUtil_setNormalColor = 0x468669;
 constexpr uint32_t SceneUtil_createOpenPopupAnimation = 0x45BC05;
 constexpr uint32_t AudioLWFNode_create = 0x5EB6B5;
-constexpr uint32_t Widget_addTouchEventListener = 0x826CCF;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Widget_addTouchEventListener = rwlib::cocos2d::ui::Widget::addTouchEventListener;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t KeyBladeDataManager_getInstance = 0x76B60D;
 constexpr uint32_t KeyBladeDataManager_getKeyBladeData = 0x76B659;   // (sret, mgr, u64, unsigned id, Keyblade)
 constexpr uint32_t KeyBladeDataManager_getKeyBladeImagePath = 0x76B809;   // (mgr, shared_ptr by value)
-constexpr uint32_t ArmatureDataManager_getInstance = 0x7AC9B5, ArmatureDataManager_addArmatureFileInfo = 0x7AD7BD;
+constexpr uint32_t ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance, ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;
 constexpr uint32_t DeckMedalView_create = 0x52BA71;            // (bool)
 constexpr uint32_t DeckMedalView_setData = 0x52BEE5;           // see the call
 constexpr uint32_t DeckMedalView_setIsShowDarklightMagnification = 0x52BFDD;

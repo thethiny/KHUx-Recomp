@@ -8,9 +8,9 @@ using namespace scene;
 namespace {
 constexpr uint32_t SceneUtil_createShadowSprite = 0x45AD69, SceneUtil_createNodeWithSceneFile = 0x45AA49;
 constexpr uint32_t SceneUtil_createOpenPopupAnimation = 0x45BC05;   // (node, const function<void()>&)
-constexpr uint32_t FadeTo_create = 0x86B3E1, Node_runAction = 0x894AED;
+constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create, Node_runAction = rwlib::cocos2d::Node::runAction;
 constexpr uint32_t MapUintUint_at = 0x5681A5;
-constexpr uint32_t clock_now = 0xC60645, clock_to_time_t = 0xC6067D, libc_localtime = 0x4101B0;
+constexpr uint32_t clock_now = rwlib::sub_C60644, clock_to_time_t = rwlib::sub_C6067C, libc_localtime = 0x4101B0;
 constexpr uint32_t VectorInt_pushSlowCopy = 0x4D6CC1, VectorInt_pushSlowMove = 0x47D709;
 constexpr uint32_t VectorInt_dtor = 0x478961;
 constexpr uint32_t BirthRegisterScrollView_create = 0x5622BD;

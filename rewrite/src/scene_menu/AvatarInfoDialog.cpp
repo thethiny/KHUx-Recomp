@@ -10,8 +10,8 @@ constexpr uint32_t VT_EditBoxDelegate = 0xF86BC0;         // _ZTV16AvatarInfoDia
 
 // ---- callees
 constexpr uint32_t Memset = 0x40E7A0;                     // __aeabi_memset(dst, n, c) (import)
-constexpr uint32_t Node_ctor = 0x892531, Node_dtor = 0x8927ED, Node_init = 0x892B69;
-constexpr uint32_t Ref_release = 0x8FD0BD, Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Node_ctor = rwlib::cocos2d::Node::ctor_base, Node_dtor = rwlib::cocos2d::Node::dtor_base, Node_init = rwlib::cocos2d::Node::init;
+constexpr uint32_t Ref_release = rwlib::cocos2d::Ref::release, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t function_vb_assign = 0x490109;         // std::function<void(bool)>::operator=(const function&)
 constexpr uint32_t function_bv_assign = 0x53327D;         // std::function<bool()>::operator=(const function&)
 constexpr uint32_t function_vb_call = 0x474139;           // std::function<void(bool)>::operator()(bool)

@@ -23,17 +23,17 @@ constexpr uint32_t FunctionVB_assign = 0x490109;           // function<void(bool
 constexpr uint32_t IntSet_insertUnique = 0x5C002F;         // (pair out, unordered_set<int>*, const int&)
 constexpr uint32_t IntSet_clear = 0x7998FD;
 constexpr uint32_t APIManager_executeUserSphereUpdate = 0x4CCD69;   // (api, board, const set&, int, const function&)
-constexpr uint32_t ImageView_loadTextureTex = 0x8398FD;    // ImageView::loadTexture(Texture2D*)
-constexpr uint32_t EaseSineOut_create = 0x860D09;
+constexpr uint32_t ImageView_loadTextureTex = rwlib::cocos2d::ui::ImageView::loadTexture__PNS_9Texture2DE;    // ImageView::loadTexture(Texture2D*)
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr uint32_t SceneUtil_createUserTitleImagePath = 0x46ED99, SceneUtil_setUserTitleOutline = 0x45BD95;
 constexpr uint32_t SceneUtil_createClosePopupAnimation = 0x45BC61;
 constexpr uint32_t SceneUtil_openOkDialog4Line = 0x45C775;  // (const string&, const function<void()>&, bool)
 constexpr uint32_t SceneUtil_openTutorialPopup = 0x4684C9;  // (out, id, function, ...)
 constexpr uint32_t AudioLWFNode_create = 0x5EB6B5;      // (path, 0)
-constexpr uint32_t LWFNode_create = 0x7EDF31;           // (path, 0)
-constexpr uint32_t LWF_Movie_GotoAndPlay = 0x815DCF;
-constexpr uint32_t DelayTime_create = 0x86852D, CallFunc_create = 0x866B39, Sequence_create = 0x867999;
-constexpr uint32_t Widget_isBright = 0x826FA5;
+constexpr uint32_t LWFNode_create = rwlib::cocos2d::LWFNode::create;           // (path, 0)
+constexpr uint32_t LWF_Movie_GotoAndPlay = rwlib::LWF::Movie::GotoAndPlay__i;
+constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create, CallFunc_create = rwlib::cocos2d::CallFunc::create, Sequence_create = rwlib::cocos2d::Sequence::create;
+constexpr uint32_t Widget_isBright = rwlib::cocos2d::ui::Widget::isBright;
 constexpr uint32_t audio_getInstance = 0x5BECFD, audio_getLayer = 0x5BF33D, Layer_playSE = 0x5BF785;
 // SphereUI
 constexpr uint32_t loadMedalTexture = 0x7962E5, loadMaterialTexture = 0x7963B1, loadKeyBladeTexture = 0x79647D;

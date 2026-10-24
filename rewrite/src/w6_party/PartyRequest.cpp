@@ -8,14 +8,14 @@ using namespace scene;
 using namespace signup;
 
 namespace {
-constexpr uint32_t Scene_create = 0x8A5F37, ScenePartyRequest_create = 0x657A81;
+constexpr uint32_t Scene_create = rwlib::cocos2d::Scene::create, ScenePartyRequest_create = 0x657A81;
 constexpr uint32_t APIManager_executePartySearchActive = 0x4CF0DD;
 constexpr uint32_t function_vb_copy = 0x45C84D, function_vb_copy2 = 0x47BC69;
 constexpr uint32_t function_vv_copy = 0x4683CD, function_vv_copy2 = 0x47F905, function_vv_swap = 0x4EE86D;
 constexpr uint32_t function_vi_swap = 0x5428E1;
 constexpr uint32_t PartyScrollView_create = 0x51CB05, PartyScrollView_setEnabledTapItem = 0x51F0C1;
 constexpr uint32_t IScrollProtocol_setMaxColumn = 0x4F719D;
-constexpr uint32_t SceneUtil_createOpenPopupAnimation = 0x45BC05, EaseSineOut_create = 0x860D09;
+constexpr uint32_t SceneUtil_createOpenPopupAnimation = 0x45BC05, EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr uint32_t GOT_POPUP_FADE = 0xFD65C0;
 constexpr uint32_t VT_SearchDone = 0xF6914C;               // callPartySearchAPI's callback {answer} (heap 0x20)
 constexpr uint32_t VT_EntryTapped = 0xF68A6C;              // runInEntryLayout's row callback {this}
@@ -38,7 +38,7 @@ void shadowText(uint32_t root, uint32_t name, uint32_t len, int32_t id) {
     SceneUtil::setShadow(text);
 }
 // the search condition popups: a title and labelled check boxes; the current value checked (and not tappable)
-constexpr uint32_t CheckBox_setSelectedState = 0x8382E7, SceneUtil_settingTitleLabel = 0x45D8D1;
+constexpr uint32_t CheckBox_setSelectedState = rwlib::cocos2d::ui::CheckBox::setSelectedState, SceneUtil_settingTitleLabel = 0x45D8D1;
 constexpr uint32_t S_TxtTitle = 0xDFF142;
 constexpr uint32_t S_TxtSearch[7] = {0xE05D4F, 0xE05D5C, 0xE05D69, 0xE05D76, 0xE05E05, 0xE05E12, 0xE05EF8};
 constexpr uint32_t S_CheckBox[7] = {0xE05D83, 0xE05D95, 0xE05DA7, 0xE05DB9, 0xE05E1F, 0xE05E31, 0xE05F05};
@@ -232,11 +232,11 @@ uint32_t okTouched(uint32_t self, uint32_t, uint32_t typeRef) {
     vcall(ld32(self + 8), V_setTouchEnabled, {ld32(self + 8), 0});
     const uint32_t sm = sceneManager();
     call(0x61FB25, {sm, ld32(sceneManager() + 0x300)});
-    const uint32_t delay = call(0x86852D, {ld32(sceneManager() + 0x300)});
+    const uint32_t delay = call(rwlib::cocos2d::DelayTime::create, {ld32(sceneManager() + 0x300)});
     Frame f;
     const uint32_t fo = newFunction(f, 0xF67F6C, {scene});
-    const uint32_t then = call(0x866B39, {fo});
-    call(Node_runAction, {scene, call(0x867999, {delay, then, 0})});
+    const uint32_t then = call(rwlib::cocos2d::CallFunc::create, {fo});
+    call(Node_runAction, {scene, call(rwlib::cocos2d::Sequence::create, {delay, then, 0})});
     functionDestroy(fo);
     return 0;
 }
@@ -431,17 +431,17 @@ RW_FUNCTION(0x657BD8, "SceneParty back button operator() (sub_657BD8)", party_re
 uint32_t editBoxEditingDidEnd(uint32_t self, uint32_t box) {
     if (ld32(self + 0x30C)) {
         Frame f;
-        const uint32_t text = call(0x85520D, {box});
+        const uint32_t text = call(rwlib::cocos2d::extension::EditBox::getText, {box});
         const uint32_t s1 = newStr(f, text);
         const uint32_t label = ld32(self + 0x30C);
         const uint32_t c = strIsLong(s1) ? ld32(s1 + 8) : s1 + 1;
         const uint32_t s2 = newStr(f, c);
-        call(0x83A2DD, {label, s2});
+        call(rwlib::cocos2d::ui::Text::setString, {label, s2});
         strFree(s2);
         strFree(s1);
     }
     const uint32_t label = ld32(self + 0x304);
-    call(0x45C61D, {self + 0x300, label, call(0x85520D, {box})});
+    call(0x45C61D, {self + 0x300, label, call(rwlib::cocos2d::extension::EditBox::getText, {box})});
     return 0;
 }
 RW_FUNCTION(0x6DD154, "ScenePartyRequest::editBoxEditingDidEnd", party_request::editBoxEditingDidEnd);
@@ -471,11 +471,11 @@ uint32_t cancelTouched(uint32_t self, uint32_t, uint32_t typeRef) {
     vcall(ld32(self + 0xC), V_setTouchEnabled, {ld32(self + 0xC), 0});
     const uint32_t sm = sceneManager();
     call(0x61FB25, {sm, ld32(sceneManager() + 0x300)});
-    const uint32_t delay = call(0x86852D, {ld32(sceneManager() + 0x300)});
+    const uint32_t delay = call(rwlib::cocos2d::DelayTime::create, {ld32(sceneManager() + 0x300)});
     Frame f;
     const uint32_t fo = newFunction(f, 0xF68258, {scene});
-    const uint32_t then = call(0x866B39, {fo});
-    call(Node_runAction, {scene, call(0x867999, {delay, then, 0})});
+    const uint32_t then = call(rwlib::cocos2d::CallFunc::create, {fo});
+    call(Node_runAction, {scene, call(rwlib::cocos2d::Sequence::create, {delay, then, 0})});
     functionDestroy(fo);
     return 0;
 }
@@ -583,11 +583,11 @@ RW_FUNCTION(0x6DF358, "ScenePartyRequest player ID search OK (sub_6DF358)", part
 void delayedOnScene(uint32_t scene, uint32_t vt) {
     const uint32_t sm = sceneManager();
     call(0x61FB25, {sm, ld32(sceneManager() + 0x300)});
-    const uint32_t delay = call(0x86852D, {ld32(sceneManager() + 0x300)});
+    const uint32_t delay = call(rwlib::cocos2d::DelayTime::create, {ld32(sceneManager() + 0x300)});
     Frame f;
     const uint32_t fo = newFunction(f, vt, {scene});
-    const uint32_t then = call(0x866B39, {fo});
-    call(Node_runAction, {scene, call(0x867999, {delay, then, 0})});
+    const uint32_t then = call(rwlib::cocos2d::CallFunc::create, {fo});
+    call(Node_runAction, {scene, call(rwlib::cocos2d::Sequence::create, {delay, then, 0})});
     functionDestroy(fo);
 }
 // the user's level (word 0 of the user data SafeBuffer) is 13 or more
@@ -694,7 +694,7 @@ uint32_t openPopUpRequest(uint32_t self, uint32_t ok, uint32_t closed) {
     if (sb && level() <= 12) {
         const uint32_t label = findNode(root, 0xDFE1CC, 0x11);
         setTextId(label, approval ? 103830014 : 103810025);
-        call(0x498A1D, {self + 0x2D8, call(0x83A33B, {label})});
+        call(0x498A1D, {self + 0x2D8, call(rwlib::cocos2d::ui::Text::getString, {label})});
     }
     st8(self + 0x308, 0);
     const uint32_t extra = f.alloc(4);
@@ -714,7 +714,7 @@ uint32_t openPopUpRequest(uint32_t self, uint32_t ok, uint32_t closed) {
         const uint32_t holder = g.alloc(12);
         call(ld32(ld32(field) + 0x150), {holder, field});
         const uint32_t size = g.alloc(8);
-        call(0x8DF027, {size, fbits(400.0f), fbits(136.0f)});
+        call(rwlib::cocos2d::Size::ctor_base__ff, {size, fbits(400.0f), fbits(136.0f)});
         const uint32_t misc = g.alloc(8);
         call(0x786D5D, {misc, 808});
         const uint32_t n = g.alloc(4);

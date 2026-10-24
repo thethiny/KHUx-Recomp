@@ -15,8 +15,8 @@ constexpr uint32_t SceneManager_changeSceneLayer = 0x612B99;     // (sm, const f
 constexpr uint32_t createSceneLayer_AdventureSelect = 0x579EB1;  // createSceneLayer<SceneAdventureSelect>
 constexpr uint32_t VT_FuncPtrLayer = 0xF7E130;                   // __func<Layer*(*)(), ..., Layer*()> + 8
 constexpr uint32_t SM_STORY_STARTED = 0x30A;                     // SceneManager byte set when the story starts
-constexpr uint32_t Vec2_copy = 0x8E4C03;                         // cocos2d::Vec2::Vec2(const Vec2&)
-constexpr uint32_t Vec2_dtor = 0x8E4C17;                         // cocos2d::Vec2::~Vec2()
+constexpr uint32_t Vec2_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_;                         // cocos2d::Vec2::Vec2(const Vec2&)
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;                         // cocos2d::Vec2::~Vec2()
 constexpr uint32_t LAMBDA_SIZE = 16;
 constexpr uint32_t CAP_NODE = 4, CAP_POS = 8;
 

@@ -10,7 +10,7 @@ using namespace signup;
 namespace {
 constexpr uint32_t SceneUtil_createOpenPopupAnimation = 0x45BC05, SceneUtil_createClosePopupAnimation = 0x45BC61;
 constexpr uint32_t SceneUtil_settingTitleLabel = 0x45D8D1;   // (node, const string& name, text id)
-constexpr uint32_t EaseSineOut_create = 0x860D09;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr uint32_t MapUintUint_at = 0x5681A5;
 constexpr uint32_t function_vb_copy = 0x45C84D, function_vb_copy2 = 0x47BC69;   // std::function<void(bool)>(const&)
 constexpr uint32_t function_vv_call = 0x470E69;
@@ -19,9 +19,9 @@ constexpr uint32_t APIManager_executeTutorialProgress = 0x4C581D, APIManager_ope
 constexpr uint32_t APIManager_needsRetry = 0x4C3C63;
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9, AudioStopGameMainBGM = 0x5C0F59;
 constexpr uint32_t AudioReplaceGameMainBGM = 0x5C0FA1;
-constexpr uint32_t Director_getInstance = 0x8EE519, Director_getVisibleOrigin = 0x8F06A1;
-constexpr uint32_t Director_getVisibleSize = 0x8F0675, Size_ctor = 0x8DF027;
-constexpr uint32_t Label_createWithTTF = 0x883AE5, Label_setAlignment = 0x884CB9;
+constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance, Director_getVisibleOrigin = rwlib::cocos2d::Director::getVisibleOrigin;
+constexpr uint32_t Director_getVisibleSize = rwlib::cocos2d::Director::getVisibleSize, Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;
+constexpr uint32_t Label_createWithTTF = rwlib::cocos2d::Label::createWithTTF__RKNS_10_ttfConfigERKNSt3__112basic_stringIcNS4_11char_traitsIcEENS4_9allocatorIcEEEENS_14TextHAlignmentEi, Label_setAlignment = rwlib::cocos2d::Label::setAlignment;
 constexpr uint32_t DataDownloader_init = 0x776B25;
 constexpr uint32_t GOT_NAME_REGISTER_FACTORY = 0xFD69A0;
 constexpr uint32_t VT_DownloadTouch = 0xF6D7F0;            // $_6 {button, -, win, layer, shadow, root, answer}

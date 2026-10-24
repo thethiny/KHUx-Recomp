@@ -15,9 +15,9 @@ constexpr uint32_t AudioLWFNode_create = 0x5EB6B5;                // (const char
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
 constexpr uint32_t AudioReplaceGameMainBGM = 0x5C0FA1;            // (ResourceID, fade ms)
 constexpr uint32_t SceneUtil_createClosePopupAnimation = 0x45BC61;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t Node_scheduleUpdate = 0x894BA7;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t Node_scheduleUpdate = rwlib::cocos2d::Node::scheduleUpdate;
 constexpr uint32_t V_getAnimation = 0x298;                        // cocostudio::Armature::getAnimation
 constexpr uint32_t V_animPlay = 0x68;                             // ArmatureAnimation::play(name, durationTo, loop)
 

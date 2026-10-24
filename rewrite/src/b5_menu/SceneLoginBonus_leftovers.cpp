@@ -7,20 +7,20 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Scene_create = 0x8A5F37;
+constexpr uint32_t Scene_create = rwlib::cocos2d::Scene::create;
 constexpr uint32_t SceneLoginBonus_create = 0x6F6329;
-constexpr uint32_t Director_getInstance = 0x8EE519, Director_getTextureCache = 0x8EFE69;
-constexpr uint32_t TextureCache_addImage = 0x917DA9;      // (cache, const string&)
+constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance, Director_getTextureCache = rwlib::cocos2d::Director::getTextureCache;
+constexpr uint32_t TextureCache_addImage = rwlib::cocos2d::TextureCache::addImage;      // (cache, const string&)
 constexpr uint32_t SafeBuffer_read = 0x45A269;
 constexpr uint32_t SceneUtil_setShadow = 0x45BD15;
-constexpr uint32_t Text_setString = 0x83A2DD;
-constexpr uint32_t ImageView_loadTexture = 0x8398FD;      // (view, Texture2D*)
+constexpr uint32_t Text_setString = rwlib::cocos2d::ui::Text::setString;
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__PNS_9Texture2DE;      // (view, Texture2D*)
 constexpr uint32_t make_getIncentive_name = 0x6F90E5;
 constexpr uint32_t loadIncentiveTexture = 0x6FA0D5;
 constexpr uint32_t AudioLWFNode_create = 0x5EB6B5;        // (path, bool)
-constexpr uint32_t Movie_GotoAndPlay = 0x815DCF;
-constexpr uint32_t DelayTime_create = 0x86852D, CallFunc_create = 0x866B39, Sequence_create = 0x867999;
-constexpr uint32_t Node_runAction = 0x894AED;
+constexpr uint32_t Movie_GotoAndPlay = rwlib::LWF::Movie::GotoAndPlay__i;
+constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create, CallFunc_create = rwlib::cocos2d::CallFunc::create, Sequence_create = rwlib::cocos2d::Sequence::create;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
 constexpr uint32_t audio_Manager_getInstance = 0x5BECFD;
 constexpr uint32_t audio_Manager_getLayer = 0x5BF33D;     // (shared_ptr out, manager, int)
 constexpr uint32_t audio_Layer_playSE = 0x5BF785;         // (layer, id, int, int)

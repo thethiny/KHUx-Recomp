@@ -226,3 +226,6 @@ struct Reg {
 #define RW_FUNCTION(addr, name, fn) RW_REGISTER(addr, name, fn, true)
 // Same, for a function the verifier must not shadow-run (side effects outside guest memory).
 #define RW_FUNCTION_NOVERIFY(addr, name, fn) RW_REGISTER(addr, name, fn, false)
+
+// the library functions the game code calls, by name (generated: rewrite/tools/gen_lib_bindings.py)
+#include "rw/lib.hpp"

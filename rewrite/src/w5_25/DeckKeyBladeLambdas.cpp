@@ -25,7 +25,7 @@ constexpr uint32_t AppState_addClearTutorialPopupIDs = 0x4EB7A9;
 constexpr uint32_t SceneUtil_getNexTutorialphase = 0x472B31;
 constexpr uint32_t SceneUtil_createClosePopupAnimation = 0x45BC61;
 constexpr uint32_t SceneUtil_openUserTitlePopup = 0x470725;   // (const shared_ptr<UserTitle>&, int, function<void()>)
-constexpr uint32_t Armature_create = 0x79F3C7;
+constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create;
 constexpr uint32_t aeabi_memset = 0x40E7A0;
 constexpr uint32_t ThrowOutOfRange = 0x47CCE1;
 }  // namespace g

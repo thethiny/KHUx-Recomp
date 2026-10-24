@@ -13,9 +13,9 @@ constexpr uint32_t AvatarParts_create = 0x778DE1;          // master::AvatarPart
 constexpr uint32_t AppState_getInstance = 0x4E66DD;
 constexpr uint32_t AppState_getNewAvatarPartsIDs = 0x4EBB45;      // const std::vector<int>&
 constexpr uint32_t AppState_getNewAvatarPartsSetIDs = 0x4EBCBF;
-constexpr uint32_t ImageView_loadTexture = 0x839731;       // (image, const string&, TextureResType)
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;       // (image, const string&, TextureResType)
 constexpr uint32_t SceneUtil_setNormalColor = 0x468669;
-constexpr uint32_t Color3B_ctor = 0x9062E7;                // (out, r, g, b)
+constexpr uint32_t Color3B_ctor = rwlib::cocos2d::Color3B::ctor_base;                // (out, r, g, b)
 constexpr uint32_t SLOT_setColor = 0x22C;
 
 constexpr uint32_t S_Area_Point = 0xDF9FB4;

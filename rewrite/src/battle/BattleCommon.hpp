@@ -109,8 +109,8 @@ namespace fn {
 constexpr uint32_t operator_new = 0xC98EF1;           // operator new(unsigned)
 constexpr uint32_t operator_delete = 0xC98F9B;        // operator delete(void*)
 constexpr uint32_t release_shared = 0xC8DBD1;        // std::__shared_weak_count::__release_shared()
-constexpr uint32_t ref_autorelease = 0x8FD0D5;       // cocos2d::Ref::autorelease()
-constexpr uint32_t ref_dtor = 0x8FD059;              // cocos2d::Ref::~Ref()
+constexpr uint32_t ref_autorelease = rwlib::cocos2d::Ref::autorelease;       // cocos2d::Ref::autorelease()
+constexpr uint32_t ref_dtor = rwlib::cocos2d::Ref::dtor_base;              // cocos2d::Ref::~Ref()
 constexpr uint32_t safebuffer_dtor = 0x45A13D;       // SafeBuffer::~SafeBuffer()
 }  // namespace fn
 

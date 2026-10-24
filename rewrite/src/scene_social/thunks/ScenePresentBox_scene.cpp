@@ -9,22 +9,22 @@ using Self = ScenePresentBox;
 
 namespace {
 namespace g {
-constexpr uint32_t Layer_ctor = 0x88A7D1;
-constexpr uint32_t Layer_dtor = 0x88A88D;
-constexpr uint32_t Layer_init = 0x88A8A1;
-constexpr uint32_t Scene_create = 0x8A5F37;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t Node_scheduleUpdate = 0x894BA7;
-constexpr uint32_t Node_unscheduleUpdate = 0x894CB3;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D;
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
-constexpr uint32_t FadeTo_create = 0x86B3E1;               // (float duration, uint8 opacity)
-constexpr uint32_t Widget_setBright = 0x825A09;
-constexpr uint32_t Widget_isBright = 0x826FA5;
-constexpr uint32_t Widget_isTouchEnabled = 0x826665;
-constexpr uint32_t Widget_addTouchEventListener = 0x826CCF;
-constexpr uint32_t Text_setString = 0x83A2DD;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base;
+constexpr uint32_t Layer_dtor = rwlib::cocos2d::Layer::dtor_base;
+constexpr uint32_t Layer_init = rwlib::cocos2d::Layer::init;
+constexpr uint32_t Scene_create = rwlib::cocos2d::Scene::create;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t Node_scheduleUpdate = rwlib::cocos2d::Node::scheduleUpdate;
+constexpr uint32_t Node_unscheduleUpdate = rwlib::cocos2d::Node::unscheduleUpdate;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff;
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create;               // (float duration, uint8 opacity)
+constexpr uint32_t Widget_setBright = rwlib::cocos2d::ui::Widget::setBright;
+constexpr uint32_t Widget_isBright = rwlib::cocos2d::ui::Widget::isBright;
+constexpr uint32_t Widget_isTouchEnabled = rwlib::cocos2d::ui::Widget::isTouchEnabled;
+constexpr uint32_t Widget_addTouchEventListener = rwlib::cocos2d::ui::Widget::addTouchEventListener;
+constexpr uint32_t Text_setString = rwlib::cocos2d::ui::Text::setString;
 constexpr uint32_t function_vv_assign = 0x4EB9CD;          // std::function<void()>::operator=(const function&)
 constexpr uint32_t function_vv_copy = 0x4683CD;            // std::function<void()>::function(const function&)
 constexpr uint32_t function_vv_move = 0x47F905;            // std::function<void()>::function(function&&)

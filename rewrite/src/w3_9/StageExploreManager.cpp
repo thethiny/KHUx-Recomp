@@ -4,16 +4,16 @@
 
 namespace {
 namespace g {
-constexpr uint32_t ref_ctor = 0x8FD025;               // cocos2d::Ref::Ref()
-constexpr uint32_t vec2_ctor = 0x8E4B9D;              // cocos2d::Vec2::Vec2(float, float)
-constexpr uint32_t vec2_between = 0x8E4BB7;           // cocos2d::Vec2::Vec2(const Vec2& from, const Vec2& to) = to - from
-constexpr uint32_t vec2_copy = 0x8E4C03;              // cocos2d::Vec2::Vec2(const Vec2&)
-constexpr uint32_t vec2_dtor = 0x8E4C17;              // cocos2d::Vec2::~Vec2()
-constexpr uint32_t vec2_add = 0x8E4D2D;               // cocos2d::Vec2::add(const Vec2&)
-constexpr uint32_t vec2_dot = 0x8E4D01;               // cocos2d::Vec2::dot(const Vec2&, const Vec2&) (static)
-constexpr uint32_t vec2_length = 0x8E4FBD;            // cocos2d::Vec2::length() const
-constexpr uint32_t vec2_normalize = 0x8E503D;         // cocos2d::Vec2::normalize()
-constexpr uint32_t vec2_scale = 0x8E50D5;             // cocos2d::Vec2::scale(float)
+constexpr uint32_t ref_ctor = rwlib::cocos2d::Ref::ctor_base;               // cocos2d::Ref::Ref()
+constexpr uint32_t vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff;              // cocos2d::Vec2::Vec2(float, float)
+constexpr uint32_t vec2_between = rwlib::cocos2d::Vec2::ctor_base__RKS0_S2_;           // cocos2d::Vec2::Vec2(const Vec2& from, const Vec2& to) = to - from
+constexpr uint32_t vec2_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_;              // cocos2d::Vec2::Vec2(const Vec2&)
+constexpr uint32_t vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;              // cocos2d::Vec2::~Vec2()
+constexpr uint32_t vec2_add = rwlib::cocos2d::Vec2::add;               // cocos2d::Vec2::add(const Vec2&)
+constexpr uint32_t vec2_dot = rwlib::cocos2d::Vec2::dot;               // cocos2d::Vec2::dot(const Vec2&, const Vec2&) (static)
+constexpr uint32_t vec2_length = rwlib::cocos2d::Vec2::length;            // cocos2d::Vec2::length() const
+constexpr uint32_t vec2_normalize = rwlib::cocos2d::Vec2::normalize;         // cocos2d::Vec2::normalize()
+constexpr uint32_t vec2_scale = rwlib::cocos2d::Vec2::scale__f;             // cocos2d::Vec2::scale(float)
 constexpr uint32_t vec2_ZERO = 0x1006950;             // cocos2d::Vec2::ZERO
 constexpr uint32_t roundf_ = 0x419C54;                // roundf (PLT)
 constexpr uint32_t avatar_changeMotion = 0x5C63C5;    // Avatar::changeMotion(Avatar::Motion)

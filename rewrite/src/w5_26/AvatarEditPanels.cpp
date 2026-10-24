@@ -27,7 +27,7 @@ constexpr uint32_t SafeBuffer_dtor = 0x45A13D;
 constexpr uint32_t AvatarParts_create = 0x778DE1;               // master::AvatarParts::create(shared_ptr out, id)
 constexpr uint32_t VectorInt_pushBackSlow = 0x4D6CC1;           // vector<int>::__push_back_slow_path(const int&)
 constexpr uint32_t ThrowOutOfRange = 0x47CCE1;
-constexpr uint32_t ImageView_loadTexture = 0x839731;
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;
 }  // namespace g
 
 constexpr uint32_t S_Txt_Accessorie_Cost = 0xE06944, S_Txt_Num_Label = 0xDFD8DC, S_Switch_M = 0xE06932,

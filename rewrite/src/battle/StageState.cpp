@@ -21,8 +21,8 @@ constexpr uint32_t Random_getInstance = 0x492055;
 constexpr uint32_t Random_generateUniformInt = 0x492225;  // (min, max, uint* state)
 constexpr uint32_t Avatar_changeMotion = 0x5C63C5;
 constexpr uint32_t FlashNode_reflection_status = 0x5C3171;
-constexpr uint32_t Vec2_copy = 0x8E4C03;                // cocos2d::Vec2::Vec2(const Vec2&)
-constexpr uint32_t Vec2_dtor = 0x8E4C17;                // cocos2d::Vec2::~Vec2()
+constexpr uint32_t Vec2_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_;                // cocos2d::Vec2::Vec2(const Vec2&)
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;                // cocos2d::Vec2::~Vec2()
 constexpr uint32_t DisplayDamageNumber_disp_dmgNum = 0x5EB45D;
 constexpr uint32_t StageState_vtable = 0xF7FDA0;        // _ZTV10StageState
 

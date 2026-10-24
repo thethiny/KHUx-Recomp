@@ -11,7 +11,7 @@
 using namespace scene;
 
 namespace {
-constexpr uint32_t JniHelper_getStaticMethodInfo = 0xA4225D, JniHelper_getMethodInfo = 0xA422DD;
+constexpr uint32_t JniHelper_getStaticMethodInfo = rwlib::cocos2d::JniHelper::getStaticMethodInfo, JniHelper_getMethodInfo = rwlib::cocos2d::JniHelper::getMethodInfo;
 constexpr uint32_t JNIEnv_CallStaticObjectMethod = 0x4E0939, JNIEnv_CallBooleanMethod = 0x4E16B5;
 constexpr uint32_t JNIEnv_CallVoidMethod = 0x4E17DD, JNIEnv_CallObjectMethod = 0x4E49AD;
 // JNIEnv function table slots
@@ -26,7 +26,7 @@ constexpr uint32_t S_Empty = 0xDF8A1A, S_JavaString = 0xDFC4CB;
 constexpr uint32_t Impl_startConnection = 0x4E2EFD, Impl_hasPermissions = 0x4E34D5;
 constexpr uint32_t SceneManager_enableLoadingIndicator = 0x60D169;
 constexpr uint32_t SceneManager_getPopupLayer = 0x613E69, SceneUtil_createShadowSprite = 0x45AD69;
-constexpr uint32_t CallFunc_create = 0x866B39, Sequence_create = 0x867999;
+constexpr uint32_t CallFunc_create = rwlib::cocos2d::CallFunc::create, Sequence_create = rwlib::cocos2d::Sequence::create;
 constexpr uint32_t make_shared_Impl = 0x4E618D;
 constexpr uint32_t vector_string_copy = 0x47A9A5, vector_string_dtor = 0x47363F;
 constexpr uint32_t libc_strlen = 0x40E08C;

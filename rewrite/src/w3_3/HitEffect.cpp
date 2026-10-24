@@ -5,12 +5,12 @@
 namespace {
 namespace g {
 constexpr uint32_t StringBuffer_fset = 0x491501;      // StringBuffer::fset(const char* fmt, ...)
-constexpr uint32_t LWFNode_create = 0x7EDF31;         // cocos2d::LWFNode::create(const char*, void*)
-constexpr uint32_t Movie_GotoAndPlay = 0x815DCF;      // LWF::Movie::GotoAndPlay(int)
-constexpr uint32_t Movie_NextFrame = 0x815C3B;
-constexpr uint32_t Movie_PrevFrame = 0x815C5B;
-constexpr uint32_t Movie_SearchMovieInstance = 0x8122D7;   // (movie, const string&, bool recursive)
-constexpr uint32_t LWF_AddMovieEventHandler = 0x808645;    // (lwf, const string& path, const map<string, function>&)
+constexpr uint32_t LWFNode_create = rwlib::cocos2d::LWFNode::create;         // cocos2d::LWFNode::create(const char*, void*)
+constexpr uint32_t Movie_GotoAndPlay = rwlib::LWF::Movie::GotoAndPlay__i;      // LWF::Movie::GotoAndPlay(int)
+constexpr uint32_t Movie_NextFrame = rwlib::LWF::Movie::NextFrame;
+constexpr uint32_t Movie_PrevFrame = rwlib::LWF::Movie::PrevFrame;
+constexpr uint32_t Movie_SearchMovieInstance = rwlib::LWF::Movie::SearchMovieInstance;   // (movie, const string&, bool recursive)
+constexpr uint32_t LWF_AddMovieEventHandler = rwlib::LWF::LWF::AddMovieEventHandler;    // (lwf, const string& path, const map<string, function>&)
 constexpr uint32_t map_insert_unique = 0x530869;      // map<string, function<void(Movie*)>>::__insert_unique(hint, pair)
 constexpr uint32_t map_destroy = 0x530811;            // ...::destroy(node)
 constexpr uint32_t fnVoid_copy = 0x4683CD;            // std::function<void()>(const function&)
@@ -220,14 +220,14 @@ RW_FUNCTION(0x5D9830, "HitEffect::deploy enterFrame lambda destroy_deallocate()"
 void deployLambdaCall(uint32_t self, uint32_t moviePtr) {
     const uint32_t movie = ld(moviePtr);
     if (ld(movie + MOVIE_CURRENT_FRAME) != ld(movie + MOVIE_TOTAL_FRAMES)) return;
-    rw::call(0x8FD0B5, {ld(self + 8)});   // Ref::retain
+    rw::call(rwlib::cocos2d::Ref::retain, {ld(self + 8)});   // Ref::retain
     if (ld(self + 0x20)) {
         rw::call(0x470E69, {self + 0x10});   // std::function<void()>::operator()
     } else {
         const uint32_t parent = ld(self + 0x28);
         rw::call(vfn(parent, 0x12C), {parent, ld(self + 8), 1});   // removeChild(effect, true)
     }
-    rw::call(0x8FD0D5, {ld(self + 8)});   // Ref::autorelease
+    rw::call(rwlib::cocos2d::Ref::autorelease, {ld(self + 8)});   // Ref::autorelease
 }
 RW_FUNCTION(0x5D985C, "HitEffect::deploy enterFrame lambda operator()", deployLambdaCall);
 

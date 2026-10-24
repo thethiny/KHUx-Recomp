@@ -20,9 +20,9 @@ constexpr uint32_t MedalDataManager_getMedalLargeImagePath = 0x76B1E5;   // (mgr
 constexpr uint32_t SkillDataManager_getInstance = 0x76BA0D;
 constexpr uint32_t SkillDataManager_getData = 0x76BA59;        // (sret, mgr, u64 id, [sp] Skill (40 bytes), bool)
 constexpr uint32_t SkillDataManager_getImagePath = 0x76BE8D;   // (mgr, shared_ptr by value) -> char*
-constexpr uint32_t ImageView_loadTexture = 0x839731;           // (image, const string&, TextureResType)
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;           // (image, const string&, TextureResType)
 constexpr uint32_t AudioLWFNode_create = 0x5EB6B5;
-constexpr uint32_t RepeatForever_create = 0x86815D;
+constexpr uint32_t RepeatForever_create = rwlib::cocos2d::RepeatForever::create;
 
 constexpr uint32_t MEDAL_RARE = 0x470;
 constexpr uint32_t MEDAL_BONUS = 0x4B8;                        // master::Medal: non-zero = status bonus plate

@@ -17,7 +17,7 @@ constexpr uint32_t VT_RUN_OUT_DONE = 0xF63F70;        // runOutAnimation lambda 
 constexpr uint32_t SceneManager_showHeader = 0x6131ED;
 constexpr uint32_t SceneManager_changeBackground = 0x6128ED;   // (mgr, BackGroundType, const std::string&)
 constexpr uint32_t SceneUtil_createLeftOutAnimation = 0x45B735; // (node, float, float, std::function<void()>)
-constexpr uint32_t EaseSineOut_create = 0x860D09;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr uint32_t S_DECK_BG = 0xE03AF2;              // "img/ui/Equip_DeckBG_01.png"
 }  // namespace
 

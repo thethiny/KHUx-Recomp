@@ -11,12 +11,12 @@ namespace g {
 constexpr uint32_t FunctionVB_copy = 0x45C84D;              // std::function<void(bool)>(const&)
 constexpr uint32_t FunctionVB_move = 0x47BC69;              // std::function<void(bool)>(&&)
 constexpr uint32_t SceneManager_openPopup = 0x61524D;       // (sm, function<bool()>, function<void(bool)>, bool)
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t TimezoneSet_lowerBound = 0x54B0D1;       // std::__lower_bound(root, end node, const key&, comp)
 constexpr uint32_t TimezoneVector_pushBackSlow = 0x544D15;  // vector<Timezone>::__push_back_slow_path(vec, &&)
 constexpr uint32_t TimezoneSort = 0x54D231;                 // std::__sort(first, last, comp)
-constexpr uint32_t CheckBox_addEventListener = 0x8389AB;    // (box, const function<void(Ref*, EventType)>&)
-constexpr uint32_t CheckBox_setSelectedState = 0x8382E7;    // (box, bool)
+constexpr uint32_t CheckBox_addEventListener = rwlib::cocos2d::ui::CheckBox::addEventListener;    // (box, const function<void(Ref*, EventType)>&)
+constexpr uint32_t CheckBox_setSelectedState = rwlib::cocos2d::ui::CheckBox::setSelectedState;    // (box, bool)
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
 }  // namespace g
 

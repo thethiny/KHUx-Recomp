@@ -15,11 +15,11 @@ namespace {
 namespace g {
 constexpr uint32_t AudioPlaySystemSEPopUp = 0x5C0E09;
 constexpr uint32_t SM_getPopupLayer = 0x613E69;
-constexpr uint32_t FadeTo_create = 0x86B3E1;               // (float duration, uint8 opacity)
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D;                   // Vec2(float, float)
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
-constexpr uint32_t ImageView_loadTexture = 0x839731;       // (image, const string&, TextureResType)
+constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create;               // (float duration, uint8 opacity)
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff;                   // Vec2(float, float)
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;       // (image, const string&, TextureResType)
 constexpr uint32_t SafeBuffer_read = 0x45A269;             // (sb, out, src, n, index)
 constexpr uint32_t TextData_format = 0x492929;             // (string out, Type, id, ...)
 constexpr uint32_t Date_makeLocalDate = 0x4927CD;          // (Date out, const Date*)

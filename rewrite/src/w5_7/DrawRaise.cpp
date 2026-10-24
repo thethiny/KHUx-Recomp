@@ -9,13 +9,13 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
-constexpr uint32_t FadeTo_create = 0x86B3E1;               // FadeTo::create(float duration, uint8 opacity)
-constexpr uint32_t Vec2_ctorXY = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Text_setString = 0x83A2DD;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
+constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create;               // FadeTo::create(float duration, uint8 opacity)
+constexpr uint32_t Vec2_ctorXY = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Text_setString = rwlib::cocos2d::ui::Text::setString;
 constexpr uint32_t SafeBuffer_read = 0x45A269;             // (sb, out, src, n, index)
-constexpr uint32_t GUIReader_getInstance = 0x7BF1E5, GUIReader_widgetFromJsonFile = 0x7BF9FD;
+constexpr uint32_t GUIReader_getInstance = rwlib::cocostudio::GUIReader::getInstance, GUIReader_widgetFromJsonFile = rwlib::cocostudio::GUIReader::widgetFromJsonFile;
 constexpr uint32_t TextData_format = 0x492929;             // (string out, Type, id, ...)
 constexpr uint32_t CustomTextView_setXml = 0x4F931D;
 constexpr uint32_t SceneUtil_createShadowSprite = 0x45AD69;

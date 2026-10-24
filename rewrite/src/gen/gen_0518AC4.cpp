@@ -274,13 +274,13 @@ RW_FUNCTION(0x5197EC, "thunk to MyRecordScrollView::~MyRecordScrollView [deletin
 
 // sub_51B9C6
 static uint32_t calls_cocos2d_Node_unscheduleUpdate_51B9C6(uint32_t a0) {
-    return rw::call(0x894CB3, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::unscheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
 }
 RW_FUNCTION(0x51B9C6, "sub_51B9C6", calls_cocos2d_Node_unscheduleUpdate_51B9C6);
 
 // sub_51BA62
 static uint32_t calls_cocos2d_Node_scheduleUpdate_51BA62(uint32_t a0) {
-    return rw::call(0x894BA7, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::scheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
 }
 RW_FUNCTION(0x51BA62, "sub_51BA62", calls_cocos2d_Node_scheduleUpdate_51BA62);
 
@@ -1158,13 +1158,13 @@ RW_FUNCTION(0x52D5FC, "DeckRevolverView::setTargetMedalList", DeckRevolverView_s
 
 // sub_52E69E
 static uint32_t calls_cocos2d_Node_unscheduleUpdate_52E69E(uint32_t a0) {
-    return rw::call(0x894CB3, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::unscheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
 }
 RW_FUNCTION(0x52E69E, "sub_52E69E", calls_cocos2d_Node_unscheduleUpdate_52E69E);
 
 // sub_52E73A
 static uint32_t calls_cocos2d_Node_scheduleUpdate_52E73A(uint32_t a0) {
-    return rw::call(0x894BA7, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::scheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
 }
 RW_FUNCTION(0x52E73A, "sub_52E73A", calls_cocos2d_Node_scheduleUpdate_52E73A);
 
@@ -1176,13 +1176,13 @@ RW_FUNCTION(0x52E9BE, "sub_52E9BE", calls_DeckRevolverView_resetMoveMedal_52E9BE
 
 // sub_52FA44
 static void forward_to_cocos2d_Vec2_Vec2_dtor_52FA44(uint32_t a0) {
-    const uint32_t r0 = rw::call(0x8E4C17, {a0 + 0x10u});  // cocos2d::Vec2::~Vec2 [base destructor]
+    const uint32_t r0 = rw::call(rwlib::cocos2d::Vec2::dtor_base, {a0 + 0x10u});  // cocos2d::Vec2::~Vec2 [base destructor]
 }
 RW_FUNCTION(0x52FA44, "sub_52FA44", forward_to_cocos2d_Vec2_Vec2_dtor_52FA44);
 
 // sub_52FA4E
 static void calls_delete_52FA4E(uint32_t a0) {
-    rw::call(0x8E4C17, {a0 + 0x10u});  // cocos2d::Vec2::~Vec2 [base destructor]
+    rw::call(rwlib::cocos2d::Vec2::dtor_base, {a0 + 0x10u});  // cocos2d::Vec2::~Vec2 [base destructor]
     const uint32_t r1 = rw::call(0xC98F9B, {a0});  // delete
 }
 RW_FUNCTION(0x52FA4E, "sub_52FA4E", calls_delete_52FA4E);
@@ -1437,7 +1437,7 @@ RW_FUNCTION(0x53DB7A, "nullsub_429", nullsub_429_53DB7A);
 
 // sub_53E41E
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_53E41E(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x53E41E, "sub_53E41E", calls_cocos2d_ui_Widget_isTouchEnabled_53E41E);
 
@@ -1625,7 +1625,7 @@ RW_FUNCTION(0x53F740, "sub_53F740", calls_std_function_op_call_53F740);
 
 // sub_53F80E
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_53F80E(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x53F80E, "sub_53F80E", calls_cocos2d_ui_Widget_isTouchEnabled_53F80E);
 
@@ -2017,7 +2017,7 @@ RW_FUNCTION(0x54274A, "sub_54274A", fn_54274A);
 
 // sub_542806
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_542806(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x542806, "sub_542806", calls_cocos2d_ui_Widget_isTouchEnabled_542806);
 
@@ -2046,7 +2046,7 @@ RW_FUNCTION(0x543030, "sub_543030", return_constant_543030);
 
 // sub_54346A
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_54346A(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x54346A, "sub_54346A", calls_cocos2d_ui_Widget_isTouchEnabled_54346A);
 
@@ -2075,7 +2075,7 @@ RW_FUNCTION(0x5448F0, "nullsub_68", nullsub_68_5448F0);
 
 // sub_54525A
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_54525A(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x54525A, "sub_54525A", calls_cocos2d_ui_Widget_isTouchEnabled_54525A);
 
@@ -2157,7 +2157,7 @@ RW_FUNCTION(0x546BD6, "sub_546BD6", calls_SceneManager_enableLoadingIndicator_54
 
 // sub_546C76
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_546C76(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x546C76, "sub_546C76", calls_cocos2d_ui_Widget_isTouchEnabled_546C76);
 
@@ -2864,7 +2864,7 @@ RW_FUNCTION(0x555B80, "thunk to SerialCodeScrollView::~SerialCodeScrollView [del
 // SerialCodeScrollView::getLayoutPanel
 // IDA: int __fastcall SerialCodeScrollView::getLayoutPanel(cocos2d::ui::Widget **this, int a2)
 static uint32_t SerialCodeScrollView_getLayoutPanel_555F90(uint32_t self, uint32_t a1) {
-    return rw::call(0x8272B9, {rw::load<uint32_t>(self + 0x650u), 0x650u});  // cocos2d::ui::Widget::clone
+    return rw::call(rwlib::cocos2d::ui::Widget::clone, {rw::load<uint32_t>(self + 0x650u), 0x650u});  // cocos2d::ui::Widget::clone
 }
 RW_FUNCTION(0x555F90, "SerialCodeScrollView::getLayoutPanel", SerialCodeScrollView_getLayoutPanel_555F90);
 
@@ -2919,8 +2919,8 @@ RW_FUNCTION(0x556C34, "ChatScrollView::update", ChatScrollView_update_556C34);
 // ChatScrollView::getLayoutPanel
 // IDA: int __fastcall ChatScrollView::getLayoutPanel(cocos2d::ui::Widget **this, int a2)
 static uint32_t ChatScrollView_getLayoutPanel_556C3C(uint32_t self, uint32_t a1) {
-    rw::call(0x8272B9, {rw::load<uint32_t>(self + 0x634u)});  // cocos2d::ui::Widget::clone
-    return rw::call(0x8272B9, {rw::load<uint32_t>(self + 0x634u)});  // cocos2d::ui::Widget::clone
+    rw::call(rwlib::cocos2d::ui::Widget::clone, {rw::load<uint32_t>(self + 0x634u)});  // cocos2d::ui::Widget::clone
+    return rw::call(rwlib::cocos2d::ui::Widget::clone, {rw::load<uint32_t>(self + 0x634u)});  // cocos2d::ui::Widget::clone
 }
 RW_FUNCTION(0x556C3C, "ChatScrollView::getLayoutPanel", ChatScrollView_getLayoutPanel_556C3C);
 
@@ -2988,7 +2988,7 @@ RW_FUNCTION(0x558EB4, "ChatScrollDelView::update", ChatScrollDelView_update_558E
 // ChatScrollDelView::getLayoutPanel
 // IDA: int __fastcall ChatScrollDelView::getLayoutPanel(cocos2d::ui::Widget **this, int a2)
 static uint32_t ChatScrollDelView_getLayoutPanel_558EBC(uint32_t self, uint32_t a1) {
-    return rw::call(0x8272B9, {rw::load<uint32_t>(self + 0x634u), 0x634u});  // cocos2d::ui::Widget::clone
+    return rw::call(rwlib::cocos2d::ui::Widget::clone, {rw::load<uint32_t>(self + 0x634u), 0x634u});  // cocos2d::ui::Widget::clone
 }
 RW_FUNCTION(0x558EBC, "ChatScrollDelView::getLayoutPanel", ChatScrollDelView_getLayoutPanel_558EBC);
 
@@ -3071,7 +3071,7 @@ RW_FUNCTION(0x55AD04, "ChatBlockListScrollView::update", ChatBlockListScrollView
 // ChatBlockListScrollView::getLayoutPanel
 // IDA: int __fastcall ChatBlockListScrollView::getLayoutPanel(cocos2d::ui::Widget **this, int a2)
 static uint32_t ChatBlockListScrollView_getLayoutPanel_55AD0C(uint32_t self, uint32_t a1) {
-    return rw::call(0x8272B9, {rw::load<uint32_t>(self + 0x650u), 0x650u});  // cocos2d::ui::Widget::clone
+    return rw::call(rwlib::cocos2d::ui::Widget::clone, {rw::load<uint32_t>(self + 0x650u), 0x650u});  // cocos2d::ui::Widget::clone
 }
 RW_FUNCTION(0x55AD0C, "ChatBlockListScrollView::getLayoutPanel", ChatBlockListScrollView_getLayoutPanel_55AD0C);
 
@@ -3128,7 +3128,7 @@ RW_FUNCTION(0x55B9C4, "thunk to ChatStampListScrollView::~ChatStampListScrollVie
 // ChatStampListScrollView::getLayoutPanel
 // IDA: int __fastcall ChatStampListScrollView::getLayoutPanel(cocos2d::ui::Widget **this, int a2)
 static uint32_t ChatStampListScrollView_getLayoutPanel_55BD94(uint32_t self, uint32_t a1) {
-    return rw::call(0x8272B9, {rw::load<uint32_t>(self + 0x658u), 0x658u});  // cocos2d::ui::Widget::clone
+    return rw::call(rwlib::cocos2d::ui::Widget::clone, {rw::load<uint32_t>(self + 0x658u), 0x658u});  // cocos2d::ui::Widget::clone
 }
 RW_FUNCTION(0x55BD94, "ChatStampListScrollView::getLayoutPanel", ChatStampListScrollView_getLayoutPanel_55BD94);
 
@@ -3662,7 +3662,7 @@ RW_FUNCTION(0x5622A8, "thunk to BirthRegisterScrollView::~BirthRegisterScrollVie
 // BirthRegisterScrollView::getLayoutPanel
 // IDA: int __fastcall BirthRegisterScrollView::getLayoutPanel(cocos2d::ui::Widget **this, int a2)
 static uint32_t BirthRegisterScrollView_getLayoutPanel_562574(uint32_t self, uint32_t a1) {
-    return rw::call(0x8272B9, {rw::load<uint32_t>(self + 0x654u), 0x654u});  // cocos2d::ui::Widget::clone
+    return rw::call(rwlib::cocos2d::ui::Widget::clone, {rw::load<uint32_t>(self + 0x654u), 0x654u});  // cocos2d::ui::Widget::clone
 }
 RW_FUNCTION(0x562574, "BirthRegisterScrollView::getLayoutPanel", BirthRegisterScrollView_getLayoutPanel_562574);
 
@@ -4128,7 +4128,7 @@ RW_FUNCTION(0x56742E, "sub_56742E", forward_to_delete_56742E);
 
 // sub_567436
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_567436(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x567436, "sub_567436", calls_cocos2d_ui_Widget_isTouchEnabled_567436);
 
@@ -4275,7 +4275,7 @@ RW_FUNCTION(0x567A2A, "sub_567A2A", forward_to_delete_567A2A);
 
 // sub_567A32
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_567A32(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x567A32, "sub_567A32", calls_cocos2d_ui_Widget_isTouchEnabled_567A32);
 
@@ -4433,7 +4433,7 @@ RW_FUNCTION(0x5680C2, "sub_5680C2", forward_to_delete_5680C2);
 
 // sub_5680CA
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_5680CA(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x5680CA, "sub_5680CA", calls_cocos2d_ui_Widget_isTouchEnabled_5680CA);
 
@@ -4677,7 +4677,7 @@ RW_FUNCTION(0x572DF0, "sub_572DF0", return_constant_572DF0);
 
 // sub_573286
 static uint32_t forward_to_cocos2d_ui_Widget_create_573286(uint32_t a0) {
-    return rw::call(0x825875, {a0});  // cocos2d::ui::Widget::create
+    return rw::call(rwlib::cocos2d::ui::Widget::create, {a0});  // cocos2d::ui::Widget::create
 }
 RW_FUNCTION(0x573286, "sub_573286", forward_to_cocos2d_ui_Widget_create_573286);
 
@@ -4939,7 +4939,7 @@ RW_FUNCTION(0x57AD2C, "sub_57AD2C", fn_57AD2C);
 
 // sub_57ADD6
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_57ADD6(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x57ADD6, "sub_57ADD6", calls_cocos2d_ui_Widget_isTouchEnabled_57ADD6);
 
@@ -5447,7 +5447,7 @@ RW_FUNCTION(0x57D442, "sub_57D442", forward_to_delete_57D442);
 
 // sub_57D44A
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_57D44A(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(rw::load<uint32_t>(a0 + 4u) + 0x2E8u), 0x2E8u});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(rw::load<uint32_t>(a0 + 4u) + 0x2E8u), 0x2E8u});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x57D44A, "sub_57D44A", calls_cocos2d_ui_Widget_isTouchEnabled_57D44A);
 
@@ -5751,7 +5751,7 @@ RW_FUNCTION(0x57D87A, "sub_57D87A", forward_to_delete_57D87A);
 
 // sub_57D882
 static uint32_t calls_cocos2d_Node_unscheduleUpdate_57D882(uint32_t a0) {
-    return rw::call(0x894CB3, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::unscheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
 }
 RW_FUNCTION(0x57D882, "sub_57D882", calls_cocos2d_Node_unscheduleUpdate_57D882);
 
@@ -5819,7 +5819,7 @@ RW_FUNCTION(0x57D916, "sub_57D916", forward_to_delete_57D916);
 
 // sub_57D91E
 static uint32_t calls_cocos2d_Node_scheduleUpdate_57D91E(uint32_t a0) {
-    return rw::call(0x894BA7, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::scheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
 }
 RW_FUNCTION(0x57D91E, "sub_57D91E", calls_cocos2d_Node_scheduleUpdate_57D91E);
 
@@ -5850,13 +5850,13 @@ RW_FUNCTION(0x585A0A, "sub_585A0A", fn_585A0A);
 
 // sub_5864AE
 static uint32_t calls_cocos2d_Node_unscheduleUpdate_5864AE(uint32_t a0) {
-    return rw::call(0x894CB3, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::unscheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
 }
 RW_FUNCTION(0x5864AE, "sub_5864AE", calls_cocos2d_Node_unscheduleUpdate_5864AE);
 
 // sub_58654A
 static uint32_t calls_cocos2d_Node_scheduleUpdate_58654A(uint32_t a0) {
-    return rw::call(0x894BA7, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::scheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
 }
 RW_FUNCTION(0x58654A, "sub_58654A", calls_cocos2d_Node_scheduleUpdate_58654A);
 
@@ -6003,7 +6003,7 @@ RW_FUNCTION(0x58D59A, "sub_58D59A", fn_58D59A);
 
 // sub_58D656
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_58D656(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x58D656, "sub_58D656", calls_cocos2d_ui_Widget_isTouchEnabled_58D656);
 
@@ -6056,7 +6056,7 @@ RW_FUNCTION(0x58F3BE, "sub_58F3BE", fn_58F3BE);
 
 // sub_58F46A
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_58F46A(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x58F46A, "sub_58F46A", calls_cocos2d_ui_Widget_isTouchEnabled_58F46A);
 
@@ -6079,7 +6079,7 @@ RW_FUNCTION(0x5909FC, "sub_5909FC", fn_5909FC);
 
 // sub_591F76
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_591F76(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x591F76, "sub_591F76", calls_cocos2d_ui_Widget_isTouchEnabled_591F76);
 

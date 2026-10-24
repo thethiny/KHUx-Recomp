@@ -10,22 +10,22 @@ using namespace scene;
 using namespace signup;
 
 namespace {
-constexpr uint32_t Scene_create = 0x8A5F37, SceneBattleResult_create = 0x6053F1;
+constexpr uint32_t Scene_create = rwlib::cocos2d::Scene::create, SceneBattleResult_create = 0x6053F1;
 constexpr uint32_t SceneBattleResult_openGetKeyBladePopup = 0x682BE1, SceneUtil_openUserTitlePopup = 0x470725;
 constexpr uint32_t SceneUtil_settingTitleLabel = 0x45D8D1, SceneUtil_createOpenPopupAnimation = 0x45BC05;
-constexpr uint32_t SceneUtil_createClosePopupAnimation = 0x45BC61, ImageView_loadTexture = 0x839731;
+constexpr uint32_t SceneUtil_createClosePopupAnimation = 0x45BC61, ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;
 constexpr uint32_t function_vv_copy = 0x4683CD, function_vv_move = 0x47F905, function_b_call = 0x51022D;
 constexpr uint32_t audio_Manager_getInstance = 0x5BECFD, audio_Manager_load = 0x5BEEF5;
 constexpr uint32_t audio_Manager_getLayer = 0x5BF33D, audio_Manager_stop = 0x5BF3AD, audio_Layer_playSE = 0x5BF785;
-constexpr uint32_t LWFNode_create = 0x7EDF31, Bone_changeDisplayWithIndex = 0x7A2681, SafeBuffer_read = 0x45A269;
+constexpr uint32_t LWFNode_create = rwlib::cocos2d::LWFNode::create, Bone_changeDisplayWithIndex = rwlib::cocostudio::Bone::changeDisplayWithIndex, SafeBuffer_read = 0x45A269;
 constexpr uint32_t CarouselDeck_removeArmature = 0x5D120D, CarouselDeck_setBurstEncourage = 0x5D0DE1;
 constexpr uint32_t CarouselDeck_setTutorialAction = 0x5CF2D9;
-constexpr uint32_t Widget_getTouchBeganPosition = 0x8270A1, Widget_getTouchEndPosition = 0x8270B1;
-constexpr uint32_t DelayTime_create = 0x86852D, CallFunc_create = 0x866B39, Sequence_create = 0x867999;
+constexpr uint32_t Widget_getTouchBeganPosition = rwlib::cocos2d::ui::Widget::getTouchBeganPosition, Widget_getTouchEndPosition = rwlib::cocos2d::ui::Widget::getTouchEndPosition;
+constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create, CallFunc_create = rwlib::cocos2d::CallFunc::create, Sequence_create = rwlib::cocos2d::Sequence::create;
 constexpr uint32_t dynamic_cast_ = 0xC9A171, NodeVector_copy = 0x4962C5, NodeVector_dtor = 0x496317;
 constexpr uint32_t GuiltBurst_set_lwf_color = 0x495ED9, LWFNodeVector_pushSlow = 0x60C10D;
-constexpr uint32_t Touch_getLocation = 0x900E57, Node_convertToNodeSpace = 0x89599D;
-constexpr uint32_t Rect_ctor = 0x8DF18B, Rect_containsPoint = 0x8DF2A9;
+constexpr uint32_t Touch_getLocation = rwlib::cocos2d::Touch::getLocation, Node_convertToNodeSpace = rwlib::cocos2d::Node::convertToNodeSpace;
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff, Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint;
 constexpr uint32_t GOT_TI_NODE = 0xFD612C, GOT_TI_LWFBITMAP = 0xFD6130, GOT_TI_LWFNODE = 0xFD6134;
 constexpr uint32_t GOT_ANCHOR_MIDDLE = 0xFD6054, AudioPlaySystemSEDecide = 0x5C0CF9;
 constexpr uint32_t VT_NewKeybladeDone = 0xF6457C, VT_TitleDone = 0xF645A8;   // {this}

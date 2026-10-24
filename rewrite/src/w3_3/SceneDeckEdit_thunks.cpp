@@ -17,7 +17,7 @@ static uint32_t t_57ABA8(uint32_t self) {
         st32(v1, 0xf598dcu);
         uint32_t v2 = ld32(self + 4);
         st32(v1 + 4, v2);
-        call(0x8e4c03, {v1 + 8, self + 8});   // _ZN7cocos2d4Vec2C2ERKS0_
+        call(rwlib::cocos2d::Vec2::ctor_base__RKS0_, {v1 + 8, self + 8});   // _ZN7cocos2d4Vec2C2ERKS0_
         uint32_t v3 = ld32(self + 16);
         st32(v1 + 16, v3);
     }
@@ -31,7 +31,7 @@ static void t_57AC00(uint32_t self, uint32_t p) {
         st32(p, 0xf598dcu);
         uint32_t v1 = ld32(self + 4);
         st32(p + 4, v1);
-        call(0x8e4c03, {p + 8, self + 8});   // _ZN7cocos2d4Vec2C2ERKS0_
+        call(rwlib::cocos2d::Vec2::ctor_base__RKS0_, {p + 8, self + 8});   // _ZN7cocos2d4Vec2C2ERKS0_
         uint32_t v2 = ld32(self + 16);
         st32(p + 16, v2);
     }
@@ -40,13 +40,13 @@ RW_FUNCTION(0x57AC00, "StartDeckEditDialog::supportScrollRunOutAnimation $_21 __
 
 // StartDeckEditDialog::supportScrollRunOutAnimation $_21: __func::destroy
 static void t_57AC3C(uint32_t self) {
-    call(0x8e4c17, {self + 8});   // _ZN7cocos2d4Vec2D2Ev
+    call(rwlib::cocos2d::Vec2::dtor_base, {self + 8});   // _ZN7cocos2d4Vec2D2Ev
 }
 RW_FUNCTION(0x57AC3C, "StartDeckEditDialog::supportScrollRunOutAnimation $_21 __func::destroy", t_57AC3C);
 
 // StartDeckEditDialog::supportScrollRunOutAnimation $_21: __func::destroy_deallocate
 static void t_57AC46(uint32_t self) {
-    call(0x8e4c17, {self + 8});   // _ZN7cocos2d4Vec2D2Ev
+    call(rwlib::cocos2d::Vec2::dtor_base, {self + 8});   // _ZN7cocos2d4Vec2D2Ev
     call(fn::operator_delete, {self});
 }
 RW_FUNCTION(0x57AC46, "StartDeckEditDialog::supportScrollRunOutAnimation $_21 __func::destroy_deallocate", t_57AC46);

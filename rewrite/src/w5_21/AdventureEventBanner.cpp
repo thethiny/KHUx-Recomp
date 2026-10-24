@@ -13,12 +13,12 @@ namespace g {
 constexpr uint32_t SafeBuffer_read = 0x45A269;
 constexpr uint32_t SceneUtil_setShadow = 0x45BD15, SceneUtil_settingTitleLabel = 0x45D8D1;
 constexpr uint32_t SceneUtil_createLeftInAnimation = 0x45B5C5;
-constexpr uint32_t EaseSineOut_create = 0x860D09, Node_runAction = 0x894AED, Node_stopAllActions = 0x893815;
-constexpr uint32_t Director_getVisibleSize = 0x8F0675, Director_getVisibleOrigin = 0x8F06A1;
-constexpr uint32_t Sprite_create = 0x8A64DD, Color3B_ctor = 0x9062E7, Rect_ctor = 0x8DF18B;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5, EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
-constexpr uint32_t EventDispatcher_addSceneGraph = 0x8F3649;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create, Node_runAction = rwlib::cocos2d::Node::runAction, Node_stopAllActions = rwlib::cocos2d::Node::stopAllActions;
+constexpr uint32_t Director_getVisibleSize = rwlib::cocos2d::Director::getVisibleSize, Director_getVisibleOrigin = rwlib::cocos2d::Director::getVisibleOrigin;
+constexpr uint32_t Sprite_create = rwlib::cocos2d::Sprite::create__v, Color3B_ctor = rwlib::cocos2d::Color3B::ctor_base, Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create, EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
+constexpr uint32_t EventDispatcher_addSceneGraph = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
 constexpr uint32_t FunctionBTE_swap = 0x483E4D, FunctionVV_swap = 0x4EE86D, FunctionVI_swap = 0x5428E1;
 constexpr uint32_t ThrowOutOfRange = 0x47CCE1;
 constexpr uint32_t Date_calculateIntervalSinceNow = 0x4922D5, createTimeLeftString = 0x492B75;

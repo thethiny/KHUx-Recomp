@@ -9,9 +9,9 @@ namespace scene {
 
 namespace fn {
 constexpr uint32_t StringBuffer_ctor = 0x49140D;          // StringBuffer(this, fmt, ...): a 1 KB printf buffer
-constexpr uint32_t Widget_addTouchEventListener = 0x826CCF;   // (widget, std::function<void(Ref*,TouchEventType)>)
-constexpr uint32_t GUIReader_getInstance = 0x7BF1E5;
-constexpr uint32_t GUIReader_widgetFromJsonFile = 0x7BF9FD;   // (reader, const char* file)
+constexpr uint32_t Widget_addTouchEventListener = rwlib::cocos2d::ui::Widget::addTouchEventListener;   // (widget, std::function<void(Ref*,TouchEventType)>)
+constexpr uint32_t GUIReader_getInstance = rwlib::cocostudio::GUIReader::getInstance;
+constexpr uint32_t GUIReader_widgetFromJsonFile = rwlib::cocostudio::GUIReader::widgetFromJsonFile;   // (reader, const char* file)
 constexpr uint32_t SceneManager_getInstance = 0x60C26D;
 constexpr uint32_t SceneManager_getPopupLayer = 0x613E69;
 constexpr uint32_t SceneManager_getPopupLayer2 = 0x613E71;
@@ -21,8 +21,8 @@ constexpr uint32_t APIManager_getInstance = 0x4BA8C9;
 constexpr uint32_t AppState_getInstance = 0x4E66DD;
 constexpr uint32_t Misc_create = 0x786D5D;                // master::Misc::create(shared_ptr out, int id)
 constexpr uint32_t CustomTextView_setXml = 0x4F931D;
-constexpr uint32_t ImageView_loadTexture = 0x839731;     // (image, const string&, TextureResType)
-constexpr uint32_t Color3B_ctor = 0x9062E7;              // (out, r, g, b)
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;     // (image, const string&, TextureResType)
+constexpr uint32_t Color3B_ctor = rwlib::cocos2d::Color3B::ctor_base;              // (out, r, g, b)
 }  // namespace fn
 
 constexpr uint32_t VEC2_ANCHOR_MIDDLE = 0xFEF5C0;         // cocos2d::Vec2::ANCHOR_MIDDLE

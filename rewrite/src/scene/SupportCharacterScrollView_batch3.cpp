@@ -20,11 +20,11 @@ constexpr uint32_t SupportIndex_find = 0x490275;              // unordered_map<u
 constexpr uint32_t SafeBuffer_read = 0x45A269;                // (buffer, dst, src, n, index)
 constexpr uint32_t FunctionVI_call = 0x4F321D;                // std::function<void(int)>::operator()(int)
 constexpr uint32_t IScrollProtocol_updateLayout = 0x4F6CF5;   // (view, bool)
-constexpr uint32_t Touch_getLocation = 0x900E57;              // (Vec2* out, Touch*)
-constexpr uint32_t Node_convertToNodeSpace = 0x89599D;        // (Vec2* out, node, const Vec2&)
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Rect_ctor = 0x8DF18B;                      // (Rect*, x, y, w, h)
-constexpr uint32_t Rect_containsPoint = 0x8DF2A9;
+constexpr uint32_t Touch_getLocation = rwlib::cocos2d::Touch::getLocation;              // (Vec2* out, Touch*)
+constexpr uint32_t Node_convertToNodeSpace = rwlib::cocos2d::Node::convertToNodeSpace;        // (Vec2* out, node, const Vec2&)
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff;                      // (Rect*, x, y, w, h)
+constexpr uint32_t Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint;
 constexpr uint32_t THROW_OUT_OF_RANGE = 0x47CCE1;
 constexpr uint32_t DIVSI3 = 0xCD5E8D;
 constexpr uint32_t MEMCPY = 0x40E164;
@@ -34,7 +34,7 @@ constexpr uint32_t S_MAIN_PANEL = 0xDFD1FC, S_MEDAL = 0xDFD05F;
 
 constexpr uint32_t FunctionTouchVoid_swap = 0x4F3699;         // std::function<void(Touch*, Event*)>::swap
 constexpr uint32_t SceneUtil_createTapAnimation = 0x45BBA9;   // (node, std::function<void()>)
-constexpr uint32_t Node_runAction = 0x894AED;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
 constexpr uint32_t VT_touchLambda = 0xF55E40;                 // [3 words]
 constexpr uint32_t VT_tapDone = 0xF55E6C;                     // [word]
 constexpr uint32_t S_SUPPORT_PANEL = 0xDF8F8B;

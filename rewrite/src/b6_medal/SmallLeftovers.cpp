@@ -9,7 +9,7 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Scene_create = 0x8A5F37, SceneMedalList_create = 0x48A635, SceneSaleMedal_create = 0x48A0ED;
+constexpr uint32_t Scene_create = rwlib::cocos2d::Scene::create, SceneMedalList_create = 0x48A635, SceneSaleMedal_create = 0x48A0ED;
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
 constexpr uint32_t SM_changeSceneLayer = 0x612B99;
 constexpr uint32_t FunctionVB_assign = 0x490109;
@@ -20,8 +20,8 @@ constexpr uint32_t ThrowOutOfRange = 0x47CCE1;
 constexpr uint32_t SceneUtil_openPartyInfoPopup = 0x46A3E9;
 constexpr uint32_t SceneUtil_shareScreenShot = 0x47A559, SceneUtil_openFBSharePhotoPopup = 0x4799D9;
 constexpr uint32_t SceneShopTop_callShopAPI = 0x68BB9D;
-constexpr uint32_t Touch_getLocation = 0x900E57, Node_convertToNodeSpace = 0x89599D;
-constexpr uint32_t Rect_ctor = 0x8DF18B, Rect_containsPoint = 0x8DF2A9, Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Touch_getLocation = rwlib::cocos2d::Touch::getLocation, Node_convertToNodeSpace = rwlib::cocos2d::Node::convertToNodeSpace;
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff, Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t TitleCellTouched = 0x50F7F5;                 // sub_50F7F4
 constexpr uint32_t MEMCPY = 0x40E164;
 constexpr uint32_t GOT_FUNC_LAYER_VT = 0xFD6074;               // __func<Layer*(*)()> vtable

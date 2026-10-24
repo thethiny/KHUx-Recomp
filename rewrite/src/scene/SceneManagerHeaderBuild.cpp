@@ -26,24 +26,24 @@ constexpr uint32_t DECK_FLAG_2E0 = 0x2E0, DECK_FLAG_2E1 = 0x2E1;   // bytes clea
 
 // ---- library
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
-constexpr uint32_t Vec2_ctor_ff = 0x8E4B9D;               // Vec2(float x, float y)
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Size_copy = 0x8DF02D;                  // Size(const Size&)
-constexpr uint32_t Node_convertToWorldSpace = 0x895A39;   // (Vec2* out, Node*, const Vec2&)
+constexpr uint32_t Vec2_ctor_ff = rwlib::cocos2d::Vec2::ctor_base__ff;               // Vec2(float x, float y)
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Size_copy = rwlib::cocos2d::Size::ctor_base__RKS0_;                  // Size(const Size&)
+constexpr uint32_t Node_convertToWorldSpace = rwlib::cocos2d::Node::convertToWorldSpace;   // (Vec2* out, Node*, const Vec2&)
 constexpr uint32_t CustomTextView_setHAlign = 0x4F92D9;
 constexpr uint32_t ImageButton_create = 0x531239;         // (std::string by value, bool)
 constexpr uint32_t ImageButton_setTargetView = 0x5318C1;  // (button, Node*, float)
 constexpr uint32_t ImageButton_addTouchEventListener = 0x5315B1;
-constexpr uint32_t ArmatureDataManager_getInstance = 0x7AC9B5;
-constexpr uint32_t ArmatureDataManager_addArmatureFileInfo = 0x7AD7BD;
-constexpr uint32_t Armature_create = 0x79F3C7;            // (const std::string& name)
-constexpr uint32_t ArmatureAnimation_setMovementEventCallFunc = 0x7A3C69;   // (anim, std::function by value)
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5;
-constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
+constexpr uint32_t ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance;
+constexpr uint32_t ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;
+constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create;            // (const std::string& name)
+constexpr uint32_t ArmatureAnimation_setMovementEventCallFunc = rwlib::cocostudio::ArmatureAnimation::setMovementEventCallFunc;   // (anim, std::function by value)
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create;
+constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
 constexpr uint32_t TouchBeganFunction_swap = 0x483E4D;    // std::function<bool(Touch*, Event*)>::swap
 constexpr uint32_t TouchFunction_swap = 0x4F3699;         // std::function<void(Touch*, Event*)>::swap
 constexpr uint32_t TouchFunction_assignLambda = 0x611B61; // sub_611B60: function<void(Touch*,Event*)>::operator=(initGlobalMenu $_18 [this])
-constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = 0x8F3649;
+constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
 constexpr uint32_t SetMenuButtonText = 0x611AA1;          // sub_611AA0(ui::Text*, text id): a global menu button label
 constexpr uint32_t UpdateHeaderAvatarIcon = 0x611725;     // SceneManager::updateHeaderAvatarIcon(Node*, int)
 constexpr uint32_t FinishFunction_swap = 0x607685;        // std::function<void(std::function<void(bool)>)>::swap

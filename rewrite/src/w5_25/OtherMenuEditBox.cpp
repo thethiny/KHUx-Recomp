@@ -8,7 +8,7 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t EditBox_getText = 0x85520D;
+constexpr uint32_t EditBox_getText = rwlib::cocos2d::extension::EditBox::getText;
 constexpr uint32_t String_compareC = 0x47CBD5;         // std::string::compare(const char*)
 constexpr uint32_t SceneUtil_setButtonEnabled = 0x468625;   // (Button*, Text*, bool enabled, bool)
 constexpr uint32_t SceneUtil_editBoxEditingDidEnd = 0x45C61D;   // (Node**, Label*, const char*)

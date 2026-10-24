@@ -9,7 +9,7 @@ constexpr uint32_t SceneUtil_createBottomInAnimation = 0x45B2F9, SceneUtil_creat
 constexpr uint32_t SceneUtil_createBottomOutAnimation = 0x45B469, SceneUtil_createRightOutAnimation = 0x45BA3D;
 constexpr uint32_t SceneUtil_createShadowSprite = 0x45AD69;
 constexpr uint32_t SceneManager_getPopupLayer2 = 0x613E71;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr uint32_t FunctionVV_move = 0x47F905;
 constexpr uint32_t M_setCameraPosition = 0x640851;
 constexpr uint32_t VT_in_15 = 0xF6170C, VT_camera_20 = 0xF61630, VT_out_16 = 0xF616E0;

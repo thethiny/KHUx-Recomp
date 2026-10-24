@@ -36,24 +36,24 @@ constexpr uint32_t GOT_ANCHOR_TOP_LEFT = 0xFD666C, GOT_ANCHOR_BOTTOM_LEFT = 0xFD
 constexpr float SKIP_BUTTON_X = 96.0f, SKIP_BUTTON_TOP = -32.0f;
 constexpr float SKIP_TOUCH_GROW = 64.0f, SKIP_TOUCH_SHIFT = -32.0f;
 
-constexpr uint32_t Scene_create = 0x8A5F37, Layer_ctor = 0x88A7D1, Layer_dtor = 0x88A88D, Layer_init = 0x88A8A1;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Scene_create = rwlib::cocos2d::Scene::create, Layer_ctor = rwlib::cocos2d::Layer::ctor_base, Layer_dtor = rwlib::cocos2d::Layer::dtor_base, Layer_init = rwlib::cocos2d::Layer::init;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t audio_Manager_getInstance = 0x5BECFD, audio_Manager_load = 0x5BEEF5;
 constexpr uint32_t SceneManager_getInstance = 0x60C26D, SceneManager_setEnabledTouchEffect = 0x60CF65;
 constexpr uint32_t SceneManager_removeBackground = 0x611691, SceneManager_changeSceneLayer = 0x612B99;
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5, EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
-constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = 0x8F3649;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create, EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
+constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
 constexpr uint32_t function_touch_bool_swap = 0x483E4D;   // std::function<bool(Touch*, Event*)>::swap
 constexpr uint32_t function_touch_void_swap = 0x4F3699;   // std::function<void(Touch*, Event*)>::swap
 constexpr uint32_t function_vv_assign = 0x4EB9CD;         // std::function<void()>::operator=(const function&)
 constexpr uint32_t AppGetGrameFrameWidth = 0x799B31;
 constexpr uint32_t CEILF = 0x40EFBC;                      // ceilf (import)
-constexpr uint32_t Sprite_create = 0x8A64DD, Rect_ctor = 0x8DF18B, Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t ArmatureDataManager_getInstance = 0x7AC9B5, ArmatureDataManager_addArmatureFileInfo = 0x7AD7BD;
-constexpr uint32_t Armature_create = 0x79F3C7;
+constexpr uint32_t Sprite_create = rwlib::cocos2d::Sprite::create__v, Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff, Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance, ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;
+constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create;
 constexpr uint32_t StringBuffer_ctor = 0x49140D, FlashDrama_ctor = 0x6F2839;
-constexpr uint32_t Node_unscheduleUpdate = 0x894CB3;
-constexpr uint32_t Touch_getLocation = 0x900E57, Rect_containsPoint = 0x8DF2A9;
+constexpr uint32_t Node_unscheduleUpdate = rwlib::cocos2d::Node::unscheduleUpdate;
+constexpr uint32_t Touch_getLocation = rwlib::cocos2d::Touch::getLocation, Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint;
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
 constexpr uint32_t Sprite_setTextureRect = 0x284, Armature_getAnimation = 0x298, Node_getBoundingBox = 0x1A0;
 constexpr uint32_t ArmatureAnimation_playWithIndex = 0x70;   // (index, durationTo = -1, loop = -1)

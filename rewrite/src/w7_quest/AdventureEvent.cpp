@@ -17,8 +17,8 @@ constexpr uint32_t SAS_scrollRunInAnimation = 0x726285, SAS_backButtonRunInAnima
 constexpr uint32_t SceneSphereBoardSelect_getSphereBoardValidCnt = 0x6BB4FD;
 constexpr uint32_t SceneUtil_settingTitleLabel = 0x45D8D1, SceneUtil_openTutorialPopup = 0x4684C9;
 constexpr uint32_t Date_calculateIntervalSinceNow = 0x4922D5, text_createTimeLeftString = 0x492B75;
-constexpr uint32_t Node_stopAllActions = 0x893815, FadeIn_create = 0x86B115, FadeOut_create = 0x86B25D;
-constexpr uint32_t DelayTime_create = 0x86852D, CallFunc_create = 0x866B39, Sequence_create = 0x867999;
+constexpr uint32_t Node_stopAllActions = rwlib::cocos2d::Node::stopAllActions, FadeIn_create = rwlib::cocos2d::FadeIn::create, FadeOut_create = rwlib::cocos2d::FadeOut::create;
+constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create, CallFunc_create = rwlib::cocos2d::CallFunc::create, Sequence_create = rwlib::cocos2d::Sequence::create;
 constexpr uint32_t MedalDataManager_getInstance = 0x76AD69, MedalDataManager_getMedalData = 0x76ADB5;
 constexpr uint32_t SafeBuffer_read = 0x45A269, ThrowOutOfRange = 0x47CCE1;
 constexpr uint32_t function_vv_copy = 0x4683CD, function_vv_call = 0x470E69;

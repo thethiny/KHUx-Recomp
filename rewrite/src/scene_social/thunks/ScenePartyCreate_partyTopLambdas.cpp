@@ -17,10 +17,10 @@ constexpr uint32_t IInOutAnimation_runOutAnimation = 0x6F24B5; // (anim, std::fu
 constexpr uint32_t SceneUtil_openOkDialog4Line = 0x45C775;     // (const string&, function<void(bool)> by value, label)
 constexpr uint32_t SceneUtil_openOkCancelDialog4Line = 0x45C951;
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
-constexpr uint32_t DelayTime_create = 0x86852D;
-constexpr uint32_t CallFunc_create = 0x866B39;
-constexpr uint32_t Sequence_create = 0x867999;
-constexpr uint32_t Node_runAction = 0x894AED;
+constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create;
+constexpr uint32_t CallFunc_create = rwlib::cocos2d::CallFunc::create;
+constexpr uint32_t Sequence_create = rwlib::cocos2d::Sequence::create;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
 constexpr uint32_t function_vv_call = 0x470E69;
 constexpr uint32_t SafeBuffer_read = 0x45A269;
 }  // namespace g

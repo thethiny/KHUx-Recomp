@@ -27,9 +27,9 @@ RW_FUNCTION(0x5D5500, "LWFNodeGroup::LWFNodeGroup::$_0 target_type()", LWFNodeGr
 // LWFNodeGroup::LWFNodeGroup lambdas {this}: the group's update schedule follows its LWF nodes
 namespace LWFNodeGroup_w3 {
 // $_1: stop updating
-void unscheduleUpdate(uint32_t lambda) { rw::call(0x894CB3, {rw::load<uint32_t>(lambda + 4)}); }   // Node::unscheduleUpdate
+void unscheduleUpdate(uint32_t lambda) { rw::call(rwlib::cocos2d::Node::unscheduleUpdate, {rw::load<uint32_t>(lambda + 4)}); }   // Node::unscheduleUpdate
 // $_0: start updating
-void scheduleUpdate(uint32_t lambda) { rw::call(0x894BA7, {rw::load<uint32_t>(lambda + 4)}); }     // Node::scheduleUpdate
+void scheduleUpdate(uint32_t lambda) { rw::call(rwlib::cocos2d::Node::scheduleUpdate, {rw::load<uint32_t>(lambda + 4)}); }     // Node::scheduleUpdate
 }  // namespace LWFNodeGroup_w3
 
 RW_FUNCTION(0x5D543A, "LWFNodeGroup::LWFNodeGroup::$_1 operator()", LWFNodeGroup_w3::unscheduleUpdate);

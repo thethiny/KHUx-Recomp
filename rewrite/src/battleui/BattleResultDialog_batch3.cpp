@@ -19,9 +19,9 @@ constexpr uint32_t CustomTextView_setXml = 0x4F931D;      // (view, const std::s
 constexpr uint32_t String_init = 0x47CD93;                // std::string(const char*, size_t)
 constexpr uint32_t STRLEN = 0x40E08C;
 constexpr uint32_t Misc_create = 0x786D5D;                // master::Misc::create(shared_ptr out, id)
-constexpr uint32_t Size_ctor = 0x8DF027;                   // (Size*, w, h)
-constexpr uint32_t MoveTo_create = 0x86941D;              // (float, const Vec2&)
-constexpr uint32_t Spawn_create = 0x8682F5;               // (action, ..., nullptr)
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;                   // (Size*, w, h)
+constexpr uint32_t MoveTo_create = rwlib::cocos2d::MoveTo::create;              // (float, const Vec2&)
+constexpr uint32_t Spawn_create = rwlib::cocos2d::Spawn::create;               // (action, ..., nullptr)
 constexpr uint32_t V_getAnimation = 0x298;                // cocostudio::Armature::getAnimation
 constexpr uint32_t V_animPlay = 0x68;                     // ArmatureAnimation::play(name, durationTo, loop)
 

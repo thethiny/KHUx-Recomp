@@ -33,15 +33,15 @@ constexpr uint32_t ADPCM_DECODER_DECODE = 0xCE8A50, ADPCM_SAMPLES_PER_BLOCK = 0x
 constexpr uint32_t SS_GET_READ_ADDR = 0xCE1B0C, SS_IS_DATA_END = 0xCE1B8C, SS_GET_READABLE_SIZE = 0xCE1C08,
                    SS_SET_READ_BYTES = 0xCE1C98, SS_STEP_OVER_LOOP_END = 0xCE1DD8;
 // libvorbis / libogg / libvorbisfile
-constexpr uint32_t OV_CLEAR = 0xCEEDB4, OV_OPEN_CALLBACKS = 0xCEFBAC, OV_READ = 0xCF1394, OV_PCM_TOTAL = 0xCEF2F0,
-                   GET_NEXT_PAGE = 0xCE3BFC, OGG_SYNC_RESET = 0xCF3610, OGG_STREAM_RESET_SERIALNO = 0xCF369C,
-                   OGG_STREAM_PAGEIN = 0xCF3254, OGG_STREAM_PACKETOUT = 0xCF36D0, OGG_STREAM_PACKETPEEK = 0xCF3704,
-                   OGG_PAGE_SERIALNO = 0xCF237C, OGG_PAGE_BOS = 0xCF2270, VORBIS_SYNTHESIS_RESTART = 0xCE9F34,
-                   VORBIS_PACKET_BLOCKSIZE = 0xCED6F4, VORBIS_INFO_BLOCKSIZE = 0xCEADD4,
-                   VORBIS_SYNTHESIS_TRACKONLY = 0xCED6EC, VORBIS_SYNTHESIS_BLOCKIN = 0xCEA3BC,
-                   VORBIS_SYNTHESIS_PCMOUT = 0xCEAA04, VORBIS_SYNTHESIS_READ = 0xCEAA80, VORBIS_SYNTHESIS = 0xCED6E4,
-                   VORBIS_DSP_CLEAR = 0xCE9FA4, VORBIS_BLOCK_CLEAR = 0xCE9EF0, VORBIS_INFO_CLEAR = 0xCEAE20,
-                   VORBIS_COMMENT_CLEAR = 0xCEAD08;
+constexpr uint32_t OV_CLEAR = rwlib::ov_clear, OV_OPEN_CALLBACKS = rwlib::ov_open_callbacks, OV_READ = rwlib::ov_read, OV_PCM_TOTAL = rwlib::ov_pcm_total,
+                   GET_NEXT_PAGE = rwlib::sub_CE3BFC, OGG_SYNC_RESET = rwlib::ogg_sync_reset, OGG_STREAM_RESET_SERIALNO = rwlib::ogg_stream_reset_serialno,
+                   OGG_STREAM_PAGEIN = rwlib::ogg_stream_pagein, OGG_STREAM_PACKETOUT = rwlib::ogg_stream_packetout, OGG_STREAM_PACKETPEEK = rwlib::ogg_stream_packetpeek,
+                   OGG_PAGE_SERIALNO = rwlib::ogg_page_serialno, OGG_PAGE_BOS = rwlib::ogg_page_bos, VORBIS_SYNTHESIS_RESTART = rwlib::vorbis_synthesis_restart,
+                   VORBIS_PACKET_BLOCKSIZE = rwlib::vorbis_packet_blocksize, VORBIS_INFO_BLOCKSIZE = rwlib::vorbis_info_blocksize,
+                   VORBIS_SYNTHESIS_TRACKONLY = rwlib::vorbis_synthesis_trackonly, VORBIS_SYNTHESIS_BLOCKIN = rwlib::vorbis_synthesis_blockin,
+                   VORBIS_SYNTHESIS_PCMOUT = rwlib::vorbis_synthesis_pcmout, VORBIS_SYNTHESIS_READ = rwlib::vorbis_synthesis_read, VORBIS_SYNTHESIS = rwlib::vorbis_synthesis,
+                   VORBIS_DSP_CLEAR = rwlib::vorbis_dsp_clear, VORBIS_BLOCK_CLEAR = rwlib::vorbis_block_clear, VORBIS_INFO_CLEAR = rwlib::vorbis_info_clear,
+                   VORBIS_COMMENT_CLEAR = rwlib::vorbis_comment_clear;
 constexpr uint32_t S_ADPCM_BUFFER_FAILED = 0xEEDA58, S_PCM_STREAM_BUFFER_FAILED = 0xEEDAF4,
                    S_ADPCM_STREAM_BUFFER_FAILED = 0xEEDB38, S_VORBIS_STREAM_BUFFER_FAILED = 0xEEDB94,
                    S_OV_OPEN_FAILED = 0xEED86C, S_OV_READ_ERROR = 0xEEDB80;

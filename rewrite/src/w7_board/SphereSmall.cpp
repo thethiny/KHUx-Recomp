@@ -7,12 +7,12 @@
 using namespace scene;
 
 namespace {
-constexpr uint32_t Director_getInstance = 0x8EE519, Director_getTextureCache = 0x8EFE69;
-constexpr uint32_t TextureCache_addImage = 0x917DA9, StringBuffer_ctor = 0x49140D, SafeBuffer_read = 0x45A269;
+constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance, Director_getTextureCache = rwlib::cocos2d::Director::getTextureCache;
+constexpr uint32_t TextureCache_addImage = rwlib::cocos2d::TextureCache::addImage, StringBuffer_ctor = 0x49140D, SafeBuffer_read = 0x45A269;
 constexpr uint32_t Skill_create = 0x78BDE9, Medal_create = 0x785871, Keyblade_create = 0x783F9D;
 constexpr uint32_t Material_create = 0x7852E5;
 constexpr uint32_t SphereUI_selectIncentiveSub = 0x795751;
-constexpr uint32_t Scene_create = 0x8A5F37, SceneSphereBoard_create = 0x6BCE79;
+constexpr uint32_t Scene_create = rwlib::cocos2d::Scene::create, SceneSphereBoard_create = 0x6BCE79;
 constexpr uint32_t IInOutAnimation_runOutAnimation = 0x6F24B5, SceneManager_changeSceneLayer = 0x612B99;
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9, SceneUtil_openMedalInfoPopup = 0x466EF5;
 constexpr uint32_t map_sphere_find = 0x503479, vector_int_copy = 0x4AF707;

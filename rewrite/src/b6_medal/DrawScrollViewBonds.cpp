@@ -18,9 +18,9 @@ constexpr uint32_t SceneUtil_createOpenPopupAnimation = 0x45BC05, SceneUtil_crea
 constexpr uint32_t SceneUtil_openOkDialog4Line = 0x45C775, SceneUtil_openMedalOverDialog = 0x460251;
 constexpr uint32_t SceneUtil_isOverMedalSlot = 0x46A085;
 constexpr uint32_t CustomTextView_setXml = 0x4F931D;
-constexpr uint32_t FadeTo_create = 0x86B3E1, EaseSineOut_create = 0x860D09;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Widget_addTouchEventListener = 0x826CCF;
+constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create, EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Widget_addTouchEventListener = rwlib::cocos2d::ui::Widget::addTouchEventListener;
 constexpr uint32_t SafeBuffer_read = 0x45A269;
 constexpr uint32_t AudioManager_getInstance = 0x5BECFD, AudioManager_getLayer = 0x5BF33D;
 constexpr uint32_t AudioLayer_playSE = 0x5BF785;

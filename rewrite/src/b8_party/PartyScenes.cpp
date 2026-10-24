@@ -6,7 +6,7 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Scene_create = 0x8A5F37;
+constexpr uint32_t Scene_create = rwlib::cocos2d::Scene::create;
 constexpr uint32_t ScenePartyTop_create = 0x53E30D, ScenePartyMember_create = 0x659E6D;
 constexpr uint32_t ScenePartyManagement_create = 0x657635;
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;

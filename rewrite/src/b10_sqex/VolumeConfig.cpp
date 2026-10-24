@@ -21,7 +21,7 @@ constexpr uint32_t BUS_SIZE = 0x10, LABEL_SIZE = 0x3C;
 // imports and libc
 constexpr uint32_t STRLEN = 0x40E08C, STRNCASECMP = 0x442370, MEMCPY = 0x442298, MEMSET = 0x442310,
                    STRCHR = 0x410198, STRCPY = 0x42A9AC, STRCAT = 0x44A9D4, MALLOC = 0x40FF58, FREE = 0x40FF64;
-constexpr uint32_t STRTOD = 0xC9CC59, SPRINTF = 0xCA4A95;
+constexpr uint32_t STRTOD = rwlib::sub_C9CC58, SPRINTF = 0xCA4A95;
 constexpr uint32_t S_END = 0xEEDBDC, S_BUS = 0xEEDBE4, S_MASTER = 0xEEDBEC, S_FLOAT = 0xEEDBF4;
 constexpr uint32_t S_BUS_MASTER = 0xEEDBF8;   // ";BUS MASTER " (12 bytes)
 constexpr uint32_t S_BUS_PREFIX = 0xEEDC08;   // ";BUS " (5 bytes with its NUL)

@@ -5,8 +5,8 @@
 namespace platform {
 
 namespace {
-constexpr uint32_t GET_STATIC_METHOD_INFO = 0xA4225D;   // cocos2d::JniHelper::getStaticMethodInfo(info, cls, name, sig)
-constexpr uint32_t GET_METHOD_INFO = 0xA422DD;          // cocos2d::JniHelper::getMethodInfo(info, cls, name, sig)
+constexpr uint32_t GET_STATIC_METHOD_INFO = rwlib::cocos2d::JniHelper::getStaticMethodInfo;   // cocos2d::JniHelper::getStaticMethodInfo(info, cls, name, sig)
+constexpr uint32_t GET_METHOD_INFO = rwlib::cocos2d::JniHelper::getMethodInfo;          // cocos2d::JniHelper::getMethodInfo(info, cls, name, sig)
 constexpr uint32_t CALL_STATIC_OBJECT_METHOD = 0x4E0939;   // _JNIEnv::CallStaticObjectMethod(env, cls, mid, ...)
 constexpr uint32_t CALL_STATIC_VOID_METHOD = 0x4E0D09;     // _JNIEnv::CallStaticVoidMethod(env, cls, mid, ...)
 constexpr uint32_t CALL_VOID_METHOD = 0x4E17DD;            // _JNIEnv::CallVoidMethod(env, obj, mid, ...)

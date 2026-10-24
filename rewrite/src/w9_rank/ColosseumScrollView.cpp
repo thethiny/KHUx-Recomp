@@ -10,13 +10,13 @@ using namespace scene;
 namespace {
 namespace g {
 constexpr uint32_t strlen = 0x40E08C;
-constexpr uint32_t Layout_ctor = 0x828671;
-constexpr uint32_t Ref_retain = 0x8FD0B5, Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Layout_ctor = rwlib::cocos2d::ui::Layout::ctor_base;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t VectorBaseInt_dtor = 0x478961;
 constexpr uint32_t IScrollProtocol_dtor = 0x4F57E1, IScrollProtocol_setEnabledScrollBar = 0x4F6FE9;
 constexpr uint32_t BaseScrollViewInt_init = 0x4FA8A1;
-constexpr uint32_t Widget_create = 0x825875, Widget_clone = 0x8272B9;
-constexpr uint32_t Size_ctor = 0x8DF027;
+constexpr uint32_t Widget_create = rwlib::cocos2d::ui::Widget::create, Widget_clone = rwlib::cocos2d::ui::Widget::clone;
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;
 constexpr uint32_t ThrowOutOfRange = 0x47CCE1;
 constexpr uint32_t SafeBuffer_read = 0x45A269;
 constexpr uint32_t SceneUtil_setShadow = 0x45BD15;
@@ -24,9 +24,9 @@ constexpr uint32_t StageVector_copy = 0x54E489, StageVector_dtor = 0x4B3A95;   /
 constexpr uint32_t Colosseum_create = 0x77C4E9, ColosseumStage_create = 0x77CF95;   // master::
 constexpr uint32_t ImageButton_create = 0x531239, ImageButton_setTargetView = 0x5318C1;
 constexpr uint32_t ImageButton_addTouchEventListener = 0x5315B1;
-constexpr uint32_t Director_getInstance = 0x8EE519;
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5, EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
-constexpr uint32_t EventDispatcher_addSceneGraph = 0x8F3649;
+constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create, EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
+constexpr uint32_t EventDispatcher_addSceneGraph = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
 constexpr uint32_t FunctionBTE_swap = 0x483E4D, FunctionVTE_swap = 0x4F3699;
 // this class
 constexpr uint32_t getLayoutPanel = 0x54DA95, updateSelectItems = 0x54E4F9, assignEnded = 0x54E7C1;

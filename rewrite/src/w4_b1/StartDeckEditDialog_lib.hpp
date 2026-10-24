@@ -39,8 +39,8 @@ constexpr uint32_t S_SUBCLEAR = 0xDFF9E8, S_PANEL_KB = 0xDFF94D, S_AREA = 0xDF93
 constexpr uint32_t S_SUPPORT_WIN = 0xDFF956, S_SCENE_JSON = 0xDFF871;   // StartDeckEdit2Scene_ver120.json (50 chars)
 
 // guest functions
-constexpr uint32_t Node_ctor = 0x892531, Node_dtor = 0x8927ED, Node_init = 0x892B69;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Node_ctor = rwlib::cocos2d::Node::ctor_base, Node_dtor = rwlib::cocos2d::Node::dtor_base, Node_init = rwlib::cocos2d::Node::init;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t AvatarIconCache_dtor = 0x5CA8FD;
 constexpr uint32_t CampaignVector_baseDtor = 0x573591;
 constexpr uint32_t FunctionVV_assign = 0x4EB9CD;
@@ -99,10 +99,10 @@ constexpr uint32_t MedalDataManager_getInstance = 0x76AD69;
 constexpr uint32_t MedalDataManager_getMedalData = 0x76ADB5;
 constexpr uint32_t MedalVector_pushBackSlow = 0x487A39;
 constexpr uint32_t MedalVector_baseDtor = 0x46B119;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
-constexpr uint32_t FadeTo_create = 0x86B3E1, FadeIn_create = 0x86B115, FadeOut_create = 0x86B25D;
-constexpr uint32_t Size_copy = 0x8DF02D;
-constexpr uint32_t Text_setString = 0x83A2DD;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
+constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create, FadeIn_create = rwlib::cocos2d::FadeIn::create, FadeOut_create = rwlib::cocos2d::FadeOut::create;
+constexpr uint32_t Size_copy = rwlib::cocos2d::Size::ctor_base__RKS0_;
+constexpr uint32_t Text_setString = rwlib::cocos2d::ui::Text::setString;
 
 // Node / Widget virtual slots (byte offsets)
 constexpr uint32_t VS_setZOrder10 = 0x10, VS_getLocalZOrder = 0x1C, VS_setPosition = 0x4C, VS_getPosition = 0x54;

@@ -9,24 +9,24 @@ using Self = RankingScrollView;
 
 namespace {
 namespace g {
-constexpr uint32_t Layout_ctor = 0x828671;                 // cocos2d::ui::Layout::Layout()
+constexpr uint32_t Layout_ctor = rwlib::cocos2d::ui::Layout::ctor_base;                 // cocos2d::ui::Layout::Layout()
 constexpr uint32_t aeabi_memset = 0x40E7A0;                // __aeabi_memset(dst, n, c)
-constexpr uint32_t Ref_retain = 0x8FD0B5;
-constexpr uint32_t Ref_release = 0x8FD0BD;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain;
+constexpr uint32_t Ref_release = rwlib::cocos2d::Ref::release;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t VectorBaseInt_dtor = 0x478961;          // std::__vector_base<int>::~__vector_base
-constexpr uint32_t ImageView_setScale9Enabled = 0x839A15;
-constexpr uint32_t ArmatureDataManager_getInstance = 0x7AC9B5;
-constexpr uint32_t ArmatureDataManager_addArmatureFileInfo = 0x7AD7BD;   // (mgr, const string&)
+constexpr uint32_t ImageView_setScale9Enabled = rwlib::cocos2d::ui::ImageView::setScale9Enabled;
+constexpr uint32_t ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance;
+constexpr uint32_t ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;   // (mgr, const string&)
 constexpr uint32_t ExpressionVector_allocate = 0x487635;   // vector<Avatar::Expression>::allocate(n)
 constexpr uint32_t ExpressionVector_destroy = 0x46BE0D;    // __vector_base<Avatar::Expression>::~__vector_base
 constexpr uint32_t AvatarIconCache_ctor = 0x5CA741;        // (Texture2D*, const Vec2&, float, float, const vector<Expression>&)
 constexpr uint32_t AvatarIconCache_dtor = 0x5CA8FD;
-constexpr uint32_t Size_copy = 0x8DF02D;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D;                   // Vec2(float, float)
-constexpr uint32_t Vec2_copy = 0x8E4C03;
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Widget_create = 0x825875;
+constexpr uint32_t Size_copy = rwlib::cocos2d::Size::ctor_base__RKS0_;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff;                   // Vec2(float, float)
+constexpr uint32_t Vec2_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_;
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Widget_create = rwlib::cocos2d::ui::Widget::create;
 constexpr uint32_t WidgetVector_clear = 0x485B45;          // cocos2d::Vector<ui::Widget*>::clear
 constexpr uint32_t WidgetVector_pushBack = 0x4F6B5D;
 constexpr uint32_t DIVSI3 = 0xCD5E8D, MODSI3 = 0xCD6009;

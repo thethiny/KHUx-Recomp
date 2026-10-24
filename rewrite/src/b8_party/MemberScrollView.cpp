@@ -13,8 +13,8 @@ using namespace scene;
 namespace {
 namespace g {
 constexpr uint32_t FunctionTouch_swap = 0x4F3699;   // function<void(Touch*, Event*)>::swap
-constexpr uint32_t Touch_getLocation = 0x900E57, Node_convertToNodeSpace = 0x89599D;
-constexpr uint32_t Rect_ctor = 0x8DF18B, Rect_containsPoint = 0x8DF2A9, Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Touch_getLocation = rwlib::cocos2d::Touch::getLocation, Node_convertToNodeSpace = rwlib::cocos2d::Node::convertToNodeSpace;
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff, Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t SceneUtil_createTapAnimation = 0x45BBA9;
 constexpr uint32_t VectorAt_throw = 0x47CCE1;
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;

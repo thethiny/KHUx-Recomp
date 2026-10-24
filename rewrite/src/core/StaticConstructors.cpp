@@ -15,8 +15,8 @@ using rw::load;
 using rw::save;
 
 constexpr uint32_t DSO_HANDLE_GOT = 0xFD604C;      // GOT slot holding &__dso_handle
-constexpr uint32_t VEC2_CTOR = 0x8E4B9D;           // cocos2d::Vec2::Vec2(float, float)
-constexpr uint32_t VEC2_DTOR = 0x8E4C17;
+constexpr uint32_t VEC2_CTOR = rwlib::cocos2d::Vec2::ctor_base__ff;           // cocos2d::Vec2::Vec2(float, float)
+constexpr uint32_t VEC2_DTOR = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t VEC2_DTOR_GOT = 0xFD681C;       // &cocos2d::Vec2::~Vec2
 
 uint32_t fbits(float v) {
@@ -67,7 +67,7 @@ constexpr uint32_t SNOW_HEADER_CONSTANT = SNOW + 0x20;
 constexpr uint32_t SNOW_SETTINGS = SNOW + 0x38;          // one setting (0x30 bytes)
 constexpr uint32_t SNOW_SETTINGS_2 = 0x1003D20;          // four settings
 constexpr uint32_t SETTING_SIZE = 0x30;
-constexpr uint32_t PARTICLE_SETTING_CTOR = 0x5EC871;
+constexpr uint32_t PARTICLE_SETTING_CTOR = rwlib::sub_5EC870;
 constexpr uint32_t SNOW_SETTING_DTOR = 0x4534D5;         // sub_4534D4: ~ the single setting
 constexpr uint32_t SNOW_SETTINGS_2_DTOR = 0x453511;      // sub_453510: ~ the four settings
 constexpr uint32_t S_PT_SNOW_N = 0xE02D57, S_PT_SNOW_NSP = 0xE02D61, S_PT_SNOW_SP = 0xE02D6D;
@@ -230,7 +230,7 @@ constexpr uint32_t DIRECTIONS_DTOR = 0x453C49;              // sub_453C48: ~ the
 
 // ------------------------------------------------------------------------------------------ the shape tables
 // Shapes {int kind; Vec2 at; float a, b}: kind 2 = circle (center, radius), kind 1 = rectangle (origin, size).
-constexpr uint32_t VEC2_DEFAULT_CTOR = 0x8E4B95;            // cocos2d::Vec2::Vec2()
+constexpr uint32_t VEC2_DEFAULT_CTOR = rwlib::cocos2d::Vec2::ctor_base__v;            // cocos2d::Vec2::Vec2()
 constexpr uint32_t SHAPES_HEADER_CONSTANT = 0x1004020;
 constexpr uint32_t SHAPES_1 = 0x1004038, SHAPES_2 = 0x1004060, SHAPES_3 = 0x1004090, SHAPE_SIZE = 0x14;
 constexpr uint32_t SHAPES_1_DTOR = 0x453E31, SHAPES_2_DTOR = 0x453E55, SHAPES_3_DTOR = 0x453E79;

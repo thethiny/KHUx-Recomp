@@ -12,9 +12,9 @@ constexpr uint32_t SceneUtil_createOpenPopupAnimation = 0x45BC05, SceneUtil_crea
 constexpr uint32_t SceneUtil_settingTitleLabelStr = 0x46E8D9;     // (node, const string& name, const string& text)
 constexpr uint32_t SceneUtil_splitSpaceCheck = 0x47898D;           // (const string&): not only spaces
 constexpr uint32_t SceneUtil_openOkDialog4Line = 0x45C775;         // (const string&, function<void(bool)>, okLabel)
-constexpr uint32_t EaseSineOut_create = 0x860D09, FadeTo_create = 0x86B3E1, Node_runAction = 0x894AED;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17, Size_ctor = 0x8DF027;
-constexpr uint32_t Label_setAlignment = 0x884CB9;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create, FadeTo_create = rwlib::cocos2d::FadeTo::create, Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base, Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;
+constexpr uint32_t Label_setAlignment = rwlib::cocos2d::Label::setAlignment;
 constexpr uint32_t SafeBuffer_read = 0x45A269;
 constexpr uint32_t SM_enableLoadingIndicator = 0x60D169;
 constexpr uint32_t APIManager_executeTutorialProgress = 0x4C581D, APIManager_openErrorDialog = 0x4C3C8D;

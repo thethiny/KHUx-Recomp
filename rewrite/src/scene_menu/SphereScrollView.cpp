@@ -9,16 +9,16 @@ using Self = SphereScrollView;
 namespace {
 namespace g {
 constexpr uint32_t aeabi_memset = 0x40E7A0;                 // __aeabi_memset(dst, n, c)
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Widget_create = 0x825875;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Widget_create = rwlib::cocos2d::ui::Widget::create;
 constexpr uint32_t IntVector_assign = 0x47D5BD;             // std::vector<int>::assign(int*, int*)
 constexpr uint32_t IntVector_base_dtor = 0x478961;          // std::__vector_base<int>::~__vector_base
 constexpr uint32_t SphereVector_assign = 0x5032B9;          // vector<shared_ptr<const Sphere>>::assign(first, last)
 constexpr uint32_t SphereVector_base_dtor = 0x50248D;
-constexpr uint32_t Node_unscheduleUpdate = 0x894CB3;
-constexpr uint32_t Director_getTextureCache = 0x8EFE69;
-constexpr uint32_t TextureCache_addImage = 0x917DA9;        // (cache, const string& path)
-constexpr uint32_t ImageView_loadTextureTexture = 0x8398FD; // ui::ImageView::loadTexture(Texture2D*)
+constexpr uint32_t Node_unscheduleUpdate = rwlib::cocos2d::Node::unscheduleUpdate;
+constexpr uint32_t Director_getTextureCache = rwlib::cocos2d::Director::getTextureCache;
+constexpr uint32_t TextureCache_addImage = rwlib::cocos2d::TextureCache::addImage;        // (cache, const string& path)
+constexpr uint32_t ImageView_loadTextureTexture = rwlib::cocos2d::ui::ImageView::loadTexture__PNS_9Texture2DE; // ui::ImageView::loadTexture(Texture2D*)
 constexpr uint32_t master_Sphere_create = 0x78CF21;         // (shared_ptr out, id)
 constexpr uint32_t UserSphereMap_find = 0x503479;           // map<int, UserSphere::Sphere>::find(const int&) const
 constexpr uint32_t libm_sin = 0x415A30, libm_cos = 0x415A3C; // (imports)

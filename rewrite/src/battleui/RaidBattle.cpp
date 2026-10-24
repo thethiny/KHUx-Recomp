@@ -10,23 +10,23 @@ using namespace raid_battle;
 
 namespace {
 // ---- guest functions
-constexpr uint32_t Node_ctor = 0x892531;
-constexpr uint32_t Node_scheduleUpdate = 0x894BA7;
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Node_ctor = rwlib::cocos2d::Node::ctor_base;
+constexpr uint32_t Node_scheduleUpdate = rwlib::cocos2d::Node::scheduleUpdate;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t aeabi_memset = 0x40E7A0;            // __aeabi_memset(dst, n, c)
-constexpr uint32_t Vec2_subtract = 0x8E530F;
-constexpr uint32_t Vec2_scale = 0x8E50D5;
-constexpr uint32_t Vec2_distance = 0x8E4EF5;
-constexpr uint32_t Director_getInstance = 0x8EE519;
-constexpr uint32_t Director_getVisibleSize = 0x8F0675;
-constexpr uint32_t ScaleTo_create = 0x86A8CD;           // (duration, scale)
-constexpr uint32_t MoveTo_create = 0x86941D;            // (duration, const Vec2&)
-constexpr uint32_t JumpTo_create = 0x869F39;            // (duration, const Vec2&, height, jumps)
-constexpr uint32_t EaseSineInOut_create = 0x860E0D;
-constexpr uint32_t Spawn_create = 0x8682F5;
-constexpr uint32_t Sequence_create = 0x867999;
-constexpr uint32_t CallFunc_create = 0x866B39;
+constexpr uint32_t Vec2_subtract = rwlib::cocos2d::Vec2::subtract;
+constexpr uint32_t Vec2_scale = rwlib::cocos2d::Vec2::scale__f;
+constexpr uint32_t Vec2_distance = rwlib::cocos2d::Vec2::distance;
+constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance;
+constexpr uint32_t Director_getVisibleSize = rwlib::cocos2d::Director::getVisibleSize;
+constexpr uint32_t ScaleTo_create = rwlib::cocos2d::ScaleTo::create__ff;           // (duration, scale)
+constexpr uint32_t MoveTo_create = rwlib::cocos2d::MoveTo::create;            // (duration, const Vec2&)
+constexpr uint32_t JumpTo_create = rwlib::cocos2d::JumpTo::create;            // (duration, const Vec2&, height, jumps)
+constexpr uint32_t EaseSineInOut_create = rwlib::cocos2d::EaseSineInOut::create;
+constexpr uint32_t Spawn_create = rwlib::cocos2d::Spawn::create;
+constexpr uint32_t Sequence_create = rwlib::cocos2d::Sequence::create;
+constexpr uint32_t CallFunc_create = rwlib::cocos2d::CallFunc::create;
 constexpr uint32_t AppState_getInstance = 0x4E66DD;
 constexpr uint32_t Random_getInstance = 0x492055;
 constexpr uint32_t Random_generateUniformInt = 0x492225;   // (random, min, max, state*)
@@ -732,10 +732,10 @@ RW_FUNCTION(0x5F0DFC, "RaidBattle::setRaidEnemyPoisonEffect", RaidBattle::setRai
 
 // ------------------------------------------------------------------------------------------------ update
 namespace {
-constexpr uint32_t Node_getNumberOfRunningActions = 0x894B4F;
-constexpr uint32_t Node_unscheduleUpdate = 0x894CB3;
-constexpr uint32_t DelayTime_create = 0x86852D;
-constexpr uint32_t EaseOut_create = 0x8606A5;           // (action, rate)
+constexpr uint32_t Node_getNumberOfRunningActions = rwlib::cocos2d::Node::getNumberOfRunningActions;
+constexpr uint32_t Node_unscheduleUpdate = rwlib::cocos2d::Node::unscheduleUpdate;
+constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create;
+constexpr uint32_t EaseOut_create = rwlib::cocos2d::EaseOut::create;           // (action, rate)
 constexpr uint32_t RaidBattle_RaidMotionRecover = 0x5EE461;
 constexpr uint32_t FlashNode_isPlaying = 0x5EE499;
 constexpr uint32_t FlashNode_knockbackShift = 0x5EFB19;

@@ -13,19 +13,19 @@ constexpr uint32_t AEABI_MEMSET = 0x40E7A0;               // __aeabi_memset(dst,
 constexpr uint32_t MEMCMP = 0x40EF2C;                     // memcmp
 constexpr uint32_t MALLOC = 0x40FF58;                     // malloc
 constexpr uint32_t ANDROID_LOG_PRINT = 0x413D38;          // __android_log_print
-constexpr uint32_t UNCOMPRESS = 0xA4C4E5;                 // zlib uncompress(dst, &dstLen, src, srcLen)
+constexpr uint32_t UNCOMPRESS = rwlib::uncompress;                 // zlib uncompress(dst, &dstLen, src, srcLen)
 
 constexpr uint32_t AUDIO_GET_INSTANCE = 0x5BECFD;         // audio::Manager::getInstance()
 constexpr uint32_t AUDIO_PAUSE = 0x5BF425;                // audio::Manager::pause(int sound, int fadeFrames)
 constexpr uint32_t AUDIO_PLAY_GAME_MAIN_BGM = 0x5C0E91;   // AudioPlayGameMainBGM(audio::ResourceID, int)
 constexpr uint32_t SPLIT_BUFFER_DTOR = 0x5C1FB1;          // __split_buffer<pair<int,int>*>::~__split_buffer (sub_5C1FB0)
 
-constexpr uint32_t DIRECTOR_GET_INSTANCE = 0x8EE519;      // cocos2d::Director::getInstance()
-constexpr uint32_t DIRECTOR_GET_WIN_SIZE = 0x8F0625;      // cocos2d::Director::getWinSize() const
-constexpr uint32_t SIZE_COPY = 0x8DF02D;                  // cocos2d::Size::Size(const Size&)
+constexpr uint32_t DIRECTOR_GET_INSTANCE = rwlib::cocos2d::Director::getInstance;      // cocos2d::Director::getInstance()
+constexpr uint32_t DIRECTOR_GET_WIN_SIZE = rwlib::cocos2d::Director::getWinSize;      // cocos2d::Director::getWinSize() const
+constexpr uint32_t SIZE_COPY = rwlib::cocos2d::Size::ctor_base__RKS0_;                  // cocos2d::Size::Size(const Size&)
 
-constexpr uint32_t GET_STATIC_METHOD_INFO = 0xA4225D;     // cocos2d::JniHelper::getStaticMethodInfo(info, cls, name, sig)
-constexpr uint32_t JSTRING_TO_STRING = 0xA423E9;          // cocos2d::JniHelper::jstring2string(out std::string, jstring)
+constexpr uint32_t GET_STATIC_METHOD_INFO = rwlib::cocos2d::JniHelper::getStaticMethodInfo;     // cocos2d::JniHelper::getStaticMethodInfo(info, cls, name, sig)
+constexpr uint32_t JSTRING_TO_STRING = rwlib::cocos2d::JniHelper::jstring2string;          // cocos2d::JniHelper::jstring2string(out std::string, jstring)
 constexpr uint32_t CALL_STATIC_OBJECT_METHOD = 0x4E0939;  // _JNIEnv::CallStaticObjectMethod(env, cls, mid, ...)
 constexpr uint32_t CALL_STATIC_DOUBLE_METHOD = 0xA416D9;  // _JNIEnv::CallStaticDoubleMethod(env, cls, mid, ...)
 constexpr uint32_t CALL_VIDEO_NON_PARAMETER_FUN = 0x8436A1;   // callVideoNonParameterFun(int index, const char* method)

@@ -23,9 +23,9 @@ constexpr uint32_t SceneManager_changeSceneLayer = 0x612B99;
 constexpr uint32_t SceneRanking_create = 0x64A271, SceneRankingReward_create = 0x702405;
 constexpr uint32_t SceneRanking_openRankingRewardPopup = 0x6FF349;
 constexpr uint32_t ResultVector_copy = 0x700BD1;           // vector<RankingReward::Result>(const vector&)
-constexpr uint32_t FadeTo_create = 0x86B3E1;
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t Scene_create = 0x8A5F37;
+constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t Scene_create = rwlib::cocos2d::Scene::create;
 }  // namespace g
 
 constexpr uint32_t GOT_FUNC_LAYER_FACTORY_VTABLE = 0xFD6074;   // &_ZTV __func<Layer*(*)(), ..., Layer*()> (vptr + 8)

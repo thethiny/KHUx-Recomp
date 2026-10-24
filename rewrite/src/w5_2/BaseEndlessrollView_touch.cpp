@@ -9,12 +9,12 @@ using namespace scene;
 
 namespace {
 namespace a {
-constexpr uint32_t Touch_getLocation = 0x900E57;          // (Vec2* out, Touch*)
-constexpr uint32_t Vec2_ctor = 0x8E4B95, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Size_copy = 0x8DF02D, Size_assign = 0x8DF041;
-constexpr uint32_t Rect_ctor = 0x8DF18B;                  // (out, x, y, w, h)
-constexpr uint32_t Rect_containsPoint = 0x8DF2A9;
-constexpr uint32_t Node_convertToNodeSpace = 0x89599D;    // (Vec2* out, Node*, const Vec2&)
+constexpr uint32_t Touch_getLocation = rwlib::cocos2d::Touch::getLocation;          // (Vec2* out, Touch*)
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__v, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Size_copy = rwlib::cocos2d::Size::ctor_base__RKS0_, Size_assign = rwlib::cocos2d::Size::op_assign__RKS0_;
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff;                  // (out, x, y, w, h)
+constexpr uint32_t Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint;
+constexpr uint32_t Node_convertToNodeSpace = rwlib::cocos2d::Node::convertToNodeSpace;    // (Vec2* out, Node*, const Vec2&)
 constexpr uint32_t FunctionVF_call = 0x4F8E89;            // function<void(float)>::operator()
 constexpr uint32_t FunctionVIW_call = 0x519061;           // function<void(int, ui::Widget*)>::operator()
 constexpr uint32_t SceneUtil_searchNodeByName = 0x45A9F5;

@@ -11,13 +11,13 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Layout_ctor = 0x828671;
-constexpr uint32_t Ref_retain = 0x8FD0B5, Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Layout_ctor = rwlib::cocos2d::ui::Layout::ctor_base;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t MEMCPY = 0x40E164;                      // __aeabi_memcpy(dst, src, n)
-constexpr uint32_t Widget_create = 0x825875, Widget_clone = 0x8272B9;
-constexpr uint32_t Size_ctor = 0x8DF027;                   // Size(float, float)
-constexpr uint32_t Vec2_ctorXY = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t GUIReader_getInstance = 0x7BF1E5, GUIReader_widgetFromJsonFile = 0x7BF9FD;
+constexpr uint32_t Widget_create = rwlib::cocos2d::ui::Widget::create, Widget_clone = rwlib::cocos2d::ui::Widget::clone;
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;                   // Size(float, float)
+constexpr uint32_t Vec2_ctorXY = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t GUIReader_getInstance = rwlib::cocostudio::GUIReader::getInstance, GUIReader_widgetFromJsonFile = rwlib::cocostudio::GUIReader::widgetFromJsonFile;
 constexpr uint32_t ExpressionVector_allocate = 0x487635;   // vector<Avatar::Expression>::allocate(n)
 constexpr uint32_t ExpressionVector_destroy = 0x46BE0D;
 constexpr uint32_t AvatarIconCache_ctor = 0x5CA741;        // (Texture2D*, const Vec2&, float, float, const vector<Expression>&)
@@ -31,13 +31,13 @@ constexpr uint32_t Party_copy = 0x4B2E63;                  // hole::network::api
 constexpr uint32_t FunctionBTE_swap = 0x483E4D;            // std::function<bool(Touch*, Event*)>::swap
 constexpr uint32_t FunctionVTE_swap = 0x4F3699;            // std::function<void(Touch*, Event*)>::swap
 constexpr uint32_t FunctionVI_call = 0x4F321D;             // std::function<void(int)>::operator()(int)
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5, EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
-constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = 0x8F3649;
-constexpr uint32_t Director_getInstance = 0x8EE519;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create, EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
+constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
+constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance;
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
 constexpr uint32_t SM_openNoTapScreen = 0x61FB25;          // (sm, float seconds)
-constexpr uint32_t DelayTime_create = 0x86852D, CallFunc_create = 0x866B39, Sequence_create = 0x867999;
-constexpr uint32_t Node_runAction = 0x894AED;
+constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create, CallFunc_create = rwlib::cocos2d::CallFunc::create, Sequence_create = rwlib::cocos2d::Sequence::create;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
 constexpr uint32_t GOT_VT_PartyScrollView = 0xFD65EC, GOT_VT_BaseScrollView_int = 0xFD6598;
 constexpr uint32_t GOT_ANCHOR_MIDDLE = 0xFD6054;
 }  // namespace g
@@ -77,10 +77,10 @@ constexpr uint32_t ICON_CACHE_FIND = 0x5CA9A9, ICON_CACHE_ADD = 0x5CAA57;
 constexpr uint32_t AVATAR_MAKE_STYLE = 0x497105, SAFE_BUFFER_DTOR = 0x45A13D;
 constexpr uint32_t IMAGE_BUTTON_CREATE = 0x531239, IMAGE_BUTTON_SET_TARGET_VIEW = 0x5318C1;
 constexpr uint32_t IMAGE_BUTTON_SET_TARGET_IMAGE_VIEW = 0x531631, IMAGE_BUTTON_ADD_TOUCH = 0x5315B1;
-constexpr uint32_t RANK_IMAGE_PATH = 0x46F08D, IMAGE_VIEW_LOAD_TEXTURE = 0x839731;
+constexpr uint32_t RANK_IMAGE_PATH = 0x46F08D, IMAGE_VIEW_LOAD_TEXTURE = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;
 constexpr uint32_t OPEN_AVATAR_INFO_POPUP = 0x46A229;      // (ull user, bool, function<void(bool)>, function<bool()>)
-constexpr uint32_t TOUCH_GET_LOCATION = 0x900E57, NODE_CONVERT_TO_NODE_SPACE = 0x89599D;
-constexpr uint32_t RECT_CTOR = 0x8DF18B, RECT_CONTAINS = 0x8DF2A9, TAP_ANIMATION = 0x45BBA9;
+constexpr uint32_t TOUCH_GET_LOCATION = rwlib::cocos2d::Touch::getLocation, NODE_CONVERT_TO_NODE_SPACE = rwlib::cocos2d::Node::convertToNodeSpace;
+constexpr uint32_t RECT_CTOR = rwlib::cocos2d::Rect::ctor_base__ffff, RECT_CONTAINS = rwlib::cocos2d::Rect::containsPoint, TAP_ANIMATION = 0x45BBA9;
 constexpr uint32_t GOT_ROW_SPACING = 0xFD659C;
 constexpr uint32_t API_PARTIES = 0x204, API_REQUESTS = 0x218, API_INVITES = 0x238;
 constexpr uint32_t PARTY = 0x70, PARTY_EX = 0x198, RECORD = 0x38;

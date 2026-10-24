@@ -5,25 +5,25 @@
 using namespace scene;
 
 namespace {
-constexpr uint32_t Scene_create = 0x8A5F37;
-constexpr uint32_t Director_setDefaultScheduler = 0x8EECC1;
-constexpr uint32_t Ref_retain = 0x8FD0B5;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Layer_ctor = 0x88A7D1;
-constexpr uint32_t Layer_create = 0x88A8C3;
-constexpr uint32_t LayerColor_create = 0x88B539;          // (const Color4B&)
-constexpr uint32_t Vec2_ctor = 0x8E4B95;
+constexpr uint32_t Scene_create = rwlib::cocos2d::Scene::create;
+constexpr uint32_t Director_setDefaultScheduler = rwlib::cocos2d::Director::setDefaultScheduler;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base;
+constexpr uint32_t Layer_create = rwlib::cocos2d::Layer::create;
+constexpr uint32_t LayerColor_create = rwlib::cocos2d::LayerColor::create;          // (const Color4B&)
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__v;
 constexpr uint32_t Memset = 0x40E7A0;                     // __aeabi_memset(dst, n, value)
 constexpr uint32_t LayerFactory_assignPointer = 0x60CE4D; // std::function<Layer*()>::operator=(Layer*(*)())
 constexpr uint32_t LayerFactory_call = 0x6116E1;          // std::function<Layer*()>::operator()
 constexpr uint32_t CreateSceneLayer_Splash = 0x60CED9;
 constexpr uint32_t LoadingIndicator_create = 0x60CEE1;
 constexpr uint32_t LoadingIndicator_show = 0x509CE1, LoadingIndicator_hide = 0x509D69;
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5;
-constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create;
+constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
 constexpr uint32_t TouchBeganFunction_swap = 0x483E4D;    // std::function<bool(Touch*, Event*)>::swap
 constexpr uint32_t TouchFunction_swap = 0x4F3699;         // std::function<void(Touch*, Event*)>::swap
-constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = 0x8F3649;
+constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
 constexpr uint32_t FunctionV_assign = 0x4EB9CD;           // std::function<void()>::operator=(const function&)
 constexpr uint32_t FunctionB_assign = 0x490109;           // std::function<void(bool)>::operator=
 constexpr uint32_t FunctionBool_assign = 0x53327D;        // std::function<bool()>::operator=

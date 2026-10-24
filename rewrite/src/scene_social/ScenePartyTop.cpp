@@ -12,10 +12,10 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Layer_ctor = 0x88A7D1;
-constexpr uint32_t Layer_dtor = 0x88A88D;
-constexpr uint32_t Layer_init = 0x88A8A1;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base;
+constexpr uint32_t Layer_dtor = rwlib::cocos2d::Layer::dtor_base;
+constexpr uint32_t Layer_init = rwlib::cocos2d::Layer::init;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t Function_vv_assign = 0x4EB9CD;          // std::function<void()>::operator=(const function&)
 constexpr uint32_t Function_vv_swap = 0x4EE86D;
 constexpr uint32_t SceneManager_changeTickerMessage = 0x610B39;   // (sm, const string&)
@@ -27,19 +27,19 @@ constexpr uint32_t APIManager_executePartyNoticeUpdate = 0x4CED11;
 constexpr uint32_t APIManager_executePartyLogin = 0x4CEE55;
 constexpr uint32_t IInOutAnimation_runOutAnimation = 0x6F24B5;
 constexpr uint32_t ScenePartyTop_runOutEntryLayout = 0x655B35;
-constexpr uint32_t EaseOut_create = 0x8606A5;               // (action, float rate)
-constexpr uint32_t Text_setTextHorizontalAlignment = 0x83A65F;
+constexpr uint32_t EaseOut_create = rwlib::cocos2d::EaseOut::create;               // (action, float rate)
+constexpr uint32_t Text_setTextHorizontalAlignment = rwlib::cocos2d::ui::Text::setTextHorizontalAlignment;
 constexpr uint32_t Avatar_create = 0x5C5883;                // (const Style&, bool)
 constexpr uint32_t Avatar_changeMotion = 0x5C63C5;
 constexpr uint32_t AvatarUtil_makeStyle = 0x497105;
 constexpr uint32_t AvatarMap_find = 0x490275;               // unordered_map<ull, int>::find (const)
 constexpr uint32_t SafeBuffer_dtor = 0x45A13D;
-constexpr uint32_t Node_unscheduleUpdate = 0x894CB3;
-constexpr uint32_t ImageView_loadTexture = 0x839731;
+constexpr uint32_t Node_unscheduleUpdate = rwlib::cocos2d::Node::unscheduleUpdate;
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;
 constexpr uint32_t SceneUtil_callPrepareMypageAPIs = 0x46F37D;
 constexpr uint32_t Function_vb_assign = 0x490109;
 constexpr uint32_t SceneManager_changeSceneLayer = 0x612B99;
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
 constexpr uint32_t Misc_create = 0x786D5D;
 constexpr uint32_t SafeBuffer_read = 0x45A269;

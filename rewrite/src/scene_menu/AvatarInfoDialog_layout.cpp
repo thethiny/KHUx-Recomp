@@ -11,12 +11,12 @@ constexpr uint32_t STRLEN = 0x40E08C;
 constexpr uint32_t MEMCPY = 0x40E164;
 constexpr uint32_t BaseSlideView_create = 0x534E79;
 constexpr uint32_t BaseSlideView_setItemIDs = 0x5260AD;      // (vector<int> by value, bool)
-constexpr uint32_t Director_getVisibleSize = 0x8F0675;       // (Size* out, Director*)
+constexpr uint32_t Director_getVisibleSize = rwlib::cocos2d::Director::getVisibleSize;       // (Size* out, Director*)
 constexpr uint32_t SceneUtil_createOpenPopupAnimation = 0x45BC05;   // (Node*, function<void()>)
 constexpr uint32_t SceneUtil_searchNodeByName = 0x45A9F5;
 constexpr uint32_t SceneUtil_setShadow = 0x45BD15;
 constexpr uint32_t SceneUtil_setButtonEnabled = 0x468625;    // (Button*, Text*, bool enabled, bool)
-constexpr uint32_t EaseSineOut_create = 0x860D09;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr uint32_t APIManager_getInstance = 0x4BA8C9;
 constexpr uint32_t SafeBuffer_read = 0x45A269;               // (sb, dst, src, len, offset)
 constexpr uint32_t String_assignCopy = 0x498A1D;             // sub_498A1C: std::string::operator=(const string&)
@@ -29,7 +29,7 @@ constexpr uint32_t IntVector_dtor = 0x478961;
 constexpr uint32_t TimezoneSet_insertUnique = 0x54CE39;      // (pair out, tree, const Timezone&)
 constexpr uint32_t TimezoneSet_assignMulti = 0x54CC0D;       // (tree, first, last)
 constexpr uint32_t TimezoneSet_destroy = 0x54CD73;           // (tree, node)
-constexpr uint32_t Widget_addTouchEventListener = 0x826CCF;
+constexpr uint32_t Widget_addTouchEventListener = rwlib::cocos2d::ui::Widget::addTouchEventListener;
 constexpr uint32_t WidgetFactory_swap = 0x54B1C5;            // function<Widget*(int)>::swap
 constexpr uint32_t WidgetUpdater_swap = 0x547159;            // function<Widget*(Widget*, int, bool)>::swap
 constexpr uint32_t FunctionVB_swap = 0x490179;               // function<void(bool)>::swap
@@ -37,8 +37,8 @@ constexpr uint32_t ImageButton_create = 0x531239;            // (string, bool)
 constexpr uint32_t ImageButton_setTargetView = 0x5318C1;     // (Node*, float)
 constexpr uint32_t ImageButton_setTargetAnchorPoint = 0x5318CF;
 constexpr uint32_t ImageButton_addTouchEventListener = 0x5315B1;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D;
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff;
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 }  // namespace c
 
 // guest string literals

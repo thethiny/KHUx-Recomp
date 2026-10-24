@@ -5,21 +5,21 @@
 using namespace scene;
 
 namespace {
-constexpr uint32_t Node_ctor = 0x892531;
-constexpr uint32_t Node_dtor = 0x8927ED;
-constexpr uint32_t Node_create = 0x89372D;
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t Ref_release = 0x8FD0BD;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Sprite_create = 0x8A637D;           // (const std::string& file)
-constexpr uint32_t MoveBy_create = 0x86911D;           // (float duration, const Vec2&)
-constexpr uint32_t EaseSineOut_create = 0x860D09;
-constexpr uint32_t EaseBounceOut_create = 0x8613C1;
-constexpr uint32_t Sequence_create = 0x867999;
-constexpr uint32_t Spawn_create = 0x8682F5;
-constexpr uint32_t DelayTime_create = 0x86852D;
-constexpr uint32_t FadeOut_create = 0x86B25D;
-constexpr uint32_t CallFunc_create = 0x866B39;
+constexpr uint32_t Node_ctor = rwlib::cocos2d::Node::ctor_base;
+constexpr uint32_t Node_dtor = rwlib::cocos2d::Node::dtor_base;
+constexpr uint32_t Node_create = rwlib::cocos2d::Node::create;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t Ref_release = rwlib::cocos2d::Ref::release;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Sprite_create = rwlib::cocos2d::Sprite::create__RKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE;           // (const std::string& file)
+constexpr uint32_t MoveBy_create = rwlib::cocos2d::MoveBy::create;           // (float duration, const Vec2&)
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
+constexpr uint32_t EaseBounceOut_create = rwlib::cocos2d::EaseBounceOut::create;
+constexpr uint32_t Sequence_create = rwlib::cocos2d::Sequence::create;
+constexpr uint32_t Spawn_create = rwlib::cocos2d::Spawn::create;
+constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create;
+constexpr uint32_t FadeOut_create = rwlib::cocos2d::FadeOut::create;
+constexpr uint32_t CallFunc_create = rwlib::cocos2d::CallFunc::create;
 constexpr uint32_t Random_getInstance = 0x492055;
 constexpr uint32_t Random_generateUniformInt = 0x492225;   // (random, min, max, uint* state)
 constexpr uint32_t libm_log10f = 0x41ABF0;             // (imports)

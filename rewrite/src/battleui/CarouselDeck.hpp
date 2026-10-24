@@ -13,28 +13,28 @@ namespace cdeck {
 using namespace scene;
 
 // ---- cocos2d / cocostudio / runtime
-constexpr uint32_t Node_ctor = 0x892531, Node_dtor = 0x8927ED, Node_init = 0x892B69, Node_create = 0x89372D;
-constexpr uint32_t Ref_retain = 0x8FD0B5, Ref_release = 0x8FD0BD, Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t ActionObject_stop = 0x79F115, ActionObject_setLoop = 0x79EA0F;
-constexpr uint32_t ActionObject_updateToFrameByTime = 0x79F159;   // (action, float time)
-constexpr uint32_t GUIReader_getInstance = 0x7BF1E5, GUIReader_widgetFromJsonFile = 0x7BF9FD;
-constexpr uint32_t ActionManagerEx_getInstance = 0x79B535, ActionManagerEx_getActionByName = 0x79BD05;
-constexpr uint32_t ArmatureDataManager_getInstance = 0x7AC9B5;
-constexpr uint32_t ArmatureDataManager_addArmatureFileInfo = 0x7AD7BD;
-constexpr uint32_t Armature_create = 0x79F3C7;                    // (const std::string&)
-constexpr uint32_t AnimationData_getMovement = 0x7A767D;
-constexpr uint32_t ArmatureAnimation_setMovementEventCallFunc = 0x7A3C69;
-constexpr uint32_t ArmatureAnimation_setFrameEventCallFunc = 0x7A3CE5;
-constexpr uint32_t DisplayManager_removeDisplay = 0x7AAE09, DisplayManager_addDisplay = 0x7AAA5D;
-constexpr uint32_t DisplayManager_changeDisplayWithIndex = 0x7AAA19;
+constexpr uint32_t Node_ctor = rwlib::cocos2d::Node::ctor_base, Node_dtor = rwlib::cocos2d::Node::dtor_base, Node_init = rwlib::cocos2d::Node::init, Node_create = rwlib::cocos2d::Node::create;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain, Ref_release = rwlib::cocos2d::Ref::release, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t ActionObject_stop = rwlib::cocostudio::ActionObject::stop, ActionObject_setLoop = rwlib::cocostudio::ActionObject::setLoop;
+constexpr uint32_t ActionObject_updateToFrameByTime = rwlib::cocostudio::ActionObject::updateToFrameByTime;   // (action, float time)
+constexpr uint32_t GUIReader_getInstance = rwlib::cocostudio::GUIReader::getInstance, GUIReader_widgetFromJsonFile = rwlib::cocostudio::GUIReader::widgetFromJsonFile;
+constexpr uint32_t ActionManagerEx_getInstance = rwlib::cocostudio::ActionManagerEx::getInstance, ActionManagerEx_getActionByName = rwlib::cocostudio::ActionManagerEx::getActionByName;
+constexpr uint32_t ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance;
+constexpr uint32_t ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;
+constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create;                    // (const std::string&)
+constexpr uint32_t AnimationData_getMovement = rwlib::cocostudio::AnimationData::getMovement;
+constexpr uint32_t ArmatureAnimation_setMovementEventCallFunc = rwlib::cocostudio::ArmatureAnimation::setMovementEventCallFunc;
+constexpr uint32_t ArmatureAnimation_setFrameEventCallFunc = rwlib::cocostudio::ArmatureAnimation::setFrameEventCallFunc;
+constexpr uint32_t DisplayManager_removeDisplay = rwlib::cocostudio::DisplayManager::removeDisplay, DisplayManager_addDisplay = rwlib::cocostudio::DisplayManager::addDisplay;
+constexpr uint32_t DisplayManager_changeDisplayWithIndex = rwlib::cocostudio::DisplayManager::changeDisplayWithIndex;
 constexpr uint32_t AppGetGrameFrameWidth = 0x799B31;
-constexpr uint32_t Vec2_ctor_xy = 0x8E4B9D, Vec2_ctor_copy = 0x8E4C03, Vec2_dtor = 0x8E4C17, Vec2_add = 0x8E4D2D;
-constexpr uint32_t Sprite_create = 0x8A637D;
+constexpr uint32_t Vec2_ctor_xy = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_ctor_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base, Vec2_add = rwlib::cocos2d::Vec2::add;
+constexpr uint32_t Sprite_create = rwlib::cocos2d::Sprite::create__RKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE;
 constexpr uint32_t audio_Manager_getInstance = 0x5BECFD, audio_Manager_load = 0x5BEEF5;
 constexpr uint32_t function_vv_assign = 0x4EB9CD;                 // std::function<void()>::operator=(const&)
 constexpr uint32_t function_b_call = 0x51022D;                    // std::function<bool()>::operator()
-constexpr uint32_t ImageView_loadTexture = 0x839731, Button_loadTextureNormal = 0x8369B5;
-constexpr uint32_t Widget_getCustomSize = 0x8262D1, Button_create = 0x836615;
+constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE, Button_loadTextureNormal = rwlib::cocos2d::ui::Button::loadTextureNormal;
+constexpr uint32_t Widget_getCustomSize = rwlib::cocos2d::ui::Widget::getCustomSize, Button_create = rwlib::cocos2d::ui::Button::create;
 constexpr uint32_t MedalIndex_find = 0x490275;                    // unordered_map<u64, int>::find
 constexpr uint32_t SafeBuffer_read = 0x45A269;
 constexpr uint32_t Medal_create = 0x785871;                       // master::Medal::create(sret, id)
@@ -105,16 +105,16 @@ constexpr uint32_t STR_KeyBladeDeck = 0xE01C24, STR_DeckMedalNumUI = 0xE01C15;
 // ---- more library / game functions
 constexpr uint32_t Burst_create = 0x77A491;          // master::Burst::create(sret, id)
 constexpr uint32_t Skill_create = 0x78BDE9;          // master::Skill::create(sret, id)
-constexpr uint32_t TextAtlas_setString = 0x83AED7;   // ui::TextAtlas::setString(const std::string&)
+constexpr uint32_t TextAtlas_setString = rwlib::cocos2d::ui::TextAtlas::setString;   // ui::TextAtlas::setString(const std::string&)
 constexpr uint32_t MedalDeck_forEachMedal = 0x5E007D;
-constexpr uint32_t Size_ctor_copy = 0x8DF02D;
-constexpr uint32_t Place_create = 0x866A49, RepeatForever_create = 0x86815D;
-constexpr uint32_t CallFunc_create = 0x866B39;
-constexpr uint32_t ActionObject_playCallFunc = 0x79F1DD;          // ActionObject::play(CallFunc*)
-constexpr uint32_t Bone_changeDisplayWithIndex = 0x7A2681;
+constexpr uint32_t Size_ctor_copy = rwlib::cocos2d::Size::ctor_base__RKS0_;
+constexpr uint32_t Place_create = rwlib::cocos2d::Place::create, RepeatForever_create = rwlib::cocos2d::RepeatForever::create;
+constexpr uint32_t CallFunc_create = rwlib::cocos2d::CallFunc::create;
+constexpr uint32_t ActionObject_playCallFunc = rwlib::cocostudio::ActionObject::play;          // ActionObject::play(CallFunc*)
+constexpr uint32_t Bone_changeDisplayWithIndex = rwlib::cocostudio::Bone::changeDisplayWithIndex;
 constexpr uint32_t GuiltBurstCutInShader_setShaderStart = 0x4961A5;
 constexpr uint32_t GuiltBurstCutInShader_setShaderCutinEnd = 0x4961F1;
-constexpr uint32_t Widget_getTouchBeganPosition = 0x8270A1, Widget_getTouchEndPosition = 0x8270B1;
+constexpr uint32_t Widget_getTouchBeganPosition = rwlib::cocos2d::ui::Widget::getTouchBeganPosition, Widget_getTouchEndPosition = rwlib::cocos2d::ui::Widget::getTouchEndPosition;
 constexpr uint32_t audio_Manager_getLayer = 0x5BF33D;             // (sret shared_ptr<Layer>, mgr, int)
 constexpr uint32_t audio_Layer_playSE = 0x5BF785;                 // (layer, ResourceID, int, int)
 constexpr uint32_t string_compare_cstr = 0x47CBD5;                // std::string::compare(const char*)

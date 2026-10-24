@@ -231,7 +231,7 @@ struct Streams {
             uint32_t len = rw::call(STRLEN, {name});
             rw::call(0x48D811, {path, name, len});  // std::string::assign(const char*, size_t)
         } else {
-            uint32_t fu = rw::call(0xA3F44D, {});  // cocos2d::FileUtils::getInstance
+            uint32_t fu = rw::call(rwlib::cocos2d::FileUtils::getInstance, {});  // cocos2d::FileUtils::getInstance
             if (fullPath == 1) {
                 uint32_t fn = ld32(ld32(fu) + 0x20);  // FileUtils::fullPathForFilename
                 uint32_t len = rw::call(STRLEN, {name});
@@ -522,7 +522,7 @@ struct Archive {
                         *f.at<uint32_t>(0x2C) = usize + terminate;
                         uint32_t q = allocate(self, f.addr(0x2C));
                         if (q != 0) {
-                            if (rw::call(0xA4C4E5, {q, f.addr(0x28), p, *f.at<uint32_t>(0x40)}) == 0 &&  // uncompress
+                            if (rw::call(rwlib::uncompress, {q, f.addr(0x28), p, *f.at<uint32_t>(0x40)}) == 0 &&  // uncompress
                                 *f.at<uint32_t>(0x28) == *f.at<uint32_t>(0x44)) {
                                 *f.at<uint32_t>(0x24) = q;
                                 uint32_t len = *f.at<uint32_t>(0x28);
@@ -580,7 +580,7 @@ struct Archive {
         bool fail = true;
         if (buf != 0) {
             *f.at<uint32_t>(0) = 1;  // level (5th argument)
-            if (rw::call(0xA4C461, {buf, f.addr(0x30), data, size, 1}) == 0) {  // compress2
+            if (rw::call(rwlib::compress2, {buf, f.addr(0x30), data, size, 1}) == 0) {  // compress2
                 uint32_t clen = *f.at<uint32_t>(0x30);
                 *f.at<uint32_t>(0x18) = clen;
                 xorWords(buf, (clen + 3) >> 2, nameLen);

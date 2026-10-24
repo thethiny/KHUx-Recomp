@@ -24,16 +24,16 @@ constexpr uint32_t FunctionVF_call = 0x4F8E89;           // std::function<void(f
 constexpr uint32_t FunctionTouchB_swap = 0x483E4D;       // std::function<bool(Touch*, Event*)>::swap
 constexpr uint32_t FunctionTouchV_swap = 0x4F3699;       // std::function<void(Touch*, Event*)>::swap
 // cocos2d
-constexpr uint32_t Vec2_ctor = 0x8E4B95;                 // Vec2::Vec2() (0, 0)
-constexpr uint32_t Vec2_ctorXY = 0x8E4B9D;               // Vec2::Vec2(float, float)
-constexpr uint32_t Vec2_dtor = 0x8E4C17;                 // Vec2::~Vec2()
-constexpr uint32_t Layout_ctor = 0x828671;               // ui::Layout::Layout()
-constexpr uint32_t Layout_dtor = 0x8289C5;               // ui::Layout::~Layout()
-constexpr uint32_t DelayTime_create = 0x86852D;          // (float)
-constexpr uint32_t MoveTo_create = 0x86941D;             // (float, const Vec2&)
-constexpr uint32_t CallFunc_create = 0x866B39;           // (const std::function<void()>&)
-constexpr uint32_t Sequence_create = 0x867999;           // (FiniteTimeAction*, ..., nullptr)
-constexpr uint32_t Node_runAction = 0x894AED;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__v;                 // Vec2::Vec2() (0, 0)
+constexpr uint32_t Vec2_ctorXY = rwlib::cocos2d::Vec2::ctor_base__ff;               // Vec2::Vec2(float, float)
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;                 // Vec2::~Vec2()
+constexpr uint32_t Layout_ctor = rwlib::cocos2d::ui::Layout::ctor_base;               // ui::Layout::Layout()
+constexpr uint32_t Layout_dtor = rwlib::cocos2d::ui::Layout::dtor_base;               // ui::Layout::~Layout()
+constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create;          // (float)
+constexpr uint32_t MoveTo_create = rwlib::cocos2d::MoveTo::create;             // (float, const Vec2&)
+constexpr uint32_t CallFunc_create = rwlib::cocos2d::CallFunc::create;           // (const std::function<void()>&)
+constexpr uint32_t Sequence_create = rwlib::cocos2d::Sequence::create;           // (FiniteTimeAction*, ..., nullptr)
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
 }  // namespace wl
 
 // softfp bit casts (short names: scene:: and rw:: both declare fbits / bitsf)

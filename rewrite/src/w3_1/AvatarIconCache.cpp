@@ -19,12 +19,12 @@ constexpr uint32_t COST_LAMBDA_VTABLE = 0xF5D06C;     // setLimit(unsigned)::$_1
 constexpr uint32_t ICON_DELETER_BLOCK_VTABLE = 0xF8F5D4;   // __shared_ptr_pointer<AvatarIcon*, add::$_2> + 8
 constexpr uint32_t DEFAULT_LIMIT = 30;
 
-constexpr uint32_t VEC2_COPY = 0x8E4C03;           // cocos2d::Vec2::Vec2(const Vec2&)
-constexpr uint32_t VEC2_DTOR = 0x8E4C17;           // cocos2d::Vec2::~Vec2()
+constexpr uint32_t VEC2_COPY = rwlib::cocos2d::Vec2::ctor_base__RKS0_;           // cocos2d::Vec2::Vec2(const Vec2&)
+constexpr uint32_t VEC2_DTOR = rwlib::cocos2d::Vec2::dtor_base;           // cocos2d::Vec2::~Vec2()
 constexpr uint32_t EXPRESSIONS_COPY = 0x5CA801;    // std::vector<Avatar::Expression>::vector(const vector&)
 constexpr uint32_t EXPRESSIONS_DTOR = 0x46BE0D;    // std::__vector_base<Avatar::Expression>::~__vector_base
-constexpr uint32_t REF_RETAIN = 0x8FD0B5;
-constexpr uint32_t REF_RELEASE = 0x8FD0BD;
+constexpr uint32_t REF_RETAIN = rwlib::cocos2d::Ref::retain;
+constexpr uint32_t REF_RELEASE = rwlib::cocos2d::Ref::release;
 constexpr uint32_t COST_FN_ASSIGN = 0x5CB689;      // std::function<unsigned(const shared_ptr<AvatarIcon>&)>::operator=
 constexpr uint32_t LIST_CLEAR = 0x5CBD6D;          // std::__list_imp<unsigned long long>::clear
 constexpr uint32_t MAP_DTOR = 0x5CBD25;            // ~__hash_table<u64, shared_ptr<AvatarIcon>>

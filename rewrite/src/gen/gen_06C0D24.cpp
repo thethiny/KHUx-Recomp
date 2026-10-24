@@ -192,7 +192,7 @@ RW_FUNCTION(0x6C0FD6, "sub_6C0FD6", forward_to_delete_6C0FD6);
 
 // sub_6C0FDE
 static uint32_t calls_cocos2d_Node_unscheduleUpdate_6C0FDE(uint32_t a0) {
-    return rw::call(0x894CB3, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::unscheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
 }
 RW_FUNCTION(0x6C0FDE, "sub_6C0FDE", calls_cocos2d_Node_unscheduleUpdate_6C0FDE);
 
@@ -259,7 +259,7 @@ RW_FUNCTION(0x6C1072, "sub_6C1072", forward_to_delete_6C1072);
 
 // sub_6C107A
 static uint32_t calls_cocos2d_Node_scheduleUpdate_6C107A(uint32_t a0) {
-    return rw::call(0x894BA7, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::scheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
 }
 RW_FUNCTION(0x6C107A, "sub_6C107A", calls_cocos2d_Node_scheduleUpdate_6C107A);
 
@@ -445,13 +445,13 @@ RW_FUNCTION(0x6C61BA, "sub_6C61BA", fn_6C61BA);
 
 // sub_6C625A
 static uint32_t calls_cocos2d_Node_unscheduleUpdate_6C625A(uint32_t a0) {
-    return rw::call(0x894CB3, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::unscheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
 }
 RW_FUNCTION(0x6C625A, "sub_6C625A", calls_cocos2d_Node_unscheduleUpdate_6C625A);
 
 // sub_6C62F6
 static uint32_t calls_cocos2d_Node_scheduleUpdate_6C62F6(uint32_t a0) {
-    return rw::call(0x894BA7, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::scheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
 }
 RW_FUNCTION(0x6C62F6, "sub_6C62F6", calls_cocos2d_Node_scheduleUpdate_6C62F6);
 
@@ -464,18 +464,18 @@ static void SceneDownload_SceneDownload_dtor_6C86BC(uint32_t self, uint32_t a1, 
         const uint32_t v3 = rw::load<uint32_t>(rw::load<uint32_t>(v1) + 0x10u);
         const uint64_t r4 = rw::call64(v3, {v1, v3, a2, a3});  // call through a function pointer
         rw::call(0x776937, {self + 0x288u, uint32_t(r4 >> 32)});  // DataDownloader::~DataDownloader [base destructor]
-        rw::call(0x88A88D, {self});  // cocos2d::Layer::~Layer [base destructor]
+        rw::call(rwlib::cocos2d::Layer::dtor_base, {self});  // cocos2d::Layer::~Layer [base destructor]
         return;
     } else {
         if (v1 == 0u) {
             rw::call(0x776937, {self + 0x288u, self + 0x2C8u});  // DataDownloader::~DataDownloader [base destructor]
-            rw::call(0x88A88D, {self});  // cocos2d::Layer::~Layer [base destructor]
+            rw::call(rwlib::cocos2d::Layer::dtor_base, {self});  // cocos2d::Layer::~Layer [base destructor]
             return;
         } else {
             const uint32_t v10 = rw::load<uint32_t>(rw::load<uint32_t>(v1) + 0x14u);
             const uint64_t r11 = rw::call64(v10, {v1, v10, a2, a3});  // call through a function pointer
             rw::call(0x776937, {self + 0x288u, uint32_t(r11 >> 32)});  // DataDownloader::~DataDownloader [base destructor]
-            rw::call(0x88A88D, {self});  // cocos2d::Layer::~Layer [base destructor]
+            rw::call(rwlib::cocos2d::Layer::dtor_base, {self});  // cocos2d::Layer::~Layer [base destructor]
             return;
         }
     }
@@ -491,20 +491,20 @@ static void SceneDownload_SceneDownload_dtor_deleting_6C8710(uint32_t self, uint
         const uint32_t v3 = rw::load<uint32_t>(rw::load<uint32_t>(v1) + 0x10u);
         const uint64_t r4 = rw::call64(v3, {v1, v3, a2, a3});  // call through a function pointer
         rw::call(0x776937, {self + 0x288u, uint32_t(r4 >> 32)});  // DataDownloader::~DataDownloader [base destructor]
-        rw::call(0x88A88D, {self});  // cocos2d::Layer::~Layer [base destructor]
+        rw::call(rwlib::cocos2d::Layer::dtor_base, {self});  // cocos2d::Layer::~Layer [base destructor]
         const uint32_t r7 = rw::call(0xC98F9B, {self});  // delete
         return;
     } else {
         if (v1 == 0u) {
             rw::call(0x776937, {self + 0x288u, self + 0x2C8u});  // DataDownloader::~DataDownloader [base destructor]
-            rw::call(0x88A88D, {self});  // cocos2d::Layer::~Layer [base destructor]
+            rw::call(rwlib::cocos2d::Layer::dtor_base, {self});  // cocos2d::Layer::~Layer [base destructor]
             const uint32_t r10 = rw::call(0xC98F9B, {self});  // delete
             return;
         } else {
             const uint32_t v12 = rw::load<uint32_t>(rw::load<uint32_t>(v1) + 0x14u);
             const uint64_t r13 = rw::call64(v12, {v1, v12, a2, a3});  // call through a function pointer
             rw::call(0x776937, {self + 0x288u, uint32_t(r13 >> 32)});  // DataDownloader::~DataDownloader [base destructor]
-            rw::call(0x88A88D, {self});  // cocos2d::Layer::~Layer [base destructor]
+            rw::call(rwlib::cocos2d::Layer::dtor_base, {self});  // cocos2d::Layer::~Layer [base destructor]
             const uint32_t r16 = rw::call(0xC98F9B, {self});  // delete
             return;
         }
@@ -520,13 +520,13 @@ RW_FUNCTION(0x6C8BAA, "nullsub_1623", nullsub_1623_6C8BAA);
 
 // sub_6C8C3E
 static uint32_t calls_cocos2d_Node_unscheduleUpdate_6C8C3E(uint32_t a0) {
-    return rw::call(0x894CB3, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::unscheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
 }
 RW_FUNCTION(0x6C8C3E, "sub_6C8C3E", calls_cocos2d_Node_unscheduleUpdate_6C8C3E);
 
 // sub_6C8CDA
 static uint32_t calls_cocos2d_Node_scheduleUpdate_6C8CDA(uint32_t a0) {
-    return rw::call(0x894BA7, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::scheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
 }
 RW_FUNCTION(0x6C8CDA, "sub_6C8CDA", calls_cocos2d_Node_scheduleUpdate_6C8CDA);
 
@@ -540,7 +540,7 @@ RW_FUNCTION(0x6C8D6A, "nullsub_1626", nullsub_1626_6C8D6A);
 // IDA: void __fastcall SceneSelectUnion::~SceneSelectUnion(SceneSelectUnion *this)
 static void SceneSelectUnion_SceneSelectUnion_dtor_6C8DC4(uint32_t self) {
     rw::save<uint32_t>(self, rw::load<uint32_t>(0xFD66E8u) + 8u);  // 0xFD66E8 = _ZTV16SceneSelectUnion_ptr
-    const uint32_t r1 = rw::call(0x88A88D, {self});  // cocos2d::Layer::~Layer [base destructor]
+    const uint32_t r1 = rw::call(rwlib::cocos2d::Layer::dtor_base, {self});  // cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x6C8DC4, "SceneSelectUnion::~SceneSelectUnion [base destructor]", SceneSelectUnion_SceneSelectUnion_dtor_6C8DC4);
 
@@ -548,7 +548,7 @@ RW_FUNCTION(0x6C8DC4, "SceneSelectUnion::~SceneSelectUnion [base destructor]", S
 // IDA: void __fastcall SceneSelectUnion::~SceneSelectUnion(SceneSelectUnion *this)
 static void SceneSelectUnion_SceneSelectUnion_dtor_deleting_6C8DE4(uint32_t self) {
     rw::save<uint32_t>(self, rw::load<uint32_t>(0xFD66E8u) + 8u);  // 0xFD66E8 = _ZTV16SceneSelectUnion_ptr
-    const uint32_t r2 = rw::call(0xC98F9B, {rw::call(0x88A88D, {self})});  // delete; cocos2d::Layer::~Layer [base destructor]
+    const uint32_t r2 = rw::call(0xC98F9B, {rw::call(rwlib::cocos2d::Layer::dtor_base, {self})});  // delete; cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x6C8DE4, "SceneSelectUnion::~SceneSelectUnion [deleting destructor]", SceneSelectUnion_SceneSelectUnion_dtor_deleting_6C8DE4);
 
@@ -571,7 +571,7 @@ RW_FUNCTION(0x6CAF56, "sub_6CAF56", fn_6CAF56);
 
 // sub_6CB012
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_6CB012(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x6CB012, "sub_6CB012", calls_cocos2d_ui_Widget_isTouchEnabled_6CB012);
 
@@ -611,7 +611,7 @@ RW_FUNCTION(0x6CC188, "sub_6CC188", fn_6CC188);
 
 // sub_6CC25A
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_6CC25A(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x6CC25A, "sub_6CC25A", calls_cocos2d_ui_Widget_isTouchEnabled_6CC25A);
 
@@ -657,13 +657,13 @@ RW_FUNCTION(0x6CCB26, "sub_6CCB26", calls_SceneSelectUnion_backScene_6CCB26);
 
 // sub_6CCBC2
 static uint32_t calls_cocos2d_Node_unscheduleUpdate_6CCBC2(uint32_t a0) {
-    return rw::call(0x894CB3, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::unscheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
 }
 RW_FUNCTION(0x6CCBC2, "sub_6CCBC2", calls_cocos2d_Node_unscheduleUpdate_6CCBC2);
 
 // sub_6CCC5E
 static uint32_t calls_cocos2d_Node_scheduleUpdate_6CCC5E(uint32_t a0) {
-    return rw::call(0x894BA7, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::scheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
 }
 RW_FUNCTION(0x6CCC5E, "sub_6CCC5E", calls_cocos2d_Node_scheduleUpdate_6CCC5E);
 
@@ -673,7 +673,7 @@ static void SceneAlbum_SceneAlbum_dtor_6CCCC0(uint32_t self) {
     const uint32_t v0 = rw::load<uint32_t>(0xFD66F0u);  // 0xFD66F0 = _ZTV10SceneAlbum_ptr
     rw::save<uint32_t>(self, v0 + 8u);
     rw::save<uint32_t>(self + 0x288u, v0 + 0x318u);
-    const uint32_t r1 = rw::call(0x88A88D, {self});  // cocos2d::Layer::~Layer [base destructor]
+    const uint32_t r1 = rw::call(rwlib::cocos2d::Layer::dtor_base, {self});  // cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x6CCCC0, "SceneAlbum::~SceneAlbum [base destructor]", SceneAlbum_SceneAlbum_dtor_6CCCC0);
 
@@ -683,7 +683,7 @@ static void thunk_SceneAlbum_SceneAlbum_dtor_6CCCF0(uint32_t self) {
     const uint32_t v0 = rw::load<uint32_t>(0xFD66F0u);  // 0xFD66F0 = _ZTV10SceneAlbum_ptr
     rw::save<uint32_t>(self - 0x288u, v0 + 8u);
     rw::save<uint32_t>(self, v0 + 0x318u);
-    const uint32_t r1 = rw::call(0x88A88D, {self - 0x288u});  // cocos2d::Layer::~Layer [base destructor]
+    const uint32_t r1 = rw::call(rwlib::cocos2d::Layer::dtor_base, {self - 0x288u});  // cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x6CCCF0, "thunk to SceneAlbum::~SceneAlbum [complete destructor]", thunk_SceneAlbum_SceneAlbum_dtor_6CCCF0);
 
@@ -693,7 +693,7 @@ static void thunk_SceneAlbum_SceneAlbum_dtor_deleting_6CCD58(uint32_t self) {
     const uint32_t v0 = rw::load<uint32_t>(0xFD66F0u);  // 0xFD66F0 = _ZTV10SceneAlbum_ptr
     rw::save<uint32_t>(self - 0x288u, v0 + 8u);
     rw::save<uint32_t>(self, v0 + 0x318u);
-    const uint32_t r2 = rw::call(0xC98F9B, {rw::call(0x88A88D, {self - 0x288u})});  // delete; cocos2d::Layer::~Layer [base destructor]
+    const uint32_t r2 = rw::call(0xC98F9B, {rw::call(rwlib::cocos2d::Layer::dtor_base, {self - 0x288u})});  // delete; cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x6CCD58, "thunk to SceneAlbum::~SceneAlbum [deleting destructor]", thunk_SceneAlbum_SceneAlbum_dtor_deleting_6CCD58);
 
@@ -863,7 +863,7 @@ RW_FUNCTION(0x6DD84A, "sub_6DD84A", fn_6DD84A);
 
 // sub_6DD906
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_6DD906(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x6DD906, "sub_6DD906", calls_cocos2d_ui_Widget_isTouchEnabled_6DD906);
 
@@ -917,7 +917,7 @@ RW_FUNCTION(0x6DE16A, "sub_6DE16A", fn_6DE16A);
 
 // sub_6DE226
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_6DE226(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x6DE226, "sub_6DE226", calls_cocos2d_ui_Widget_isTouchEnabled_6DE226);
 
@@ -971,7 +971,7 @@ RW_FUNCTION(0x6DEC3C, "sub_6DEC3C", fn_6DEC3C);
 
 // sub_6DEF9E
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_6DEF9E(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x6DEF9E, "sub_6DEF9E", calls_cocos2d_ui_Widget_isTouchEnabled_6DEF9E);
 
@@ -1544,13 +1544,13 @@ RW_FUNCTION(0x6E5D4A, "sub_6E5D4A", calls_ScenePartyRequest_backScene_6E5D4A);
 
 // sub_6E5DE6
 static uint32_t calls_cocos2d_Node_unscheduleUpdate_6E5DE6(uint32_t a0) {
-    return rw::call(0x894CB3, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::unscheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
 }
 RW_FUNCTION(0x6E5DE6, "sub_6E5DE6", calls_cocos2d_Node_unscheduleUpdate_6E5DE6);
 
 // sub_6E5E82
 static uint32_t calls_cocos2d_Node_scheduleUpdate_6E5E82(uint32_t a0) {
-    return rw::call(0x894BA7, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::scheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
 }
 RW_FUNCTION(0x6E5E82, "sub_6E5E82", calls_cocos2d_Node_scheduleUpdate_6E5E82);
 
@@ -1651,7 +1651,7 @@ RW_FUNCTION(0x6E9E8A, "sub_6E9E8A", calls_std_function_op_call_6E9E8A);
 
 // sub_6E9F2E
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_6E9F2E(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x6E9F2E, "sub_6E9F2E", calls_cocos2d_ui_Widget_isTouchEnabled_6E9F2E);
 
@@ -2454,13 +2454,13 @@ RW_FUNCTION(0x6F0486, "sub_6F0486", calls_ScenePartyManagement_backScene_6F0486)
 
 // sub_6F0522
 static uint32_t calls_cocos2d_Node_unscheduleUpdate_6F0522(uint32_t a0) {
-    return rw::call(0x894CB3, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::unscheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
 }
 RW_FUNCTION(0x6F0522, "sub_6F0522", calls_cocos2d_Node_unscheduleUpdate_6F0522);
 
 // sub_6F05BE
 static uint32_t calls_cocos2d_Node_scheduleUpdate_6F05BE(uint32_t a0) {
-    return rw::call(0x894BA7, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::scheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
 }
 RW_FUNCTION(0x6F05BE, "sub_6F05BE", calls_cocos2d_Node_scheduleUpdate_6F05BE);
 
@@ -2484,7 +2484,7 @@ static void ScenePartyMember_ScenePartyMember_dtor_6F0A44(uint32_t self) {
     const uint32_t v0 = rw::load<uint32_t>(0xFD68E4u);  // 0xFD68E4 = _ZTV16ScenePartyMember_ptr
     rw::save<uint32_t>(self, v0 + 8u);
     rw::save<uint32_t>(self + 0x288u, v0 + 0x318u);
-    const uint32_t r1 = rw::call(0x88A88D, {self});  // cocos2d::Layer::~Layer [base destructor]
+    const uint32_t r1 = rw::call(rwlib::cocos2d::Layer::dtor_base, {self});  // cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x6F0A44, "ScenePartyMember::~ScenePartyMember [base destructor]", ScenePartyMember_ScenePartyMember_dtor_6F0A44);
 
@@ -2494,7 +2494,7 @@ static void thunk_ScenePartyMember_ScenePartyMember_dtor_6F0A74(uint32_t self) {
     const uint32_t v0 = rw::load<uint32_t>(0xFD68E4u);  // 0xFD68E4 = _ZTV16ScenePartyMember_ptr
     rw::save<uint32_t>(self - 0x288u, v0 + 8u);
     rw::save<uint32_t>(self, v0 + 0x318u);
-    const uint32_t r1 = rw::call(0x88A88D, {self - 0x288u});  // cocos2d::Layer::~Layer [base destructor]
+    const uint32_t r1 = rw::call(rwlib::cocos2d::Layer::dtor_base, {self - 0x288u});  // cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x6F0A74, "thunk to ScenePartyMember::~ScenePartyMember [complete destructor]", thunk_ScenePartyMember_ScenePartyMember_dtor_6F0A74);
 
@@ -2504,7 +2504,7 @@ static void thunk_ScenePartyMember_ScenePartyMember_dtor_deleting_6F0ADC(uint32_
     const uint32_t v0 = rw::load<uint32_t>(0xFD68E4u);  // 0xFD68E4 = _ZTV16ScenePartyMember_ptr
     rw::save<uint32_t>(self - 0x288u, v0 + 8u);
     rw::save<uint32_t>(self, v0 + 0x318u);
-    const uint32_t r2 = rw::call(0xC98F9B, {rw::call(0x88A88D, {self - 0x288u})});  // delete; cocos2d::Layer::~Layer [base destructor]
+    const uint32_t r2 = rw::call(0xC98F9B, {rw::call(rwlib::cocos2d::Layer::dtor_base, {self - 0x288u})});  // delete; cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x6F0ADC, "thunk to ScenePartyMember::~ScenePartyMember [deleting destructor]", thunk_ScenePartyMember_ScenePartyMember_dtor_deleting_6F0ADC);
 
@@ -2860,7 +2860,7 @@ RW_FUNCTION(0x6F23D2, "sub_6F23D2", forward_to_delete_6F23D2);
 
 // sub_6F23DA
 static uint32_t calls_cocos2d_Node_unscheduleUpdate_6F23DA(uint32_t a0) {
-    return rw::call(0x894CB3, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::unscheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
 }
 RW_FUNCTION(0x6F23DA, "sub_6F23DA", calls_cocos2d_Node_unscheduleUpdate_6F23DA);
 
@@ -2927,7 +2927,7 @@ RW_FUNCTION(0x6F246E, "sub_6F246E", forward_to_delete_6F246E);
 
 // sub_6F2476
 static uint32_t calls_cocos2d_Node_scheduleUpdate_6F2476(uint32_t a0) {
-    return rw::call(0x894BA7, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::scheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
 }
 RW_FUNCTION(0x6F2476, "sub_6F2476", calls_cocos2d_Node_scheduleUpdate_6F2476);
 
@@ -2981,13 +2981,13 @@ RW_FUNCTION(0x6F3EF2, "sub_6F3EF2", calls_start_movie_6F3EF2);
 
 // sub_6F3F92
 static uint32_t calls_cocos2d_Node_unscheduleUpdate_6F3F92(uint32_t a0) {
-    return rw::call(0x894CB3, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::unscheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
 }
 RW_FUNCTION(0x6F3F92, "sub_6F3F92", calls_cocos2d_Node_unscheduleUpdate_6F3F92);
 
 // sub_6F402E
 static uint32_t calls_cocos2d_Node_scheduleUpdate_6F402E(uint32_t a0) {
-    return rw::call(0x894BA7, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::scheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
 }
 RW_FUNCTION(0x6F402E, "sub_6F402E", calls_cocos2d_Node_scheduleUpdate_6F402E);
 
@@ -3339,13 +3339,13 @@ RW_FUNCTION(0x6FB5EC, "sub_6FB5EC", fn_6FB5EC);
 
 // sub_6FB69A
 static uint32_t calls_cocos2d_Node_unscheduleUpdate_6FB69A(uint32_t a0) {
-    return rw::call(0x894CB3, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::unscheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
 }
 RW_FUNCTION(0x6FB69A, "sub_6FB69A", calls_cocos2d_Node_unscheduleUpdate_6FB69A);
 
 // sub_6FB736
 static uint32_t calls_cocos2d_Node_scheduleUpdate_6FB736(uint32_t a0) {
-    return rw::call(0x894BA7, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::scheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
 }
 RW_FUNCTION(0x6FB736, "sub_6FB736", calls_cocos2d_Node_scheduleUpdate_6FB736);
 
@@ -3402,9 +3402,9 @@ static void thunk_SceneRanking_SceneRanking_dtor_6FBDD0(uint32_t self) {
     const uint32_t v0 = rw::load<uint32_t>(0xFD68C4u);  // 0xFD68C4 = _ZTV12SceneRanking_ptr
     rw::save<uint32_t>(self - 0x288u, v0 + 8u);
     rw::save<uint32_t>(self, v0 + 0x318u);
-    rw::call(0x8E4C17, {self + 0x40u});  // cocos2d::Vec2::~Vec2 [base destructor]
-    rw::call(0x8E4C17, {self + 0x18u});  // cocos2d::Vec2::~Vec2 [base destructor]
-    const uint32_t r3 = rw::call(0x88A88D, {self - 0x288u});  // cocos2d::Layer::~Layer [base destructor]
+    rw::call(rwlib::cocos2d::Vec2::dtor_base, {self + 0x40u});  // cocos2d::Vec2::~Vec2 [base destructor]
+    rw::call(rwlib::cocos2d::Vec2::dtor_base, {self + 0x18u});  // cocos2d::Vec2::~Vec2 [base destructor]
+    const uint32_t r3 = rw::call(rwlib::cocos2d::Layer::dtor_base, {self - 0x288u});  // cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x6FBDD0, "thunk to SceneRanking::~SceneRanking [complete destructor]", thunk_SceneRanking_SceneRanking_dtor_6FBDD0);
 
@@ -3776,13 +3776,13 @@ RW_FUNCTION(0x7025A6, "sub_7025A6", calls_SceneRanking_backScene_7025A6);
 
 // sub_702642
 static uint32_t calls_cocos2d_Node_unscheduleUpdate_702642(uint32_t a0) {
-    return rw::call(0x894CB3, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::unscheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
 }
 RW_FUNCTION(0x702642, "sub_702642", calls_cocos2d_Node_unscheduleUpdate_702642);
 
 // sub_7026E0
 static uint32_t calls_AudioReplaceGameMainBGM_7026E0(uint32_t a0) {
-    rw::call(0x894BA7, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
+    rw::call(rwlib::cocos2d::Node::scheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
     return rw::call(0x5C0FA1, {0x1DDCAAD8u, 0x1F4u});  // AudioReplaceGameMainBGM
 }
 RW_FUNCTION(0x7026E0, "sub_7026E0", calls_AudioReplaceGameMainBGM_7026E0);
@@ -4468,7 +4468,7 @@ RW_FUNCTION(0x70B67A, "sub_70B67A", fn_70B67A);
 
 // sub_70B7F6
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_70B7F6(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x70B7F6, "sub_70B7F6", calls_cocos2d_ui_Widget_isTouchEnabled_70B7F6);
 
@@ -4485,7 +4485,7 @@ RW_FUNCTION(0x70B886, "sub_70B886", fn_70B886);
 
 // sub_70BD1E
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_70BD1E(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x70BD1E, "sub_70BD1E", calls_cocos2d_ui_Widget_isTouchEnabled_70BD1E);
 
@@ -4700,13 +4700,13 @@ RW_FUNCTION(0x70E312, "sub_70E312", calls_SceneAvatarEdit_backScene_70E312);
 
 // sub_70E3AE
 static uint32_t calls_cocos2d_Node_unscheduleUpdate_70E3AE(uint32_t a0) {
-    return rw::call(0x894CB3, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::unscheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
 }
 RW_FUNCTION(0x70E3AE, "sub_70E3AE", calls_cocos2d_Node_unscheduleUpdate_70E3AE);
 
 // sub_70E44A
 static uint32_t calls_cocos2d_Node_scheduleUpdate_70E44A(uint32_t a0) {
-    return rw::call(0x894BA7, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::scheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
 }
 RW_FUNCTION(0x70E44A, "sub_70E44A", calls_cocos2d_Node_scheduleUpdate_70E44A);
 
@@ -4716,7 +4716,7 @@ static void SceneRankingReward_SceneRankingReward_dtor_70E50C(uint32_t self) {
     const uint32_t v0 = rw::load<uint32_t>(0xFD6964u);  // 0xFD6964 = _ZTV18SceneRankingReward_ptr
     rw::save<uint32_t>(self, v0 + 8u);
     rw::save<uint32_t>(self + 0x288u, v0 + 0x318u);
-    const uint32_t r1 = rw::call(0x88A88D, {self});  // cocos2d::Layer::~Layer [base destructor]
+    const uint32_t r1 = rw::call(rwlib::cocos2d::Layer::dtor_base, {self});  // cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x70E50C, "SceneRankingReward::~SceneRankingReward [base destructor]", SceneRankingReward_SceneRankingReward_dtor_70E50C);
 
@@ -4726,7 +4726,7 @@ static void thunk_SceneRankingReward_SceneRankingReward_dtor_70E53C(uint32_t sel
     const uint32_t v0 = rw::load<uint32_t>(0xFD6964u);  // 0xFD6964 = _ZTV18SceneRankingReward_ptr
     rw::save<uint32_t>(self - 0x288u, v0 + 8u);
     rw::save<uint32_t>(self, v0 + 0x318u);
-    const uint32_t r1 = rw::call(0x88A88D, {self - 0x288u});  // cocos2d::Layer::~Layer [base destructor]
+    const uint32_t r1 = rw::call(rwlib::cocos2d::Layer::dtor_base, {self - 0x288u});  // cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x70E53C, "thunk to SceneRankingReward::~SceneRankingReward [complete destructor]", thunk_SceneRankingReward_SceneRankingReward_dtor_70E53C);
 
@@ -4736,7 +4736,7 @@ static void thunk_SceneRankingReward_SceneRankingReward_dtor_deleting_70E5A4(uin
     const uint32_t v0 = rw::load<uint32_t>(0xFD6964u);  // 0xFD6964 = _ZTV18SceneRankingReward_ptr
     rw::save<uint32_t>(self - 0x288u, v0 + 8u);
     rw::save<uint32_t>(self, v0 + 0x318u);
-    const uint32_t r2 = rw::call(0xC98F9B, {rw::call(0x88A88D, {self - 0x288u})});  // delete; cocos2d::Layer::~Layer [base destructor]
+    const uint32_t r2 = rw::call(0xC98F9B, {rw::call(rwlib::cocos2d::Layer::dtor_base, {self - 0x288u})});  // delete; cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x70E5A4, "thunk to SceneRankingReward::~SceneRankingReward [deleting destructor]", thunk_SceneRankingReward_SceneRankingReward_dtor_deleting_70E5A4);
 
@@ -4824,7 +4824,7 @@ RW_FUNCTION(0x711306, "sub_711306", fn_711306);
 
 // sub_711A16
 static uint32_t forward_to_cocos2d_ui_Widget_create_711A16(uint32_t a0) {
-    return rw::call(0x825875, {a0});  // cocos2d::ui::Widget::create
+    return rw::call(rwlib::cocos2d::ui::Widget::create, {a0});  // cocos2d::ui::Widget::create
 }
 RW_FUNCTION(0x711A16, "sub_711A16", forward_to_cocos2d_ui_Widget_create_711A16);
 
@@ -4850,13 +4850,13 @@ RW_FUNCTION(0x711B5E, "sub_711B5E", calls_SceneRankingReward_backScene_711B5E);
 
 // sub_711BFA
 static uint32_t calls_cocos2d_Node_unscheduleUpdate_711BFA(uint32_t a0) {
-    return rw::call(0x894CB3, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::unscheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
 }
 RW_FUNCTION(0x711BFA, "sub_711BFA", calls_cocos2d_Node_unscheduleUpdate_711BFA);
 
 // sub_711C96
 static uint32_t calls_cocos2d_Node_scheduleUpdate_711C96(uint32_t a0) {
-    return rw::call(0x894BA7, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::scheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
 }
 RW_FUNCTION(0x711C96, "sub_711C96", calls_cocos2d_Node_scheduleUpdate_711C96);
 
@@ -4864,7 +4864,7 @@ RW_FUNCTION(0x711C96, "sub_711C96", calls_cocos2d_Node_scheduleUpdate_711C96);
 // IDA: void __fastcall SceneBirthRegister::~SceneBirthRegister(SceneBirthRegister *this)
 static void SceneBirthRegister_SceneBirthRegister_dtor_711F54(uint32_t self) {
     rw::save<uint32_t>(self, rw::load<uint32_t>(0xFD6978u) + 8u);  // 0xFD6978 = _ZTV18SceneBirthRegister_ptr
-    const uint32_t r1 = rw::call(0x88A88D, {self});  // cocos2d::Layer::~Layer [base destructor]
+    const uint32_t r1 = rw::call(rwlib::cocos2d::Layer::dtor_base, {self});  // cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x711F54, "SceneBirthRegister::~SceneBirthRegister [base destructor]", SceneBirthRegister_SceneBirthRegister_dtor_711F54);
 
@@ -4872,7 +4872,7 @@ RW_FUNCTION(0x711F54, "SceneBirthRegister::~SceneBirthRegister [base destructor]
 // IDA: void __fastcall SceneBirthRegister::~SceneBirthRegister(SceneBirthRegister *this)
 static void SceneBirthRegister_SceneBirthRegister_dtor_deleting_711F74(uint32_t self) {
     rw::save<uint32_t>(self, rw::load<uint32_t>(0xFD6978u) + 8u);  // 0xFD6978 = _ZTV18SceneBirthRegister_ptr
-    const uint32_t r2 = rw::call(0xC98F9B, {rw::call(0x88A88D, {self})});  // delete; cocos2d::Layer::~Layer [base destructor]
+    const uint32_t r2 = rw::call(0xC98F9B, {rw::call(rwlib::cocos2d::Layer::dtor_base, {self})});  // delete; cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x711F74, "SceneBirthRegister::~SceneBirthRegister [deleting destructor]", SceneBirthRegister_SceneBirthRegister_dtor_deleting_711F74);
 
@@ -4897,13 +4897,13 @@ RW_FUNCTION(0x71229E, "sub_71229E", calls_SceneManager_closeCurrentPopup_71229E)
 
 // sub_71233E
 static uint32_t calls_cocos2d_Node_unscheduleUpdate_71233E(uint32_t a0) {
-    return rw::call(0x894CB3, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::unscheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
 }
 RW_FUNCTION(0x71233E, "sub_71233E", calls_cocos2d_Node_unscheduleUpdate_71233E);
 
 // sub_7123DA
 static uint32_t calls_cocos2d_Node_scheduleUpdate_7123DA(uint32_t a0) {
-    return rw::call(0x894BA7, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::scheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
 }
 RW_FUNCTION(0x7123DA, "sub_7123DA", calls_cocos2d_Node_scheduleUpdate_7123DA);
 
@@ -4911,7 +4911,7 @@ RW_FUNCTION(0x7123DA, "sub_7123DA", calls_cocos2d_Node_scheduleUpdate_7123DA);
 // IDA: void __fastcall SceneTakeOver::~SceneTakeOver(SceneTakeOver *this)
 static void SceneTakeOver_SceneTakeOver_dtor_7124BC(uint32_t self) {
     rw::save<uint32_t>(self, rw::load<uint32_t>(0xFD697Cu) + 8u);  // 0xFD697C = _ZTV13SceneTakeOver_ptr
-    const uint32_t r1 = rw::call(0x88A88D, {self});  // cocos2d::Layer::~Layer [base destructor]
+    const uint32_t r1 = rw::call(rwlib::cocos2d::Layer::dtor_base, {self});  // cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x7124BC, "SceneTakeOver::~SceneTakeOver [base destructor]", SceneTakeOver_SceneTakeOver_dtor_7124BC);
 
@@ -4919,7 +4919,7 @@ RW_FUNCTION(0x7124BC, "SceneTakeOver::~SceneTakeOver [base destructor]", SceneTa
 // IDA: void __fastcall SceneTakeOver::~SceneTakeOver(SceneTakeOver *this)
 static void SceneTakeOver_SceneTakeOver_dtor_deleting_7124DC(uint32_t self) {
     rw::save<uint32_t>(self, rw::load<uint32_t>(0xFD697Cu) + 8u);  // 0xFD697C = _ZTV13SceneTakeOver_ptr
-    const uint32_t r2 = rw::call(0xC98F9B, {rw::call(0x88A88D, {self})});  // delete; cocos2d::Layer::~Layer [base destructor]
+    const uint32_t r2 = rw::call(0xC98F9B, {rw::call(rwlib::cocos2d::Layer::dtor_base, {self})});  // delete; cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x7124DC, "SceneTakeOver::~SceneTakeOver [deleting destructor]", SceneTakeOver_SceneTakeOver_dtor_deleting_7124DC);
 
@@ -4973,7 +4973,7 @@ RW_FUNCTION(0x713858, "sub_713858", fn_713858);
 
 // sub_713932
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_713932(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x713932, "sub_713932", calls_cocos2d_ui_Widget_isTouchEnabled_713932);
 
@@ -5579,13 +5579,13 @@ RW_FUNCTION(0x714D16, "nullsub_1968", nullsub_1968_714D16);
 
 // sub_714DAA
 static uint32_t calls_cocos2d_Node_unscheduleUpdate_714DAA(uint32_t a0) {
-    return rw::call(0x894CB3, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::unscheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
 }
 RW_FUNCTION(0x714DAA, "sub_714DAA", calls_cocos2d_Node_unscheduleUpdate_714DAA);
 
 // sub_714E46
 static uint32_t calls_cocos2d_Node_scheduleUpdate_714E46(uint32_t a0) {
-    return rw::call(0x894BA7, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::scheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
 }
 RW_FUNCTION(0x714E46, "sub_714E46", calls_cocos2d_Node_scheduleUpdate_714E46);
 
@@ -5593,7 +5593,7 @@ RW_FUNCTION(0x714E46, "sub_714E46", calls_cocos2d_Node_scheduleUpdate_714E46);
 // IDA: void __fastcall SceneAgreement::~SceneAgreement(SceneAgreement *this)
 static void SceneAgreement_SceneAgreement_dtor_714EA8(uint32_t self) {
     rw::save<uint32_t>(self, rw::load<uint32_t>(0xFD6908u) + 8u);  // 0xFD6908 = _ZTV14SceneAgreement_ptr
-    const uint32_t r1 = rw::call(0x88A88D, {self});  // cocos2d::Layer::~Layer [base destructor]
+    const uint32_t r1 = rw::call(rwlib::cocos2d::Layer::dtor_base, {self});  // cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x714EA8, "SceneAgreement::~SceneAgreement [base destructor]", SceneAgreement_SceneAgreement_dtor_714EA8);
 
@@ -5601,7 +5601,7 @@ RW_FUNCTION(0x714EA8, "SceneAgreement::~SceneAgreement [base destructor]", Scene
 // IDA: void __fastcall SceneAgreement::~SceneAgreement(SceneAgreement *this)
 static void SceneAgreement_SceneAgreement_dtor_deleting_714EC8(uint32_t self) {
     rw::save<uint32_t>(self, rw::load<uint32_t>(0xFD6908u) + 8u);  // 0xFD6908 = _ZTV14SceneAgreement_ptr
-    const uint32_t r2 = rw::call(0xC98F9B, {rw::call(0x88A88D, {self})});  // delete; cocos2d::Layer::~Layer [base destructor]
+    const uint32_t r2 = rw::call(0xC98F9B, {rw::call(rwlib::cocos2d::Layer::dtor_base, {self})});  // delete; cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x714EC8, "SceneAgreement::~SceneAgreement [deleting destructor]", SceneAgreement_SceneAgreement_dtor_deleting_714EC8);
 
@@ -5609,8 +5609,8 @@ RW_FUNCTION(0x714EC8, "SceneAgreement::~SceneAgreement [deleting destructor]", S
 // IDA: int __fastcall SceneAgreement::runInAnimation(SceneAgreement *this)
 static uint32_t SceneAgreement_runInAnimation_71576C(uint32_t self) {
     const uint32_t v0 = rw::load<uint32_t>(self + 0x288u);
-    const uint32_t r4 = rw::call(0x867999, {rw::call(0x86852D, {rw::load<uint32_t>(rw::load<uint32_t>(0xFD65C0u)), 0xFFFFD174u}), 0u});  // cocos2d::Sequence::create; cocos2d::DelayTime::create; 0xFD65C0 = _ZN9SceneUtil11IN_OUT_TIMEE_ptr
-    return rw::call(0x894AED, {v0, r4});  // cocos2d::Node::runAction
+    const uint32_t r4 = rw::call(rwlib::cocos2d::Sequence::create, {rw::call(rwlib::cocos2d::DelayTime::create, {rw::load<uint32_t>(rw::load<uint32_t>(0xFD65C0u)), 0xFFFFD174u}), 0u});  // cocos2d::Sequence::create; cocos2d::DelayTime::create; 0xFD65C0 = _ZN9SceneUtil11IN_OUT_TIMEE_ptr
+    return rw::call(rwlib::cocos2d::Node::runAction, {v0, r4});  // cocos2d::Node::runAction
 }
 RW_FUNCTION(0x71576C, "SceneAgreement::runInAnimation", SceneAgreement_runInAnimation_71576C);
 
@@ -5636,7 +5636,7 @@ RW_FUNCTION(0x7157AE, "SceneAgreement::backScene", SceneAgreement_backScene_7157
 
 // sub_715AFA
 static uint32_t calls_cocos2d_ui_Widget_isTouchEnabled_715AFA(uint32_t a0) {
-    return rw::call(0x826665, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
+    return rw::call(rwlib::cocos2d::ui::Widget::isTouchEnabled, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::ui::Widget::isTouchEnabled
 }
 RW_FUNCTION(0x715AFA, "sub_715AFA", calls_cocos2d_ui_Widget_isTouchEnabled_715AFA);
 
@@ -5659,13 +5659,13 @@ RW_FUNCTION(0x715D02, "sub_715D02", calls_SceneManager_closeCurrentPopup_715D02)
 
 // sub_715DA2
 static void calls_SceneManager_setEnabledTouchEffect_715DA2(uint32_t a0) {
-    const uint32_t r3 = rw::call(0x60CF65, {rw::call(0x60C26D, {rw::call(0x894CB3, {rw::load<uint32_t>(a0 + 4u)})}), 1u});  // SceneManager::setEnabledTouchEffect; SceneManager::getInstance; cocos2d::Node::unscheduleUpdate
+    const uint32_t r3 = rw::call(0x60CF65, {rw::call(0x60C26D, {rw::call(rwlib::cocos2d::Node::unscheduleUpdate, {rw::load<uint32_t>(a0 + 4u)})}), 1u});  // SceneManager::setEnabledTouchEffect; SceneManager::getInstance; cocos2d::Node::unscheduleUpdate
 }
 RW_FUNCTION(0x715DA2, "sub_715DA2", calls_SceneManager_setEnabledTouchEffect_715DA2);
 
 // sub_715E4A
 static void calls_SceneManager_setEnabledTouchEffect_715E4A(uint32_t a0) {
-    const uint32_t r3 = rw::call(0x60CF65, {rw::call(0x60C26D, {rw::call(0x894BA7, {rw::load<uint32_t>(a0 + 4u)})}), 0u});  // SceneManager::setEnabledTouchEffect; SceneManager::getInstance; cocos2d::Node::scheduleUpdate
+    const uint32_t r3 = rw::call(0x60CF65, {rw::call(0x60C26D, {rw::call(rwlib::cocos2d::Node::scheduleUpdate, {rw::load<uint32_t>(a0 + 4u)})}), 0u});  // SceneManager::setEnabledTouchEffect; SceneManager::getInstance; cocos2d::Node::scheduleUpdate
 }
 RW_FUNCTION(0x715E4A, "sub_715E4A", calls_SceneManager_setEnabledTouchEffect_715E4A);
 
@@ -5675,7 +5675,7 @@ static void SceneInvitation_SceneInvitation_dtor_715EB8(uint32_t self) {
     const uint32_t v0 = rw::load<uint32_t>(0xFD68FCu);  // 0xFD68FC = _ZTV15SceneInvitation_ptr
     rw::save<uint32_t>(self, v0 + 8u);
     rw::save<uint32_t>(self + 0x288u, v0 + 0x320u);
-    const uint32_t r1 = rw::call(0x88A88D, {self});  // cocos2d::Layer::~Layer [base destructor]
+    const uint32_t r1 = rw::call(rwlib::cocos2d::Layer::dtor_base, {self});  // cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x715EB8, "SceneInvitation::~SceneInvitation [base destructor]", SceneInvitation_SceneInvitation_dtor_715EB8);
 
@@ -5685,7 +5685,7 @@ static void thunk_SceneInvitation_SceneInvitation_dtor_715EE8(uint32_t self) {
     const uint32_t v0 = rw::load<uint32_t>(0xFD68FCu);  // 0xFD68FC = _ZTV15SceneInvitation_ptr
     rw::save<uint32_t>(self - 0x288u, v0 + 8u);
     rw::save<uint32_t>(self, v0 + 0x320u);
-    const uint32_t r1 = rw::call(0x88A88D, {self - 0x288u});  // cocos2d::Layer::~Layer [base destructor]
+    const uint32_t r1 = rw::call(rwlib::cocos2d::Layer::dtor_base, {self - 0x288u});  // cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x715EE8, "thunk to SceneInvitation::~SceneInvitation [complete destructor]", thunk_SceneInvitation_SceneInvitation_dtor_715EE8);
 
@@ -5695,7 +5695,7 @@ static void SceneInvitation_SceneInvitation_dtor_deleting_715F1C(uint32_t self) 
     const uint32_t v0 = rw::load<uint32_t>(0xFD68FCu);  // 0xFD68FC = _ZTV15SceneInvitation_ptr
     rw::save<uint32_t>(self, v0 + 8u);
     rw::save<uint32_t>(self + 0x288u, v0 + 0x320u);
-    const uint32_t r2 = rw::call(0xC98F9B, {rw::call(0x88A88D, {self})});  // delete; cocos2d::Layer::~Layer [base destructor]
+    const uint32_t r2 = rw::call(0xC98F9B, {rw::call(rwlib::cocos2d::Layer::dtor_base, {self})});  // delete; cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x715F1C, "SceneInvitation::~SceneInvitation [deleting destructor]", SceneInvitation_SceneInvitation_dtor_deleting_715F1C);
 
@@ -5705,7 +5705,7 @@ static void thunk_SceneInvitation_SceneInvitation_dtor_deleting_715F50(uint32_t 
     const uint32_t v0 = rw::load<uint32_t>(0xFD68FCu);  // 0xFD68FC = _ZTV15SceneInvitation_ptr
     rw::save<uint32_t>(self - 0x288u, v0 + 8u);
     rw::save<uint32_t>(self, v0 + 0x320u);
-    const uint32_t r2 = rw::call(0xC98F9B, {rw::call(0x88A88D, {self - 0x288u})});  // delete; cocos2d::Layer::~Layer [base destructor]
+    const uint32_t r2 = rw::call(0xC98F9B, {rw::call(rwlib::cocos2d::Layer::dtor_base, {self - 0x288u})});  // delete; cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x715F50, "thunk to SceneInvitation::~SceneInvitation [deleting destructor]", thunk_SceneInvitation_SceneInvitation_dtor_deleting_715F50);
 
@@ -5779,13 +5779,13 @@ RW_FUNCTION(0x716BDE, "nullsub_1982", nullsub_1982_716BDE);
 
 // sub_716C72
 static uint32_t calls_cocos2d_Node_unscheduleUpdate_716C72(uint32_t a0) {
-    return rw::call(0x894CB3, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::unscheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
 }
 RW_FUNCTION(0x716C72, "sub_716C72", calls_cocos2d_Node_unscheduleUpdate_716C72);
 
 // sub_716D0E
 static uint32_t calls_cocos2d_Node_scheduleUpdate_716D0E(uint32_t a0) {
-    return rw::call(0x894BA7, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::scheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
 }
 RW_FUNCTION(0x716D0E, "sub_716D0E", calls_cocos2d_Node_scheduleUpdate_716D0E);
 
@@ -5795,7 +5795,7 @@ static void SceneNameRegister_SceneNameRegister_dtor_716D70(uint32_t self) {
     const uint32_t v0 = rw::load<uint32_t>(0xFD6900u);  // 0xFD6900 = _ZTV17SceneNameRegister_ptr
     rw::save<uint32_t>(self, v0 + 8u);
     rw::save<uint32_t>(self + 0x288u, v0 + 0x320u);
-    const uint32_t r1 = rw::call(0x88A88D, {self});  // cocos2d::Layer::~Layer [base destructor]
+    const uint32_t r1 = rw::call(rwlib::cocos2d::Layer::dtor_base, {self});  // cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x716D70, "SceneNameRegister::~SceneNameRegister [base destructor]", SceneNameRegister_SceneNameRegister_dtor_716D70);
 
@@ -5805,7 +5805,7 @@ static void thunk_SceneNameRegister_SceneNameRegister_dtor_716DA0(uint32_t self)
     const uint32_t v0 = rw::load<uint32_t>(0xFD6900u);  // 0xFD6900 = _ZTV17SceneNameRegister_ptr
     rw::save<uint32_t>(self - 0x288u, v0 + 8u);
     rw::save<uint32_t>(self, v0 + 0x320u);
-    const uint32_t r1 = rw::call(0x88A88D, {self - 0x288u});  // cocos2d::Layer::~Layer [base destructor]
+    const uint32_t r1 = rw::call(rwlib::cocos2d::Layer::dtor_base, {self - 0x288u});  // cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x716DA0, "thunk to SceneNameRegister::~SceneNameRegister [complete destructor]", thunk_SceneNameRegister_SceneNameRegister_dtor_716DA0);
 
@@ -5815,7 +5815,7 @@ static void SceneNameRegister_SceneNameRegister_dtor_deleting_716DD4(uint32_t se
     const uint32_t v0 = rw::load<uint32_t>(0xFD6900u);  // 0xFD6900 = _ZTV17SceneNameRegister_ptr
     rw::save<uint32_t>(self, v0 + 8u);
     rw::save<uint32_t>(self + 0x288u, v0 + 0x320u);
-    const uint32_t r2 = rw::call(0xC98F9B, {rw::call(0x88A88D, {self})});  // delete; cocos2d::Layer::~Layer [base destructor]
+    const uint32_t r2 = rw::call(0xC98F9B, {rw::call(rwlib::cocos2d::Layer::dtor_base, {self})});  // delete; cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x716DD4, "SceneNameRegister::~SceneNameRegister [deleting destructor]", SceneNameRegister_SceneNameRegister_dtor_deleting_716DD4);
 
@@ -5825,7 +5825,7 @@ static void thunk_SceneNameRegister_SceneNameRegister_dtor_deleting_716E08(uint3
     const uint32_t v0 = rw::load<uint32_t>(0xFD6900u);  // 0xFD6900 = _ZTV17SceneNameRegister_ptr
     rw::save<uint32_t>(self - 0x288u, v0 + 8u);
     rw::save<uint32_t>(self, v0 + 0x320u);
-    const uint32_t r2 = rw::call(0xC98F9B, {rw::call(0x88A88D, {self - 0x288u})});  // delete; cocos2d::Layer::~Layer [base destructor]
+    const uint32_t r2 = rw::call(0xC98F9B, {rw::call(rwlib::cocos2d::Layer::dtor_base, {self - 0x288u})});  // delete; cocos2d::Layer::~Layer [base destructor]
 }
 RW_FUNCTION(0x716E08, "thunk to SceneNameRegister::~SceneNameRegister [deleting destructor]", thunk_SceneNameRegister_SceneNameRegister_dtor_deleting_716E08);
 
@@ -5873,13 +5873,13 @@ RW_FUNCTION(0x717050, "thunk to SceneNameRegister::editBoxReturn", thunk_SceneNa
 
 // sub_7171EE
 static uint32_t calls_cocos2d_Node_unscheduleUpdate_7171EE(uint32_t a0) {
-    return rw::call(0x894CB3, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
+    return rw::call(rwlib::cocos2d::Node::unscheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::unscheduleUpdate
 }
 RW_FUNCTION(0x7171EE, "sub_7171EE", calls_cocos2d_Node_unscheduleUpdate_7171EE);
 
 // sub_71728A
 static void calls_AudioStopGameMainBGM_71728A(uint32_t a0) {
-    rw::call(0x894BA7, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
+    rw::call(rwlib::cocos2d::Node::scheduleUpdate, {rw::load<uint32_t>(a0 + 4u)});  // cocos2d::Node::scheduleUpdate
     const uint32_t r2 = rw::call(0x5C0F59, {0x32u});  // AudioStopGameMainBGM
 }
 RW_FUNCTION(0x71728A, "sub_71728A", calls_AudioStopGameMainBGM_71728A);

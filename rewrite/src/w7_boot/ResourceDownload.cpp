@@ -20,11 +20,11 @@ constexpr uint32_t ResourceInfo_acceptForIndexFile = 0x772839;
 constexpr uint32_t RDM_startDownload = 0x773985, RDM_startNextDownload = 0x773C39, RDM_finishDownload = 0x773F0D;
 constexpr uint32_t RDM_purge = 0x772C15, RDM_onRespond = 0x774571;
 constexpr uint32_t CacheManager_getInstance = 0x4D7571, CacheManager_validate = 0x4D76F1;
-constexpr uint32_t Ref_ctor = 0x8FD025, Ref_retain = 0x8FD0B5, Ref_release = 0x8FD0BD;
+constexpr uint32_t Ref_ctor = rwlib::cocos2d::Ref::ctor_base, Ref_retain = rwlib::cocos2d::Ref::retain, Ref_release = rwlib::cocos2d::Ref::release;
 constexpr uint32_t aeabi_memclr = 0x40E7A0, string_assign = 0x48D811, libc_strlen = 0x40E08C;
 constexpr uint32_t HttpCallback_assign = 0x49D419;        // function<void(HttpClient*, HttpResponse*)>::operator=
 constexpr uint32_t HttpProgress_assign = 0x49D279;        // function<int(double, double, double, double)>::operator=
-constexpr uint32_t HttpClient_getInstance = 0x7E3FCD, HttpClient_send = 0x7E4409;
+constexpr uint32_t HttpClient_getInstance = rwlib::cocos2d::network::HttpClient::getInstance, HttpClient_send = rwlib::cocos2d::network::HttpClient::send;
 constexpr uint32_t pthread_create_ = 0x410900, throw_system_error = 0xC97965;
 constexpr uint32_t thread_detach = 0xC97ADD, thread_dtor = 0xC97A3D;
 constexpr uint32_t THREAD_NEXT = 0x775659;                 // the worker: startNextDownloadThread
@@ -46,7 +46,7 @@ constexpr uint32_t RDM_save = 0x77490D, RDM_validate = 0x774941, RDM_appendPiece
 constexpr uint32_t RDM_dataFilePath = 0x772E4D, RDM_indexFilePath = 0x772CB9, RDM_eventTempPath = 0x776319;
 constexpr uint32_t deque_info_pop_front = 0x7749C1;
 constexpr uint32_t CacheManager_convertURLToCacheFilePath = 0x4D7585, CacheManager_removeCache = 0x4D78C1;
-constexpr uint32_t FileUtils_getInstance = 0xA3F44D, V_getWritablePath = 0x44, V_createDirectory = 0x54;
+constexpr uint32_t FileUtils_getInstance = rwlib::cocos2d::FileUtils::getInstance, V_getWritablePath = 0x44, V_createDirectory = 0x54;
 constexpr uint32_t string_append = 0x47AC89;               // std::string::append(const char*, size_t) -> *this
 constexpr uint32_t libc_fopen = 0x414158, libc_fread = 0x414308, libc_fwrite = 0x414164, libc_fclose = 0x414170;
 constexpr uint32_t libc_fseek = 0x4146D4, libc_ftell = 0x4146E0, libc_remove = 0x413C84, libc_rename = 0x4149A4;

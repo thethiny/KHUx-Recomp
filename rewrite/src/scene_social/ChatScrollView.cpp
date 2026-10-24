@@ -9,14 +9,14 @@ using Self = ChatScrollView;
 
 namespace {
 namespace g {
-constexpr uint32_t Ref_retain = 0x8FD0B5;
-constexpr uint32_t Ref_release = 0x8FD0BD;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Widget_create = 0x825875;
-constexpr uint32_t Widget_clone = 0x8272B9;
-constexpr uint32_t Size_ctor = 0x8DF027;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D;
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Ref_retain = rwlib::cocos2d::Ref::retain;
+constexpr uint32_t Ref_release = rwlib::cocos2d::Ref::release;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Widget_create = rwlib::cocos2d::ui::Widget::create;
+constexpr uint32_t Widget_clone = rwlib::cocos2d::ui::Widget::clone;
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff;
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t VectorAt_throw = 0x47CCE1;
 constexpr uint32_t MessageVector_dtor = 0x5568AD;          // __vector_base<ChatMessage>::~
 constexpr uint32_t MessageVector_assign = 0x55D309;        // vector<ChatMessage>::assign(first, last)
@@ -25,8 +25,8 @@ constexpr uint32_t IntVector_base_dtor = 0x478961;
 constexpr uint32_t AvatarIconCache_makeShared = 0x509899;  // make_shared<AvatarIconCache>(Texture2D*&, Vec2, float, float)
 constexpr uint32_t String_substr = 0x47CD4D;               // std::string(const string&, pos, n)
 constexpr uint32_t String_compareC = 0x47CBD5;             // string::compare(const char*)
-constexpr uint32_t Layer_ctor = 0x88A7D1;
-constexpr uint32_t Layer_dtor = 0x88A88D;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base;
+constexpr uint32_t Layer_dtor = rwlib::cocos2d::Layer::dtor_base;
 }  // namespace g
 
 constexpr uint32_t S_ChatPanelJson = 0xDFECC1;   // "cocostudio/publish/Chat_Panel.json"

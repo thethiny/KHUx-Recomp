@@ -34,10 +34,10 @@ constexpr uint32_t GOT_ANCHOR_MIDDLE = 0xFD6054;   // &cocos2d::Vec2::ANCHOR_MID
 constexpr float FADE_SECONDS = 0.1f;
 
 constexpr uint32_t AEABI_MEMSET = 0x40E7A0;   // __aeabi_memset(dst, n, c) (import)
-constexpr uint32_t Node_ctor = 0x892531, Node_dtor = 0x8927ED, Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t GUIReader_getInstance = 0x7BF1E5, GUIReader_widgetFromJsonFile = 0x7BF9FD;
-constexpr uint32_t Widget_addTouchEventListener = 0x826CCF;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
+constexpr uint32_t Node_ctor = rwlib::cocos2d::Node::ctor_base, Node_dtor = rwlib::cocos2d::Node::dtor_base, Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t GUIReader_getInstance = rwlib::cocostudio::GUIReader::getInstance, GUIReader_widgetFromJsonFile = rwlib::cocostudio::GUIReader::widgetFromJsonFile;
+constexpr uint32_t Widget_addTouchEventListener = rwlib::cocos2d::ui::Widget::addTouchEventListener;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr uint32_t SceneUtil_searchNodeByName = 0x45A9F5, SceneUtil_textToCustomTextView = 0x45BF15;
 constexpr uint32_t SceneUtil_setShadow = 0x45BD15, SceneUtil_getSideMargin = 0x45AD0D;
 constexpr uint32_t SceneUtil_getSideHeightMargin = 0x45AF59, SceneUtil_createShadowSprite = 0x45AD69;

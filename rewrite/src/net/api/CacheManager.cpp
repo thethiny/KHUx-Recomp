@@ -7,7 +7,7 @@ using api::SharedPtr;
 using api::StdString;
 
 namespace {
-constexpr uint32_t FileUtils_getInstance = 0xA3F44D;  // cocos2d::FileUtils::getInstance()
+constexpr uint32_t FileUtils_getInstance = rwlib::cocos2d::FileUtils::getInstance;  // cocos2d::FileUtils::getInstance()
 constexpr uint32_t FileUtils_getWritablePath = 18;    // vtable slot (+0x48), returns a std::string (hidden r0)
 constexpr uint32_t new_array = 0xC98F6F;              // operator new[]
 constexpr uint32_t delete_array = 0xC98FB3;           // operator delete[]

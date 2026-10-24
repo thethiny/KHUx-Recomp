@@ -18,8 +18,8 @@ constexpr uint32_t ThrowOutOfRange = 0x47CCE1;
 constexpr uint32_t VectorInt_copy = 0x4AF707, VectorInt_dtor = 0x478961, VectorInt_pushSlow = 0x4D6CC1;
 constexpr uint32_t VectorInt_assign = 0x47D5BD, SortInt = 0x4EC65D;
 constexpr uint32_t FunctionVTE_swap = 0x4F3699;
-constexpr uint32_t Rect_ctor = 0x8DF18B, Rect_containsPoint = 0x8DF2A9, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t Node_runAction = 0x894AED, Node_convertToNodeSpace = 0x89599D, Touch_getLocation = 0x900E57;
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff, Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction, Node_convertToNodeSpace = rwlib::cocos2d::Node::convertToNodeSpace, Touch_getLocation = rwlib::cocos2d::Touch::getLocation;
 constexpr uint32_t SceneUtil_createTapAnimation = 0x45BBA9;
 constexpr uint32_t aeabi_fixsfsi = 0xCD7240, aeabi_idiv = 0xCD5E8D;
 }  // namespace g

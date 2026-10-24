@@ -39,8 +39,8 @@ RW_SIZE(ShowEffect, 0x2B8);
 
 namespace {
 using rw::guest_addr;
-constexpr uint32_t Node_ctor = 0x892531;
-constexpr uint32_t Node_dtor = 0x8927ED;
+constexpr uint32_t Node_ctor = rwlib::cocos2d::Node::ctor_base;
+constexpr uint32_t Node_dtor = rwlib::cocos2d::Node::dtor_base;
 constexpr uint32_t S_LWF_PATH = 0xE020C2;   // "lwf/character/enemy/show_effect_fla/show_effect%d/show_effect%d.lwf"
 constexpr uint32_t S_ROOT = 0xDFE0ED;       // "_root"
 constexpr uint32_t S_EFFECTS = 0xE020B1;    // "effects"

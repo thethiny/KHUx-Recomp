@@ -6,18 +6,18 @@ using namespace shop_top;
 using Self = SceneShopTop;
 
 namespace {
-constexpr uint32_t Layer_ctor = 0x88A7D1;                 // cocos2d::Layer::Layer
-constexpr uint32_t Layer_dtor = 0x88A88D;                 // cocos2d::Layer::~Layer
-constexpr uint32_t Layer_init = 0x88A8A1;                 // cocos2d::Layer::init
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Scene_create = 0x8A5F37;
-constexpr uint32_t Node_create = 0x89372D;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5;
-constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D;                  // cocos2d::Vec2::Vec2(float, float)
-constexpr uint32_t Vec2_dtor = 0x8E4C17;
-constexpr uint32_t ImageView_create = 0x8394C1;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base;                 // cocos2d::Layer::Layer
+constexpr uint32_t Layer_dtor = rwlib::cocos2d::Layer::dtor_base;                 // cocos2d::Layer::~Layer
+constexpr uint32_t Layer_init = rwlib::cocos2d::Layer::init;                 // cocos2d::Layer::init
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Scene_create = rwlib::cocos2d::Scene::create;
+constexpr uint32_t Node_create = rwlib::cocos2d::Node::create;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create;
+constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff;                  // cocos2d::Vec2::Vec2(float, float)
+constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t ImageView_create = rwlib::cocos2d::ui::ImageView::create;
 constexpr uint32_t ImageButton_create = 0x531239;         // (std::string by value, bool)
 constexpr uint32_t ImageButton_setTargetImageView = 0x531631;
 constexpr uint32_t ImageButton_addTouchEventListener = 0x5315B1;   // (std::function by value)

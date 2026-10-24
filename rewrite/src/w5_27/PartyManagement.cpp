@@ -19,7 +19,7 @@ constexpr uint32_t SceneManager_openPopup = 0x61524D;                // (sm, fun
 constexpr uint32_t SceneUtil_openOkCancelDialog4Line = 0x45C951;     // (const string&, function<void(bool)>, a, b)
 constexpr uint32_t SceneUtil_openOkDialog4Line = 0x45C775;           // (const string&, function<void(bool)>, a)
 constexpr uint32_t SceneUtil_createClosePopupAnimation = 0x45BC61;   // (node, const function<void()>&)
-constexpr uint32_t EaseSineOut_create = 0x860D09;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr uint32_t APIManager_openErrorDialog = 0x4C3C8D;            // (api, const function<void(bool)>&, bool)
 constexpr uint32_t APIManager_executePartyInviteCancel = 0x4D0CDD;   // (api, -, uint64 offer, const function&)
 constexpr uint32_t APIManager_executePartyApplicantReject = 0x4CFA9D;
@@ -30,7 +30,7 @@ constexpr uint32_t TextData_get = 0x4928AD;                          // (shared_
 constexpr uint32_t STRLEN = 0x40E08C;
 constexpr uint32_t ThrowOutOfRange = 0x47CCE1;
 constexpr uint32_t SafeBuffer_read = 0x45A269;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t U64Vector_pushBackSlow = 0x4ECB6D;                // vector<unsigned long long>::__push_back_slow_path
 constexpr uint32_t U64Vector_dtor = 0x468499;
 constexpr uint32_t ULLScrollView_setItemIDs = 0x4FD231;              // BaseScrollView<unsigned long long>::setItemIDs

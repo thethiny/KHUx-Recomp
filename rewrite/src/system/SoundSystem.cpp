@@ -47,7 +47,7 @@ constexpr uint32_t AKB_MSADPCM_BLOCK_ALIGN = 0xCDCDDC, AKB_MSADPCM_NUM_SAMPLES =
 constexpr uint32_t AKB_MSADPCM_LOOP_START = 0xCDCE1C, AKB_MSADPCM_LOOP_END = 0xCDCE3C;
 constexpr uint32_t AKB_GET_ENABLE_ENCRYPTION = 0xCDCF70;
 constexpr uint32_t MSADPCM_INITIALIZE = 0xCE8ECC, MSADPCM_DECODE = 0xCE8A50, MSADPCM_RELEASE = 0xCE8A34;
-constexpr uint32_t OV_OPEN_CALLBACKS = 0xCEFBAC, OV_READ = 0xCF1394, OV_CLEAR = 0xCEEDB4;
+constexpr uint32_t OV_OPEN_CALLBACKS = rwlib::ov_open_callbacks, OV_READ = rwlib::ov_read, OV_CLEAR = rwlib::ov_clear;
 
 // log strings
 constexpr uint32_t TAG = 0xEECB88;                        // "sqexsdlib"

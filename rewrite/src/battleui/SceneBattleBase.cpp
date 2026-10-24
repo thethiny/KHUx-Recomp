@@ -7,11 +7,11 @@ using namespace scene;
 
 namespace {
 // cocos2d
-constexpr uint32_t Layer_ctor = 0x88A7D1;
-constexpr uint32_t Layer_dtor = 0x88A88D;
-constexpr uint32_t Layer_init = 0x88A8A1;
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t EaseSineOut_create = 0x860D09;
+constexpr uint32_t Layer_ctor = rwlib::cocos2d::Layer::ctor_base;
+constexpr uint32_t Layer_dtor = rwlib::cocos2d::Layer::dtor_base;
+constexpr uint32_t Layer_init = rwlib::cocos2d::Layer::init;
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr uint32_t RefVector_pushBack = 0x5E29A9;        // cocos2d::Vector<Ref*>::pushBack
 constexpr uint32_t RefVector_clear = 0x5E44F1;
 constexpr uint32_t RefVector_dtor = 0x5E2971;

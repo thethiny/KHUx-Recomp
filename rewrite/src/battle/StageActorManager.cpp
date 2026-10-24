@@ -3,7 +3,7 @@
 namespace {
 namespace g {
 // cocos2d / libc++ / runtime
-constexpr uint32_t ref_ctor = 0x8FD025;               // cocos2d::Ref::Ref()
+constexpr uint32_t ref_ctor = rwlib::cocos2d::Ref::ctor_base;               // cocos2d::Ref::Ref()
 constexpr uint32_t aeabi_memset = 0x40E7A0;           // __aeabi_memset(dst, n, c)
 constexpr uint32_t add_shared = 0xC8DBB5;             // std::__shared_weak_count::__add_shared()
 constexpr uint32_t enemyVec_clear = 0x74ED1D;         // cocos2d::Vector<EnemyActor*>::clear()
@@ -21,22 +21,22 @@ constexpr uint32_t fnBool_call = 0x51022D;            // std::function<bool()>::
 constexpr uint32_t fnVoid_call = 0x470E69;            // std::function<void()>::operator()() const
 constexpr uint32_t fnVoidBool_call = 0x474139;        // std::function<void(bool)>::operator()(bool) const
 constexpr uint32_t base_dtor = 0x74E759;              // BaseActorManager::~BaseActorManager()
-constexpr uint32_t vec2_ctor = 0x8E4B9D;              // cocos2d::Vec2::Vec2(float, float)
-constexpr uint32_t vec2_copy = 0x8E4C03;              // cocos2d::Vec2::Vec2(const Vec2&)
-constexpr uint32_t vec2_dtor = 0x8E4C17;              // cocos2d::Vec2::~Vec2()
-constexpr uint32_t vec2_add = 0x8E4D2D;               // cocos2d::Vec2::add(const Vec2&)
-constexpr uint32_t vec2_scale = 0x8E50D5;             // cocos2d::Vec2::scale(float)
-constexpr uint32_t vec2_subtract = 0x8E530F;          // cocos2d::Vec2::subtract(const Vec2&)
+constexpr uint32_t vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff;              // cocos2d::Vec2::Vec2(float, float)
+constexpr uint32_t vec2_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_;              // cocos2d::Vec2::Vec2(const Vec2&)
+constexpr uint32_t vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;              // cocos2d::Vec2::~Vec2()
+constexpr uint32_t vec2_add = rwlib::cocos2d::Vec2::add;               // cocos2d::Vec2::add(const Vec2&)
+constexpr uint32_t vec2_scale = rwlib::cocos2d::Vec2::scale__f;             // cocos2d::Vec2::scale(float)
+constexpr uint32_t vec2_subtract = rwlib::cocos2d::Vec2::subtract;          // cocos2d::Vec2::subtract(const Vec2&)
 constexpr uint32_t vec2_ZERO = 0x1006950;             // cocos2d::Vec2::ZERO
-constexpr uint32_t node_runAction = 0x894AED;         // cocos2d::Node::runAction(Action*)
-constexpr uint32_t callFunc_create = 0x866B39;        // cocos2d::CallFunc::create(const std::function<void()>&)
-constexpr uint32_t moveBy_create = 0x86911D;          // cocos2d::MoveBy::create(float, const Vec2&)
-constexpr uint32_t moveTo_create = 0x86941D;          // cocos2d::MoveTo::create(float, const Vec2&)
-constexpr uint32_t jumpBy_create = 0x869B79;          // cocos2d::JumpBy::create(float, const Vec2&, float, int)
-constexpr uint32_t easeOut_create = 0x8606A5;         // cocos2d::EaseOut::create(ActionInterval*, float)
-constexpr uint32_t easeSineOut_create = 0x860D09;     // cocos2d::EaseSineOut::create(ActionInterval*)
-constexpr uint32_t delayTime_create = 0x86852D;       // cocos2d::DelayTime::create(float)
-constexpr uint32_t sequence_create = 0x867999;        // cocos2d::Sequence::create(FiniteTimeAction*, ...)
+constexpr uint32_t node_runAction = rwlib::cocos2d::Node::runAction;         // cocos2d::Node::runAction(Action*)
+constexpr uint32_t callFunc_create = rwlib::cocos2d::CallFunc::create;        // cocos2d::CallFunc::create(const std::function<void()>&)
+constexpr uint32_t moveBy_create = rwlib::cocos2d::MoveBy::create;          // cocos2d::MoveBy::create(float, const Vec2&)
+constexpr uint32_t moveTo_create = rwlib::cocos2d::MoveTo::create;          // cocos2d::MoveTo::create(float, const Vec2&)
+constexpr uint32_t jumpBy_create = rwlib::cocos2d::JumpBy::create;          // cocos2d::JumpBy::create(float, const Vec2&, float, int)
+constexpr uint32_t easeOut_create = rwlib::cocos2d::EaseOut::create;         // cocos2d::EaseOut::create(ActionInterval*, float)
+constexpr uint32_t easeSineOut_create = rwlib::cocos2d::EaseSineOut::create;     // cocos2d::EaseSineOut::create(ActionInterval*)
+constexpr uint32_t delayTime_create = rwlib::cocos2d::DelayTime::create;       // cocos2d::DelayTime::create(float)
+constexpr uint32_t sequence_create = rwlib::cocos2d::Sequence::create;        // cocos2d::Sequence::create(FiniteTimeAction*, ...)
 // game singletons / state
 constexpr uint32_t appState_getInstance = 0x4E66DD;   // AppState::getInstance()
 constexpr uint32_t stageState_hasExtermination = 0x4EF995;  // StageState::hasExterminationTeamID(unsigned)

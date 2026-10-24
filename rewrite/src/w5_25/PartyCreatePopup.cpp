@@ -14,12 +14,12 @@ constexpr uint32_t SceneUtil_createShadowSprite = 0x45AD69;
 constexpr uint32_t SceneUtil_setShadow = 0x45BD15;
 constexpr uint32_t SceneUtil_getSideMargin = 0x45AD0D, SceneUtil_getSideHeightMargin = 0x45AF59;
 constexpr uint32_t SceneUtil_createLeftInAnimation = 0x45B5C5;   // (node, float, float, function<void()>)
-constexpr uint32_t EaseSineOut_create = 0x860D09;
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr uint32_t String_assign = 0x498A1D;                     // std::string::operator=(const string&)
-constexpr uint32_t Size_ctor = 0x8DF027;
-constexpr uint32_t CheckBox_setSelectedState = 0x8382E7;
-constexpr uint32_t Director_getInstance = 0x8EE519;
-constexpr uint32_t EventDispatcher_removeEventListenersForTarget = 0x8F30AD;
+constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;
+constexpr uint32_t CheckBox_setSelectedState = rwlib::cocos2d::ui::CheckBox::setSelectedState;
+constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance;
+constexpr uint32_t EventDispatcher_removeEventListenersForTarget = rwlib::cocos2d::EventDispatcher::removeEventListenersForTarget;
 constexpr uint32_t ScenePartyCreate_showPlayStyle = 0x6D3FB3;    // sub_6D3FB2({this, box1, box2, box3}, style)
 constexpr uint32_t ScenePartyCreate_showJoinType = 0x6D4071;     // sub_6D4070({this, box1, box2, box3}, type)
 }  // namespace g

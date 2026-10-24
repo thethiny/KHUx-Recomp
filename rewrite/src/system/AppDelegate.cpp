@@ -5,21 +5,21 @@
 namespace appdelegate {
 
 namespace {
-constexpr uint32_t APPLICATION_CTOR = 0xA3E72D;        // cocos2d::Application::Application()
-constexpr uint32_t APPLICATION_DTOR = 0xA3E751;        // cocos2d::Application::~Application()
-constexpr uint32_t CONFIGURATION_GET_INSTANCE = 0x8E861D;
-constexpr uint32_t CONFIGURATION_SET_VALUE = 0x8E8737;  // (config, const string& key, const Value&)
-constexpr uint32_t VALUE_CTOR_CSTR = 0x901C39;          // cocos2d::Value::Value(const char*)
-constexpr uint32_t VALUE_DTOR = 0x901FBD;
+constexpr uint32_t APPLICATION_CTOR = rwlib::cocos2d::Application::ctor_base;        // cocos2d::Application::Application()
+constexpr uint32_t APPLICATION_DTOR = rwlib::cocos2d::Application::dtor_base;        // cocos2d::Application::~Application()
+constexpr uint32_t CONFIGURATION_GET_INSTANCE = rwlib::cocos2d::Configuration::getInstance;
+constexpr uint32_t CONFIGURATION_SET_VALUE = rwlib::cocos2d::Configuration::setValue;  // (config, const string& key, const Value&)
+constexpr uint32_t VALUE_CTOR_CSTR = rwlib::cocos2d::Value::ctor_base;          // cocos2d::Value::Value(const char*)
+constexpr uint32_t VALUE_DTOR = rwlib::cocos2d::Value::dtor_base;
 constexpr uint32_t STRING_INIT = 0x47CD93;              // sub_47CD92: std::string::__init(this, const char*, size)
 constexpr uint32_t STRING_ASSIGN = 0x48D811;            // sub_48D810: std::string::assign(const char*, size)
 constexpr uint32_t STRLEN = 0x40E08C;
-constexpr uint32_t DIRECTOR_GET_INSTANCE = 0x8EE519;
-constexpr uint32_t DIRECTOR_ADD_SCHEDULER = 0x8EEC15;     // (director, int)
-constexpr uint32_t DIRECTOR_REMOVE_SCHEDULER = 0x8F0C49;  // (director, int)
-constexpr uint32_t DIRECTOR_SET_OPENGL_VIEW = 0x8EF96F;
-constexpr uint32_t DIRECTOR_RUN_WITH_SCENE = 0x8F06CD;
-constexpr uint32_t GLVIEW_CREATE = 0xA3F2AD;              // cocos2d::GLView::create(const string&)
+constexpr uint32_t DIRECTOR_GET_INSTANCE = rwlib::cocos2d::Director::getInstance;
+constexpr uint32_t DIRECTOR_ADD_SCHEDULER = rwlib::cocos2d::Director::addScheduler;     // (director, int)
+constexpr uint32_t DIRECTOR_REMOVE_SCHEDULER = rwlib::cocos2d::Director::removeScheduler;  // (director, int)
+constexpr uint32_t DIRECTOR_SET_OPENGL_VIEW = rwlib::cocos2d::Director::setOpenGLView;
+constexpr uint32_t DIRECTOR_RUN_WITH_SCENE = rwlib::cocos2d::Director::runWithScene;
+constexpr uint32_t GLVIEW_CREATE = rwlib::cocos2d::GLView::create;              // cocos2d::GLView::create(const string&)
 constexpr uint32_t APP_SET_TEXTURE_CACHE_LIMIT = 0x799F05;
 constexpr uint32_t APP_GET_FRAME_WIDTH = 0x799B31;        // AppGetGrameFrameWidth()
 constexpr uint32_t APP_GET_FRAME_HEIGHT = 0x799D21;       // AppGetGrameFrameHeight()
@@ -39,8 +39,8 @@ constexpr uint32_t SCENE_MANAGER_CREATE_SCENE = 0x60C249;
 constexpr uint32_t LOCAL_NOTIFICATION_CANCEL = 0x4E0D5D;
 constexpr uint32_t LOCAL_NOTIFICATION_SHOW = 0x4E0C59;    // (string*, seconds, id)
 constexpr uint32_t TEXTDATA_GET = 0x4928AD;
-constexpr uint32_t DISPATCH_CUSTOM_EVENT = 0x8F3F69;      // EventDispatcher::dispatchCustomEvent(name, data)
-constexpr uint32_t TEXTURE_SIZE_IN_PIXELS = 0x914B07;     // Texture2D::getContentSizeInPixels() -> const Size&
+constexpr uint32_t DISPATCH_CUSTOM_EVENT = rwlib::cocos2d::EventDispatcher::dispatchCustomEvent;      // EventDispatcher::dispatchCustomEvent(name, data)
+constexpr uint32_t TEXTURE_SIZE_IN_PIXELS = rwlib::cocos2d::Texture2D::getContentSizeInPixels;     // Texture2D::getContentSizeInPixels() -> const Size&
 constexpr uint32_t VFS_READ_DATA = 0x8DD46D;
 constexpr uint32_t JSON_STACK_CTOR = 0x49A659;            // rapidjson::internal::Stack(allocator, capacity)
 constexpr uint32_t JSON_STACK_DTOR = 0x49A5FF;
@@ -227,10 +227,10 @@ RW_FUNCTION(0x799FD0, "AppConfig::get", appConfigGet);
 // AppSetTextureCacheLimit(unsigned reserved): the texture cache may hold 32 MB minus `reserved`. The first time
 // (no limit set yet) it also installs the cost function ($_0 below: a texture costs its pixel count).
 void appSetTextureCacheLimit(uint32_t reserved) {
-    constexpr uint32_t DIRECTOR_GET_TEXTURE_CACHE = 0x8EFE69;    // Director::getTextureCache()
-    constexpr uint32_t TEXTURE_CACHE_GET_LIMIT = 0x918219;       // TextureCache::getLimit()
-    constexpr uint32_t TEXTURE_CACHE_SET_LIMIT = 0x91822D;       // TextureCache::setLimit(unsigned)
-    constexpr uint32_t TEXTURE_CACHE_SET_LIMIT_COST = 0x91821D;  // setLimit(unsigned, const function<unsigned(..)>&)
+    constexpr uint32_t DIRECTOR_GET_TEXTURE_CACHE = rwlib::cocos2d::Director::getTextureCache;    // Director::getTextureCache()
+    constexpr uint32_t TEXTURE_CACHE_GET_LIMIT = rwlib::cocos2d::TextureCache::getLimit;       // TextureCache::getLimit()
+    constexpr uint32_t TEXTURE_CACHE_SET_LIMIT = rwlib::cocos2d::TextureCache::setLimit__j;       // TextureCache::setLimit(unsigned)
+    constexpr uint32_t TEXTURE_CACHE_SET_LIMIT_COST = rwlib::cocos2d::TextureCache::setLimit__jRKNSt3__18functionIFjRKNS1_10shared_ptrINS_9Texture2DEEEEEE;  // setLimit(unsigned, const function<unsigned(..)>&)
     constexpr uint32_t COST_LAMBDA_VTABLE = 0xF6EEEC;            // __func<AppSetTextureCacheLimit::$_0> + 8
     uint32_t limit = 0x2000000u - reserved;
     uint32_t cache = rw::call(DIRECTOR_GET_TEXTURE_CACHE, {rw::call(DIRECTOR_GET_INSTANCE, {})});

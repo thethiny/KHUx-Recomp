@@ -29,17 +29,17 @@ constexpr uint32_t IntTree_destroy = 0x48D9B5;            // std::__tree<int>::d
 constexpr uint32_t APIManager_executeTutorialStatusUpdate = 0x4C5DCD;
 constexpr uint32_t SceneManager_enableLoadingIndicator = 0x60D169;
 constexpr uint32_t FunctionB_assign = 0x490109;           // std::function<void(bool)>::operator=(const function&)
-constexpr uint32_t ActionManagerEx_getInstance = 0x79B535;
-constexpr uint32_t ActionManagerEx_playActionByName = 0x79BE43;
-constexpr uint32_t Layout_ctor = 0x828671;
-constexpr uint32_t Layout_dtor = 0x8289C5;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
-constexpr uint32_t Node_removeFromParentAndCleanup = 0x894203;
-constexpr uint32_t FadeIn_create = 0x86B115;
-constexpr uint32_t EventListenerTouchOneByOne_create = 0x8FACA5;
-constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = 0x8FAC99;
+constexpr uint32_t ActionManagerEx_getInstance = rwlib::cocostudio::ActionManagerEx::getInstance;
+constexpr uint32_t ActionManagerEx_playActionByName = rwlib::cocostudio::ActionManagerEx::playActionByName;
+constexpr uint32_t Layout_ctor = rwlib::cocos2d::ui::Layout::ctor_base;
+constexpr uint32_t Layout_dtor = rwlib::cocos2d::ui::Layout::dtor_base;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t Node_removeFromParentAndCleanup = rwlib::cocos2d::Node::removeFromParentAndCleanup;
+constexpr uint32_t FadeIn_create = rwlib::cocos2d::FadeIn::create;
+constexpr uint32_t EventListenerTouchOneByOne_create = rwlib::cocos2d::EventListenerTouchOneByOne::create;
+constexpr uint32_t EventListenerTouchOneByOne_setSwallowTouches = rwlib::cocos2d::EventListenerTouchOneByOne::setSwallowTouches;
 constexpr uint32_t TouchFunction_swap = 0x483E4D;
-constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = 0x8F3649;
+constexpr uint32_t EventDispatcher_addEventListenerWithSceneGraphPriority = rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority;
 constexpr uint32_t Memset = 0x40E7A0;                     // __aeabi_memset(dst, n, value)
 
 constexpr uint32_t SceneManager_loadingBlocked = 0x4CC;   // SceneManager byte

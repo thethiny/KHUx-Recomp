@@ -30,7 +30,7 @@ constexpr uint32_t SceneUtil_createOpenPopupAnimation = 0x45BC05;   // (node, fu
 constexpr uint32_t SceneUtil_textToCustomTextView = 0x45BF15;       // (Text*, const string& name)
 constexpr uint32_t CustomTextView_setXml = 0x4F931D;
 constexpr uint32_t TextData_format = 0x492929;                  // (string out, Type, id, ...)
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t VectorInt_pushBackSlow = 0x4D6CC1;           // vector<int>::__push_back_slow_path(const int&)
 constexpr uint32_t VectorString_pushBackSlow = 0x484465;        // vector<string>::__push_back_slow_path(string&&)
 constexpr uint32_t Shop_create = 0x790951;                      // master::Shop::create(shared_ptr out, int id)
@@ -39,8 +39,8 @@ constexpr uint32_t FunctionVB_call = 0x474139;                  // std::function
 constexpr uint32_t StoreManager_getInstance = 0x4E0DD5;
 constexpr uint32_t FunctionPurchase_call = 0x4E1921;  // function<void(Result, const Purchase*)>::operator()
 constexpr uint32_t StringAssignCopy = 0x498A1D;       // std::string::operator=(const string&) (sub_498A1C)
-constexpr uint32_t JniHelper_getStaticMethodInfo = 0xA4225D;    // (info, cls, name, sig)
-constexpr uint32_t JniHelper_getMethodInfo = 0xA422DD;
+constexpr uint32_t JniHelper_getStaticMethodInfo = rwlib::cocos2d::JniHelper::getStaticMethodInfo;    // (info, cls, name, sig)
+constexpr uint32_t JniHelper_getMethodInfo = rwlib::cocos2d::JniHelper::getMethodInfo;
 constexpr uint32_t JNIEnv_CallStaticObjectMethod = 0x4E0939;
 constexpr uint32_t JNIEnv_CallVoidMethod = 0x4E17DD;
 constexpr uint32_t base64Encode = 0x905B2D;           // (const uchar* in, uint len, char** out)

@@ -41,17 +41,17 @@ RW_SIZE(Enemy, 0x540);
 
 // Shared by Enemy and Npc: load an LWF motion file into a fresh LWF node.
 namespace flashlwf {
-constexpr uint32_t lwfNode_create = 0x7EDF31;        // cocos2d::LWFNode::create(const char*, void*)
+constexpr uint32_t lwfNode_create = rwlib::cocos2d::LWFNode::create;        // cocos2d::LWFNode::create(const char*, void*)
 constexpr uint32_t stringBuffer_fset = 0x491501;     // StringBuffer::fset(const char* fmt, ...)
 constexpr uint32_t lwfUtil_preload = 0x491361;       // LWFUtil::preloadResources(const std::string&)
 constexpr uint32_t lwfHandler_assign = 0x5C9BE5;     // std::function<void(const string&, LWF::Movie*, LWF::Button*)>::operator=
 constexpr uint32_t commandParserBind = 0xF8F52C;     // __func vtable of std::bind(&CommandParser::parse, parser, _1, _2, _3)
 constexpr uint32_t commandParser_parse = 0x4F28F9;   // CommandParser::parse(const string&, LWF::Movie*, LWF::Button*)
-constexpr uint32_t lwf_searchMovieInstance = 0x7FE1B9;   // LWF::LWF::SearchMovieInstance(const string&) const
-constexpr uint32_t movie_searchMovieInstance = 0x8122D7; // LWF::Movie::SearchMovieInstance(const string&, bool) const
-constexpr uint32_t movie_gotoAndPlay = 0x815D91;     // LWF::Movie::GotoAndPlay(const string&)
-constexpr uint32_t movie_getX = 0x815FCD;            // LWF::Movie::GetX() const
-constexpr uint32_t movie_getY = 0x816017;            // LWF::Movie::GetY() const
+constexpr uint32_t lwf_searchMovieInstance = rwlib::LWF::LWF::SearchMovieInstance;   // LWF::LWF::SearchMovieInstance(const string&) const
+constexpr uint32_t movie_searchMovieInstance = rwlib::LWF::Movie::SearchMovieInstance; // LWF::Movie::SearchMovieInstance(const string&, bool) const
+constexpr uint32_t movie_gotoAndPlay = rwlib::LWF::Movie::GotoAndPlay__RKNSt3__112basic_stringIcNS1_11char_traitsIcEENS1_9allocatorIcEEEE;     // LWF::Movie::GotoAndPlay(const string&)
+constexpr uint32_t movie_getX = rwlib::LWF::Movie::GetX;            // LWF::Movie::GetX() const
+constexpr uint32_t movie_getY = rwlib::LWF::Movie::GetY;            // LWF::Movie::GetY() const
 constexpr uint32_t LWF_HANDLER = 248;                // LWF::LWF: script command handler (std::function)
 constexpr uint32_t MOVIE_FRAME = 156;                // LWF::Movie: current frame (1 = not started)
 constexpr uint32_t NODE_REMOVE_CHILD = 75;           // cocos2d::Node::removeChild(Node*, bool)

@@ -12,7 +12,7 @@ using namespace scene;
 
 namespace {
 namespace g {
-constexpr uint32_t Scene_create = 0x8A5F37, SceneEvolveMedal_create = 0x65E1F9;
+constexpr uint32_t Scene_create = rwlib::cocos2d::Scene::create, SceneEvolveMedal_create = 0x65E1F9;
 constexpr uint32_t AudioPlaySystemSEPopUp = 0x5C0E09, AudioPlaySystemSEDecide = 0x5C0CF9;
 constexpr uint32_t AudioPlaySystemSECancel = 0x5C0D81;
 constexpr uint32_t SM_getPopupLayer = 0x613E69, SM_getPopupLayer2 = 0x613E71;
@@ -25,13 +25,13 @@ constexpr uint32_t SceneUtil_getSideMargin = 0x45AD0D, SceneUtil_getSideHeightMa
 constexpr uint32_t SceneUtil_setShadow = 0x45BD15;
 constexpr uint32_t SceneUtil_openOkDialog4Line = 0x45C775;        // (const string&, const function<void()>&, bool)
 constexpr uint32_t SceneUtil_openOkCancelDialog4Line = 0x45C951;  // (const string&, const function<void(bool)>&, ...)
-constexpr uint32_t FadeTo_create = 0x86B3E1;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
-constexpr uint32_t ArmatureDataManager_getInstance = 0x7AC9B5, ArmatureDataManager_addArmatureFileInfo = 0x7AD7BD;
-constexpr uint32_t Armature_create = 0x79F3C7;
+constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance, ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;
+constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create;
 constexpr uint32_t ImageButton_create = 0x531239, ImageButton_setTargetView = 0x5318C1;
 constexpr uint32_t ImageButton_addTouchEventListener = 0x5315B1;
-constexpr uint32_t Widget_addTouchEventListener = 0x826CCF;
+constexpr uint32_t Widget_addTouchEventListener = rwlib::cocos2d::ui::Widget::addTouchEventListener;
 constexpr uint32_t SafeBuffer_read = 0x45A269;
 constexpr uint32_t AEABI_MEMSET = 0x40E7A0, MEMCPY = 0x40E164, STRLEN = 0x40E08C;
 constexpr uint32_t MedalDataManager_getInstance = 0x76AD69, MedalDataManager_getMedalData = 0x76ADB5;
@@ -44,11 +44,11 @@ constexpr uint32_t SceneEvolveMedal_openRareWarnPopup = 0x6B0119, SceneEvolveMed
 constexpr uint32_t APIManager_openErrorDialog = 0x4C3C8D;
 constexpr uint32_t APIManager_executeUserMedalEvolve = 0x4CA331;  // (api, -, u64 base, set&, function<void(bool)>)
 constexpr uint32_t IInOutAnimation_runOutAnimation = 0x6F24B5;
-constexpr uint32_t Director_getInstance = 0x8EE519;
-constexpr uint32_t DelayTime_create = 0x86852D, CallFunc_create = 0x866B39, Sequence_create = 0x867999;
+constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance;
+constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create, CallFunc_create = rwlib::cocos2d::CallFunc::create, Sequence_create = rwlib::cocos2d::Sequence::create;
 constexpr uint32_t AudioLWFNode_create = 0x5EB6B5, FlashMovieView_create = 0x5682A1;
 constexpr uint32_t HandlerMap_insert_unique = 0x530869, HandlerMap_destroy = 0x530811;
-constexpr uint32_t LWF_AddMovieEventHandler = 0x808645;
+constexpr uint32_t LWF_AddMovieEventHandler = rwlib::LWF::LWF::AddMovieEventHandler;
 constexpr uint32_t function_vb_call = 0x474139, function_vv_assign = 0x4EB9CD;
 constexpr uint32_t GOT_VEC2_ZERO = 0xFD605C, GOT_LINE_BREAK_TAG = 0xFD6930;
 }  // namespace g

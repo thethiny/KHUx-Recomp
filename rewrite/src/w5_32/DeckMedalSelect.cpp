@@ -26,7 +26,7 @@ constexpr uint32_t IScrollProtocol_setIndex = 0x4F71A5;
 constexpr uint32_t VectorMedal_copy = 0x665539, VectorMedal_dtor = 0x46B119, VectorU64_dtor = 0x468499;
 constexpr uint32_t VectorU64_pushSlow = 0x4ECB6D;
 constexpr uint32_t AppState_isClearTutorialPopupIDs = 0x4EB815, AppState_setTutorialCloseFunc = 0x4EB8D9;
-constexpr uint32_t Widget_isTouchEnabled = 0x826665;
+constexpr uint32_t Widget_isTouchEnabled = rwlib::cocos2d::ui::Widget::isTouchEnabled;
 constexpr uint32_t AudioPlaySystemSECancel = 0x5C0D81;
 constexpr uint32_t IInOut_runOutAnimation = 0x6F24B5;
 constexpr uint32_t IInOut_canRunOut = 0x51022D;

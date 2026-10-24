@@ -549,9 +549,9 @@ constexpr uint32_t SceneAdventureSelect_callAdventureSelectAPI = 0x71D261;   // 
 constexpr uint32_t BuyMagicStoneDialog_open = 0x588CAD;     // (const function<void()>&, bool)
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
 constexpr uint32_t AudioPlaySystemSECancel = 0x5C0D81;
-constexpr uint32_t FadeTo_create = 0x86B3E1;                // (float duration, uint8 opacity)
-constexpr uint32_t Node_runAction = 0x894AED;
-constexpr uint32_t Widget_isTouchEnabled = 0x826665;
+constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create;                // (float duration, uint8 opacity)
+constexpr uint32_t Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t Widget_isTouchEnabled = rwlib::cocos2d::ui::Widget::isTouchEnabled;
 constexpr uint32_t start_movie = 0x6C4A55;                  // Layer* start_movie(int, bool)
 
 constexpr uint32_t POPUP_FADE_DURATION = 0xDEC3D0;          // a const float (0.15) the popups fade out with

@@ -8,8 +8,8 @@ using namespace scene;
 
 constexpr uint32_t SceneUtil_createShadowSprite = 0x45AD69, SceneUtil_getSideMargin = 0x45AD0D;
 constexpr uint32_t SceneUtil_getSideHeightMargin = 0x45AF59;
-constexpr uint32_t FadeTo_create = 0x86B3E1, Node_runAction = 0x894AED;
-constexpr uint32_t Vec2_ctor = 0x8E4B9D, Vec2_dtor = 0x8E4C17;
+constexpr uint32_t FadeTo_create = rwlib::cocos2d::FadeTo::create, Node_runAction = rwlib::cocos2d::Node::runAction;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t GOT_ANCHOR_MIDDLE = 0xFD6054;           // &Vec2::ANCHOR_MIDDLE
 
 // the popup shadow on `layer`: transparent, then (when fadeIn) fading in to its opacity in 0.1 s

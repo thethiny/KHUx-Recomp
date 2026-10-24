@@ -11,8 +11,8 @@ constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
 constexpr uint32_t SceneManager_changeSceneLayer = 0x612B99;
 constexpr uint32_t SceneUtil_openAvatarBoardFilterPopup = 0x47546D;   // (function<void()> on close)
 constexpr uint32_t SceneSphereBoardSelect_backScene = 0x6BB63D;
-constexpr uint32_t Touch_getLocation = 0x900E57, Node_convertToNodeSpace = 0x89599D;
-constexpr uint32_t Rect_containsPoint = 0x8DF2A9, Vec2_dtor = 0x8E4C17;
+constexpr uint32_t Touch_getLocation = rwlib::cocos2d::Touch::getLocation, Node_convertToNodeSpace = rwlib::cocos2d::Node::convertToNodeSpace;
+constexpr uint32_t Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 constexpr uint32_t GOT_FuncLayerPtr_vt = 0xFD6074;      // &vtable of __func<Layer*(*)(), ..., Layer*()>
 constexpr uint32_t GOT_createAdventureSelect = 0xFD669C;   // &createSceneLayer<SceneAdventureSelect>
 }  // namespace g

@@ -23,7 +23,7 @@ constexpr uint32_t MSG_SIZE = 0x40;
 constexpr uint32_t APIManager_chatShared = 0x84;          // a shared_ptr held while the popup is built (+0x88 control)
 
 // guest functions
-constexpr uint32_t Vec2_ctor_copy = 0x8E4C03;
+constexpr uint32_t Vec2_ctor_copy = rwlib::cocos2d::Vec2::ctor_base__RKS0_;
 constexpr uint32_t ChatScrollDelView_create = 0x558BE1;
 constexpr uint32_t ChatScrollDelView_setMessages = 0x559FE5;   // (view, std::vector<ChatMessage> by value)
 constexpr uint32_t MessageVector_pushBackSlow = 0x630CBD;      // vector<ChatMessage>::__push_back_slow_path(const&)
@@ -620,7 +620,7 @@ constexpr uint32_t SM_reportReason = 0x424;               // int: the selected r
 constexpr uint32_t SM_reportEditing = 0x4A5;              // uint8: the report text box is being edited
 constexpr uint32_t REPORT_REASON_TEXTS = 0xE52960;        // int[7]: TextData ids of the report reasons
 
-constexpr uint32_t TextField_getMaxLength = 0x83F7DD;
+constexpr uint32_t TextField_getMaxLength = rwlib::cocos2d::ui::TextField::getMaxLength;
 constexpr uint32_t TextField_getPlaceHolder = 0x150;      // vtable byte offset: std::string (sret)
 constexpr uint32_t ChatEditBoxMessageSend_create = 0x55C6E9;
 constexpr uint32_t EditBox_node = 0x2A8;                  // ChatEditBoxMessageSend: Node* (textFieldToEditBox out)
@@ -628,7 +628,7 @@ constexpr uint32_t EditBox_label = 0x2AC;                 // Label* (out)
 constexpr uint32_t EditBox_delegate = 0x288;              // the EditBoxDelegate base
 constexpr uint32_t EditBox_onSend = 0x290;                // std::function<void()>
 constexpr uint32_t FunctionV_swap = 0x4EE86D;             // std::function<void()>::swap
-constexpr uint32_t Label_setAlignment = 0x884CB9;         // (label, TextHAlignment, TextVAlignment)
+constexpr uint32_t Label_setAlignment = rwlib::cocos2d::Label::setAlignment;         // (label, TextHAlignment, TextVAlignment)
 constexpr uint32_t Label_vAlignment = 0x3E0;
 
 constexpr uint32_t VT_Report_EditDone = 0xF5F924;         // $_79 [label, this, maxLength, uiText] (heap 0x14)

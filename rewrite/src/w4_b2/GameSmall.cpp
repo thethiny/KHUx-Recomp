@@ -8,8 +8,8 @@ using namespace scene;
 
 constexpr uint32_t FN_VV_COPY = 0x4683CD;    // std::function<void()>::function(const function&)
 constexpr uint32_t FN_VV_ASSIGN = 0x4EB9CD;  // std::function<void()>::operator=(const function&)
-constexpr uint32_t REF_AUTORELEASE = 0x8FD0D5;
-constexpr uint32_t NODE_CTOR = 0x892531, NODE_DTOR = 0x8927ED;
+constexpr uint32_t REF_AUTORELEASE = rwlib::cocos2d::Ref::autorelease;
+constexpr uint32_t NODE_CTOR = rwlib::cocos2d::Node::ctor_base, NODE_DTOR = rwlib::cocos2d::Node::dtor_base;
 constexpr uint32_t AEABI_MEMSET = 0x40E7A0;  // __aeabi_memset(dest, n, c)
 
 // a std::function<void()> holding a [this] lambda (vtable of its __func) on the guest stack
@@ -36,11 +36,11 @@ RW_FUNCTION(0x6F24B4, "IInOutAnimation::runOutAnimation", IInOutAnimation::runOu
 struct LWFUtil {
     static uint32_t preloadResources(uint32_t path) {
         Frame f;
-        uint32_t cache = call(0x7EFF59, {});  // LWFResourceCache::sharedLWFResourceCache
+        uint32_t cache = call(rwlib::cocos2d::LWFResourceCache::sharedLWFResourceCache, {});  // LWFResourceCache::sharedLWFResourceCache
         uint32_t s = f.alloc(12);
         uint32_t data = f.alloc(8);
         strInitC(s, strData(path));
-        call(0x7F0209, {data, cache, s});  // loadLWFData -> shared_ptr<LWFData>
+        call(rwlib::cocos2d::LWFResourceCache::loadLWFData, {data, cache, s});  // loadLWFData -> shared_ptr<LWFData>
         strFree(s);
         if (ld32(data + 4) != 0) call(fn::shared_release, {ld32(data + 4)});
         return 0;
@@ -54,9 +54,9 @@ struct GestureRecognizer {
     static uint32_t construct(uint32_t self, uint32_t node) {
         Frame f;
         st8(self + 4, 0);
-        call(0x8E4B95, {self + 8});  // Vec2::Vec2
+        call(rwlib::cocos2d::Vec2::ctor_base__v, {self + 8});  // Vec2::Vec2
         st32(self + 0x28, 0);
-        uint32_t listener = call(0x8FACA5, {self + 0x18});  // EventListenerTouchOneByOne::create
+        uint32_t listener = call(rwlib::cocos2d::EventListenerTouchOneByOne::create, {self + 0x18});  // EventListenerTouchOneByOne::create
         st32(self + 0x10, listener);
         uint32_t tmp = f.alloc(20);
         // onTouchBegan / Moved / Ended / Cancelled = [this] lambdas (swapped into the listener)
@@ -71,14 +71,14 @@ struct GestureRecognizer {
             functionDestroy(tmp);
         }
         uint32_t dispatcher = ld32(call(fn::Director_getInstance, {}) + 0x84);
-        call(0x8F3649, {dispatcher, ld32(self + 0x10), node});  // addEventListenerWithSceneGraphPriority
+        call(rwlib::cocos2d::EventDispatcher::addEventListenerWithSceneGraphPriority, {dispatcher, ld32(self + 0x10), node});  // addEventListenerWithSceneGraphPriority
         return self;
     }
     static uint32_t destruct(uint32_t self) {
         uint32_t dispatcher = ld32(call(fn::Director_getInstance, {}) + 0x84);
-        call(0x8F2F29, {dispatcher, ld32(self + 0x10)});  // removeEventListener
+        call(rwlib::cocos2d::EventDispatcher::removeEventListener, {dispatcher, ld32(self + 0x10)});  // removeEventListener
         functionDestroy(self + 0x18);
-        call(0x8E4C17, {self + 8});  // Vec2::~Vec2
+        call(rwlib::cocos2d::Vec2::dtor_base, {self + 8});  // Vec2::~Vec2
         return self;
     }
 };
@@ -139,7 +139,7 @@ RW_FUNCTION(0x5D52FC, "LWFNodeGroup::~LWFNodeGroup (deleting)", LWFNodeGroup::de
 struct SceneMovie {
     static uint32_t create() {
         uint32_t obj = call(fn::operator_new, {0x298});
-        call(0x88A7D1, {obj});  // Layer::Layer
+        call(rwlib::cocos2d::Layer::ctor_base, {obj});  // Layer::Layer
         st32(obj, ld32(0xFD68C0) + 8);
         if (call(0x638D89, {obj}) == 1) {  // init
             call(REF_AUTORELEASE, {obj});
@@ -150,12 +150,12 @@ struct SceneMovie {
     }
     static void destroyDelete(uint32_t self) {
         st32(self, ld32(0xFD68C0) + 8);
-        uint32_t r = call(0x88A88D, {self});  // Layer::~Layer
+        uint32_t r = call(rwlib::cocos2d::Layer::dtor_base, {self});  // Layer::~Layer
         call(fn::operator_delete, {r});
     }
     static uint32_t init(uint32_t self) {
         Frame f;
-        if (call(0x88A8A1, {self}) != 1) return 0;  // Layer::init
+        if (call(rwlib::cocos2d::Layer::init, {self}) != 1) return 0;  // Layer::init
         uint32_t a = lambdaFunction(f, 0xF60AD8, self);
         call(FN_VV_ASSIGN, {self + 0x210, a});
         functionDestroy(a);
@@ -170,7 +170,7 @@ struct SceneMovie {
         uint32_t size = f.alloc(8);
         call(fn::Director_getVisibleSize, {size, call(fn::Director_getInstance, {})});
         float w = ldf(size), h = ldf(size + 4);
-        uint32_t player = call(0x5A358D, {});  // VideoPlayer::create
+        uint32_t player = call(rwlib::cocos2d::experimental::ui::VideoPlayer::create, {});  // VideoPlayer::create
         st32(self + 0x290, player);
         float sx = w / 960.0f;
         float sy = h / 540.0f;
@@ -179,23 +179,23 @@ struct SceneMovie {
         float ph = s * 540.0f;
         uint32_t setContentSize = ld32(ld32(player) + 0xA8);
         uint32_t sz = f.alloc(8);
-        call(0x8DF027, {sz, fbits(pw), fbits(ph)});  // Size::Size
+        call(rwlib::cocos2d::Size::ctor_base__ff, {sz, fbits(pw), fbits(ph)});  // Size::Size
         call(setContentSize, {player, sz});
         uint32_t p = ld32(self + 0x290);
         uint32_t setPosition = ld32(ld32(p) + 0x4C);
         float x = ldf(size) * 0.5f;
         float y = ldf(size + 4) * 0.5f;
         uint32_t pos = f.alloc(8);
-        call(0x8E4B9D, {pos, fbits(x), fbits(y)});  // Vec2::Vec2
+        call(rwlib::cocos2d::Vec2::ctor_base__ff, {pos, fbits(x), fbits(y)});  // Vec2::Vec2
         call(setPosition, {p, pos});
-        call(0x8E4C17, {pos});
+        call(rwlib::cocos2d::Vec2::dtor_base, {pos});
         p = ld32(self + 0x290);
         vcall(p, 0x29C, {p, 1});  // setFullScreenEnabled / touch enabled
         uint32_t touch = f.alloc(20);
         st32(touch + 16, touch);
         st32(touch, 0xF60A80);  // [](Ref*, TouchEventType) {}
         st8(touch + 4, 0);
-        call(0x826CCF, {ld32(self + 0x290), touch});  // Widget::addTouchEventListener
+        call(rwlib::cocos2d::ui::Widget::addTouchEventListener, {ld32(self + 0x290), touch});  // Widget::addTouchEventListener
         functionDestroy(touch);
         p = ld32(self + 0x290);
         uint32_t ev = f.alloc(20);
@@ -239,7 +239,7 @@ struct CampaignAnimationView {
     }
     static uint32_t init(uint32_t self, uint32_t parent, uint32_t campaigns) {
         Frame f;
-        if (call(0x892B69, {self}) != 1) return 0;  // Node::init
+        if (call(rwlib::cocos2d::Node::init, {self}) != 1) return 0;  // Node::init
         st32(self + 0x270, 0xFFFFFFFF);
         if (self + 0x274 != campaigns)
             call(0x599A3D, {self + 0x274, ld32(campaigns), ld32(campaigns + 4)});  // vector::assign
@@ -249,8 +249,8 @@ struct CampaignAnimationView {
         st32(self + 0x284, call(0x45A9F5, {parent, s}));  // SceneUtil::searchNodeByName
         strFree(s);
         if (ld32(self + 0x284) == 0) {
-            uint32_t reader = call(0x7BF1E5, {});  // GUIReader::getInstance
-            uint32_t w = call(0x7BF9FD, {reader, 0xE0040E});  // widgetFromJsonFile(StartDeckEdit2_Announce.json)
+            uint32_t reader = call(rwlib::cocostudio::GUIReader::getInstance, {});  // GUIReader::getInstance
+            uint32_t w = call(rwlib::cocostudio::GUIReader::widgetFromJsonFile, {reader, 0xE0040E});  // widgetFromJsonFile(StartDeckEdit2_Announce.json)
             st32(self + 0x280, w);
             uint32_t s2 = f.alloc(12);
             strInit(s2, 0xE00401, 12);
@@ -271,7 +271,7 @@ struct CampaignAnimationView {
     }
     static uint32_t show(uint32_t self) {
         Frame f;
-        call(0x893815, {ld32(self + 0x280)});  // stopAllActions
+        call(rwlib::cocos2d::Node::stopAllActions, {ld32(self + 0x280)});  // stopAllActions
         uint32_t begin = ld32(self + 0x274);
         uint32_t n = uint32_t(int32_t(ld32(self + 0x278) - begin) >> 3);
         uint32_t idx = ld32(self + 0x270);
@@ -293,9 +293,9 @@ struct CampaignAnimationView {
         call(fn::Text_setString, {text, s});
         strFree(s);
         uint32_t panel = ld32(self + 0x280);
-        uint32_t fadeIn = call(0x86B115, {fbits(1.0f)});
+        uint32_t fadeIn = call(rwlib::cocos2d::FadeIn::create, {fbits(1.0f)});
         uint32_t delay = call(fn::DelayTime_create, {fbits(0.5f)});
-        uint32_t fadeOut = call(0x86B25D, {fbits(1.0f)});
+        uint32_t fadeOut = call(rwlib::cocos2d::FadeOut::create, {fbits(1.0f)});
         uint32_t cb = lambdaFunction(f, 0xF5B144, self);  // [this] { next campaign }
         uint32_t callFunc = call(fn::CallFunc_create, {cb});
         uint32_t seq = call(fn::Sequence_create, {fadeIn, delay, fadeOut, callFunc, 0});
@@ -304,9 +304,9 @@ struct CampaignAnimationView {
         return 0;
     }
     static uint32_t hide(uint32_t self) {
-        call(0x893815, {ld32(self + 0x280)});
+        call(rwlib::cocos2d::Node::stopAllActions, {ld32(self + 0x280)});
         uint32_t panel = ld32(self + 0x280);
-        uint32_t r = call(fn::Node_runAction, {panel, call(0x86B25D, {fbits(1.0f)})});
+        uint32_t r = call(fn::Node_runAction, {panel, call(rwlib::cocos2d::FadeOut::create, {fbits(1.0f)})});
         st32(self + 0x270, 0);
         return r;
     }

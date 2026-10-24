@@ -7,8 +7,8 @@ namespace w4b2 {
 using namespace scene;
 
 constexpr uint32_t SEARCH_NODE = 0x45A9F5;       // SceneUtil::searchNodeByName(root, name)
-constexpr uint32_t STOP_ALL_ACTIONS = 0x893815;
-constexpr uint32_t WRAP_ACTION = 0x860D09;       // the eased wrapper the panel animations run
+constexpr uint32_t STOP_ALL_ACTIONS = rwlib::cocos2d::Node::stopAllActions;
+constexpr uint32_t WRAP_ACTION = rwlib::cocos2d::EaseSineOut::create;       // the eased wrapper the panel animations run
 constexpr uint32_t FADEOUT_GOT = 0xFD65C0;       // &fade duration (float)
 constexpr uint32_t DELAY_GOT = 0xFD6988;         // &delay (float)
 
@@ -27,8 +27,8 @@ struct AdventurePanel {
         return 0;
     }
     static uint32_t createWidget(uint32_t self, uint32_t parent, uint32_t file) {
-        uint32_t reader = call(0x7BF1E5, {});  // GUIReader::getInstance
-        uint32_t w = call(0x7BF9FD, {reader, file});  // widgetFromJsonFile
+        uint32_t reader = call(rwlib::cocostudio::GUIReader::getInstance, {});  // GUIReader::getInstance
+        uint32_t w = call(rwlib::cocostudio::GUIReader::widgetFromJsonFile, {reader, file});  // widgetFromJsonFile
         st32(self + 8, w);
         vcall(parent, 0xF0, {parent, w});  // addChild
         w = ld32(self + 8);
@@ -83,45 +83,45 @@ struct AdventurePanel {
         if (mode != 2) {
             uint32_t w = ld32(self + 8);
             posCopy = f.alloc(8);
-            call(0x8E4C03, {posCopy, vcall(w, 0x54, {w})});  // Vec2 copy of getPosition
+            call(rwlib::cocos2d::Vec2::ctor_base__RKS0_, {posCopy, vcall(w, 0x54, {w})});  // Vec2 copy of getPosition
         }
         uint32_t size = f.alloc(8);
         uint32_t w = ld32(self + 8);
-        call(0x8DF02D, {size, vcall(w, 0xAC, {w})});
+        call(rwlib::cocos2d::Size::ctor_base__RKS0_, {size, vcall(w, 0xAC, {w})});
         w = ld32(self + 8);
         if (int32_t(vcall(w, 0x114, {w})) >= 1) {  // getChildrenCount
             w = ld32(self + 8);
             uint32_t children = vcall(w, 0x10C, {w});
             uint32_t first = ld32(ld32(children));
-            call(0x8DF041, {size, vcall(first, 0xAC, {first})});  // Size::operator=
+            call(rwlib::cocos2d::Size::op_assign__RKS0_, {size, vcall(first, 0xAC, {first})});  // Size::operator=
         }
         uint32_t target = f.alloc(8);
         float h = ldf(size + 4);
         uint32_t opacity;
         if (mode == 0) {  // info out: up by (-50 - h) / 3
             float y = (-50.0f - h) / 3.0f + ldf(self + 4);
-            call(0x8E4B9D, {target, ld32(posCopy), fbits(y)});
+            call(rwlib::cocos2d::Vec2::ctor_base__ff, {target, ld32(posCopy), fbits(y)});
             opacity = 0;
         } else if (mode == 1) {  // select out: up by h / 3
             float y = h / 3.0f + ldf(self + 4);
-            call(0x8E4B9D, {target, ld32(posCopy), fbits(y)});
+            call(rwlib::cocos2d::Vec2::ctor_base__ff, {target, ld32(posCopy), fbits(y)});
             opacity = 0;
         } else {  // info in: back home, opaque
-            call(0x8E4B9D, {target, ld32(self), ld32(self + 4)});
+            call(rwlib::cocos2d::Vec2::ctor_base__ff, {target, ld32(self), ld32(self + 4)});
             opacity = 0xFF;
         }
         uint32_t dur = ld32(ld32(FADEOUT_GOT));
         uint32_t move = call(fn::MoveTo_create, {dur, target});
         uint32_t fade = call(fn::FadeTo_create, {dur, opacity});
         uint32_t spawn = call(fn::Spawn_create, {move, fade, 0});
-        call(0x8E4C17, {target});
+        call(rwlib::cocos2d::Vec2::dtor_base, {target});
         uint32_t delayTime = ld32(ld32(DELAY_GOT));
         uint32_t widget = ld32(self + 8);
         uint32_t delay = call(fn::DelayTime_create, {delayTime});
         uint32_t cf = call(fn::CallFunc_create, {callback});
         uint32_t seq = call(fn::Sequence_create, {spawn, delay, cf, 0});
         call(fn::Node_runAction, {widget, call(WRAP_ACTION, {seq})});
-        if (posCopy != 0) call(0x8E4C17, {posCopy});
+        if (posCopy != 0) call(rwlib::cocos2d::Vec2::dtor_base, {posCopy});
         return 0;
     }
     static uint32_t runInfoOut(uint32_t self, uint32_t cb) { return runSlide(self, cb, 0); }

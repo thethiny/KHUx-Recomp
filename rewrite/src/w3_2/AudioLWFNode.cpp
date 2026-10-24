@@ -45,11 +45,11 @@ constexpr uint32_t CommandParser_parse = 0x4F28F9;
 
 constexpr uint32_t AEABI_MEMSET = 0x40E7A0;            // __aeabi_memset(dst, n, c) (import)
 constexpr uint32_t STRING_INIT = 0x47CD93;             // std::string::__init(const char*, size_t)
-constexpr uint32_t LWFNode_ctor = 0x7EE2B5;
-constexpr uint32_t LWFNode_dtor = 0x7EE321;
-constexpr uint32_t LWFNode_initWithLWFFile = 0x7EE03D;  // (const std::string&, void* userData)
-constexpr uint32_t LWFNode_update = 0x7EE741;
-constexpr uint32_t Ref_autorelease = 0x8FD0D5;
+constexpr uint32_t LWFNode_ctor = rwlib::cocos2d::LWFNode::ctor_base;
+constexpr uint32_t LWFNode_dtor = rwlib::cocos2d::LWFNode::dtor_base;
+constexpr uint32_t LWFNode_initWithLWFFile = rwlib::cocos2d::LWFNode::initWithLWFFile;  // (const std::string&, void* userData)
+constexpr uint32_t LWFNode_update = rwlib::cocos2d::LWFNode::update;
+constexpr uint32_t Ref_autorelease = rwlib::cocos2d::Ref::autorelease;
 constexpr uint32_t CommandParser_dtor = 0x5C3831;
 constexpr uint32_t VectorInt_base_dtor = 0x478961;      // std::__vector_base<int>::~__vector_base
 constexpr uint32_t VectorInt_push_back_slow = 0x47D709; // std::vector<int>::__push_back_slow_path(int&&)

@@ -7,11 +7,11 @@ using namespace b2;
 namespace freegame {
 
 constexpr uint32_t SHARED_RELEASE = 0xC8DBD1;    // __shared_weak_count::__release_shared
-constexpr uint32_t DIRECTOR_INSTANCE = 0x8EE519; // cocos2d::Director::getInstance
+constexpr uint32_t DIRECTOR_INSTANCE = rwlib::cocos2d::Director::getInstance; // cocos2d::Director::getInstance
 constexpr uint32_t STRING_INIT = 0x47CD93;       // std::string::__init(const char*, size_t)
 constexpr uint32_t STRLEN = 0x40E08C;
 constexpr uint32_t OPERATOR_DELETE = 0xC98F9B;
-constexpr uint32_t JNI_STATIC_METHOD = 0xA4225D; // JniHelper::getStaticMethodInfo(info, class, method, sig)
+constexpr uint32_t JNI_STATIC_METHOD = rwlib::cocos2d::JniHelper::getStaticMethodInfo; // JniHelper::getStaticMethodInfo(info, class, method, sig)
 constexpr uint32_t CALL_STATIC_VOID = 0x4E0D09;  // _JNIEnv::CallStaticVoidMethod(env, cls, mid, ...)
 constexpr uint32_t AUDIO_MANAGER = 0x5BECFD;     // audio::Manager::getInstance
 constexpr uint32_t AUDIO_GET_LAYER = 0x5BF33D;   // audio::Manager::getLayer(shared_ptr out, mgr, layer)
@@ -28,8 +28,8 @@ struct Free {
     static uint32_t appInit() {
         uint32_t app = rw::call(0xC98EF1, {4});      // operator new(4)
         uint32_t r = rw::call(0x79A211, {app});      // AppDelegate::AppDelegate
-        uint32_t vm = rw::call(0xA41F6D, {r});       // JniHelper::getJavaVM
-        return rw::call(0x81B1F5, {vm});             // PluginJniHelper::setJavaVM
+        uint32_t vm = rw::call(rwlib::cocos2d::JniHelper::getJavaVM, {r});       // JniHelper::getJavaVM
+        return rw::call(rwlib::cocos2d::PluginJniHelper::setJavaVM, {vm});             // PluginJniHelper::setJavaVM
     }
 
     // std::vector<std::string> createHeaders(bool withToken) (sret; r0 = 0)
@@ -80,7 +80,7 @@ struct Free {
     }
     static uint32_t textHandler(uint32_t thisAdj, uint32_t, uint32_t text) {
         uint32_t element = rw::call(0x4F9C81, {thisAdj - 0x270, text});  // CustomTextView::createCustomElement
-        return rw::call(0x84064D, {ld32(thisAdj + 0x28), element});     // RichText::pushBackElement
+        return rw::call(rwlib::cocos2d::ui::RichText::pushBackElement, {ld32(thisAdj + 0x28), element});     // RichText::pushBackElement
     }
 
     // a system SE on audio layer 10000
@@ -248,7 +248,7 @@ struct Free {
         uint32_t chars = jni(env, 0x2A4, {env, jurl, 0});  // GetStringUTFChars
         rw::call(STRING_INIT, {f.addr(0xC), chars, rw::call(STRLEN, {chars})});
         jni(env, 0x2A8, {env, jurl, chars});              // ReleaseStringUTFChars
-        rw::call(0x81A0C1, {index, f.addr(0xC)});          // WebViewImpl::didFinishLoading
+        rw::call(rwlib::cocos2d::plugin::WebViewImpl::didFinishLoading, {index, f.addr(0xC)});          // WebViewImpl::didFinishLoading
         if (*f.at<uint8_t>(0xC) & 1) rw::call(OPERATOR_DELETE, {*f.at<uint32_t>(0x14)});
         return 0;
     }
@@ -283,24 +283,24 @@ struct Free {
         guest::Frame f(0x2C);
         uint32_t director = rw::call(DIRECTOR_INSTANCE, {});
         if (ld32(director + 0x9C) != 0) {  // a GL view exists: the context was lost
-            rw::call(0x8F0845, {director});  // Director::end
+            rw::call(rwlib::cocos2d::Director::end, {director});  // Director::end
             return -1;
         }
         rw::call(STRING_INIT, {f.addr(0x1C), 0xE132CB, 11});  // "Android app"
-        uint32_t view = rw::call(0xA3F2AD, {f.addr(0x1C)});   // GLView::create
+        uint32_t view = rw::call(rwlib::cocos2d::GLView::create, {f.addr(0x1C)});   // GLView::create
         if (*f.at<uint8_t>(0x1C) & 1) rw::call(OPERATOR_DELETE, {*f.at<uint32_t>(0x24)});
         uint32_t setFrameSize = ld32(ld32(view) + 0x20);
         uint32_t fw = rw::call(0xCD6D68, {uint32_t(w)});  // __floatsisf
         uint32_t fh = rw::call(0xCD6D68, {uint32_t(h)});
         rw::call(setFrameSize, {view, fw, fh});
-        rw::call(0x8EF96F, {director, view});  // Director::setOpenGLView
+        rw::call(rwlib::cocos2d::Director::setOpenGLView, {director, view});  // Director::setOpenGLView
         rw::call(0x459E31, {env, thiz});       // cocos_android_app_init
-        rw::call(0xA3E7C5, {rw::call(0xA3E7D5, {})});  // Application::getInstance()->run()
+        rw::call(rwlib::cocos2d::Application::run, {rw::call(rwlib::cocos2d::Application::getInstance, {})});  // Application::getInstance()->run()
         return 0;
     }
     static uint32_t setApkPath(uint32_t, uint32_t, uint32_t jpath) {
         guest::Frame f(0x18);
-        rw::call(0xA423E9, {f.addr(8), jpath});  // JniHelper::jstring2string
+        rw::call(rwlib::cocos2d::JniHelper::jstring2string, {f.addr(8), jpath});  // JniHelper::jstring2string
         uint32_t g = got(0xFD88B4);             // &g_apkPath
         if (ld8(g) & 1) {
             st8(ld32(g + 8), 0);
@@ -314,10 +314,10 @@ struct Free {
         return 0;
     }
     static uint32_t setContext(uint32_t env, uint32_t, uint32_t context, uint32_t assetManager) {
-        rw::call(0xA42061, {context});  // JniHelper::setClassLoaderFrom
-        rw::call(0xA421BD, {context});  // JniHelper::setApplicationInfoFrom
+        rw::call(rwlib::cocos2d::JniHelper::setClassLoaderFrom, {context});  // JniHelper::setClassLoaderFrom
+        rw::call(rwlib::cocos2d::JniHelper::setApplicationInfoFrom, {context});  // JniHelper::setApplicationInfoFrom
         uint32_t am = rw::call(0x444A04, {env, assetManager});  // AAssetManager_fromJava
-        return rw::call(0xA3F42D, {am});  // FileUtilsAndroid::setassetmanager
+        return rw::call(rwlib::cocos2d::FileUtilsAndroid::setassetmanager, {am});  // FileUtilsAndroid::setassetmanager
     }
     static uint32_t setStringForKey(uint32_t key, uint32_t value) {
         guest::Frame f(0x1C);
