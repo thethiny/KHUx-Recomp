@@ -147,12 +147,12 @@ Rewrite: game code
   Verified                ██████░░░░░░░░░░░░░░   27.8%   5,232 / 18,828
 
 Rewrite: open-source libraries
-  Rewritten               ████████░░░░░░░░░░░░   41.1%  15,449 / 37,547
+  Rewritten               ████████░░░░░░░░░░░░   41.1%  15,450 / 37,547
   Run under the verifier  █░░░░░░░░░░░░░░░░░░░    5.6%   2,115 / 37,547
   Verified                █░░░░░░░░░░░░░░░░░░░    4.7%   1,750 / 37,547
 
 Rewrite: all functions
-  Rewritten               ████████████░░░░░░░░   60.8%  34,277 / 56,381
+  Rewritten               ████████████░░░░░░░░   60.8%  34,278 / 56,381
   Run under the verifier  ███░░░░░░░░░░░░░░░░░   14.4%   8,114 / 56,381
   Verified                ██░░░░░░░░░░░░░░░░░░   12.4%   6,982 / 56,381
 

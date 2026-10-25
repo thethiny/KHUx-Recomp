@@ -88,6 +88,24 @@ void staticVec2(uint32_t at, float x, float y) {
     call(VEC2_CTOR, {at, fbits(x), fbits(y)});
     atexit(load<uint32_t>(VEC2_DTOR_GOT), at);
 }
+// sub_5EC870: the snow particle setting's constructor (0x30 bytes: name, a, b, c, then four Vec2 - the second and
+// the fourth halved). libsplit counts it as cocos2d-x; it is the game's. The original first sets the four points to
+// Vec2::ZERO and scales copies on its stack; only the final values remain.
+uint32_t particleSetting(uint32_t self, uint32_t name, uint32_t a, uint32_t b, uint32_t c, uint32_t p0, uint32_t p1,
+                         uint32_t p2, uint32_t p3) {
+    save<uint32_t>(self, name);
+    save<uint32_t>(self + 4, a);
+    save<uint32_t>(self + 8, b);
+    save<uint32_t>(self + 12, c);
+    const uint32_t src[4] = {p0, p1, p2, p3};
+    for (uint32_t k = 0; k < 4; k++) {
+        const float scale = (k & 1) ? 0.5f : 1.0f;
+        save<float>(self + 16 + 8 * k, load<float>(src[k]) * scale);
+        save<float>(self + 20 + 8 * k, load<float>(src[k] + 4) * scale);
+    }
+    return self;
+}
+
 // a setting from four temporary points (the temporaries live until the caller's frame ends; `points` gets 4 Vec2)
 void snowSetting(uint32_t at, const SnowSetting &s, uint32_t points) {
     const Vec2c p[4] = {s.p0, s.p1, s.p2, s.p3};
@@ -559,6 +577,7 @@ RW_FUNCTION(0x4540F4, "MasterDataManager.cpp static destructor (sub_4540F4)", St
 RW_FUNCTION(0x45344C, "Avatar.cpp static constructor (sub_45344C)", StaticConstructors::avatar);
 RW_FUNCTION(0x453DD4, "StageActorManager.cpp static constructor (sub_453DD4)", StaticConstructors::stageActorManager);
 RW_FUNCTION(0x45355C, "snow particle settings static constructor (sub_45355C)", StaticConstructors::snow);
+RW_FUNCTION(0x5EC870, "snow particle setting constructor (sub_5EC870)", particleSetting);
 RW_FUNCTION(0x454160, "MasterDataManager.cpp static constructor (sub_454160)", StaticConstructors::masterTables);
 RW_FUNCTION(0x453280, "bg::MemoryStream static constructor (sub_453280)", StaticConstructors::memoryStream);
 RW_FUNCTION(0x453324, "RemoteNotification.cpp static constructor (sub_453324)", StaticConstructors::remoteNotification);
