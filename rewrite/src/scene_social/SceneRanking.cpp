@@ -811,3 +811,70 @@ void Self::backLambda(Addr functor) {
     else call(g::SM_changeSceneLayer, {m, functor + 0x10, 1, 0, 0});
 }
 RW_FUNCTION(0x701278, "SceneRanking::backScene $_21 __func::operator()()", SceneRanking::backLambda);
+
+// ------------------------------------------------------------------------------------------------ buttons
+namespace {
+constexpr uint32_t SceneRanking_openRankingRewardPopup = 0x6FF349;   // static (int, std::function<void()> by value)
+constexpr uint32_t VT_BackOutDone = 0xF6A2A8;      // $_10's run-out end {this}
+constexpr uint32_t VT_BackLayer = 0xF6A2D4;        // the next scene's layer factory {backTo}
+constexpr uint32_t SM_SCENE_KIND = 0x290;          // SceneManager: int
+constexpr uint32_t SCENE_KIND_RANKING = 4;
+constexpr uint32_t TOUCH_ENDED = 2;
+constexpr int32_t RUN_IN_ANIMATION = 0x288;        // the scene's IInOutAnimation base
+}  // namespace
+
+// runInAnimation $_16: the run-in done -> the ranking reward popup (if one is due)
+static void rankingRunInDone(Self::Addr) {
+    Frame f;
+    const uint32_t none = newEmptyFunction(f);
+    call(SceneRanking_openRankingRewardPopup, {0, none});
+    functionDestroy(none);
+}
+RW_FUNCTION(0x701DAC, "SceneRanking::runInAnimation $_16::operator()()", rankingRunInDone);
+
+// init $_13 {this, $_14's captures}: the category button -> Lux <-> party (with the API)
+static void rankingCategoryTouch(Self::Addr functor, Self::Addr, Self::Addr typep) {
+    if (ld32(typep) != TOUCH_ENDED) return;
+    Self *self = host(ld32(functor + 4));
+    if (self->changing) return;
+    call(fn::AudioPlaySystemSEDecide, {});
+    const int32_t next = self->select == SELECT_LUX ? SELECT_PARTY : SELECT_LUX;
+    call(0x6FDE41, {functor + 8, uint32_t(next), 1, 1});
+}
+RW_FUNCTION(0x701F72, "SceneRanking::init $_13::operator() (category)", rankingCategoryTouch);
+
+// init $_12 {this, $_11's captures}: the period button -> current <-> previous
+static void rankingPeriodTouch(Self::Addr functor, Self::Addr, Self::Addr typep) {
+    if (ld32(typep) != TOUCH_ENDED) return;
+    Self *self = host(ld32(functor + 4));
+    if (self->changing) return;
+    call(fn::AudioPlaySystemSEDecide, {});
+    const int32_t next = self->period == PERIOD_CURRENT ? PERIOD_PREVIOUS : PERIOD_CURRENT;
+    call(0x6FDCF1, {functor + 8, uint32_t(next)});
+}
+RW_FUNCTION(0x702052, "SceneRanking::init $_12::operator() (period)", rankingPeriodTouch);
+
+// init $_10 {this}: Back -> the scene runs out ($_10's lambda goes on)
+static void rankingBackTouch(Self::Addr functor, Self::Addr, Self::Addr typep) {
+    if (ld32(typep) != TOUCH_ENDED) return;
+    const uint32_t me = ld32(functor + 4);
+    call(fn::AudioPlaySystemSEDecide, {});
+    Frame f;
+    const uint32_t done = newFunction(f, VT_BackOutDone, {me});
+    call(g::IInOutAnimation_runOutAnimation, {me + RUN_IN_ANIMATION, done});
+    functionDestroy(done);
+}
+RW_FUNCTION(0x702120, "SceneRanking::init $_10::operator() (Back)", rankingBackTouch);
+
+// $_10's lambda {this}: run out -> back to where the ranking came from (no fade)
+static void rankingBackOutDone(Self::Addr functor) {
+    const uint32_t me = ld32(functor + 4);
+    if (ld32(sceneManager() + SM_SCENE_KIND) == SCENE_KIND_RANKING) st32(sceneManager() + SM_SCENE_KIND, SCENE_KIND_RANKING);
+    const uint32_t backTo = uint32_t(host(me)->backTo);
+    const uint32_t sm = sceneManager();
+    Frame f;
+    const uint32_t layer = newFunction(f, VT_BackLayer, {backTo});
+    call(g::SM_changeSceneLayer, {sm, layer, 1, 0, 0});
+    functionDestroy(layer);
+}
+RW_FUNCTION(0x702260, "SceneRanking::init $_10 run-out lambda::operator()()", rankingBackOutDone);

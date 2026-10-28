@@ -660,3 +660,39 @@ void BattleResultDialog::initSubMissionLwf(BattleResultDialog *self, int32_t mis
     call(g::IntVector_dtor, {vec});
 }
 RW_FUNCTION(0x582EF8, "BattleResultDialog::initSubMissionLwf", BattleResultDialog::initSubMissionLwf);
+
+// ------------------------------------------------------------------------------------------------ skill popup lambdas
+namespace {
+constexpr uint32_t SceneUtil_createLeftOutAnimation = 0x45B735;   // (node, float, float, std::function<void()>)
+constexpr uint32_t VT_SkillPopupOut = 0xF59E5C;                   // $_22's lambda {area, popup, dialog}
+constexpr float SKILL_POPUP_SHOWN = 2.0f;
+}  // namespace
+
+// popUpSkillLevelUp $_22 {popup, area, dialog}: the popup slid in -> after 2 s it slides out to the left
+static void skillPopupIn(uint32_t functor) {
+    const uint32_t popup = ld32(functor + 4);
+    const uint32_t delay = call(g::DelayTime_create, {rw::fbits(SKILL_POPUP_SHOWN)});
+    Frame f;
+    const uint32_t fn = f.alloc(24);
+    st32(fn, VT_SkillPopupOut);
+    st32(fn + 4, ld32(functor + 8));
+    st32(fn + 8, popup);
+    st32(fn + 12, ld32(functor + 0xC));
+    st32(fn + 16, fn);
+    const uint32_t out = call(SceneUtil_createLeftOutAnimation, {ld32(functor + 4), 0, 0, fn});
+    const uint32_t seq = call(g::Sequence_create, {delay, call(g::EaseSineOut_create, {out}), 0});
+    functionDestroy(fn);
+    call(g::Node_runAction, {ld32(functor + 4), seq});
+}
+RW_FUNCTION(0x583E58, "BattleResultDialog::popUpSkillLevelUp $_22::operator()", skillPopupIn);
+
+// $_22's lambda {area, popup, dialog}: the popup gone -> the next level-up skill's popup, if any
+static void skillPopupOut(uint32_t functor) {
+    const uint32_t area = ld32(functor + 4);
+    vcall(area, node::removeChild, {area, ld32(functor + 8), 1});
+    BattleResultDialog *self = rw::host_ptr<BattleResultDialog>(ld32(functor + 0xC));
+    self->skillPopupOpen = 0;
+    self->skillIndex = self->skillIndex + 1;
+    if ((self->skillsEnd - self->skillsBegin) >> 4 > self->skillIndex) call(0x583235, {addr(self)});   // popUpSkillLevelUp
+}
+RW_FUNCTION(0x583FC2, "BattleResultDialog::popUpSkillLevelUp $_22 inner lambda::operator()", skillPopupOut);

@@ -257,7 +257,7 @@ void SceneAdventureSelect::checkApColosseum(Addr self) {
     {
         Frame g;
         uint32_t cb = g.alloc(20);
-        heapLambda(cb, VT_checkApColosseum_63, 0x18, {w0, w1, stageId, base, self});
+        heapLambda(cb, 0x18, VT_checkApColosseum_63, {w0, w1, stageId, base, self});
         checkAp(self, points, cb);
         functionDestroy(cb);
     }

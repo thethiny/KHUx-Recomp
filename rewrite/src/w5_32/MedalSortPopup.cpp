@@ -127,9 +127,6 @@ uint32_t imageButton() {
     strFree(s);
     return b;
 }
-void copyWords(uint32_t dst, uint32_t src, uint32_t n) {
-    for (uint32_t k = 0; k < n; k += 4) st32(dst + k, ld32(src + k));
-}
 }  // namespace
 
 namespace medal_sort_popup {

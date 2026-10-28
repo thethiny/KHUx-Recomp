@@ -18,6 +18,13 @@ constexpr uint32_t TextData_format = 0x492929;              // (string out, type
 constexpr uint32_t String_append = 0x47AC89;                // std::string::append(const char*, size_t)
 constexpr uint32_t ImageView_loadTexture = rwlib::cocos2d::ui::ImageView::loadTexture__RKNSt3__112basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEENS0_6Widget14TextureResTypeE;        // (view, string, TextureResType)
 constexpr uint32_t STRLEN = 0x40E08C;
+constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9, AudioPlaySystemSECancel = 0x5C0D81;
+constexpr uint32_t FunctionVB_call = 0x474139;              // std::function<void(bool)>::operator()(bool)
+constexpr uint32_t openPopUpSelectSubName = 0x539515;       // (-, mode, -, function<void(int)>)
+constexpr uint32_t SceneManager_enableLoadingIndicator = 0x60D169;
+constexpr uint32_t APIManager_getInstance = 0x4BA8C9, APIManager_openErrorDialog = 0x4C3C8D;
+constexpr uint32_t APIManager_executeUserTitleUpdate = 0x4C896D;   // (api, -, s64 main, s64 sub, s64 plate, function)
+constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 }  // namespace g
 
 constexpr uint32_t S_Base = 0xDFE253, S_PreArea = 0xDFE27C, S_PanelBig = 0xDFE285, S_RankTitleBoard = 0xDF940E,
@@ -44,6 +51,12 @@ constexpr uint32_t VT_CanClose = 0xF5838C;            // openPopup's function<bo
 constexpr uint32_t VT_Closed = 0xF582DC;              // openPopup's result (heap 0x50, see below)
 constexpr uint32_t VT_PlateTouch = 0xF582B0;          // Button_Plate / Button_AvTitle1 / 2 (heap 0x28, plates)
 constexpr uint32_t VT_Title1Touch = 0xF58258, VT_Title2Touch = 0xF58200;
+constexpr uint32_t VT_Title1Chosen = 0xF58284, VT_Title2Chosen = 0xF5822C;   // openPopUpSelectSubName's result (0x28)
+constexpr uint32_t VT_Updated = 0xF58334;             // executeUserTitleUpdate's result {-, onClosed} (heap 0x20)
+constexpr uint32_t VT_UpdateError = 0xF58360;         // its error dialog's callback (no captures)
+constexpr uint32_t VT_Closing = 0xF58308;             // the close animation's end {shadow, view, layer}
+constexpr uint32_t V_SET_TOUCH_ENABLED = 0x29C;       // ui::Widget
+constexpr uint32_t API_SHOW_ERROR = 0x14;             // APIManager: uint8, the error dialog is wanted
 
 // text->setString(TextData `id`) then its shadow
 void textShadow(uint32_t text, int32_t id) {
@@ -90,6 +103,97 @@ uint32_t titlePlate(uint32_t id, uint32_t text, uint32_t names, bool separator) 
 }
 
 struct AvatarInfoSubName {
+    // Button_AvTitle1 / 2 {dialog, plates}(sender, type): ended -> the title list for the main (mode 0) or sub
+    // (mode 1) title, its choice going to a heap lambda over the plates ($_18 / $_19)
+    template <uint32_t ChosenVt, uint32_t Mode> static void titleTouch(uint32_t self, uint32_t, uint32_t typep) {
+        if (ld32(typep) != 2) return;
+        const uint32_t dialog = ld32(self + 4);
+        call(g::AudioPlaySystemSEDecide, {});
+        uint32_t w[8];
+        for (uint32_t k = 0; k < 8; k++) w[k] = ld32(self + 8 + 4 * k);
+        Frame f;
+        const uint32_t fo = f.alloc(20);
+        const uint32_t obj = heapLambda(fo, 0x28, ChosenVt, {dialog, w[0], w[1], w[2], w[3], w[4], w[5], w[6], w[7]});
+        // openPopUpSelectSubName does not use its first and third argument (the original passes the heap lambda
+        // and a stale literal offset)
+        call(g::openPopUpSelectSubName, {obj, Mode, 0, fo});
+        functionDestroy(fo);
+    }
+
+    // Button_Plate {dialog, plates}(sender, type): ended -> the plate design switches between main and sub title
+    // ($_17)
+    static void plateTouch(uint32_t self, uint32_t, uint32_t typep) {
+        if (ld32(typep) != 2) return;
+        const uint32_t dialog = ld32(self + 4);
+        call(g::AudioPlaySystemSEDecide, {});
+        st32(dialog + D_EDIT_SUB_DESIGN, ld32(dialog + D_EDIT_SUB_DESIGN) == 0 ? 1u : 0u);
+        refresh(self + 8);
+    }
+
+    // openPopup's result {-, close, dialog, onClosed, -, view, shadow, layer, -, closer's onClosed}(closed by OK):
+    // the close button disabled; closed otherwise (the back key, Close_Button) -> the cancel sound, the edited
+    // titles become the dialog's and go to the server (/user/title), the view shrinks, the shadow fades out and
+    // the closer's onClosed(true) runs ($_16)
+    static void closed(uint32_t self, uint32_t byOkp) {
+        const uint32_t byOk = ld8(byOkp);
+        const uint32_t close = ld32(self + 8), dialog = ld32(self + 0xC);
+        vcall(close, V_SET_TOUCH_ENABLED, {close, 0});
+        if (byOk) return;
+        call(g::AudioPlaySystemSECancel, {});
+        st32(dialog + D_TITLES, ld32(dialog + D_EDIT_MAIN));
+        st32(dialog + D_TITLES + 4, ld32(dialog + D_EDIT_SUB));
+        st32(dialog + D_TITLES + 8, ld32(dialog + D_EDIT_PLATE));
+        Frame f;
+        const uint32_t onClosed = f.alloc(20);
+        call(g::FunctionVB_copy, {onClosed, self + 0x10});
+        call(g::SceneManager_enableLoadingIndicator, {sceneManager(), 1});
+        const uint32_t api = call(g::APIManager_getInstance, {});
+        const int32_t plate = int32_t(ld32(dialog + D_TITLES + 8)), sub = int32_t(ld32(dialog + D_TITLES + 4)),
+                      main = int32_t(ld32(dialog + D_TITLES));
+        const uint32_t copy = f.alloc(20);
+        functionCopy(copy, onClosed);
+        const uint32_t fo = f.alloc(20);
+        st32(fo + 16, 0);
+        const uint32_t obj = call(fn::operator_new, {0x20});
+        if (obj) {
+            st32(obj, VT_Updated);
+            call(g::FunctionVB_move, {obj + 8, copy});
+        }
+        st32(fo + 16, obj);
+        call(g::APIManager_executeUserTitleUpdate, {api, 0, uint32_t(main), uint32_t(main >> 31), uint32_t(sub),
+                                                    uint32_t(sub >> 31), uint32_t(plate), uint32_t(plate >> 31), fo});
+        functionDestroy(fo);
+        functionDestroy(copy);
+        const uint32_t view = ld32(self + 0x28);
+        {
+            Frame t;
+            const uint32_t closing = newFunction(t, VT_Closing, {ld32(self + 0x2C), view, ld32(self + 0x30)});
+            const uint32_t action = SceneUtil::createClosePopupAnimation(view, closing);
+            call(fn::Node_runAction, {view, call(g::EaseSineOut_create, {action})});
+            functionDestroy(closing);
+        }
+        call(fn::Node_runAction, {ld32(self + 0x2C), call(fn::FadeTo_create, {fbits(0.1f), 0})});
+        if (ld32(self + 0x48)) call(g::FunctionVB_call, {self + 0x38, 1});
+        functionDestroy(onClosed);
+    }
+
+    // the title update's result {-, onClosed}(ok): the loading indicator off; ok -> onClosed(true); else the API
+    // error dialog when wanted ($_16 lambda(bool))
+    static void updated(uint32_t self, uint32_t okp) {
+        const uint32_t ok = ld8(okp);
+        call(g::SceneManager_enableLoadingIndicator, {sceneManager(), 0});
+        if (ok) {
+            if (ld32(self + 0x18)) call(g::FunctionVB_call, {self + 8, 1});
+            return;
+        }
+        if (!ld8(call(g::APIManager_getInstance, {}) + API_SHOW_ERROR)) return;
+        const uint32_t api = call(g::APIManager_getInstance, {});
+        Frame f;
+        const uint32_t fo = newFunction(f, VT_UpdateError, {});
+        call(g::APIManager_openErrorDialog, {api, fo, 1});
+        functionDestroy(fo);
+    }
+
     // sub_536000 {dialog, name1, name2, board, big2, rankName, plateButton, plateText}: the plates and the preview
     static void refresh(uint32_t ctx) {
         const uint32_t dialog = ld32(ctx);
@@ -259,3 +363,8 @@ struct AvatarInfoSubName {
 
 RW_FUNCTION(0x53506C, "AvatarInfoDialog::openPopUpSubName(function<void(bool)>)", AvatarInfoSubName::open);
 RW_FUNCTION(0x536000, "AvatarInfoDialog::openPopUpSubName plates (sub_536000)", AvatarInfoSubName::refresh);
+RW_FUNCTION(0x545FEC, "AvatarInfoDialog::openPopUpSubName::$_18 operator() (Button_AvTitle1)", (AvatarInfoSubName::titleTouch<VT_Title1Chosen, 0>));
+RW_FUNCTION(0x545D38, "AvatarInfoDialog::openPopUpSubName::$_19 operator() (Button_AvTitle2)", (AvatarInfoSubName::titleTouch<VT_Title2Chosen, 1>));
+RW_FUNCTION(0x5462A4, "AvatarInfoDialog::openPopUpSubName::$_17 operator() (Button_Plate)", AvatarInfoSubName::plateTouch);
+RW_FUNCTION(0x546570, "AvatarInfoDialog::openPopUpSubName::$_16 operator() (popup closed)", AvatarInfoSubName::closed);
+RW_FUNCTION(0x546A7C, "AvatarInfoDialog::openPopUpSubName::$_16 lambda(bool) operator() (title update result)", AvatarInfoSubName::updated);

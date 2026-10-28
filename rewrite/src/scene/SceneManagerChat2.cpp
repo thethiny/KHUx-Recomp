@@ -20,6 +20,7 @@ constexpr uint32_t CHAT_REQUESTING = 0x46D, CHAT_LOADING_PAGE = 0x46E, CHAT_RELO
 constexpr uint32_t CHAT_OPENING = 0x470;         // uint8: set when the popup opens
 constexpr uint32_t CHAT_TEXT_FIELD = 0x478;      // ui::TextField* Txt_Chat_Label (cleared once replaced by the edit box)
 constexpr uint32_t CHAT_ON_CLOSE = 0x480;        // std::function<void()>: closes the chat popup
+constexpr uint32_t CHAT_TIMER = 0x474;           // float: seconds to the next poll
 constexpr uint32_t CHAT_EDITING = 0x4A5;         // uint8: the edit box is being edited
 constexpr uint32_t CHAT_EDIT_BOX = 0x4AC;        // cocos2d::extension::EditBox* (from textFieldToEditBox)
 constexpr uint32_t CHAT_EDIT_LAYER = 0x4B0;      // the edit box's layer (textFieldToEditBox output)
@@ -52,7 +53,10 @@ constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = 
 constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;                         // Size(float, float)
 constexpr uint32_t APIManager_executePaymentInfo = 0x4CE74D;
 constexpr uint32_t ChatPopup_fetch = 0x61507D;   // openChatPopup $_43::operator() (on the captures, called directly)
-constexpr uint32_t ChatPopup_show = 0x631931;    // openChatPopup lambda body: shows the popup ({this, root, layer, shadow})
+constexpr uint32_t ChatPopup_close = 0x631931;   // the chat popup's close ({this, root, layer, shadow}; chatPopupClose below)
+constexpr uint32_t LoadingIndicator_hide = 0x509D69;
+constexpr uint32_t SceneManager_closeCurrentPopup = 0x6216A1;   // (mgr, bool) -> bool
+constexpr uint32_t AudioPlaySystemSECancel = 0x5C0D81;
 constexpr uint32_t COLOR3B_GRAY = 0x1007EA0, COLOR3B_BLACK = 0x1007E9A;
 constexpr uint32_t TEXTFIELD_PLACEHOLDER = 0x150;   // vtable byte offset: returns the place holder (sret)
 constexpr uint32_t WIDGET_SET_TOUCH_ENABLED = 0x29C;
@@ -66,6 +70,7 @@ constexpr uint32_t VT_Chat_StampTouch = 0xF60004;   // $_42 [this]
 constexpr uint32_t VT_Chat_Payment = 0xF5FFAC;   // $_44 (heap 0x54): the 0x50-byte capture block
 constexpr uint32_t VT_Chat_CanClose = 0xF5FF80;  // $_46 [close button]
 constexpr uint32_t VT_Chat_OnClose = 0xF5FF54;   // $_45 (heap 0x18): [this, this, root, layer, shadow]
+constexpr uint32_t VT_Chat_Closed = 0xF60054;    // the close animation's end (heap 0x14): [layer, this, shadow, root]
 
 constexpr uint32_t STR_Empty = 0xDF8A1A;
 constexpr uint32_t STR_ChatSceneJson = 0xE032CB;  // "cocostudio/publish/ChatScene.json"
@@ -92,18 +97,6 @@ void vcallVec2(uint32_t node, uint32_t slot, float x, float y) {
     call(Vec2_dtor, {v});
 }
 
-// a heap lambda (vtable + words) as the callable of the std::function at `fo` (whose __f_ is cleared first)
-uint32_t heapLambda(uint32_t fo, uint32_t size, uint32_t vtable, std::initializer_list<uint32_t> words) {
-    st32(fo + 16, 0);
-    uint32_t heap = call(fn::operator_new, {size});
-    if (heap) {
-        st32(heap, vtable);
-        uint32_t k = 4;
-        for (uint32_t w : words) { st32(heap + k, w); k += 4; }
-    }
-    st32(fo + 16, heap);
-    return heap;
-}
 }  // namespace
 
 // Open the chat: reset the chat state, build ChatScene.json on the popup layer (message list, input edit box,
@@ -409,9 +402,339 @@ void SceneManager::openChatPopup(SceneManager *self) {
         functionDestroy(canClose);
     } else {
         st8(ld32(shown) + CHAT_EDITING, 1);
-        call(ChatPopup_show, {shown + 4});
+        call(ChatPopup_close, {shown + 4});
     }
     if (mapCtl) call(fn::shared_release, {mapCtl});
     if (headerCtl) call(fn::shared_release, {headerCtl});
 }
 RW_FUNCTION(0x613E9C, "SceneManager::openChatPopup", SceneManager::openChatPopup);
+
+namespace {
+// the loading indicator hidden when it is shown (on a parent)
+void hideLoadingIndicator() {
+    SceneManager *mgr = SceneManager::getInstance();
+    const uint32_t indicator = mgr->loadingIndicator;
+    if (vcall(indicator, node::getParent, {indicator})) call(LoadingIndicator_hide, {mgr->loadingIndicator});
+}
+
+// The chat popup's close {this, root, layer, shadow}: the chat flags and poll timer cleared, the loading indicator
+// hidden, the popup shrinks (a heap lambda {layer, this, shadow, root} ends the close) and the shadow fades out.
+void chatPopupClose(uint32_t cap) {
+    const uint32_t self = ld32(cap);
+    st8(self + CHAT_POPUP_SHOWN, 0);
+    st8(self + CHAT_REQUESTING, 0);
+    st32(self + CHAT_TIMER, 0);
+    hideLoadingIndicator();
+    const uint32_t root = ld32(cap + 4), layer = ld32(cap + 8), shadow = ld32(cap + 12);
+    Frame f;
+    const uint32_t fo = f.alloc(20);
+    heapLambda(fo, 0x14, VT_Chat_Closed, {layer, self, shadow, root});
+    call(fn::Node_runAction, {root, SceneUtil::createClosePopupAnimation(root, fo)});
+    functionDestroy(fo);
+    call(fn::Node_runAction, {ld32(cap + 12), call(fn::FadeTo_create, {fbits(0.1f), 0})});
+}
+
+// A chat request failed {this, this, root, layer, shadow, send, stamp, close}(message): the loading indicator
+// hidden; with the popup shown its buttons are enabled again, else the popup (when it is the current one) closes;
+// then the message in an OK dialog.
+void chatRequestFailed(uint32_t cap, uint32_t message) {
+    const uint32_t self = ld32(cap);
+    st8(self + CHAT_REQUESTING, 0);
+    hideLoadingIndicator();
+    if (ld8(self + CHAT_POPUP_SHOWN)) {
+        for (uint32_t k = 0x14; k <= 0x1C; k += 4) vcall(ld32(cap + k), WIDGET_SET_TOUCH_ENABLED, {ld32(cap + k), 1});
+        st8(self + CHAT_EDITING, 0);
+    } else if (!call(SceneManager_closeCurrentPopup, {mgrAddr(SceneManager::getInstance()), 1})) {
+        st8(self + CHAT_EDITING, 1);
+        call(ChatPopup_close, {cap + 4});
+    }
+    call(AudioPlaySystemSECancel, {});
+    Frame f;
+    const uint32_t none = newEmptyFunction(f);
+    SceneUtil::openOkDialog4Line(message, none, 0);
+    functionDestroy(none);
+}
+}  // namespace
+
+RW_FUNCTION(0x631930, "SceneManager chat popup close (sub_631930)", chatPopupClose);
+RW_FUNCTION(0x6317FC, "SceneManager chat request failed (sub_6317FC)", chatRequestFailed);
+
+// ------------------------------------------------------------------------------------------------ input and send
+namespace {
+constexpr uint32_t VT_Chat_PaymentError = 0xF5FFD8;   // $_44's error dialog callback (no captures)
+constexpr uint32_t VT_Chat_Created = 0xF60088;        // createMessage's callback $_128 (heap 0x58): $_41's captures from +0x14
+constexpr uint32_t VT_Chat_Opened = 0xF600B4;         // $_38's open animation end {send, stamp, close}
+constexpr uint32_t CHAT_LAST_ID = 0x414;              // uint32: the newest message id seen
+constexpr uint32_t CHAT_SENT = 0x41C;                 // uint32: messages sent
+constexpr uint32_t EDITBOX_SET_TEXT = 0x2A8, EDITBOX_GET_TEXT = 0x2AC;   // vtable byte offsets (const std::string&)
+constexpr uint32_t API_SHOW_ERROR = 0x14;             // APIManager: uint8
+constexpr uint32_t APIManager_openErrorDialog = 0x4C3C8D;   // (api, const function<void()>&, bool)
+constexpr uint32_t SceneManager_chatWindowUpdate = 0x615311;   // (mgr, int lines)
+constexpr uint32_t SceneManager_chatLineUpdate = 0x615729;     // (sret string, mgr, const string&, int maxLength)
+constexpr uint32_t SceneManager_getChatStampMessageCheck = 0x615EA5;   // (mgr, const string&): a stamp message
+constexpr uint32_t SceneUtil_splitSpaceCheck = 0x47898D;       // (const string&): not only spaces
+constexpr uint32_t SceneUtil_createOpenPopupAnimation = 0x45BC05;
+constexpr uint32_t ChatManager_getInstance = 0x4DB0E5, ChatManager_createMessage = 0x4DC021;   // (cm, const char*, const function&)
+constexpr uint32_t ChatScrollView_getTextLineCount = 0x55852D;   // (const string&, int columns, int maxLines)
+constexpr uint32_t Text_setTextAreaSize = rwlib::cocos2d::ui::Text::setTextAreaSize;
+constexpr uint32_t ChatPopup_reopen = 0x63204D;                  // $_38's body (on its captures)
+constexpr int32_t TEXT_CHAT_SEND_FAILED = 104200029, TEXT_CHAT_ONLY_SPACES = 104200032;
+constexpr int32_t TEXT_CHAT_STATUS_1 = 105000001, TEXT_CHAT_STATUS_2 = 105000002;
+constexpr uint32_t CHAT_COLUMNS = 36, CHAT_MAX_LINES = 3, CHAT_LINE_HEIGHT = 26;
+constexpr float CHAT_INPUT_WIDTH = 470.0f, CHAT_LAYER_WIDTH = 500.0f, CHAT_LAYER_HEIGHT = 52.0f;
+constexpr float CHAT_POLL_SECONDS = 15.0f;
+constexpr uint32_t CHAT_RECENT = 50;                  // the window starts this many messages before the newest
+constexpr uint32_t TOUCH_BEGAN = 0, TOUCH_ENDED = 2, TOUCH_CANCELED = 3;
+
+uint32_t editText(uint32_t m) {
+    const uint32_t box = ld32(m + CHAT_EDIT_BOX);
+    return vcall(box, EDITBOX_GET_TEXT, {box});
+}
+void setTouch(uint32_t widget, uint32_t on) { vcall(widget, WIDGET_SET_TOUCH_ENABLED, {widget, on}); }
+// a stamp message that cannot go out while no request runs
+bool stampBlocked(uint32_t m) {
+    const uint32_t text = editText(m);
+    if (call(SceneManager_getChatStampMessageCheck, {text, text}) != 1) return false;
+    return strSize(editText(m)) != 0 && !ld8(m + CHAT_REQUESTING);
+}
+// chatRequestFailed(cap, TextData text `id`)
+void chatFailedText(uint32_t cap, int32_t id) {
+    Frame f;
+    const uint32_t text = textData(f, id);
+    const uint32_t message = newStr(f, textDataStr(text));
+    chatRequestFailed(cap, message);
+    strFree(message);
+    sharedRelease(text);
+}
+}  // namespace
+
+// $_44 (heap 0x54) {the fetch captures}(ok): the payment info for the chat arrived -> fetch; failed: the loading
+// indicator hidden and, when wanted, the API error dialog
+static void chatPaymentInfo(uint32_t functor, uint32_t okp) {
+    if (ld8(okp)) {
+        call(ChatPopup_fetch, {functor + 4});
+        return;
+    }
+    hideLoadingIndicator();
+    if (!ld8(call(fn::APIManager_getInstance, {}) + API_SHOW_ERROR)) return;
+    const uint32_t api = call(fn::APIManager_getInstance, {});
+    Frame f;
+    const uint32_t fo = newFunction(f, VT_Chat_PaymentError, {});
+    call(APIManager_openErrorDialog, {api, fo, 1});
+    functionDestroy(fo);
+}
+
+// $_41 (heap 0x88) Button_Send {this, send, stamp, close, $_128's captures (+0x14, 0x54 bytes), the failure
+// captures (+0x68)}(sender, type): began / cancelled mark the edit box (+0x4A5); ended sends the edit box's text
+// (not a blocked stamp, not empty, not only spaces) with the buttons off until createMessage answers
+static void chatSendTouch(uint32_t functor, uint32_t, uint32_t typep) {
+    const uint32_t type = ld32(typep);
+    const uint32_t m = ld32(functor + 4);
+    if (type == TOUCH_CANCELED) {
+        st8(m + CHAT_EDITING, 0);
+        return;
+    }
+    if (type != TOUCH_ENDED) {
+        if (type == TOUCH_BEGAN) st8(m + CHAT_EDITING, 1);
+        return;
+    }
+    Frame f;
+    const uint32_t message = f.alloc(12);
+    strCopy(message, editText(m));
+    if (stampBlocked(m) || strSize(editText(m)) == 0) {
+        st8(m + CHAT_EDITING, 0);
+        strFree(message);
+        return;
+    }
+    if (strSize(editText(m)) && !call(SceneUtil_splitSpaceCheck, {editText(m)})) {
+        okDialogText(TEXT_CHAT_ONLY_SPACES);
+        st8(m + CHAT_EDITING, 0);
+        strFree(message);
+        return;
+    }
+    call(fn::AudioPlaySystemSEDecide, {});
+    st8(m + CHAT_REQUESTING, 1);
+    st32(m + CHAT_TIMER, 0);
+    setTouch(ld32(functor + 8), 0);
+    setTouch(ld32(functor + 0xC), 0);
+    setTouch(ld32(functor + 0x10), 0);
+    const uint32_t cm = call(ChatManager_getInstance, {});
+    const uint32_t captures = f.alloc(0x54);
+    call(Memcpy, {captures, functor + 0x14, 0x54});
+    const uint32_t fo = f.alloc(20);
+    st32(fo + 16, 0);
+    const uint32_t heap = call(fn::operator_new, {0x58});
+    if (heap) {
+        st32(heap, VT_Chat_Created);
+        call(Memcpy, {heap + 4, captures, 0x54});
+    }
+    st32(fo + 16, heap);
+    const uint32_t sent = call(ChatManager_createMessage, {cm, strData(message), fo});
+    functionDestroy(fo);
+    if (!sent) chatFailedText(functor + 0x68, TEXT_CHAT_SEND_FAILED);
+    strFree(message);
+}
+
+// $_128 (heap 0x58) {this, label2, send, sendText, $_38's captures (+0x14), stamp (+0x30), close (+0x34), the
+// failure captures (+0x38)}(ChatManager::StatusCode): 0 sent -> the input cleared and shrunk, the message window
+// moved to the newest messages, the popup reopened and polled again in 15 s; 1 / 2 refused -> the buttons back
+// and a notice; 3 nothing; else the request failed
+static void chatCreated(uint32_t functor, uint32_t statusp) {
+    const uint32_t status = ld32(statusp);
+    if (status > 3) {
+        chatFailedText(functor + 0x38, TEXT_CHAT_SEND_FAILED);
+        return;
+    }
+    const uint32_t m = ld32(functor + 4);
+    if (status == 0) {
+        {
+            Frame f;
+            const uint32_t box = ld32(m + CHAT_EDIT_BOX);
+            const uint32_t empty = f.alloc(12);
+            st8(empty, 0);
+            st8(empty + 1, 0);
+            vcall(box, EDITBOX_SET_TEXT, {box, empty});
+            strFree(empty);
+            const uint32_t empty2 = f.alloc(12);
+            st8(empty2, 0);
+            st8(empty2 + 1, 0);
+            call(fn::Text_setString, {ld32(functor + 8), empty2});
+            strFree(empty2);
+        }
+        const uint32_t send = ld32(functor + 0xC);
+        call(Widget_setBright, {send, 0});
+        SceneUtil::setButtonEnabled(ld32(functor + 0xC), ld32(functor + 0x10),
+                                    call(Widget_isBright, {ld32(functor + 0xC)}), 0);
+        {
+            const uint32_t layer = ld32(m + CHAT_EDIT_LAYER);
+            const uint32_t setSize = ld32(ld32(layer) + node::setContentSize);
+            Frame f;
+            const uint32_t size = f.alloc(8);
+            call(Size_ctor, {size, fbits(CHAT_LAYER_WIDTH), fbits(CHAT_LAYER_HEIGHT)});
+            call(setSize, {layer, size});
+        }
+        call(SceneManager_chatWindowUpdate, {m, 1});
+        st32(m + CHAT_SENT, ld32(m + CHAT_SENT) + 1);
+        st32(m + CHAT_START, 1);
+        const uint32_t total = ld32(m + CHAT_TOTAL);
+        if (total > CHAT_RECENT) st32(m + CHAT_START, total - CHAT_RECENT);
+        if (ld32(m + CHAT_LAST_ID) < total) st32(m + CHAT_LAST_ID, total);
+        call(ChatPopup_reopen, {functor + 0x14});
+        st8(m + CHAT_LOADING_PAGE, 1);
+        stf(m + CHAT_TIMER, CHAT_POLL_SECONDS);
+        call(fn::SceneManager_enableLoadingIndicator, {sceneManager(), 1});
+        return;
+    }
+    if (status == 3) return;
+    st8(m + CHAT_REQUESTING, 0);
+    hideLoadingIndicator();
+    setTouch(ld32(functor + 0xC), 1);
+    setTouch(ld32(functor + 0x30), 1);
+    setTouch(ld32(functor + 0x34), 1);
+    st8(m + CHAT_EDITING, 0);
+    okDialogText(status == 1 ? TEXT_CHAT_STATUS_1 : TEXT_CHAT_STATUS_2);
+}
+
+// $_38's body {this, root, shadow, opacity, send, stamp, close}: the request done; a shown popup gets its buttons
+// back, a hidden one is shown again (shadow fade, open animation that enables the buttons at its end)
+static void chatReopen(uint32_t cap) {
+    const uint32_t m = ld32(cap);
+    st8(m + CHAT_REQUESTING, 0);
+    st32(m + CHAT_TIMER, 0);
+    const uint32_t root = ld32(cap + 4);
+    if (vcall(root, node::isVisible, {root})) {
+        setTouch(ld32(cap + 0x10), 1);
+        setTouch(ld32(cap + 0x14), 1);
+        setTouch(ld32(cap + 0x18), 1);
+        st8(m + CHAT_EDITING, 0);
+        return;
+    }
+    call(fn::AudioPlaySystemSEPopUp, {});
+    call(fn::Node_runAction, {ld32(cap + 8), call(fn::FadeTo_create, {fbits(0.1f), ld8(cap + 0xC)})});
+    st32(m + CHAT_TIMER, 0);
+    vcall(ld32(cap + 4), node::setVisible, {ld32(cap + 4), 1});
+    const uint32_t popup = ld32(cap + 4);
+    Frame f;
+    const uint32_t opened = newFunction(f, VT_Chat_Opened, {ld32(cap + 0x10), ld32(cap + 0x14), ld32(cap + 0x18)});
+    call(fn::Node_runAction, {popup, call(SceneUtil_createOpenPopupAnimation, {popup, opened})});
+    functionDestroy(opened);
+}
+
+// $_40 (heap 0x18) {this, maxLength, label2, send, sendText}: the edit box's text changed -> cut to maxLength,
+// mirrored in label2, Send lit when there is text (and it is no blocked stamp), the input areas sized to the
+// message's lines
+static void chatTextChanged(uint32_t functor) {
+    const uint32_t m = ld32(functor + 4);
+    {
+        const uint32_t box = ld32(m + CHAT_EDIT_BOX);
+        const uint32_t setText = ld32(ld32(box) + EDITBOX_SET_TEXT);
+        const uint32_t text = vcall(box, EDITBOX_GET_TEXT, {box});
+        Frame f;
+        const uint32_t cut = f.alloc(12);
+        call(SceneManager_chatLineUpdate, {cut, text, text, ld32(functor + 8)});
+        call(setText, {box, cut});
+        strFree(cut);
+    }
+    {
+        const uint32_t label2 = ld32(functor + 0xC);
+        Frame f;
+        const uint32_t s = newStr(f, strData(editText(m)));
+        call(fn::Text_setString, {label2, s});
+        strFree(s);
+    }
+    const uint32_t lines = call(ChatScrollView_getTextLineCount, {editText(m), CHAT_COLUMNS, CHAT_MAX_LINES});
+    const uint32_t send = ld32(functor + 0x10);
+    call(Widget_setBright, {send, strSize(editText(m)) ? 1u : 0u});
+    if (stampBlocked(m)) call(Widget_setBright, {ld32(functor + 0x10), 0});
+    SceneUtil::setButtonEnabled(ld32(functor + 0x10), ld32(functor + 0x14), call(Widget_isBright, {ld32(functor + 0x10)}), 0);
+    const float height = float(int32_t(lines * CHAT_LINE_HEIGHT));
+    Frame f;
+    {
+        const uint32_t box = ld32(m + CHAT_EDIT_BOX);
+        const uint32_t setSize = ld32(ld32(box) + node::setContentSize);
+        const uint32_t size = f.alloc(8);
+        call(Size_ctor, {size, fbits(CHAT_INPUT_WIDTH), fbits(height)});
+        call(setSize, {box, size});
+    }
+    {
+        const uint32_t size = f.alloc(8);
+        call(Size_ctor, {size, fbits(CHAT_INPUT_WIDTH), fbits(height)});
+        call(Text_setTextAreaSize, {ld32(functor + 0xC), size});
+    }
+    {
+        const uint32_t label2 = ld32(functor + 0xC);
+        const uint32_t setSize = ld32(ld32(label2) + node::setContentSize);
+        const uint32_t size = f.alloc(8);
+        call(Size_ctor, {size, fbits(CHAT_INPUT_WIDTH), fbits(height)});
+        call(setSize, {label2, size});
+    }
+    {
+        const uint32_t layer = ld32(m + CHAT_EDIT_LAYER);
+        const uint32_t setSize = ld32(ld32(layer) + node::setContentSize);
+        const uint32_t size = f.alloc(8);
+        call(Size_ctor, {size, fbits(CHAT_LAYER_WIDTH), fbits(float(int32_t(lines * CHAT_LINE_HEIGHT + CHAT_LINE_HEIGHT)))});
+        call(setSize, {layer, size});
+    }
+    call(SceneManager_chatWindowUpdate, {m, lines});
+}
+
+// $_39 Close_Button {this}(sender, type): ended -> the current popup closes; began / cancelled mark the edit box
+static void chatCloseTouch(uint32_t functor, uint32_t, uint32_t typep) {
+    const uint32_t type = ld32(typep);
+    const uint32_t m = ld32(functor + 4);
+    if (type == TOUCH_CANCELED) {
+        st8(m + CHAT_EDITING, 0);
+    } else if (type == TOUCH_ENDED) {
+        call(AudioPlaySystemSECancel, {});
+        call(SceneManager_closeCurrentPopup, {sceneManager(), 0});
+    } else if (type == TOUCH_BEGAN) {
+        st8(m + CHAT_EDITING, 1);
+    }
+}
+
+RW_FUNCTION(0x631150, "SceneManager::openChatPopup $_44::operator() (payment info)", chatPaymentInfo);
+RW_FUNCTION(0x631418, "SceneManager::openChatPopup $_41::operator() (Button_Send)", chatSendTouch);
+RW_FUNCTION(0x631BDC, "SceneManager::openChatPopup $_128::operator() (message created)", chatCreated);
+RW_FUNCTION(0x63204C, "SceneManager::openChatPopup $_38 body (sub_63204C): reopen", chatReopen);
+RW_FUNCTION(0x6322D4, "SceneManager::openChatPopup $_40::operator() (text changed)", chatTextChanged);
+RW_FUNCTION(0x632610, "SceneManager::openChatPopup $_39::operator() (Close_Button)", chatCloseTouch);

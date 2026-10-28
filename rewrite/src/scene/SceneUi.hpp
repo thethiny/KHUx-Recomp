@@ -17,6 +17,8 @@ constexpr uint32_t SceneManager_getPopupLayer = 0x613E69;
 constexpr uint32_t SceneManager_getPopupLayer2 = 0x613E71;
 constexpr uint32_t SceneManager_openPopup = 0x61524D;     // (mgr, function<bool()>*, function<void(bool)>*, bool)
 constexpr uint32_t AudioPlaySystemSEPopUp = 0x5C0E09;
+constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
+constexpr uint32_t SceneManager_enableLoadingIndicator = 0x60D169;   // (mgr, bool)
 constexpr uint32_t APIManager_getInstance = 0x4BA8C9;
 constexpr uint32_t AppState_getInstance = 0x4E66DD;
 constexpr uint32_t Misc_create = 0x786D5D;                // master::Misc::create(shared_ptr out, int id)
@@ -33,10 +35,13 @@ inline const SafeBuffer *safe(uint32_t sb) { return rw::host_ptr<SafeBuffer>(sb)
 // a 32-bit value of a SafeBuffer (the original decodes it to a stack temporary with SafeBuffer::read)
 inline int32_t safe32(uint32_t sb, uint32_t index) { return safe(sb)->get32(index); }
 // n decoded bytes of a SafeBuffer in a guest stack buffer (strings stored in master/user data)
-inline uint32_t safeBytes(Frame &f, uint32_t sb, uint32_t index, uint32_t n) {
-    uint32_t dst = f.alloc(n);
+inline void safeBytesAt(uint32_t dst, uint32_t sb, uint32_t index, uint32_t n) {
     const SafeBuffer *s = safe(sb);
     SafeBuffer::read(s, rw::host_ptr<uint8_t>(dst), s->data.get() + index, n, index);
+}
+inline uint32_t safeBytes(Frame &f, uint32_t sb, uint32_t index, uint32_t n) {
+    uint32_t dst = f.alloc(n);
+    safeBytesAt(dst, sb, index, n);
     return dst;
 }
 // master::<Table>::create(shared_ptr out, id): the row (a SafeBuffer) in a shared_ptr on the guest stack
@@ -116,6 +121,20 @@ inline void addTouch(uint32_t widget, uint32_t vtable, std::initializer_list<uin
     functionDestroy(cb);
 }
 
+// a std::function at fo whose callable is a heap lambda: `size` bytes, the __func vtable, then the captured words
+// (fo's callable is cleared first; it stays 0 when operator new failed). Returns the heap object.
+inline uint32_t heapLambda(uint32_t fo, uint32_t size, uint32_t vtable, std::initializer_list<uint32_t> captures) {
+    st32(fo + 16, 0);
+    uint32_t obj = call(fn::operator_new, {size});
+    if (obj) {
+        st32(obj, vtable);
+        uint32_t k = 4;
+        for (uint32_t c : captures) { st32(obj + k, c); k += 4; }
+    }
+    st32(fo + 16, obj);
+    return obj;
+}
+
 // libc++ std::function copy constructor, inline (clone the callable into dst)
 inline void functionCopy(uint32_t dst, uint32_t src) {
     uint32_t p = ld32(src + 16);
@@ -159,6 +178,68 @@ inline void centerPopup(uint32_t popup) {
 }
 
 inline uint32_t sceneManager() { return call(fn::SceneManager_getInstance, {}); }
+
+// audio::Manager::getInstance()->getLayer(0)->playSE(id, 0, 0)
+inline void playLayerSE(uint32_t id) {
+    constexpr uint32_t AudioManager_getInstance = 0x5BECFD;
+    constexpr uint32_t AudioManager_getLayer = 0x5BF33D;      // (shared_ptr<Layer> out, Manager*, int layer)
+    constexpr uint32_t AudioLayer_playSE = 0x5BF785;          // (Layer*, ResourceID, int, int)
+    const uint32_t mgr = call(AudioManager_getInstance, {});
+    Frame f;
+    const uint32_t layer = f.alloc(8);
+    call(AudioManager_getLayer, {layer, mgr, 0});
+    call(AudioLayer_playSE, {ld32(layer), id, 0, 0});
+    sharedRelease(layer);
+}
+
+// SceneManager::changeSceneLayer(function<Layer*()>, a, b, fade) to the layer of a createSceneLayer<T> (its address
+// read from the GOT entry `createGot`): the std::function holds the plain function pointer
+inline void changeSceneLayerTo(uint32_t createGot, uint32_t a, uint32_t b, uint32_t fade) {
+    constexpr uint32_t SceneManager_changeSceneLayer = 0x612B99;
+    constexpr uint32_t GOT_FUNC_LAYER_VT = 0xFD6074;      // GOT: __func<Layer*(*)(), ..., Layer*()>'s vtable - 8
+    const uint32_t sm = sceneManager();
+    Frame f;
+    const uint32_t fo = newFunction(f, ld32(GOT_FUNC_LAYER_VT) + 8, {ld32(createGot)});
+    call(SceneManager_changeSceneLayer, {sm, fo, a, b, fade});
+    functionDestroy(fo);
+}
+
+// SceneUtil::openOkDialog4Line(TextData text `id`, no callback, 0)
+inline void okDialogText(int32_t id) {
+    constexpr uint32_t SceneUtil_openOkDialog4Line = 0x45C775;   // (const string&, function<void(bool)>, const char*)
+    Frame f;
+    const uint32_t text = textData(f, id);
+    const uint32_t message = newStr(f, textDataStr(text));
+    const uint32_t none = newEmptyFunction(f);
+    call(SceneUtil_openOkDialog4Line, {message, none, 0});
+    functionDestroy(none);
+    strFree(message);
+    sharedRelease(text);
+}
+
+// AppState's tutorial close function `id`: when one is set, it runs (getTutorialCloseFunc's copy dropped first)
+inline void execTutorialCloseIfSet(uint32_t id) {
+    constexpr uint32_t AppState_getTutorialCloseFunc = 0x4EBA3D;    // (sret function<void()>, app, id)
+    constexpr uint32_t AppState_execTutorialCloseFunc = 0x4EBA5D;   // (app, id)
+    Frame f;
+    const uint32_t closeFn = f.alloc(24);
+    call(AppState_getTutorialCloseFunc, {closeFn, call(fn::AppState_getInstance, {}), id});
+    const bool set = ld32(closeFn + 16) != 0;
+    functionDestroy(closeFn);
+    if (set) call(AppState_execTutorialCloseFunc, {call(fn::AppState_getInstance, {}), id});
+}
+
+// SceneManager: an API request is about to run (byte +0x4CC) and the pending payment callback (+0x548) is dropped
+inline void apiBusyDropPayment() {
+    constexpr uint32_t SM_API_BUSY = 0x4CC, SM_ON_PAYMENT = 0x548;
+    constexpr uint32_t FunctionVB_assign = 0x490109;   // std::function<void(bool)>::operator=(const function&)
+    const uint32_t sm = sceneManager();
+    st8(sm + SM_API_BUSY, 1);
+    Frame f;
+    const uint32_t none = newEmptyFunction(f);
+    call(FunctionVB_assign, {sm + SM_ON_PAYMENT, none});
+    functionDestroy(none);
+}
 
 // The usual popup opening: the popup sound, a modal shadow fading in on popup layer 2, then the cocostudio
 // layout `json` added on top and centred.

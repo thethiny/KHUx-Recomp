@@ -186,6 +186,27 @@ inline void strMoveAssign(uint32_t out, uint32_t tmp) {
     st32(tmp + 4, 0);
     st32(tmp + 8, 0);
 }
+// n bytes (a multiple of 4) copied word by word
+inline void copyWords(uint32_t dst, uint32_t src, uint32_t n) {
+    for (uint32_t k = 0; k < n; k += 4) st32(dst + k, ld32(src + k));
+}
+// std::string move construction: take the three words, leave the source empty
+inline void strMove(uint32_t dst, uint32_t src) {
+    copyWords(dst, src, 12);
+    st32(src, 0);
+    st32(src + 4, 0);
+    st32(src + 8, 0);
+}
+// the libc++ string copy constructor, inline: a long string's characters, a short string's 12 bytes as they are
+inline void strCopy(uint32_t dst, uint32_t src) {
+    if (strIsLong(src)) {
+        strInit(dst, ld32(src + 8), ld32(src + 4));
+    } else {
+        st32(dst, ld32(src));
+        st32(dst + 4, ld32(src + 4));
+        st32(dst + 8, ld32(src + 8));
+    }
+}
 // a temporary std::string on the guest stack built from a C string
 inline uint32_t newStr(Frame &f, uint32_t text) {
     uint32_t s = f.alloc(12);

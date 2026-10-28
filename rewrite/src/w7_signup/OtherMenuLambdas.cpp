@@ -13,6 +13,7 @@ constexpr uint32_t function_vb_assign = 0x490109;
 constexpr uint32_t SM_enableLoadingIndicator = 0x60D169, SM_closeCurrentPopup = 0x6216A1;
 constexpr uint32_t SM_canFinishScene = 0x6214F5;
 constexpr uint32_t SceneUtil_openOkDialog4Line = 0x45C775, SceneUtil_openOkDialog8Line = 0x45CA3D;
+constexpr uint32_t SceneUtil_openOkCancelDialog4Line = 0x45C951;   // (const string&, function<void(bool)>, const char*, const char*)
 constexpr uint32_t SceneUtil_openWebViewInfoPopup = 0x47463D;   // (title, url, function<void(Node*)>, post)
 constexpr uint32_t SceneUtil_isLoggedInFacebook = 0x4697E9, SceneUtil_callPrepareMypageAPIs = 0x46F37D;
 constexpr uint32_t APIManager_openErrorDialog = 0x4C3C8D, APIManager_needsRetry = 0x4C3C63;
@@ -85,28 +86,45 @@ void okDialogWithAnswer(uint32_t dialog, int32_t id, uint32_t vt, uint32_t answe
     functionDestroy(copy);
 }
 
-// a web page in the info popup: title text `id`, the system data's URL at `urlField`
-void webPage(int32_t id, uint32_t urlField) {
-    const uint32_t system = ld32(call(fn::APIManager_getInstance, {}) + API_SYSTEM);
+// a web page in the info popup: title text `id`, the page `url` (C string), POST data `post` (0: none)
+void webPageUrl(int32_t id, uint32_t url, uint32_t post = 0) {
     Frame f;
-    const uint32_t url = f.alloc(12);
-    const uint32_t src = system + urlField;
-    if (strIsLong(src)) strInit(url, ld32(src + 8), ld32(src + 4));
-    else for (uint32_t k = 0; k < 12; k += 4) st32(url + k, ld32(src + k));
     const uint32_t td = textData(f, id);
     const uint32_t title = newStr(f, textDataStr(td));
-    const uint32_t page = newStr(f, strData(url));
+    const uint32_t page = newStr(f, url);
     const uint32_t none = newEmptyFunction(f);
-    const uint32_t post = f.alloc(12);
-    st8(post, 0);
-    st8(post + 1, 0);
-    call(SceneUtil_openWebViewInfoPopup, {title, page, none, post});
-    strFree(post);
+    uint32_t body = post;
+    if (!body) {
+        body = f.alloc(12);
+        st8(body, 0);
+        st8(body + 1, 0);
+    }
+    call(SceneUtil_openWebViewInfoPopup, {title, page, none, body});
+    if (!post) strFree(body);
     functionDestroy(none);
     strFree(page);
     strFree(title);
     sharedRelease(td);
+}
+// ... the URL being the system data's string at `urlField`
+void webPage(int32_t id, uint32_t urlField) {
+    const uint32_t system = ld32(call(fn::APIManager_getInstance, {}) + API_SYSTEM);
+    Frame f;
+    const uint32_t url = f.alloc(12);
+    strCopy(url, system + urlField);
+    webPageUrl(id, strData(url));
     strFree(url);
+}
+// SceneUtil::openOkCancelDialog4Line(TextData text `id`, an inline lambda `vt` with no captures)
+void okCancelText(int32_t id, uint32_t vt) {
+    Frame f;
+    const uint32_t td = textData(f, id);
+    const uint32_t s = newStr(f, textDataStr(td));
+    const uint32_t fo = newFunction(f, vt, {});
+    call(SceneUtil_openOkCancelDialog4Line, {s, fo, 0, 0});
+    functionDestroy(fo);
+    strFree(s);
+    sharedRelease(td);
 }
 }  // namespace
 
@@ -454,3 +472,197 @@ uint32_t closedToMyPage(uint32_t lambda, uint32_t ok) {
 RW_FUNCTION(0x5AAA04, "side menu popup closed to MyPage lambda operator()(bool) (sub_5AAA04)", other_menu_lambdas::closedToMyPage);
 
 }  // namespace other_menu_lambdas
+
+// ------------------------------------------------------------------------------------------------ open()'s buttons
+namespace {
+constexpr uint32_t SceneManager_changeSceneLayer = 0x612B99;
+constexpr uint32_t TrackingSDKUtil_sendEventOnlyOnce = 0x4E04E5;   // (const char* event, const char*)
+constexpr uint32_t AppState_getUUIDString = 0x4EA8E1;             // (string out, app)
+constexpr uint32_t AppConfig_get = 0x799FD1;                       // (string out, const char* key)
+constexpr uint32_t md5_calculate = 0x4E0A89;                       // (string out, const void*, size)
+constexpr uint32_t OtherMenuDialog_openLegalPopup = 0x59FEAD;      // (function<void()> by value)
+constexpr uint32_t OtherMenuDialog_openSerialCodePopup = 0x5A058D; // (dialog, function<void()> by value)
+constexpr uint32_t SceneSelectUnion_openPopUpDescriptionUnion = 0x6C9741;   // (function<void(bool)> by value)
+constexpr uint32_t ClosedToMyPage = 0x5AAA05;                      // sub_5AAA04 (closedToMyPage) on {button}
+constexpr uint32_t GOT_CREATE_SELECT_UNION = 0xFD66E4;             // &createSceneLayer<SceneSelectUnion>
+constexpr uint32_t VT_TransferAnswer = 0xF5C114;                   // $_10's dialog answer (no captures)
+constexpr uint32_t VT_SupportAnswer = 0xF5C198;                    // $_8's dialog answer (no captures)
+constexpr uint32_t VT_UnionDescriptionClosed = 0xF5C21C;           // $_6's popup closed {bool false}
+constexpr uint32_t S_ReadHelp = 0xE007E2, S_InquirySalt = 0xE007EB, S_FmtConcat = 0xDF8BBA, S_FmtInquiry = 0xE007F8;
+constexpr uint32_t API_USER_HEADER = 0x84;                         // shared_ptr<SafeBuffer> (u64 party id at +8)
+constexpr uint32_t API_USER_PROFILE = 0x74;                        // SafeBuffer (the 15-byte tag name at +0x152)
+constexpr uint32_t SYSTEM_SUPPORT_URL = 0x00, SYSTEM_TRANSFER_URL = 0x0C, SYSTEM_HELP_URL = 0x24, SYSTEM_CREDIT_URL = 0x30;
+constexpr uint32_t PROFILE_TAG_NAME = 0x152, TAG_NAME_SIZE = 0xF;
+constexpr int32_t TXT_CREDITS = 101000014, TXT_HELP = 101000007, TXT_TRANSFER = 101000011, TXT_SUPPORT = 101000012;
+constexpr int32_t TXT_TRANSFER_ASK = 104020002, TXT_SUPPORT_ASK = 104030001, TXT_IN_PARTY = 103700010;
+constexpr uint32_t TOUCH_ENDED = 2;
+}  // namespace
+
+namespace other_menu_lambdas {
+
+// $_66's scene change lambda {-, function<Layer*()> (+8)}: the next scene, faded
+uint32_t changeToLayer(uint32_t functor) {
+    return call(SceneManager_changeSceneLayer, {sceneManager(), functor + 8, 1, 1, 1});
+}
+
+// $_15's token refreshed {button, -, dialog}(ok, error, message): the login / logout popup, or (failed) back to
+// MyPage like a closed popup
+uint32_t tokenRefreshed(uint32_t functor, uint32_t okRef, uint32_t, uint32_t msg) {
+    const MovedString m = takeString(msg);
+    Frame f;
+    if (ld8(okRef)) {
+        const uint32_t fo = newFunction(f, VT_FacebookAnswer, {ld32(functor + 4), 0});
+        call(OtherMenuDialog_openFacebookLoginLogout, {ld32(functor + 0xC), fo});
+        functionDestroy(fo);
+    } else {
+        const uint32_t button = f.alloc(8);
+        st32(button, ld32(functor + 4));
+        call(ClosedToMyPage, {button, 1});
+    }
+    freeMoved(m);
+    return 0;
+}
+
+// $_13 Credits / $_11 Help: the credits / help page (help is tracked once)
+uint32_t creditsTouched(uint32_t, uint32_t, uint32_t typeRef) {
+    if (ld32(typeRef) != TOUCH_ENDED) return 0;
+    call(AudioPlaySystemSEDecide, {});
+    webPage(TXT_CREDITS, SYSTEM_CREDIT_URL);
+    return 0;
+}
+uint32_t helpTouched(uint32_t, uint32_t, uint32_t typeRef) {
+    if (ld32(typeRef) != TOUCH_ENDED) return 0;
+    call(AudioPlaySystemSEDecide, {});
+    call(TrackingSDKUtil_sendEventOnlyOnce, {S_ReadHelp, 0});
+    webPage(TXT_HELP, SYSTEM_HELP_URL);
+    return 0;
+}
+
+// $_10 Data Transfer: asks first; yes -> the transfer page (its URL formatted with the device UUID)
+uint32_t transferTouched(uint32_t, uint32_t, uint32_t typeRef) {
+    if (ld32(typeRef) != TOUCH_ENDED) return 0;
+    call(AudioPlaySystemSEDecide, {});
+    okCancelText(TXT_TRANSFER_ASK, VT_TransferAnswer);
+    return 0;
+}
+uint32_t transferAnswer(uint32_t, uint32_t yesRef) {
+    if (!ld8(yesRef)) return 0;
+    const uint32_t system = ld32(call(fn::APIManager_getInstance, {}) + API_SYSTEM);
+    Frame f;
+    const uint32_t url = f.alloc(12);
+    strCopy(url, system + SYSTEM_TRANSFER_URL);
+    const uint32_t uuid = f.alloc(12);
+    call(AppState_getUUIDString, {uuid, call(fn::AppState_getInstance, {})});
+    const uint32_t page = stringBuffer(f, {strData(url), strData(uuid), 2});
+    strFree(uuid);
+    call(SM_closeCurrentPopup, {sceneManager(), 0});
+    webPageUrl(TXT_TRANSFER, page);
+    strFree(url);
+    return 0;
+}
+
+// $_9 Legal Information
+uint32_t legalTouched(uint32_t, uint32_t, uint32_t typeRef) {
+    if (ld32(typeRef) != TOUCH_ENDED) return 0;
+    call(AudioPlaySystemSEDecide, {});
+    Frame f;
+    const uint32_t none = newEmptyFunction(f);
+    call(OtherMenuDialog_openLegalPopup, {0, none});
+    functionDestroy(none);
+    return 0;
+}
+
+// $_8 Support: asks first; yes -> the inquiry page, POSTing the player's tag name and its salted md5
+uint32_t supportTouched(uint32_t, uint32_t, uint32_t typeRef) {
+    if (ld32(typeRef) != TOUCH_ENDED) return 0;
+    call(AudioPlaySystemSEDecide, {});
+    okCancelText(TXT_SUPPORT_ASK, VT_SupportAnswer);
+    return 0;
+}
+uint32_t supportAnswer(uint32_t, uint32_t yesRef) {
+    if (!ld8(yesRef)) return 0;
+    call(SM_closeCurrentPopup, {sceneManager(), 0});
+    Frame f;
+    const uint32_t tag = f.alloc(TAG_NAME_SIZE + 1);
+    safeBytesAt(tag, ld32(call(fn::APIManager_getInstance, {}) + API_USER_PROFILE), PROFILE_TAG_NAME, TAG_NAME_SIZE);
+    const uint32_t salt = f.alloc(12);
+    call(AppConfig_get, {salt, S_InquirySalt});
+    const uint32_t salted = newStr(f, stringBuffer(f, {S_FmtConcat, tag, strData(salt)}));
+    const uint32_t hash = f.alloc(12);
+    call(md5_calculate, {hash, strData(salted), strSize(salted)});
+    const uint32_t post = newStr(f, stringBuffer(f, {S_FmtInquiry, tag, strData(hash)}));
+    strFree(hash);
+    const uint32_t system = ld32(call(fn::APIManager_getInstance, {}) + API_SYSTEM);
+    const uint32_t url = f.alloc(12);
+    strCopy(url, system + SYSTEM_SUPPORT_URL);
+    webPageUrl(TXT_SUPPORT, strData(url), post);
+    strFree(url);
+    strFree(post);
+    strFree(salted);
+    strFree(salt);
+    return 0;
+}
+
+// $_7 Serial Codes {dialog}
+uint32_t serialCodesTouched(uint32_t functor, uint32_t, uint32_t typeRef) {
+    if (ld32(typeRef) != TOUCH_ENDED) return 0;
+    const uint32_t dialog = ld32(functor + 4);
+    call(AudioPlaySystemSEDecide, {});
+    Frame f;
+    const uint32_t none = newEmptyFunction(f);
+    call(OtherMenuDialog_openSerialCodePopup, {dialog, none});
+    functionDestroy(none);
+    return 0;
+}
+
+// $_6 Union Transfer {false}: in a party -> "leave your party first"; else the union description, then (yes) the
+// union selection
+uint32_t unionTransferTouched(uint32_t, uint32_t, uint32_t typeRef) {
+    if (ld32(typeRef) != TOUCH_ENDED) return 0;
+    call(AudioPlaySystemSEDecide, {});
+    const uint32_t api = call(fn::APIManager_getInstance, {});
+    const uint32_t ctrl = ld32(api + API_USER_HEADER + 4), header = ld32(api + API_USER_HEADER);
+    if (ctrl) call(fn::shared_add, {ctrl});
+    bool inParty = false;
+    if (header) {
+        Frame f;
+        const uint32_t id = safeBytes(f, header, 8, 8);
+        inParty = (ld32(id) | ld32(id + 4)) != 0;
+    }
+    if (inParty) {
+        okDialogText(TXT_IN_PARTY);
+    } else {
+        Frame f;
+        const uint32_t fo = f.alloc(20);
+        st32(fo + 16, fo);
+        st32(fo, VT_UnionDescriptionClosed);
+        st8(fo + 4, 0);
+        call(SceneSelectUnion_openPopUpDescriptionUnion, {fo});
+        functionDestroy(fo);
+    }
+    if (ctrl) call(fn::shared_release, {ctrl});
+    return 0;
+}
+uint32_t unionDescriptionClosed(uint32_t, uint32_t yesRef) {
+    if (!ld8(yesRef)) return 0;
+    Frame f;
+    const uint32_t layerFn = newFunction(f, ld32(GOT_FUNC_LAYER_VT) + 8, {ld32(GOT_CREATE_SELECT_UNION)});
+    call(SideMenu_changeScene, {layerFn});
+    functionDestroy(layerFn);
+    return 0;
+}
+
+}  // namespace other_menu_lambdas
+
+RW_FUNCTION(0x5AADE4, "OtherMenuDialog::open $_66 scene change lambda operator()", other_menu_lambdas::changeToLayer);
+RW_FUNCTION(0x5AAF88, "OtherMenuDialog::open $_15 token refreshed operator()", other_menu_lambdas::tokenRefreshed);
+RW_FUNCTION(0x5AB1AC, "OtherMenuDialog::open $_13 Credits operator()", other_menu_lambdas::creditsTouched);
+RW_FUNCTION(0x5AB488, "OtherMenuDialog::open $_11 Help operator()", other_menu_lambdas::helpTouched);
+RW_FUNCTION(0x5AB6E4, "OtherMenuDialog::open $_10 Data Transfer operator()", other_menu_lambdas::transferTouched);
+RW_FUNCTION(0x5AB874, "OtherMenuDialog::open $_10 answer operator()(bool)", other_menu_lambdas::transferAnswer);
+RW_FUNCTION(0x5ABB18, "OtherMenuDialog::open $_9 Legal operator()", other_menu_lambdas::legalTouched);
+RW_FUNCTION(0x5ABC30, "OtherMenuDialog::open $_8 Support operator()", other_menu_lambdas::supportTouched);
+RW_FUNCTION(0x5ABDC0, "OtherMenuDialog::open $_8 answer operator()(bool)", other_menu_lambdas::supportAnswer);
+RW_FUNCTION(0x5AC170, "OtherMenuDialog::open $_7 Serial Codes operator()", other_menu_lambdas::serialCodesTouched);
+RW_FUNCTION(0x5AC298, "OtherMenuDialog::open $_6 Union Transfer operator()", other_menu_lambdas::unionTransferTouched);
+RW_FUNCTION(0x5AC4E8, "OtherMenuDialog::open $_6 description closed operator()(bool)", other_menu_lambdas::unionDescriptionClosed);

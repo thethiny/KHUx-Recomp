@@ -430,3 +430,102 @@ uint32_t FlashDrama::isFinished(const FlashDrama *self) {
     return ld32(movie + wfn::MOVIE_CURRENT_FRAME) == ld32(movie + wfn::MOVIE_TOTAL_FRAMES) ? 1 : 0;
 }
 RW_FUNCTION(0x6F33D4, "FlashDrama::isFinished", FlashDrama::isFinished);
+
+// ------------------------------------------------------------------------------------------------ $_1
+namespace {
+constexpr uint32_t PendingTexts_find = 0x6F5EF3;           // unordered_map<string, list<int>>::find(map, const string&)
+constexpr uint32_t PendingTexts_insert = 0x6F58ED;         // __insert_unique(pair out, map, pair<const char*, list<int>>&&)
+constexpr uint32_t IntList_ctor = 0x6F5831;                // list<int>(list*, n, const int&)
+constexpr uint32_t IntList_splice = 0x6F58BB;              // list<int>::splice(list*, iterator, list&)
+constexpr uint32_t IntList_clear = 0x6F5887;               // __list_imp<int>::clear
+constexpr uint32_t IntIntMap_find = 0x497A21;              // unordered_map<int, int>::find(map, const int&)
+constexpr uint32_t VectorAt_throw = 0x47CCE1;
+constexpr uint32_t PENDING_KEY = 0x5A4;                    // FlashDrama: const char* the balloon the texts go to
+constexpr uint32_t PENDING_TEXTS = 0x5A8;
+constexpr uint32_t API_USER = 0x94;                        // APIManager: SafeBuffer (int +0x30: a choice index + 2, int +0x3C: a key)
+constexpr uint32_t API_USER_FLAGS = 0x4C;                  // APIManager: SafeBuffer (byte 1)
+constexpr uint32_t API_RECORD = 0x54;                      // APIManager: object with an int at +0x20
+constexpr uint32_t API_TABLE = 0xC4;                       // APIManager: table (SafeBuffer of 0x30-byte rows, index map at +0x24)
+constexpr int32_t KIND_INDEXED = 2, KIND_FIRST = 1;
+constexpr uint32_t ROW_SIZE = 0x30;
+
+// the text id a choice resolves to: kind 2 picks ids[user +0x30 - 2] (when in range), kind 1 ids[0] when the
+// user's record kind is 2; anything else keeps `text`
+int32_t resolveText(int32_t text, int32_t kind, uint32_t ids) {
+    const uint32_t api = call(fn::APIManager_getInstance, {});
+    const uint32_t begin = ld32(ids), end = ld32(ids + 4);
+    if (kind == KIND_INDEXED) {
+        const uint32_t user = ld32(api + API_USER);
+        if (!user) return text;
+        const int32_t i = safe32(user, 0x30) - 2;
+        if (i < 0 || uint32_t(i) >= (end - begin) >> 2) return text;
+        return int32_t(ld32(begin + 4 * uint32_t(i)));
+    }
+    if (kind != KIND_FIRST) return text;
+    Frame f;
+    const uint8_t flag = ld8(safeBytes(f, ld32(api + API_USER_FLAGS), 1, 1));
+    const uint32_t api2 = call(fn::APIManager_getInstance, {});
+    int32_t recordKind;
+    if (flag) {
+        const uint32_t record = ld32(api2 + API_RECORD);
+        if (!record) return text;
+        recordKind = int32_t(ld32(record + 0x20));
+    } else {
+        if (!ld32(api2 + API_TABLE)) return text;
+        const uint32_t user = ld32(call(fn::APIManager_getInstance, {}) + API_USER);
+        if (!user) return text;
+        const uint32_t key = f.alloc(8);
+        st32(key, uint32_t(safe32(user, 0x3C)));
+        const uint32_t table = ld32(api2 + API_TABLE);
+        const uint32_t node = call(IntIntMap_find, {table + 0x24, key});
+        if (!node) return text;
+        const int32_t row = int32_t(ld32(node + 0xC));
+        if (row < 0) return text;
+        recordKind = safe32(table, uint32_t(row) * ROW_SIZE + 4);
+    }
+    if (recordKind != KIND_INDEXED) return text;
+    if (ld32(ids + 4) == ld32(ids)) call(VectorAt_throw, {ids});
+    return int32_t(ld32(ld32(ids)));
+}
+}  // namespace
+
+// FlashDrama(const char*) $_1 {this}(int text, int kind, vector<int>* ids): a text for the current balloon (+0x5A4)
+// (resolved through ids for the choice kinds) appended to its pending list (a new list for a new balloon)
+static void flashDramaPendingText(uint32_t functor, uint32_t textp, uint32_t kindp, uint32_t idsp) {
+    const uint32_t ids = ld32(idsp);
+    const int32_t kind = int32_t(ld32(kindp));
+    const int32_t text = int32_t(ld32(textp));
+    const uint32_t me = ld32(functor + 4);
+    if (!ld32(me + PENDING_KEY)) return;
+    const int32_t value = ids ? resolveText(text, kind, ids) : text;
+    Frame f;
+    const uint32_t valueSlot = f.alloc(8);
+    st32(valueSlot, uint32_t(value));
+    const uint32_t key = f.alloc(12);
+    strInitC(key, ld32(me + PENDING_KEY));
+    const uint32_t node = call(PendingTexts_find, {me + PENDING_TEXTS, key});
+    strFree(key);
+    if (node) {
+        // list<int>::push_back, inline
+        const uint32_t n = call(fn::operator_new, {0xC});
+        st32(n + 8, uint32_t(value));
+        const uint32_t sentinel = node + 0x14;
+        st32(ld32(sentinel) + 4, n);
+        st32(n, ld32(sentinel));
+        st32(sentinel, n);
+        st32(n + 4, sentinel);
+        st32(node + 0x1C, ld32(node + 0x1C) + 1);
+        return;
+    }
+    const uint32_t one = f.alloc(12), pair = f.alloc(16), out = f.alloc(8);
+    call(IntList_ctor, {one, 1, valueSlot});
+    st32(pair, ld32(me + PENDING_KEY));
+    st32(pair + 4, pair + 4);
+    st32(pair + 8, pair + 4);
+    st32(pair + 0xC, 0);
+    call(IntList_splice, {pair + 4, pair + 4, one});
+    call(PendingTexts_insert, {out, me + PENDING_TEXTS, pair});
+    call(IntList_clear, {pair + 4});
+    call(IntList_clear, {one});
+}
+RW_FUNCTION(0x6F55DC, "FlashDrama::FlashDrama(const char*) $_1::operator()(int, int, vector<int>*)", flashDramaPendingText);

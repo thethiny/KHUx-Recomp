@@ -65,11 +65,6 @@ uint32_t playSE(uint32_t id) {
     return r;
 }
 
-// a std::string copied the way libc++ copies (long: a new buffer; short: the 12 bytes)
-void strCopy(uint32_t dst, uint32_t src) {
-    if (strIsLong(src)) strInit(dst, ld32(src + 8), ld32(src + 4));
-    else for (uint32_t k = 0; k < 12; k += 4) st32(dst + k, ld32(src + k));
-}
 
 uint32_t f2b(float v) { return v <= 0.0f ? 0 : uint32_t(v) & 0xFF; }
 }  // namespace

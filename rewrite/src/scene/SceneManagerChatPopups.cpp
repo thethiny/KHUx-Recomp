@@ -7,18 +7,13 @@
 // temporary first, then moved into the heap object (its strings taken, the temporary's left empty).
 #include "SceneManager.hpp"
 #include "SceneUi.hpp"
+#include "ChatMessage.hpp"
 
 using namespace scene;
+using namespace scene::chatmsg;
 
 namespace {
 // ChatScrollView::ChatMessage (0x40 bytes with its padding, 8-aligned)
-constexpr uint32_t MSG_HEAD = 0x00;       // 16 bytes (ids)
-constexpr uint32_t MSG_FLAG = 0x10;       // uint8
-constexpr uint32_t MSG_NAME = 0x14;       // std::string
-constexpr uint32_t MSG_INFO = 0x20;       // 12 bytes, copied raw
-constexpr uint32_t MSG_TEXT = 0x2C;       // std::string
-constexpr uint32_t MSG_FLAG2 = 0x38;      // uint8
-constexpr uint32_t MSG_SIZE = 0x40;
 
 constexpr uint32_t APIManager_chatShared = 0x84;          // a shared_ptr held while the popup is built (+0x88 control)
 
@@ -64,44 +59,6 @@ constexpr uint32_t VT_CheckPost_OnClose = 0xF5FAB0;       // $_70 [popup, layer,
 uint32_t addrOf(SceneManager *self) { return rw::guest_addr(self); }
 uint32_t addrOfMgr() { return rw::guest_addr(SceneManager::getInstance()); }
 
-void copyWords(uint32_t dst, uint32_t src, uint32_t n) {
-    for (uint32_t k = 0; k < n; k += 4) st32(dst + k, ld32(src + k));
-}
-
-// std::string copy constructor as libc++ inlines it
-void strCopy(uint32_t dst, uint32_t src) {
-    if (strIsLong(src)) strInit(dst, ld32(src + 8), ld32(src + 4));
-    else copyWords(dst, src, 12);
-}
-// std::string move: take the three words, leave the source empty
-void strMove(uint32_t dst, uint32_t src) {
-    copyWords(dst, src, 12);
-    st32(src, 0);
-    st32(src + 4, 0);
-    st32(src + 8, 0);
-}
-
-// ChatMessage copy / move constructors and destructor
-void msgCopy(uint32_t dst, uint32_t src) {
-    copyWords(dst + MSG_HEAD, src + MSG_HEAD, 16);
-    st8(dst + MSG_FLAG, ld8(src + MSG_FLAG));
-    strCopy(dst + MSG_NAME, src + MSG_NAME);
-    copyWords(dst + MSG_INFO, src + MSG_INFO, 12);
-    strCopy(dst + MSG_TEXT, src + MSG_TEXT);
-    st8(dst + MSG_FLAG2, ld8(src + MSG_FLAG2));
-}
-void msgMove(uint32_t dst, uint32_t src) {
-    copyWords(dst + MSG_HEAD, src + MSG_HEAD, 16);
-    st8(dst + MSG_FLAG, ld8(src + MSG_FLAG));
-    strMove(dst + MSG_NAME, src + MSG_NAME);
-    copyWords(dst + MSG_INFO, src + MSG_INFO, 12);
-    strMove(dst + MSG_TEXT, src + MSG_TEXT);
-    st8(dst + MSG_FLAG2, ld8(src + MSG_FLAG2));
-}
-void msgDestroy(uint32_t m) {
-    strFree(m + MSG_TEXT);
-    strFree(m + MSG_NAME);
-}
 
 // The opening shared by the chat popups: sound, shadow fading in on a popup layer of the SceneManager (z `z`),
 // the layout `json` on the shadow (z `z` + 1), anchored in the middle and centred on the visible area.

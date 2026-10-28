@@ -2,6 +2,7 @@
 #include "BattleUi.hpp"
 
 namespace {
+using scene::strCopy;
 using scene::Frame;
 using scene::call;
 using scene::ld32;
@@ -73,11 +74,6 @@ uint32_t rewardAt(uint32_t row, uint32_t index, uint32_t k) {
     const SafeBuffer *s = rw::host_ptr<SafeBuffer>(row);
     SafeBuffer::read(s, rw::host_ptr<uint8_t>(arr), s->data.get() + index, 16, index);
     return ld32(call(array4_at, {arr, k}));
-}
-// copy of a std::string (the by-value argument)
-void strCopy(uint32_t dst, uint32_t src) {
-    if (scene::strIsLong(src)) scene::strInit(dst, ld32(src + 8), ld32(src + 4));
-    else for (uint32_t k = 0; k < 12; k += 4) st32(dst + k, ld32(src + k));
 }
 }  // namespace
 

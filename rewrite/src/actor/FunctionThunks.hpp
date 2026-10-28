@@ -46,6 +46,17 @@ template <uint32_t VTABLE> uint32_t cloneInto1(uint32_t self, uint32_t dst) {
     rw::save<uint32_t>(dst + 4, w);
     return w;
 }
+// [3] __clone(__base* dst) for a lambda capturing N words. r0 is the last copied word when dst is set.
+template <uint32_t VTABLE, uint32_t N> uint32_t cloneIntoWords(uint32_t self, uint32_t dst) {
+    if (!dst) return self;
+    rw::save<uint32_t>(dst, VTABLE);
+    uint32_t w = 0;
+    for (uint32_t k = 1; k <= N; k++) {
+        w = rw::load<uint32_t>(self + 4 * k);
+        rw::save<uint32_t>(dst + 4 * k, w);
+    }
+    return w;
+}
 // [7] target(const type_info& ti): the lambda (this + 4) when ti's name pointer is the lambda's type name.
 template <uint32_t TYPE_NAME> uint32_t target(uint32_t self, uint32_t typeInfo) {
     return rw::load<uint32_t>(typeInfo + 4) == TYPE_NAME ? self + 4 : 0;

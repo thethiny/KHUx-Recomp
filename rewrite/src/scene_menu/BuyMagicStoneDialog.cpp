@@ -3,8 +3,9 @@
 // payment info (/payment/info, the player's monthly billing), then the shop state (/user/shop), then the store for
 // the products' prices (iap::StoreManager::sendProductsRequest), then call back with the ids and the prices.
 // The three info buttons (Jewel info, Fund Settlement Act, Specified Commercial Transactions Act) are shown when
-// the server's function flags enable them. openStoneInfoPopup, purchaseCallback and the discount variants are not
-// rewritten yet.
+// the server's function flags enable them. Then the shop popup (open $_0: the pack list) or the one-pack discount
+// popup (openDiscount $_1) and their lambdas. openStoneInfoPopup is in b5_menu/BuyMagicStoneDialog_leftovers.cpp,
+// purchaseCallback in w5_25/ShopPurchase.cpp.
 #include "../master/Shop.hpp"
 #include "../scene/SceneUi.hpp"
 
@@ -784,3 +785,743 @@ static void BuyMagicStoneDialog_onInitReady(Addr functor, Addr ok) {
     functionDestroy(lambda);
 }
 RW_FUNCTION(0x58E124, "BuyMagicStoneDialog::init $_2::operator()(bool)", BuyMagicStoneDialog_onInitReady);
+
+// ------------------------------------------------------------------------------------------------ the Jewel shop popup
+// open $_0 {onClose +8, flag +0x20}: init's result (the pack ids, the store's products, ok). On failure an OK dialog
+// (then onClose). Otherwise the purchase manager takes the products; a suspended purchase or an owned item stops
+// here (checkTransaction's / hasOwnedItem's own dialogs). Then ShopBuyItem_Crown_ver120 opens on popup layer 2 over
+// a fading shadow: with flag set only its close button; without, the title, the MagicStoneScrollView of the packs
+// (in Scroll_Area when an info button is enabled, else in Scroll_Area2 with Win_Over 542 high), the billing info and
+// the three info buttons. Closing calls the close lambda, fades out and removes the popup, then onClose.
+namespace {
+namespace ms {
+constexpr uint32_t PurchaseManager_setProductInfoMap = 0x4D86ED;   // (mgr, const unordered_map<string, ProductInfo>*)
+constexpr uint32_t PurchaseManager_startPurchase = 0x4D831D;       // (mgr, const char* productId, function<void(bool)>)
+constexpr uint32_t PurchaseCallback = 0x58A7A1;      // purchaseCallback(ok, jewels, view, popup, tickets, function, function)
+constexpr uint32_t CheckTransaction = 0x58A2B1;
+constexpr uint32_t HasOwnedItem = 0x58AD81;
+constexpr uint32_t UpdatePaymentInfo = 0x58A4E9, InitJewelInfoButton = 0x58B311, InitFundSettlementButton = 0x58B505,
+                   InitTokushohoButton = 0x58B6F9;
+constexpr uint32_t ScrollView_create = 0x4FA569;     // MagicStoneScrollView::create()
+constexpr uint32_t ScrollView_setProductInfoMap = 0x4FB935;
+constexpr uint32_t ScrollView_setItemIDs = 0x478929; // (view, const vector<int>&)
+constexpr uint32_t FunctionVV_swap = 0x4EE86D;       // std::function<void()>::swap
+constexpr uint32_t FunctionInt_swap = 0x5428E1;      // std::function<void(int)>::swap
+constexpr uint32_t Widget_getCustomSize = 0x8262D1;
+constexpr uint32_t Size_copy = 0x8DF02D;
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t EaseSineOut_create = 0x860D09;
+constexpr uint32_t SceneUtil_createOpenPopupAnimation = 0x45BC05;    // (node, const function<void()>&)
+constexpr uint32_t SceneUtil_createClosePopupAnimation = 0x45BC61;   // (node, const function<void()>&)
+constexpr uint32_t SceneUtil_settingTitleLabel = 0x45D8D1;           // (node, const string&, int textId)
+constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9, AudioPlaySystemSECancel = 0x5C0D81;
+}  // namespace ms
+
+constexpr uint32_t VT_OpenError = 0xF5AC48;          // the error dialog's callback {function<void()> onClose +8} (0x20)
+constexpr uint32_t VT_OpenSuspended = 0xF5AC1C;      // checkTransaction's callback {function<void()> +8} (0x20)
+constexpr uint32_t VT_CloseOnly = 0xF5ABF0;          // the close lambda (flag set) {closeButton}
+constexpr uint32_t VT_CloseList = 0xF5ABC4;          // the close lambda (the pack list) {closeButton}
+constexpr uint32_t VT_CloseTouch = 0xF5AB98;         // Button_Close's touch listener (no captures)
+constexpr uint32_t VT_ListSelect = 0xF5AB14;         // the scroll view's pack chosen {view, popup}
+constexpr uint32_t VT_Purchase = 0xF5AB40;           // startPurchase's callback {jewels, view, popup, tickets} (0x14)
+constexpr uint32_t VT_ListSuspended = 0xF5AB6C;      // the chosen pack's checkTransaction callback (no captures)
+constexpr uint32_t VT_OpenAnim = 0xF5AAE8;           // the open animation's end (no captures)
+constexpr uint32_t VT_CanClose = 0xF5AABC;           // openPopup's function<bool()> {closeButton}
+constexpr uint32_t VT_Closed = 0xF5AA64;             // openPopup's result {close +8, shadow +0x20, popup +0x24, onClose +0x28, layer +0x40} (0x48)
+constexpr uint32_t VT_Removed = 0xF5AA90;            // the close animation's end {onClose +8, layer +0x20, shadow +0x24, popup +0x28} (0x30)
+constexpr uint32_t S_ShopJson = 0xDFFFEE;            // "cocostudio/publish/ShopBuyItem_Crown_ver120.json"
+constexpr uint32_t S_ButtonClose = 0xDF8692, S_TxtTitleLabel = 0xDF9554, S_ScrollArea = 0xDF9B59,
+                   S_ScrollArea2 = 0xE0001F;
+constexpr char WIN_OVER[] = "Win_Over";              // built inline as a short string
+constexpr int32_t TXT_SHOP_ERROR = 105100001, TXT_SHOP_TITLE = 102600002;
+constexpr uint32_t G_SHADOW_FADE = 0xFD65C0;         // GOT: the popup shadow's fade time (float)
+constexpr uint32_t V_SET_TOUCH_ENABLED = 0x29C, V_SET_SIZE = 0x2B0;   // ui::Widget
+constexpr uint32_t VIEW_ON_SELECT = 0x650;           // MagicStoneScrollView: function<void(int)>, a pack was chosen
+constexpr float WIN_OVER_HEIGHT = 542.0f;
+
+float shadowFade() { return ldf(ld32(G_SHADOW_FADE)); }
+// a std::function at fo holding an inline lambda (vtable, captures)
+void inlineFunction(uint32_t fo, uint32_t vtable, std::initializer_list<uint32_t> captures) {
+    st32(fo + 16, fo);
+    st32(fo, vtable);
+    uint32_t k = 4;
+    for (uint32_t c : captures) { st32(fo + k, c); k += 4; }
+}
+// a widget by name (the name built in the frame slot s)
+uint32_t seekNamed(uint32_t root, uint32_t s) {
+    uint32_t node = SceneUtil::searchNodeByName(root, s);
+    strFree(s);
+    return node;
+}
+uint32_t seek(uint32_t root, uint32_t s, uint32_t name) {
+    strInitC(s, name);
+    return seekNamed(root, s);
+}
+// a short std::string written in place (libc++ inlines short literals)
+void shortStr(uint32_t s, const char *text) {
+    const uint32_t n = uint32_t(std::strlen(text));
+    st8(s, uint8_t(n << 1));
+    for (uint32_t k = 0; k < n; k++) st8(s + 1 + k, uint8_t(text[k]));
+    st8(s + 1 + n, 0);
+}
+}  // namespace
+
+static void BuyMagicStoneDialog_openResult(Addr functor, Addr ids, Addr mapRef, Addr okRef) {
+    Frame frame;
+    const uint32_t base = frame.allocExact(0x278);    // push 0x14 + 0x264: the temporaries at their original offsets
+    const uint32_t IDS = base + 0x50, FN3 = base + 0x1B0, TMP = base + 0x240, COPY1 = base + 0x1F8;
+    const uint32_t onClose = functor + 8;
+    call(g::VectorInt_copy, {IDS, ids});
+    const uint8_t ok = ld8(okRef);
+    const uint32_t map = ld32(mapRef);
+    loadingIndicator(0);
+    if (!map || !ok || !ld32(map + 0xC)) {
+        const uint32_t text = base + 0xBC, str = base + 0xC4, copy = base + 0x210, fo = base + 0x228;
+        call(fn::TextData_get, {text, 0, uint32_t(TXT_SHOP_ERROR)});
+        strInitC(str, textDataStr(text));
+        call(fn::function_vv_copy, {copy, onClose});
+        st32(fo + 16, 0);
+        st32(fo + 16, heapFunc(VT_OpenError, 0x20, 8, copy));
+        call(g::SceneUtil_openOkDialog4Line, {str, fo, 0});
+        functionDestroy(fo);
+        functionDestroy(copy);
+        strFree(str);
+        sharedRelease(text);
+        call(g::VectorBaseInt_dtor, {IDS});
+        return;
+    }
+    call(ms::PurchaseManager_setProductInfoMap, {call(g::PurchaseManager_getInstance, {}), map});
+    call(fn::function_vv_copy, {COPY1, onClose});
+    {
+        const uint32_t L0 = base + 0x1C8, fo = base + 0x1E0;
+        functionCopy(L0, COPY1);
+        st32(fo + 16, 0);
+        st32(fo + 16, heapFunc(VT_OpenSuspended, 0x20, 8, L0));
+        const uint32_t suspended = call(ms::CheckTransaction, {fo});
+        functionDestroy(fo);
+        functionDestroy(L0);
+        if (suspended) {
+            functionDestroy(COPY1);
+            call(g::VectorBaseInt_dtor, {IDS});
+            return;
+        }
+    }
+    if (call(ms::HasOwnedItem, {map}) == 1) {
+        if (ld32(COPY1 + 16)) {
+            call(fn::function_vv_call, {COPY1});
+            functionDestroy(COPY1);
+        }
+        call(g::VectorBaseInt_dtor, {IDS});
+        return;
+    }
+
+    // the popup over a fading shadow
+    const uint32_t layer = call(fn::SceneManager_getPopupLayer2, {sceneManager()});
+    const uint32_t shadow = SceneUtil::createShadowSprite();
+    const uint32_t opacity = vcall(shadow, node::getOpacity, {shadow});
+    vcall(shadow, node::setOpacity, {shadow, 0});
+    call(fn::Node_runAction, {shadow, call(fn::FadeTo_create, {fbits(shadowFade()), opacity})});
+    vcall(layer, node::addChild, {layer, shadow});
+    st32(FN3 + 16, 0);
+    const uint8_t flag = ld8(functor + 0x20);
+    const uint32_t popup = call(fn::GUIReader_widgetFromJsonFile, {call(fn::GUIReader_getInstance, {}), S_ShopJson});
+    vcall(shadow, node::addChild, {shadow, popup});
+    {
+        const uint32_t v = base + (flag ? 0xB4 : 0xA0);
+        call(ms::Vec2_ctor, {v, fbits(0.5f), fbits(0.5f)});
+        vcall(popup, node::setAnchorPoint, {popup, v});
+        call(ms::Vec2_dtor, {v});
+    }
+    vcall(popup, node::setPosition, {popup, vcall(shadow, node::getPosition, {shadow})});
+    uint32_t closeButton, view = 0;
+    if (flag) {
+        closeButton = seek(popup, base + 0xA8, S_ButtonClose);
+        inlineFunction(TMP, VT_CloseOnly, {closeButton});
+        call(ms::FunctionVV_swap, {TMP, FN3});
+        functionDestroy(TMP);
+    } else {
+        {
+            const uint32_t s = base + 0x94;
+            strInitC(s, S_TxtTitleLabel);
+            call(ms::SceneUtil_settingTitleLabel, {popup, s, uint32_t(TXT_SHOP_TITLE)});
+            strFree(s);
+        }
+        closeButton = seek(popup, base + 0x88, S_ButtonClose);
+        inlineFunction(TMP, VT_CloseList, {closeButton});
+        call(ms::FunctionVV_swap, {TMP, FN3});
+        functionDestroy(TMP);
+        const uint32_t area = seek(popup, base + 0x7C, S_ScrollArea);
+        const uint32_t area2 = seek(popup, base + 0x70, S_ScrollArea2);
+        shortStr(base + 0x64, WIN_OVER);
+        const uint32_t winOver = seekNamed(popup, base + 0x64);
+        view = call(ms::ScrollView_create, {});
+        call(ms::ScrollView_setProductInfoMap, {view, map});
+        const bool infoButtons = (retFlags(1) & 0x04) || (retFlags(0) & 0x80) || (retFlags(1) & 0x01);
+        const uint32_t into = infoButtons ? area : area2;
+        vcall(view, node::setContentSize, {view, vcall(into, node::getContentSize, {into})});
+        call(ms::ScrollView_setItemIDs, {view, IDS});
+        vcall(into, node::addChild, {into, view});
+        if (infoButtons) {
+            vcall(area, node::setVisible, {area, 1});
+            vcall(area2, node::setVisible, {area2, 0});
+        } else {
+            vcall(area, node::setVisible, {area, 0});
+            vcall(area2, node::setVisible, {area2, 1});
+            const uint32_t size = base + 0x5C;
+            call(ms::Size_copy, {size, call(ms::Widget_getCustomSize, {winOver})});
+            stf(size + 4, WIN_OVER_HEIGHT);
+            vcall(winOver, V_SET_SIZE, {winOver, size});
+        }
+        call(ms::UpdatePaymentInfo, {popup});
+        call(ms::InitJewelInfoButton, {popup});
+        call(ms::InitFundSettlementButton, {popup});
+        call(ms::InitTokushohoButton, {popup});
+    }
+
+    // L {close (a copy of FN3) +0, shadow +0x18, popup +0x1C, onClose +0x20, layer +0x38}
+    const uint32_t L = base + 0x170;
+    functionCopy(L, FN3);
+    st32(L + 0x18, shadow);
+    st32(L + 0x1C, popup);
+    call(fn::function_vv_copy, {L + 0x20, onClose});
+    st32(L + 0x38, layer);
+    vcall(closeButton, V_SET_TOUCH_ENABLED, {closeButton, 1});
+    {
+        const uint32_t fo = base + 0x158;
+        inlineFunction(fo, VT_CloseTouch, {});
+        call(fn::Widget_addTouchEventListener, {closeButton, fo});
+        functionDestroy(fo);
+    }
+    if (!flag) {
+        inlineFunction(TMP, VT_ListSelect, {view, popup});
+        call(ms::FunctionInt_swap, {TMP, view + VIEW_ON_SELECT});
+        functionDestroy(TMP);
+    }
+    call(fn::AudioPlaySystemSEPopUp, {});
+    {
+        const uint32_t fo = base + 0x140;
+        inlineFunction(fo, VT_OpenAnim, {});
+        call(fn::Node_runAction, {popup, call(ms::SceneUtil_createOpenPopupAnimation, {popup, fo})});
+        functionDestroy(fo);
+    }
+    const uint32_t sm = sceneManager();
+    const uint32_t canClose = base + 0x128, closed = base + 0x110, C = base + 0xD0;
+    inlineFunction(canClose, VT_CanClose, {closeButton});
+    functionCopy(C, L);
+    st32(C + 0x18, shadow);
+    st32(C + 0x1C, popup);
+    functionCopy(C + 0x20, L + 0x20);
+    st32(C + 0x38, layer);
+    st32(closed + 16, 0);
+    const uint32_t heap = call(fn::operator_new, {0x48});
+    if (heap) {
+        st32(heap, VT_Closed);
+        call(fn::function_vv_move, {heap + 8, C});
+        st32(heap + 0x20, ld32(C + 0x18));
+        st32(heap + 0x24, ld32(C + 0x1C));
+        functionCopy(heap + 0x28, C + 0x20);
+        st32(heap + 0x40, ld32(C + 0x38));
+    }
+    st32(closed + 16, heap);
+    call(fn::SceneManager_openPopup, {sm, canClose, closed, 1});
+    functionDestroy(closed);
+    functionDestroy(C + 0x20);
+    functionDestroy(C);
+    functionDestroy(canClose);
+    functionDestroy(L + 0x20);
+    functionDestroy(L);
+    functionDestroy(FN3);
+    functionDestroy(COPY1);
+    call(g::VectorBaseInt_dtor, {IDS});
+}
+RW_FUNCTION(0x590B9C, "BuyMagicStoneDialog::open $_0::operator()(vector<int>, const unordered_map*, bool)",
+            BuyMagicStoneDialog_openResult);
+
+// open $_0's closed lambda __clone()
+static Addr BuyMagicStoneDialog_closedClone(Addr functor) {
+    const uint32_t heap = call(fn::operator_new, {0x48});
+    if (heap) {
+        st32(heap, VT_Closed);
+        call(fn::function_vv_copy, {heap + 8, functor + 8});
+        st32(heap + 0x20, ld32(functor + 0x20));
+        st32(heap + 0x24, ld32(functor + 0x24));
+        call(fn::function_vv_copy, {heap + 0x28, functor + 0x28});
+        st32(heap + 0x40, ld32(functor + 0x40));
+    }
+    return heap;
+}
+RW_FUNCTION(0x5919D0, "BuyMagicStoneDialog::open $_0 closed lambda __clone()", BuyMagicStoneDialog_closedClone);
+
+// the popup closed: the close lambda, the shadow fades out, the popup plays its close animation and is then removed
+static void BuyMagicStoneDialog_closed(Addr functor, Addr) {
+    call(ms::AudioPlaySystemSECancel, {});
+    call(fn::function_vv_call, {functor + 8});
+    const uint32_t shadow = ld32(functor + 0x20);
+    call(fn::Node_runAction, {shadow, call(fn::FadeTo_create, {fbits(shadowFade()), 0})});
+    const uint32_t popup = ld32(functor + 0x24);
+    Frame f;
+    const uint32_t L = f.alloc(0x24);
+    call(fn::function_vv_copy, {L, functor + 0x28});
+    st32(L + 0x18, ld32(functor + 0x40));
+    st32(L + 0x1C, ld32(functor + 0x20));
+    st32(L + 0x20, ld32(functor + 0x24));
+    const uint32_t fo = f.alloc(20);
+    st32(fo + 16, 0);
+    const uint32_t heap = call(fn::operator_new, {0x30});
+    if (heap) {
+        st32(heap, VT_Removed);
+        functionCopy(heap + 8, L);
+        st32(heap + 0x20, ld32(L + 0x18));
+        st32(heap + 0x24, ld32(L + 0x1C));
+        st32(heap + 0x28, ld32(L + 0x20));
+    }
+    st32(fo + 16, heap);
+    const uint32_t anim = call(ms::SceneUtil_createClosePopupAnimation, {popup, fo});
+    call(fn::Node_runAction, {popup, call(ms::EaseSineOut_create, {anim})});
+    functionDestroy(fo);
+    functionDestroy(L);
+}
+RW_FUNCTION(0x591B70, "BuyMagicStoneDialog::open $_0 closed lambda::operator()(bool)", BuyMagicStoneDialog_closed);
+
+// the close animation ended: onClose, then the shadow and the popup leave popup layer 2
+static void BuyMagicStoneDialog_removed(Addr functor) {
+    if (ld32(functor + 0x18)) call(fn::function_vv_call, {functor + 8});
+    const uint32_t layer = ld32(functor + 0x20);
+    vcall(layer, node::removeChild, {layer, ld32(functor + 0x24), 1});
+    vcall(layer, node::removeChild, {layer, ld32(functor + 0x28), 1});
+}
+RW_FUNCTION(0x591EA8, "BuyMagicStoneDialog::open $_0 removed lambda::operator()()", BuyMagicStoneDialog_removed);
+
+// a pack chosen: unless a purchase runs or a suspended one is pending, the loading indicator and the store purchase
+// of the pack's product id (the callback gets number + bonus Jewels and the pack's stage skip tickets)
+static void BuyMagicStoneDialog_packSelected(Addr functor, Addr idRef) {
+    Frame frame;
+    const uint32_t base = frame.allocExact(0x108);    // push 0x14 + 0xF4
+    const uint32_t row = base + 0x20, productId = base + 0x4C, fo = base + 0x30, check = base + 0xD0;
+    const uint32_t id = ld32(idRef);
+    call(ms::AudioPlaySystemSEDecide, {});
+    call(g::Shop_create, {row, id});
+    const uint32_t jewels = uint32_t(safe32(ld32(row), master::Shop::BONUS) + safe32(ld32(row), master::Shop::NUMBER));
+    const uint32_t tickets = call(g::GetSkipTicketCnt, {id});
+    const uint32_t mgr = call(g::PurchaseManager_getInstance, {});
+    if (!ld8(mgr)) {
+        inlineFunction(check, VT_ListSuspended, {});
+        const uint32_t suspended = call(ms::CheckTransaction, {check});
+        functionDestroy(check);
+        if (!suspended) {
+            loadingIndicator(1);
+            safeBytesAt(productId, ld32(row), master::Shop::PRODUCT_ID, 0x81);
+            st32(fo + 16, 0);
+            const uint32_t heap = call(fn::operator_new, {0x14});
+            if (heap) {
+                st32(heap, VT_Purchase);
+                st32(heap + 4, jewels);
+                st32(heap + 8, ld32(functor + 4));
+                st32(heap + 0xC, ld32(functor + 8));
+                st32(heap + 0x10, tickets);
+            }
+            st32(fo + 16, heap);
+            call(ms::PurchaseManager_startPurchase, {mgr, productId, fo});
+            functionDestroy(fo);
+        }
+    }
+    sharedRelease(row);
+}
+RW_FUNCTION(0x5920AC, "BuyMagicStoneDialog::open $_0 pack chosen lambda::operator()(int)",
+            BuyMagicStoneDialog_packSelected);
+
+// the store purchase ended: purchaseCallback(ok, jewels, view, popup, tickets, {}, {})
+static void BuyMagicStoneDialog_purchased(Addr functor, Addr okRef) {
+    Frame frame;
+    const uint32_t base = frame.allocExact(0x68);     // push 0x14 + 0x54: the stack arguments at sp
+    const uint32_t a = base + 0x18, b = base + 0x30;
+    st32(a + 16, 0);
+    st32(b + 16, 0);
+    rw::call_exact(ms::PurchaseCallback, {ld8(okRef), ld32(functor + 4), ld32(functor + 8), ld32(functor + 0xC),
+                                          ld32(functor + 0x10), b, a});
+    functionDestroy(a);
+    functionDestroy(b);
+}
+RW_FUNCTION(0x5922FC, "BuyMagicStoneDialog::open $_0 purchase lambda::operator()(bool)", BuyMagicStoneDialog_purchased);
+
+// init $_2's inner lambda {callback +8, itemIds +0x20}: the store's products -> callback(itemIds, products, ok)
+static void BuyMagicStoneDialog_onProducts(Addr functor, Addr okRef, Addr mapRef) {
+    const uint32_t map = ld32(mapRef);
+    const uint8_t ok = ld8(okRef);
+    loadingIndicator(0);
+    call(g::FunctionProducts_call, {functor + 8, functor + 0x20, map, ok ? 1u : 0u});
+}
+RW_FUNCTION(0x58E584, "BuyMagicStoneDialog::init $_2 inner lambda::operator()(bool, const unordered_map*)",
+            BuyMagicStoneDialog_onProducts);
+
+static Addr BuyMagicStoneDialog_initProductsClone(Addr functor) {
+    const uint32_t heap = call(fn::operator_new, {0x30});
+    if (heap) {
+        st32(heap, VT_InitProducts);
+        call(g::FunctionProducts_copy, {heap + 8, functor + 8});
+        call(g::VectorInt_copy, {heap + 0x20, functor + 0x20});
+    }
+    return heap;
+}
+RW_FUNCTION(0x58E42C, "BuyMagicStoneDialog::init $_2 inner lambda __clone()", BuyMagicStoneDialog_initProductsClone);
+
+// ------------------------------------------------------------------------------------------------ the discount popup
+// openDiscount $_1 {onClose +8, onPurchased +0x20}: init's result for the one discounted pack (Type 1). On failure
+// onClose. Otherwise like open $_0 up to the popup: Purchase_Pop centred over a fading shadow, Button_Purchase (its
+// label: TextData 102620006 with the store price, in helvetica 32 when the store knows the product) and
+// Close_Button_Purchase; the web view of popup layer 2 is hidden while it is open.
+namespace {
+namespace dc {
+constexpr uint32_t ProductMap_find = 0x5907B5;       // unordered_map<string, ProductInfo>::find(map, const string&)
+constexpr uint32_t Text_setFontName = 0x83A499, Text_setFontSize = 0x83A35D;
+constexpr uint32_t SceneUtil_settingTitleLabelText = 0x46E8D9;   // (node, const string& name, const string& text)
+constexpr uint32_t SceneUtil_getSideMargin = 0x45AD0D, SceneUtil_getSideHeightMargin = 0x45AF59;
+constexpr uint32_t VectorInt_throwOutOfRange = 0x47CCE1;
+constexpr uint32_t G_ANCHOR_MIDDLE = 0xFD6054;       // GOT: &Vec2::ANCHOR_MIDDLE
+}  // namespace dc
+constexpr uint32_t VT_DiscountProducts = 0xF5A828;   // openDiscount $_1 (0x38)
+constexpr uint32_t VT_DiscountSuspended = 0xF5AA0C;  // checkTransaction's callback {function<void()> +8} (0x20)
+constexpr uint32_t VT_DiscountPurchase = 0xF5A904;   // Button_Purchase {purchase, close, shop row, shopId, popup, webView, onPurchased} (0x40)
+constexpr uint32_t VT_DiscountClose = 0xF5A8AC;      // Close_Button_Purchase {purchase, close, popup, webView, onClose} (0x30)
+constexpr uint32_t VT_DiscountCanClose = 0xF5A880;   // openPopup's function<bool()> {purchase}
+constexpr uint32_t VT_DiscountClosed = 0xF5A854;     // openPopup's result {layer, shadow}
+constexpr uint32_t S_PurchaseJson = 0xDFFF8C;        // "cocostudio/publish/Purchase_Pop.json"
+constexpr uint32_t S_ButtonPurchase = 0xDFFFB1, S_CloseButtonPurchase = 0xDFFFC1, S_TxtPurchase = 0xDFFFD7;
+constexpr char HELVETICA[] = "helvetica", WEB_VIEW[] = "webView";
+constexpr int32_t TXT_PURCHASE_PRICE = 102620006;
+constexpr uint32_t PURCHASE_FONT_SIZE = 32;
+constexpr uint32_t PRODUCT_PRICE = 0x20;             // the map node's ProductInfo price string
+}  // namespace
+
+static void BuyMagicStoneDialog_openDiscountResult(Addr functor, Addr ids, Addr mapRef, Addr okRef) {
+    Frame frame;
+    const uint32_t base = frame.allocExact(0x6A0);    // push 0x14 + 0x68C: the temporaries at their original offsets
+    const uint32_t IDS = base + 0x54, COPY = base + 0x668, ROW = base + 0xB0;
+    const uint32_t onClose = functor + 8;
+    call(g::VectorInt_copy, {IDS, ids});
+    const uint8_t ok = ld8(okRef);
+    const uint32_t map = ld32(mapRef);
+    loadingIndicator(0);
+    if (!map || !ok || !ld32(map + 0xC)) {
+        if (ld32(functor + 0x18)) call(fn::function_vv_call, {onClose});
+        call(g::VectorBaseInt_dtor, {IDS});
+        return;
+    }
+    call(ms::PurchaseManager_setProductInfoMap, {call(g::PurchaseManager_getInstance, {}), map});
+    call(fn::function_vv_copy, {COPY, onClose});
+    {
+        const uint32_t L0 = base + 0x638, fo = base + 0x650;
+        functionCopy(L0, COPY);
+        st32(fo + 16, 0);
+        st32(fo + 16, heapFunc(VT_DiscountSuspended, 0x20, 8, L0));
+        const uint32_t suspended = call(ms::CheckTransaction, {fo});
+        functionDestroy(fo);
+        functionDestroy(L0);
+        if (suspended) {
+            functionDestroy(COPY);
+            call(g::VectorBaseInt_dtor, {IDS});
+            return;
+        }
+    }
+    if (call(ms::HasOwnedItem, {map}) == 1) {
+        if (ld32(COPY + 16)) {
+            call(fn::function_vv_call, {COPY});
+            functionDestroy(COPY);
+        }
+        call(g::VectorBaseInt_dtor, {IDS});
+        return;
+    }
+
+    // the popup, centred, over a fading shadow
+    const uint32_t layer = call(fn::SceneManager_getPopupLayer2, {sceneManager()});
+    const uint32_t shadow = SceneUtil::createShadowSprite();
+    const uint32_t opacity = vcall(shadow, node::getOpacity, {shadow});
+    vcall(shadow, node::setOpacity, {shadow, 0});
+    call(fn::Node_runAction, {shadow, call(fn::FadeTo_create, {fbits(shadowFade()), opacity})});
+    vcall(layer, node::addChild, {layer, shadow});
+    const uint32_t popup = call(fn::GUIReader_widgetFromJsonFile, {call(fn::GUIReader_getInstance, {}), S_PurchaseJson});
+    vcall(popup, node::setAnchorPoint, {popup, ld32(dc::G_ANCHOR_MIDDLE)});
+    {
+        const float px = bitsf(vcall(popup, node::getPositionX, {popup}));
+        const float w = ldf(vcall(popup, node::getContentSize, {popup}));
+        const float mx = bitsf(call(dc::SceneUtil_getSideMargin, {}));
+        const float x = mx + (px + w * 0.5f);
+        const float py = bitsf(vcall(popup, node::getPositionY, {popup}));
+        const float h = ldf(vcall(popup, node::getContentSize, {popup}) + 4);
+        const float my = bitsf(call(dc::SceneUtil_getSideHeightMargin, {}));
+        const float y = my + (py + h * 0.5f);
+        const uint32_t v = base + 0xD0;
+        call(ms::Vec2_ctor, {v, fbits(x), fbits(y)});
+        vcall(popup, node::setPosition, {popup, v});
+        call(ms::Vec2_dtor, {v});
+    }
+    vcall(shadow, node::addChildZ, {shadow, popup, 0});
+    const uint32_t purchase = seek(popup, base + 0xC4, S_ButtonPurchase);
+    const uint32_t close = seek(popup, base + 0xB8, S_CloseButtonPurchase);
+    vcall(purchase, node::setVisible, {purchase, 1});
+    vcall(close, node::setVisible, {close, 1});
+    const uint32_t first = ld32(IDS);
+    if (ld32(IDS + 4) == first) call(dc::VectorInt_throwOutOfRange, {IDS});   // ids.at(0)
+    call(g::Shop_create, {ROW, ld32(first)});
+    {
+        const uint32_t bytes = base + 0x5B4, productId = base + 0xA4;
+        safeBytesAt(bytes, ld32(ROW), master::Shop::PRODUCT_ID, 0x81);
+        strInitC(productId, bytes);
+        const uint32_t found = call(dc::ProductMap_find, {map, productId});
+        strFree(productId);
+        if (found) {
+            const uint32_t txt = seek(purchase, base + 0x98, S_TxtPurchase);
+            shortStr(base + 0x8C, HELVETICA);
+            call(dc::Text_setFontName, {txt, base + 0x8C});
+            strFree(base + 0x8C);
+            call(dc::Text_setFontSize, {txt, PURCHASE_FONT_SIZE});
+            const uint32_t text = base + 0x84;
+            call(fn::TextData_get, {text, 0, uint32_t(TXT_PURCHASE_PRICE)});
+            const uint32_t price = found + PRODUCT_PRICE;
+            const uint32_t buf = base + 0x1B0;
+            call(fn::StringBuffer_ctor, {buf, textDataStr(text), strData(price)});
+            const uint32_t name = base + 0x78, label = base + 0x6C;
+            strInitC(name, S_TxtPurchase);
+            strInitC(label, buf);
+            call(dc::SceneUtil_settingTitleLabelText, {purchase, name, label});
+            strFree(label);
+            strFree(name);
+            sharedRelease(text);
+        }
+    }
+    shortStr(base + 0x60, WEB_VIEW);
+    const uint32_t webView = seekNamed(layer, base + 0x60);
+    if (webView) vcall(webView, node::setVisible, {webView, 0});
+
+    // Button_Purchase: P {purchase, close, shop row (shared), shopId, popup, webView, onPurchased +0x20}
+    {
+        const uint32_t P = base + 0x160, fo = base + 0x198;
+        st32(P, purchase);
+        st32(P + 4, close);
+        st32(P + 8, ld32(ROW));
+        st32(P + 0xC, ld32(ROW + 4));
+        if (ld32(ROW + 4)) call(fn::shared_add, {ld32(ROW + 4)});
+        st32(P + 0x10, ld32(first));
+        st32(P + 0x14, popup);
+        st32(P + 0x18, webView);
+        call(fn::function_vv_copy, {P + 0x20, functor + 0x20});
+        st32(fo + 16, 0);
+        const uint32_t heap = call(fn::operator_new, {0x40});
+        if (heap) {
+            st32(heap, VT_DiscountPurchase);
+            st32(heap + 0xC, ld32(P + 4));
+            st32(heap + 8, ld32(P));
+            st32(heap + 0x10, ld32(P + 8));
+            st32(heap + 0x14, ld32(P + 0xC));
+            st32(P + 8, 0);
+            st32(P + 0xC, 0);
+            st32(heap + 0x18, ld32(P + 0x10));
+            st32(heap + 0x1C, ld32(P + 0x14));
+            st32(heap + 0x20, ld32(P + 0x18));
+            functionCopy(heap + 0x28, P + 0x20);
+        }
+        st32(fo + 16, heap);
+        call(fn::Widget_addTouchEventListener, {purchase, fo});
+        functionDestroy(fo);
+        functionDestroy(P + 0x20);
+        if (ld32(P + 0xC)) call(fn::shared_release, {ld32(P + 0xC)});
+    }
+    // Close_Button_Purchase: C {purchase, close, popup, webView, onClose +0x10}
+    {
+        const uint32_t C = base + 0x120, fo = base + 0x148;
+        st32(C, purchase);
+        st32(C + 4, close);
+        st32(C + 8, popup);
+        st32(C + 0xC, webView);
+        call(fn::function_vv_copy, {C + 0x10, onClose});
+        st32(fo + 16, 0);
+        const uint32_t heap = call(fn::operator_new, {0x30});
+        if (heap) {
+            st32(heap, VT_DiscountClose);
+            for (uint32_t k = 0; k < 16; k += 4) st32(heap + 8 + k, ld32(C + k));
+            functionCopy(heap + 0x18, C + 0x10);
+        }
+        st32(fo + 16, heap);
+        call(fn::Widget_addTouchEventListener, {close, fo});
+        functionDestroy(fo);
+        functionDestroy(C + 0x10);
+    }
+    {
+        const uint32_t fo = base + 0x108;
+        st32(fo + 16, 0);
+        call(fn::Node_runAction, {popup, call(ms::SceneUtil_createOpenPopupAnimation, {popup, fo})});
+        functionDestroy(fo);
+    }
+    const uint32_t sm = sceneManager();
+    const uint32_t canClose = base + 0xF0, closed = base + 0xD8;
+    inlineFunction(canClose, VT_DiscountCanClose, {purchase});
+    inlineFunction(closed, VT_DiscountClosed, {layer, shadow});
+    call(fn::SceneManager_openPopup, {sm, canClose, closed, 0});
+    functionDestroy(closed);
+    functionDestroy(canClose);
+    sharedRelease(ROW);
+    functionDestroy(COPY);
+    call(g::VectorBaseInt_dtor, {IDS});
+}
+RW_FUNCTION(0x58E828, "BuyMagicStoneDialog::openDiscount $_1::operator()(vector<int>, const unordered_map*, bool)",
+            BuyMagicStoneDialog_openDiscountResult);
+
+static Addr BuyMagicStoneDialog_openDiscountClone(Addr functor) {
+    const uint32_t heap = call(fn::operator_new, {0x38});
+    if (heap) {
+        st32(heap, VT_DiscountProducts);
+        call(fn::function_vv_copy, {heap + 8, functor + 8});
+        call(fn::function_vv_copy, {heap + 0x20, functor + 0x20});
+    }
+    return heap;
+}
+RW_FUNCTION(0x58E6A0, "BuyMagicStoneDialog::openDiscount $_1 __clone()", BuyMagicStoneDialog_openDiscountClone);
+
+// ------------------------------------------------------------------------------------------------ the discount buttons
+namespace {
+constexpr uint32_t VT_DiscountCloseEnd = 0xF5A8D8;   // Close_Button_Purchase's close animation end {purchase, webView, onClose +0x10} (0x28)
+constexpr uint32_t VT_DiscountPackSuspended = 0xF5A9E0;   // Button_Purchase's checkTransaction callback (no captures)
+constexpr uint32_t VT_DiscountPurchased = 0xF5A930;  // startPurchase's callback {jewels, tickets, popup, purchase, webView, onPurchased +0x20, close +0x38} (0x40)
+constexpr uint32_t VT_DiscountDone = 0xF5A988;       // purchaseCallback's done {popup, purchase, webView, onPurchased +0x18} (0x30)
+constexpr uint32_t VT_DiscountRetry = 0xF5A95C;      // purchaseCallback's retry {purchase, close}
+constexpr uint32_t VT_DiscountDoneEnd = 0xF5A9B4;    // the done close animation's end {purchase, webView, onPurchased +0x10} (0x28)
+constexpr uint32_t SceneManager_closeCurrentPopup = 0x6216A1;   // (sm, bool)
+constexpr uint32_t TOUCH_ENDED = 2;
+
+void setTouchEnabled(uint32_t widget, uint32_t on) { vcall(widget, V_SET_TOUCH_ENABLED, {widget, on}); }
+
+// the popup's close animation; at its end (vtable `endVt`) a heap lambda {purchase, webView, a copy of `fn`}
+void closeDiscountPopup(uint32_t popup, uint32_t purchase, uint32_t webView, uint32_t fn, uint32_t endVt) {
+    Frame f;
+    const uint32_t L = f.alloc(0x20);
+    st32(L, purchase);
+    st32(L + 4, webView);
+    call(fn::function_vv_copy, {L + 8, fn});
+    const uint32_t fo = f.alloc(20);
+    st32(fo + 16, 0);
+    const uint32_t heap = call(fn::operator_new, {0x28});
+    if (heap) {
+        st32(heap, endVt);
+        st32(heap + 8, ld32(L));
+        st32(heap + 0xC, ld32(L + 4));
+        functionCopy(heap + 0x10, L + 8);
+    }
+    st32(fo + 16, heap);
+    call(fn::Node_runAction, {popup, call(ms::SceneUtil_createClosePopupAnimation, {popup, fo})});
+    functionDestroy(fo);
+    functionDestroy(L + 8);
+}
+// the close animation ended {purchase +8, webView +0xC, fn +0x10}: the popup closes, the web view comes back, fn
+void discountPopupClosed(uint32_t functor, uint32_t closeArg) {
+    const uint32_t purchase = ld32(functor + 8);
+    setTouchEnabled(purchase, 1);
+    call(SceneManager_closeCurrentPopup, {sceneManager(), closeArg});
+    setTouchEnabled(ld32(functor + 8), 0);
+    const uint32_t webView = ld32(functor + 0xC);
+    if (webView) vcall(webView, node::setVisible, {webView, 1});
+    if (ld32(functor + 0x20)) call(fn::function_vv_call, {functor + 0x10});
+}
+}  // namespace
+
+// Close_Button_Purchase {purchase +8, close +0xC, popup +0x10, webView +0x14, onClose +0x18}
+static void BuyMagicStoneDialog_discountCloseTouch(Addr functor, Addr, Addr typeRef) {
+    if (ld32(typeRef) != TOUCH_ENDED) return;
+    setTouchEnabled(ld32(functor + 8), 0);
+    setTouchEnabled(ld32(functor + 0xC), 0);
+    call(ms::AudioPlaySystemSECancel, {});
+    closeDiscountPopup(ld32(functor + 0x10), ld32(functor + 8), ld32(functor + 0x14), functor + 0x18, VT_DiscountCloseEnd);
+}
+RW_FUNCTION(0x58F60C, "BuyMagicStoneDialog::openDiscount $_1 close touch lambda::operator()(Ref*, TouchEventType)",
+            BuyMagicStoneDialog_discountCloseTouch);
+
+static void BuyMagicStoneDialog_discountCloseEnd(Addr functor) { discountPopupClosed(functor, 0); }
+RW_FUNCTION(0x58F91C, "BuyMagicStoneDialog::openDiscount $_1 close animation end::operator()()",
+            BuyMagicStoneDialog_discountCloseEnd);
+
+// Button_Purchase {purchase +8, close +0xC, shop row +0x10, shopId +0x18, popup +0x1C, webView +0x20,
+// onPurchased +0x28}: the store purchase of the discounted pack (as the pack list's, with the buttons locked)
+static void BuyMagicStoneDialog_discountPurchaseTouch(Addr functor, Addr, Addr typeRef) {
+    if (ld32(typeRef) != TOUCH_ENDED) return;
+    Frame frame;
+    const uint32_t base = frame.allocExact(0x138);    // push 0x14 + 0x124
+    const uint32_t L = base + 0x28, productId = base + 0x7C, fo = base + 0x60, check = base + 0x100;
+    setTouchEnabled(ld32(functor + 8), 0);
+    setTouchEnabled(ld32(functor + 0xC), 0);
+    call(ms::AudioPlaySystemSEDecide, {});
+    const uint32_t row = ld32(functor + 0x10);
+    const uint32_t jewels = uint32_t(safe32(row, master::Shop::NUMBER) + safe32(row, master::Shop::BONUS));
+    const uint32_t tickets = call(g::GetSkipTicketCnt, {ld32(functor + 0x18)});
+    const uint32_t mgr = call(g::PurchaseManager_getInstance, {});
+    if (ld8(mgr)) return;
+    inlineFunction(check, VT_DiscountPackSuspended, {});
+    const uint32_t suspended = call(ms::CheckTransaction, {check});
+    functionDestroy(check);
+    if (suspended) return;
+    loadingIndicator(1);
+    safeBytesAt(productId, ld32(functor + 0x10), master::Shop::PRODUCT_ID, 0x81);
+    // L {jewels, tickets, popup, purchase, webView, onPurchased +0x18, close +0x30}
+    st32(L, jewels);
+    st32(L + 4, tickets);
+    st32(L + 8, ld32(functor + 0x1C));
+    st32(L + 0xC, ld32(functor + 8));
+    st32(L + 0x10, ld32(functor + 0x20));
+    call(fn::function_vv_copy, {L + 0x18, functor + 0x28});
+    st32(L + 0x30, ld32(functor + 0xC));
+    st32(fo + 16, 0);
+    const uint32_t heap = call(fn::operator_new, {0x40});
+    if (heap) {
+        st32(heap, VT_DiscountPurchased);
+        st32(heap + 0x14, ld32(L + 0xC));
+        st32(heap + 0x10, ld32(L + 8));
+        st32(heap + 0xC, ld32(L + 4));
+        st32(heap + 8, ld32(L));
+        st32(heap + 0x18, ld32(L + 0x10));
+        functionCopy(heap + 0x20, L + 0x18);
+        st32(heap + 0x38, ld32(L + 0x30));
+    }
+    st32(fo + 16, heap);
+    call(ms::PurchaseManager_startPurchase, {mgr, productId, fo});
+    functionDestroy(fo);
+    functionDestroy(L + 0x18);
+}
+RW_FUNCTION(0x58FB90, "BuyMagicStoneDialog::openDiscount $_1 purchase touch lambda::operator()(Ref*, TouchEventType)",
+            BuyMagicStoneDialog_discountPurchaseTouch);
+
+// the store purchase ended: purchaseCallback(ok, jewels, no view, no popup, tickets, done, retry)
+static void BuyMagicStoneDialog_discountPurchased(Addr functor, Addr okRef) {
+    Frame frame;
+    const uint32_t base = frame.allocExact(0x98);     // push 0x14 + 0x84: the stack arguments at sp
+    const uint32_t retry = base + 0x20, L = base + 0x38, done = base + 0x60;
+    const uint8_t ok = ld8(okRef);
+    const uint32_t tickets = ld32(functor + 0xC), jewels = ld32(functor + 8);
+    st32(L, ld32(functor + 0x10));
+    st32(L + 4, ld32(functor + 0x14));
+    st32(L + 8, ld32(functor + 0x18));
+    call(fn::function_vv_copy, {L + 0x10, functor + 0x20});
+    st32(done + 16, 0);
+    const uint32_t heap = call(fn::operator_new, {0x30});
+    if (heap) {
+        st32(heap, VT_DiscountDone);
+        for (uint32_t k = 0; k < 12; k += 4) st32(heap + 8 + k, ld32(L + k));
+        functionCopy(heap + 0x18, L + 0x10);
+    }
+    st32(done + 16, heap);
+    inlineFunction(retry, VT_DiscountRetry, {ld32(functor + 0x14), ld32(functor + 0x38)});
+    rw::call_exact(ms::PurchaseCallback, {ok ? 1u : 0u, jewels, 0, 0, tickets, done, retry});
+    functionDestroy(retry);
+    functionDestroy(done);
+    functionDestroy(L + 0x10);
+}
+RW_FUNCTION(0x58FF9C, "BuyMagicStoneDialog::openDiscount $_1 purchase lambda::operator()(bool)",
+            BuyMagicStoneDialog_discountPurchased);
+
+// purchaseCallback's done {popup +8, purchase +0xC, webView +0x10, onPurchased +0x18}: the popup closes
+static void BuyMagicStoneDialog_discountDone(Addr functor) {
+    closeDiscountPopup(ld32(functor + 8), ld32(functor + 0xC), ld32(functor + 0x10), functor + 0x18, VT_DiscountDoneEnd);
+}
+RW_FUNCTION(0x5903C0, "BuyMagicStoneDialog::openDiscount $_1 purchase done lambda::operator()()",
+            BuyMagicStoneDialog_discountDone);
+
+static void BuyMagicStoneDialog_discountDoneEnd(Addr functor) { discountPopupClosed(functor, 1); }
+RW_FUNCTION(0x5906A4, "BuyMagicStoneDialog::openDiscount $_1 done animation end::operator()()",
+            BuyMagicStoneDialog_discountDoneEnd);

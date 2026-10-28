@@ -29,6 +29,12 @@ constexpr uint32_t SceneManager_enableLoadingIndicator = 0x60D169;
 constexpr uint32_t APIManager_openErrorDialog = 0x4C3C8D;  // (api, const function<void(bool)>&, bool)
 constexpr uint32_t openPopUpComment = 0x536481;
 constexpr uint32_t STRLEN = 0x40E08C;
+constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9, AudioPlaySystemSECancel = 0x5C0D81;
+constexpr uint32_t FunctionVB_call = 0x474139;             // std::function<void(bool)>::operator()(bool)
+constexpr uint32_t SceneUtil_splitSpaceCheck = 0x47898D;   // (const string&) -> bool: not only spaces
+constexpr uint32_t SceneManager_closeCurrentPopup = 0x6216A1, SceneManager_onChangeProfile = 0x6215F7;
+constexpr uint32_t APIManager_getInstance = 0x4BA8C9;
+constexpr uint32_t APIManager_executeUserUpdate = 0x4C8361;   // (api, const char* name, const char* comment, function<void(bool)>)
 }  // namespace g
 
 constexpr uint32_t S_Comment = 0xDFE39D, S_CommentU13 = 0xDFE3C8, S_TxtName = 0xDFDA10, S_FontSoGei = 0xDF9F4D,
@@ -64,6 +70,13 @@ constexpr uint32_t VT_CancelTouch = 0xF58150;         // Button_Close (no captur
 constexpr uint32_t VT_CanClose = 0xF58124;            // openPopup's function<bool()> {close}
 constexpr uint32_t VT_Closed = 0xF580CC;              // openPopup's result (heap 0x48)
 constexpr uint32_t VT_PaymentError = 0xF588B4;        // createLayout $_3 payment info's error dialog callback
+constexpr uint32_t VT_Closing = 0xF580F8;             // the close animation's end {layer, shadow, view}
+constexpr uint32_t VT_Updated = 0xF581A8;             // executeUserUpdate's result {dialog, close, ok}
+constexpr uint32_t VT_UpdateError = 0xF581D4;         // its error dialog's callback (no captures)
+constexpr uint32_t V_SET_TOUCH_ENABLED = 0x29C;       // ui::Widget
+constexpr uint32_t D_USER = 0x300;                    // AvatarInfoDialog: shared_ptr<SafeBuffer> user (name +0x14, message +0x3C)
+constexpr uint32_t API_USER = 0x74;                   // APIManager: shared_ptr<SafeBuffer> the player's user data
+constexpr int32_t TXT_INVALID = 102300004, TXT_NAME_U13_INVALID = 102300003;
 constexpr uint32_t API_OFFLINE = 0x14;                // APIManager: a request failed (byte)
 
 // Closed lambda layouts (stack): {close, ok, view, layer, shadow, -, onClosed} and
@@ -111,6 +124,127 @@ uint32_t editBox(uint32_t dialog, uint32_t field, uint32_t text, uint32_t font, 
 }
 
 struct AvatarInfoComment {
+    // an OK dialog with TextData `id` (the name / message check failed)
+    static void checkFailed(int32_t id) {
+        Frame f;
+        const uint32_t td = textData(f, id);
+        const uint32_t s = newStr(f, textDataStr(td));
+        const uint32_t none = newEmptyFunction(f);
+        SceneUtil::openOkDialog4Line(s, none, 0);
+        functionDestroy(none);
+        strFree(s);
+        sharedRelease(td);
+    }
+
+    // Button_Ok {payment info, dialog, close, ok}(sender, type): ended -> the edited name (and, 13 and over, the
+    // message) checked: not empty, not only spaces (SceneUtil::splitSpaceCheck); then both buttons disabled and
+    // the name and message sent (/user/update) ($_21)
+    static void okTouch(uint32_t self, uint32_t, uint32_t typep) {
+        if (ld32(typep) != 2) return;
+        const uint32_t dialog = ld32(self + 12);
+        call(g::AudioPlaySystemSEDecide, {});
+        bool under13 = false;
+        if (const uint32_t payment = ld32(self + 4)) {
+            Frame f;
+            const uint32_t age = f.alloc(4);
+            call(g::SafeBuffer_read, {payment, age, ld32(payment + 0xC), 4, 0});
+            under13 = int32_t(ld32(age)) <= ADULT_AGE - 1;
+        }
+        const uint32_t name = dialog + D_EDIT_NAME, comment = dialog + D_EDIT_COMMENT;
+        if (under13) {
+            if (!strSize(name) || !call(g::SceneUtil_splitSpaceCheck, {name})) {
+                checkFailed(TXT_NAME_U13_INVALID);
+                return;
+            }
+        } else {
+            if (!strSize(name) || !strSize(comment) || call(g::SceneUtil_splitSpaceCheck, {name}) != 1 ||
+                !call(g::SceneUtil_splitSpaceCheck, {comment})) {
+                checkFailed(TXT_INVALID);
+                return;
+            }
+        }
+        const uint32_t close = ld32(self + 0x10), ok = ld32(self + 0x14);
+        st8(dialog + D_EDIT_CLOSING, 1);
+        vcall(close, V_SET_TOUCH_ENABLED, {close, 0});
+        vcall(ok, V_SET_TOUCH_ENABLED, {ok, 0});
+        call(g::SceneManager_enableLoadingIndicator, {sceneManager(), 1});
+        const uint32_t api = call(g::APIManager_getInstance, {});
+        Frame f;
+        const uint32_t fo = newFunction(f, VT_Updated, {dialog, close, ok});
+        call(g::APIManager_executeUserUpdate, {api, strData(name), strData(comment), fo});
+        functionDestroy(fo);
+    }
+
+    // the update's result {dialog, close, ok}(ok): the loading indicator off; ok -> the player's user data from the
+    // API cache, its name and message copied out, the close button enabled and the popup closed; else the API error
+    // dialog when wanted and both buttons enabled again ($_21 lambda(bool))
+    static void updated(uint32_t self, uint32_t okp) {
+        const uint32_t ok = ld8(okp);
+        const uint32_t dialog = ld32(self + 4);
+        call(g::SceneManager_enableLoadingIndicator, {sceneManager(), 0});
+        const uint32_t api = call(g::APIManager_getInstance, {});
+        if (ok) {
+            uint32_t user = ld32(api + API_USER);
+            const uint32_t ctrl = ld32(api + API_USER + 4);
+            if (ctrl) call(fn::shared_add, {ctrl});
+            st32(dialog + D_USER, user);
+            const uint32_t old = ld32(dialog + D_USER + 4);
+            st32(dialog + D_USER + 4, ctrl);
+            if (old) {
+                call(fn::shared_release, {old});
+                user = ld32(dialog + D_USER);
+            }
+            Frame f;
+            const uint32_t nameBuf = f.alloc(0x24), commentBuf = f.alloc(0x104);
+            call(g::SafeBuffer_read, {user, nameBuf, ld32(user + 0xC) + 0x14, 0x21, 0x14});
+            call(g::String_assignN, {dialog + D_NAME, nameBuf, host_strlen(nameBuf)});
+            const uint32_t user2 = ld32(dialog + D_USER);
+            call(g::SafeBuffer_read, {user2, commentBuf, ld32(user2 + 0xC) + 0x3C, 0x101, 0x3C});
+            call(g::String_assignN, {dialog + D_COMMENT, commentBuf, host_strlen(commentBuf)});
+            const uint32_t close = ld32(self + 8);
+            vcall(close, V_SET_TOUCH_ENABLED, {close, 1});
+            call(g::SceneManager_closeCurrentPopup, {sceneManager(), 1});
+            return;
+        }
+        if (ld8(api + API_OFFLINE)) {
+            const uint32_t a = call(g::APIManager_getInstance, {});
+            Frame f;
+            const uint32_t fo = newFunction(f, VT_UpdateError, {});
+            call(g::APIManager_openErrorDialog, {a, fo, 1});
+            functionDestroy(fo);
+        }
+        st8(dialog + D_EDIT_CLOSING, 0);
+        const uint32_t close = ld32(self + 8), okButton = ld32(self + 12);
+        vcall(close, V_SET_TOUCH_ENABLED, {close, 1});
+        vcall(okButton, V_SET_TOUCH_ENABLED, {okButton, 1});
+    }
+
+    // openPopup's result {-, dialog, ok, close, -, close, ok, view, layer, shadow, -, onClosed}(closed by OK): not
+    // by OK -> the cancel sound, the edit marked closing, both buttons disabled; then the popup's buttons disabled,
+    // the view shrinks, the shadow fades out and onClosed(by OK) runs, followed by SceneManager::onChangeProfile
+    // when the profile changed ($_25)
+    static void closed(uint32_t self, uint32_t byOkp) {
+        const uint32_t byOk = ld8(byOkp);
+        if (!byOk) {
+            const uint32_t dialog = ld32(self + 8);
+            call(g::AudioPlaySystemSECancel, {});
+            st8(dialog + D_EDIT_CLOSING, 1);
+            for (uint32_t k : {0xCu, 0x10u}) vcall(ld32(self + k), V_SET_TOUCH_ENABLED, {ld32(self + k), 0});
+        }
+        for (uint32_t k : {0x18u, 0x1Cu}) vcall(ld32(self + k), V_SET_TOUCH_ENABLED, {ld32(self + k), 0});
+        const uint32_t view = ld32(self + 0x20);
+        {
+            Frame f;
+            const uint32_t fo = newFunction(f, VT_Closing, {ld32(self + 0x24), ld32(self + 0x28), view});
+            call(fn::Node_runAction, {view, SceneUtil::createClosePopupAnimation(view, fo)});
+            functionDestroy(fo);
+        }
+        call(fn::Node_runAction, {ld32(self + 0x28), call(fn::FadeTo_create, {ld32(ld32(G_SHADOW_FADE)), 0})});
+        if (!ld32(self + 0x40)) return;
+        call(g::FunctionVB_call, {self + 0x30, byOk ? 1u : 0u});
+        if (byOk) call(g::SceneManager_onChangeProfile, {sceneManager()});
+    }
+
     static void open(uint32_t dialog, uint32_t onClosed) {
         call(fn::AudioPlaySystemSEPopUp, {});
         call(g::String_assignCopy, {dialog + D_EDIT_NAME, dialog + D_NAME});
@@ -330,3 +464,6 @@ RW_FUNCTION(0x536480, "AvatarInfoDialog::openPopUpComment(function<void(bool)>)"
 RW_FUNCTION(0x53743C, "AvatarInfoDialog::editBoxEditingDidEnd(EditBox*)", AvatarInfoComment::editingDidEnd);
 RW_FUNCTION(0x54C888, "AvatarInfoDialog::createLayout::$_3::lambda()::lambda(bool) operator() (payment info)",
             AvatarInfoComment::paymentInfoDone);
+RW_FUNCTION(0x545444, "AvatarInfoDialog::openPopUpComment::$_21 operator() (Button_Ok)", AvatarInfoComment::okTouch);
+RW_FUNCTION(0x545A44, "AvatarInfoDialog::openPopUpComment::$_21 lambda(bool) operator() (update result)", AvatarInfoComment::updated);
+RW_FUNCTION(0x544FA8, "AvatarInfoDialog::openPopUpComment::$_25 operator() (popup closed)", AvatarInfoComment::closed);

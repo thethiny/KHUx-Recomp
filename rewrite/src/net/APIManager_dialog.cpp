@@ -94,3 +94,73 @@ uint32_t APIManager::openErrorDialog(APIManager *self, uint32_t cb, uint32_t ret
     return shown;
 }
 RW_FUNCTION_NOVERIFY(0x4C3C8C, "APIManager::openErrorDialog", APIManager::openErrorDialog);
+
+// ------------------------------------------------------------------------------------------ the dialogs' lambdas
+// openErrorDialog's lambdas ($_0 the dialog's, $_1 the web view's; heap 0x30): {this +8, callback +0x10 (callable
+// at +0x20), retry +0x28}. Their operator()s (rewritten elsewhere) call the shared body with captures = this + 8.
+namespace {
+
+constexpr uint32_t SCENE_MANAGER_ENABLE_LOADING = 0x60D169;   // SceneManager::enableLoadingIndicator(bool)
+constexpr uint32_t STATUS_OK = 0, STATUS_DATA_UPDATE = 4;      // APIManager::status values that are not retried
+
+template <uint32_t VTABLE> struct ErrorDialogLambda {
+    static uint32_t clone(uint32_t self) {
+        const uint32_t p = rw::call(OPERATOR_NEW, {0x30});
+        if (p) {
+            rw::save<uint32_t>(p, VTABLE);
+            rw::save<uint32_t>(p + 8, load32(self + 8));
+            rw::call(FN_BOOL_COPY, {p + 0x10, self + 0x10});
+            rw::save<uint8_t>(p + 0x28, load8(self + 0x28));
+        }
+        return p;
+    }
+    // r0: this when dst is null, else the byte offset the last copy used (0x28)
+    static uint32_t cloneInto(uint32_t self, uint32_t dst) {
+        if (!dst) return self;
+        rw::save<uint32_t>(dst, VTABLE);
+        rw::save<uint32_t>(dst + 8, load32(self + 8));
+        rw::call(FN_BOOL_COPY, {dst + 0x10, self + 0x10});
+        rw::save<uint8_t>(dst + 0x28, load8(self + 0x28));
+        return 0x28;
+    }
+    static void destroyDeallocate(uint32_t self) {
+        const uint32_t fn = self + 0x10, f = load32(self + 0x20);
+        if (f == fn) rw::call(load32(load32(f) + 0x10), {f});
+        else if (f) rw::call(load32(load32(f) + 0x14), {f});
+        rw::call(OPERATOR_DELETE, {self});
+    }
+};
+
+using DialogLambda = ErrorDialogLambda<DIALOG_LAMBDA_VTABLE>;
+using WebViewLambda = ErrorDialogLambda<WEBVIEW_LAMBDA_VTABLE>;
+
+// The error dialog closed {this, -, callback (+8), retry (+0x20)}(ok): the error cleared, the caller's callback
+// told; a request that can be resent (retryable, or a status other than ok / data update) is sent again (the same
+// action and parameters, behind the loading indicator when `retry`)
+void errorDialogClosed(uint32_t cap, uint32_t ok) {
+    APIManager *self = rw::host_ptr<APIManager>(load32(cap));
+    self->failed = 0;
+    const bool resend = self->retryable || (self->status != int32_t(STATUS_DATA_UPDATE) && self->status != int32_t(STATUS_OK));
+    if (load32(cap + 0x18)) rw::call(FN_BOOL_CALL, {cap + 8, ok});
+    if (!resend) return;
+    Frame F(0x60);   // push {r4-r7, lr}; sub sp, #0x4c
+    if (load8(cap + 0x20)) F.call(SCENE_MANAGER_ENABLE_LOADING, {F.call(SCENE_MANAGER_GET_INSTANCE, {}), 1});
+    self->connecting = 1;
+    const uint32_t client = F.call(CLIENT_GET_INSTANCE, {});
+    const uint32_t action = uint32_t(self->action);
+    const uint32_t respond = F.at(0x28), result = F.at(0x20);
+    F.call(FN_BIND_RESPOND, {respond, load32(ONRESPOND_GOT), 0, addr(self), action, 0});
+    F.call(CLIENT_CALL, {result, client, action, respond, addr(&self->params), 1, 0});
+    releaseIfSet(F, F.word(0x24));
+    destroyFunction(F, respond);
+}
+
+}  // namespace
+
+RW_FUNCTION(0x4D593C, "APIManager::openErrorDialog lambdas' body (sub_4D593C): the error dialog closed", errorDialogClosed);
+RW_FUNCTION(0x4D5810, "APIManager::openErrorDialog $_0 __clone()", DialogLambda::clone);
+RW_FUNCTION(0x4D5868, "APIManager::openErrorDialog $_0 __clone(__base*)", DialogLambda::cloneInto);
+RW_FUNCTION(0x4D58CC, "APIManager::openErrorDialog $_0 destroy_deallocate()", DialogLambda::destroyDeallocate);
+RW_FUNCTION(0x4D5AE8, "APIManager::openErrorDialog $_1 __clone()", WebViewLambda::clone);
+RW_FUNCTION(0x4D5B40, "APIManager::openErrorDialog $_1 __clone(__base*)", WebViewLambda::cloneInto);
+RW_FUNCTION(0x4D5BA4, "APIManager::openErrorDialog $_1 destroy_deallocate()", WebViewLambda::destroyDeallocate);

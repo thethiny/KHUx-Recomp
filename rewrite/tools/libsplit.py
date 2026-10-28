@@ -35,7 +35,9 @@ LIBS = [
                              r"__(add|sub|mul|div|cmp|fix|float|extend|trunc|neg|ash|lsh|lsr)\w*[sd]f\d|__popcount|"
                              # libunwind (unw_* and its C++ namespace) and compiler-rt's soft-float helpers
                              r"unw_|libunwind::|__(gt|lt|ge|le|eq|ne|un)[sd]f2$|__float(un)?[sd]i[sd]f$|"
-                             r"__fix(uns)?[sd]f[sd]i$)"),
+                             r"__fix(uns)?[sd]f[sd]i$|__unord[sd]f2$|__muldi3$|"
+                             # operator new / delete under their mangled names
+                             r"_Zn[wa]j|_Zd[la]Pv)"),
     ("libpng", r"(png_|_png)"),
     ("freetype", r"(FT_|ft_|af_|tt_|TT_|cff_|CFF_|ps_|PS_|t1_|T1_|t42_|pfr_|bdf_|pcf_|sfnt_|gxv_|otv_|FTC_|"
                  r"winfnt|pshinter|psh_|psaux|_ft_|tt_face|ft_smooth|gray_)"),
@@ -166,6 +168,26 @@ def groups():
             # not libc++: its templates (std::function thunks, std::sort) call the game's own lambdas
             if len(libs) == 1 and None not in libs and "libc++ / C++ runtime" not in libs:
                 out[a] = libs.pop()
+                changed = True
+    # unnamed functions the nearest-name rule gives to libc++ although they call the game's named functions: the
+    # bodies of the game's lambdas and the libc++ template instances over game types (std::function's __func
+    # methods, shared_ptr control blocks, destructors) that the linker placed among libc++'s own code. Game, to a
+    # fixed point (a function calling one of them is game code too)
+    callees = {}
+    for b, cs in callers.items():
+        for c in cs:
+            callees.setdefault(c & ~1, set()).add(b)
+    named_game = {a for a, name in items if out.get(a) is None and not name.startswith(("sub_", "nullsub_", "j_"))}
+    pending = [a for a, name in items if name.startswith(("sub_", "nullsub_", "j_")) and out.get(a) == "libc++ / C++ runtime"]
+    changed = True
+    while changed:
+        changed = False
+        for a in pending:
+            if a in named_game:
+                continue
+            if callees.get(a, set()) & named_game:
+                out[a] = None
+                named_game.add(a)
                 changed = True
     return out
 

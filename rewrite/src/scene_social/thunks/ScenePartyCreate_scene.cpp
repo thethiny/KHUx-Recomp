@@ -96,16 +96,6 @@ constexpr uint32_t SM_PARTY_DIRTY = 0x4CC;         // SceneManager byte
 constexpr uint32_t SM_PARTY_CALLBACK = 0x548;      // SceneManager std::function<void(bool)>
 constexpr uint32_t API_PARTY = 0x84;               // shared_ptr<SafeBuffer>: the player's party (byte +0x10: exists)
 
-// libc++ std::string copy constructor, inline: a long string is re-initialised, a short one copied as is
-void strCopy(Addr dst, Addr src) {
-    if (strIsLong(src)) {
-        call(fn::string_init, {dst, ld32(src + 8), ld32(src + 4)});
-    } else {
-        st32(dst, ld32(src));
-        st32(dst + 4, ld32(src + 4));
-        st32(dst + 8, ld32(src + 8));
-    }
-}
 
 // openOkDialog4Line(TextData TEXT_INVALID_TEXT, no callback)
 void invalidTextDialog() {

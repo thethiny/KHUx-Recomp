@@ -60,10 +60,6 @@ void labelText(uint32_t node, uint32_t name, uint32_t len, int32_t id) {
     SceneUtil::setShadow(text);
     setTextId(text, id);
 }
-void strCopy(uint32_t dst, uint32_t src) {
-    if (strIsLong(src)) strInit(dst, ld32(src + 8), ld32(src + 4));
-    else for (uint32_t k = 0; k < 12; k += 4) st32(dst + k, ld32(src + k));
-}
 }  // namespace
 
 namespace scene_takeover {

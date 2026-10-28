@@ -568,3 +568,42 @@ RW_FUNCTION(0x6060EA, "SceneActionMap::init::$_20 operator()", init_20);
 RW_FUNCTION(0x60619C, "SceneActionMap::init::$_19 operator()", init_19);
 RW_FUNCTION(0x6062B8, "SceneActionMap::init::$_18 operator()", init_18);
 RW_FUNCTION(0x6063D6, "SceneActionMap::init::$_17 operator()", init_17);
+
+namespace {
+constexpr uint32_t StageActorManager_isAnnihilationMapEnemy = 0x74F89B;
+constexpr uint32_t APIManager_executeColosseumRetire = 0x4D17A5;   // (api, const function<void(bool)>&)
+constexpr uint32_t APIManager_executeStageRetire = 0x4CB43D;       // (api, const function<void(bool)>&)
+constexpr uint32_t STAGE_ANNIHILATION_SEEN = 0x45BC;               // stage state: int
+constexpr uint32_t STAGE_ANNIHILATION_FLAG = 1;                    // stage state: byte written at this index
+}  // namespace
+
+namespace SceneActionMapLambdas {
+// init()::$_10 [this]() -> bool: an annihilation map; the first time it is seen (stage state 0x45BC still 0) the
+// stage state's byte 1 is set
+uint32_t init_10(uint32_t func) {
+    const uint32_t self = ld32(func + 4);
+    if (call(StageActorManager_isAnnihilationMapEnemy, {ld32(self + 0x2BC)}) != 1) return 0;
+    if (stageStateWord(STAGE_ANNIHILATION_SEEN) == 0) {
+        const uint32_t sb = ld32(call(g::AppState_getInstance, {}) + 0x20);
+        Frame f;
+        const uint32_t one = f.alloc(8);
+        st8(one, 1);
+        call(g::SafeBuffer_write, {sb, ld32(sb + 0xC) + STAGE_ANNIHILATION_FLAG, one, 1, STAGE_ANNIHILATION_FLAG});
+    }
+    return 1;
+}
+// init()::$_9 / $_7 [](function<void(bool)> done): the retire request (colosseum / stage) with done
+void retireWith(uint32_t donePtr, uint32_t execute) {
+    Frame f;
+    const uint32_t done = f.alloc(24);
+    call(fn::function_vb_move, {done, donePtr});
+    call(execute, {call(g::APIManager_getInstance, {}), done});
+    functionDestroy(done);
+}
+void init_9(uint32_t, uint32_t donePtr) { retireWith(donePtr, APIManager_executeColosseumRetire); }
+void init_7(uint32_t, uint32_t donePtr) { retireWith(donePtr, APIManager_executeStageRetire); }
+}  // namespace SceneActionMapLambdas
+
+RW_FUNCTION(0x606AE8, "SceneActionMap::init::$_10 operator()", SceneActionMapLambdas::init_10);
+RW_FUNCTION(0x606C04, "SceneActionMap::init::$_9 operator()", SceneActionMapLambdas::init_9);
+RW_FUNCTION(0x606DB8, "SceneActionMap::init::$_7 operator()", SceneActionMapLambdas::init_7);

@@ -54,11 +54,6 @@ uint32_t jni(uint32_t env, uint32_t slot, std::initializer_list<uint32_t> args) 
 }
 void deleteRef(uint32_t env, uint32_t ref) { jni(env, JNI_DeleteLocalRef, {ref}); }
 uint32_t cstr(uint32_t s) { return strIsLong(s) ? ld32(s + 8) : s + 1; }
-// a std::string copy into dst (libc++: a long string through init, a short one as its three words)
-void strCopy(uint32_t dst, uint32_t src) {
-    if (strIsLong(src)) strInit(dst, ld32(src + 8), ld32(src + 4));
-    else for (uint32_t k = 0; k < 12; k += 4) st32(dst + k, ld32(src + k));
-}
 void zero12(uint32_t p) { for (uint32_t k = 0; k < 12; k += 4) st32(p + k, 0); }
 
 // the request ended: nothing in progress, the loading indicator off

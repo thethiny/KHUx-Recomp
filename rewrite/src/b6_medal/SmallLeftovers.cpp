@@ -1,4 +1,4 @@
-// Batch #6's small leftovers: SceneMedalList (createScene, setTouchEnabledAllButton, a back button to the medal
+// Batch #6's small leftovers: SceneMedalList (createScene, setTouchEnabledAllButton, the popup close, a back button to the medal
 // list, the sale mode toggle), MedalListScrollView (getSelectedMedals, clearSelectedMedals), SceneSaleMedal
 // (createScene, backScene2), AvatarPartsScrollView (a closure's destructors, the party info touch),
 // AvatarTitleScrollView (touch began / moved of a cell, a lambda's __clone(p)), SceneDrawRaise (share, Facebook
@@ -14,6 +14,7 @@ constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
 constexpr uint32_t SM_changeSceneLayer = 0x612B99;
 constexpr uint32_t FunctionVB_assign = 0x490109;
 constexpr uint32_t MedalListClose = 0x489EE1;                   // sub_489EE0 (the closure's close)
+constexpr uint32_t FunctionVB_copy = 0x45C84D, FunctionVB_move = 0x47BC69;   // std::function<void(bool)> copy / move ctor
 constexpr uint32_t MapULLBool_index = 0x4FFAC5, MapULLBool_destroy = 0x5004F1;
 constexpr uint32_t VectorU64_pushSlow = 0x4ECB6D, VectorU64_dtor = 0x468499, VectorInt_copy = 0x4AF707;
 constexpr uint32_t ThrowOutOfRange = 0x47CCE1;
@@ -30,6 +31,7 @@ constexpr uint32_t GOT_CREATE_DECK_EDIT = 0xFD66B0;
 }  // namespace g
 
 constexpr uint32_t VT_PartyInfoClosed = 0xF58AF0, VT_PartsClosure = 0xF58AC4;
+constexpr uint32_t VT_MedalListClosed = 0xF54DA0;   // the close animation's end: {a, shadow, b, onClosed, result}
 constexpr uint32_t VT_TitleClosure = 0xF56444, VT_DeckClosure = 0xF594E8;
 constexpr uint32_t VT_ShareDone = 0xF651DC, VT_FBShareDone = 0xF65208, VT_ShopBack = 0xF6528C;
 constexpr uint32_t V_SET_TOUCH_ENABLED = 0x29C;
@@ -55,6 +57,34 @@ uint32_t setTouchEnabledAllButton(uint32_t self, uint32_t enabled) {
     vcall(ld32(self + 0x2B8), V_SET_TOUCH_ENABLED, {ld32(self + 0x2B8), enabled});
     return vcall(ld32(self + 0x2BC), V_SET_TOUCH_ENABLED, {ld32(self + 0x2BC), enabled});
 }
+// the medal list popup's close {popup, a, shadow, b, onClosed}(result): a copy of the closure goes into a heap
+// lambda (the three words, onClosed moved in, the result) that the shrink animation calls at its end; the shadow
+// fades out. createClosePopupAnimation does not use its node (the original passes a stale register).
+void medalListClose(uint32_t self, uint32_t result) {
+    Frame f;
+    const uint32_t popup = ld32(self);
+    const uint32_t copy = f.alloc(0x30);        // the three words, function<void(bool)> at +0x10, the result at +0x28
+    st32(copy, ld32(self + 4));
+    st32(copy + 4, ld32(self + 8));
+    st32(copy + 8, ld32(self + 12));
+    call(g::FunctionVB_copy, {copy + 0x10, self + 0x10});
+    st8(copy + 0x28, uint8_t(result));
+    const uint32_t fo = f.alloc(20);
+    st32(fo + 16, 0);
+    const uint32_t obj = call(fn::operator_new, {0x38});
+    if (obj) {
+        st32(obj, VT_MedalListClosed);
+        for (uint32_t k = 0; k < 12; k += 4) st32(obj + 8 + k, ld32(copy + k));
+        call(g::FunctionVB_move, {obj + 0x18, copy + 0x10});
+        st8(obj + 0x30, ld8(copy + 0x28));
+    }
+    st32(fo + 16, obj);
+    call(fn::Node_runAction, {popup, SceneUtil::createClosePopupAnimation(0, fo)});
+    functionDestroy(fo);
+    functionDestroy(copy + 0x10);
+    call(fn::Node_runAction, {ld32(self + 8), call(fn::FadeTo_create, {fbits(0.1f), 0})});
+}
+
 // a back button {-, closure}(sender, type): ended -> close, then the medal list
 uint32_t backToMedalList(uint32_t self, uint32_t, uint32_t typep) {
     if (ld32(typep) != 2) return 0;
@@ -322,6 +352,7 @@ uint32_t deckClone(uint32_t self) {
 
 RW_FUNCTION(0x73CCCC, "SceneMedalList::createScene()", medalListCreateScene);
 RW_FUNCTION(0x73DC70, "SceneMedalList::setTouchEnabledAllButton(bool)", setTouchEnabledAllButton);
+RW_FUNCTION(0x489EE0, "SceneMedalList popup close (sub_489EE0)", medalListClose);
 RW_FUNCTION(0x48A520, "SceneMedalList back button (sub_48A520)", backToMedalList);
 RW_FUNCTION(0x73C9E0, "SceneMedalList sale mode toggle (sub_73C9E0)", saleModeToggle);
 RW_FUNCTION(0x59B190, "MedalListScrollView::getSelectedMedals()", getSelectedMedals);

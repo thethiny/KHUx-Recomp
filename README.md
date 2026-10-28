@@ -142,19 +142,19 @@ Translation
   Recompiled              ████████████████████  100.0%  56,381 / 56,381
 
 Rewrite: game code
-  Rewritten               ████████████████████  100.0%  18,828 / 18,828
-  Run under the verifier  ██████░░░░░░░░░░░░░░   31.9%   5,999 / 18,828
-  Verified                ██████░░░░░░░░░░░░░░   27.8%   5,232 / 18,828
+  Rewritten               ████████████████████   98.8%  19,478 / 19,711
+  Run under the verifier  ██████░░░░░░░░░░░░░░   31.4%   6,185 / 19,711
+  Verified                █████░░░░░░░░░░░░░░░   27.3%   5,372 / 19,711
 
 Rewrite: open-source libraries
-  Rewritten               ████████░░░░░░░░░░░░   41.1%  15,450 / 37,547
-  Run under the verifier  █░░░░░░░░░░░░░░░░░░░    5.6%   2,115 / 37,547
-  Verified                █░░░░░░░░░░░░░░░░░░░    4.7%   1,750 / 37,547
+  Rewritten               █████████░░░░░░░░░░░   44.3%  16,237 / 36,664
+  Run under the verifier  █░░░░░░░░░░░░░░░░░░░    7.2%   2,643 / 36,664
+  Verified                █░░░░░░░░░░░░░░░░░░░    6.1%   2,253 / 36,664
 
 Rewrite: all functions
-  Rewritten               ████████████░░░░░░░░   60.8%  34,278 / 56,381
-  Run under the verifier  ███░░░░░░░░░░░░░░░░░   14.4%   8,114 / 56,381
-  Verified                ██░░░░░░░░░░░░░░░░░░   12.4%   6,982 / 56,381
+  Rewritten               █████████████░░░░░░░   63.3%  35,715 / 56,381
+  Run under the verifier  ███░░░░░░░░░░░░░░░░░   15.7%   8,828 / 56,381
+  Verified                ███░░░░░░░░░░░░░░░░░   13.5%   7,625 / 56,381
 
 Binary match
   1:1 binary match        ░░░░░░░░░░░░░░░░░░░░    0.0%       0 / 56,381
@@ -165,7 +165,7 @@ Updated by `python recomp/progress.py`.
 - **Decompiled**: functions with Hex-Rays pseudocode (590 failed). Reference only.
 - **Lifted**: functions the lifter translates to C (machine-generated, one C function per guest function, 65 instructions left to the emulator). 14,189 of them run and are checked against the emulator in game.
 - **Recompiled**: a native executable that runs without the emulator. The native host (`host/`, Windows) runs every lifted function natively, with real threads, sound, sockets, JNI and OpenGL ES, and no emulator or Python: it plays the game through login, the main menu, quests, raids and multiplayer against the private server.
-- **Rewritten**: readable C++ (named types and variables, no register-level code) in `rewrite/`. **Game code** is the game's own 18,828 functions, Square Enix's sound engine included; **open-source libraries** are the other 37,547 (cocos2d-x, libc++, OpenSSL, FreeType, libpng and others; `rewrite/tools/libsplit.py`), which a native build can take from upstream source instead.
+- **Rewritten**: readable C++ (named types and variables, no register-level code) in `rewrite/`. **Game code** is the game's own 19,711 functions, Square Enix's sound engine included; **open-source libraries** are the other 36,664 (cocos2d-x, libc++, OpenSSL, FreeType, libpng and others; `rewrite/tools/libsplit.py`), which a native build can take from upstream source instead.
 - **Run under the verifier**: rewritten functions the game has called while the M3 verifier compared them with the lifted original.
 - **Verified**: rewritten functions that matched the lifted original on every checked call. Normal play installs only these.
 - **1:1 binary match**: source that rebuilds the original ARM binary byte for byte (a matching decompilation). Not started.

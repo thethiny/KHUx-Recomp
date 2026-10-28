@@ -23,6 +23,10 @@ constexpr uint32_t openPopUpPlayStyle = 0x5376D1;
 constexpr uint32_t openPopUpLeaderChange = 0x539CCD;
 constexpr uint32_t openPopUpSubLeaderAppoint = 0x539F35;
 constexpr uint32_t openPopUpSubLeaderDismiss = 0x53A18D;
+constexpr uint32_t openPopUpMemberExpel = 0x53A3E5, openPopUpOffer = 0x53A641;
+constexpr uint32_t OtherClosedAssign = 0x54AB91;                     // (function<void(bool)>&, $_73's captures)
+constexpr uint32_t FunctionBool_call = 0x51022D;                     // std::function<bool()>::operator()
+constexpr uint32_t SceneManager_closeCurrentPopup = 0x6216A1;        // (sm, bool) -> bool
 }  // namespace g
 
 constexpr uint32_t VSLOT_setTouchEnabled = 0x29C;      // ui::Widget
@@ -38,6 +42,16 @@ constexpr uint32_t VT_OWN_CLOSED = 0xF58804;           // $_72 {buttons A..D, in
 constexpr uint32_t VT_OTHER_CLOSED = 0xF5864C;         // $_73 (same captures)
 constexpr uint32_t VT_OPEN_COMMENT = 0xF5885C;         // $_3's lambda() {dialog}
 constexpr uint32_t VT_PAYMENT_DONE = 0xF58888;         // that lambda's lambda(bool) {dialog}
+constexpr uint32_t VT_OPEN_OFFER = 0xF58780;           // $_6's lambda() {dialog}
+constexpr uint32_t VT_OFFER_PAYMENT_DONE = 0xF586FC;   // $_6's lambda(bool) {dialog}
+constexpr uint32_t VT_OPEN_OFFER_LATE = 0xF58728;      // that lambda's lambda() {dialog}
+constexpr uint32_t VT_OFFER_PAYMENT_ERROR = 0xF58754;  // its error dialog's callback
+constexpr uint32_t D_LEAVING = 0x2A4;                  // AvatarInfoDialog: uint8, closing for another scene
+constexpr uint32_t D_CAN_CLOSE = 0x2A8;                // std::function<bool()>
+constexpr uint32_t D_CHANGED = 0x2CB;                  // uint8, the shown player changed (party action done)
+constexpr uint32_t SM_MENU_OPEN = 0x2E2;               // SceneManager: uint8
+constexpr uint32_t VSLOT_setSlideTouch = 0x31C;        // BaseSlideView: (bool)
+constexpr uint32_t GOT_CREATE_AVATAR_EDIT = 0xFD662C;  // GOT: createSceneLayer<SceneAvatarEdit>
 
 // a std::function<void(bool)> at `out` holding a heap "closed" lambda (`vt`, 0x20 bytes) with 7 captured words
 uint32_t closedCallback(uint32_t vt, uint32_t out, uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint32_t e,
@@ -172,6 +186,75 @@ struct AvatarInfoButtons {
         }
         if (count) call(fn::shared_release, {count});
     }
+
+    // $_73 operator()(bool) {buttons A..D, invitation, dialog, view}: the scene manager unlocked, the buttons
+    // unlocked; done -> the dialog marked changed, the header refreshed, the slide view's touch on
+    static void otherClosedCall(uint32_t functor, uint32_t okRef) {
+        const uint32_t dialog = ld32(functor + 0x18);
+        const uint32_t ok = ld8(okRef);
+        st8(sceneManager() + aid::SM_LOCKED, 0);
+        setButtonsTouch(functor + 4, 1);
+        if (!ok) return;
+        st8(dialog + D_CHANGED, 1);
+        call(g::SceneManager_updateHeader, {sceneManager()});
+        const uint32_t view = ld32(functor + 0x1C);
+        vcall(view, VSLOT_setSlideTouch, {view, 1});
+    }
+
+    // $_5 (button D) {+4 buttons, +0x18 dialog, +0x1C $_73's captures}: another player's page -> the member
+    // expel popup; the player's own -> the dialog closes and the avatar edit scene opens (when the dialog's
+    // canClose agrees)
+    static void buttonD(uint32_t functor, uint32_t /*sender*/, uint32_t typeRef) {
+        if (ld32(typeRef) != TOUCH_ENDED) return;
+        const uint32_t dialog = ld32(functor + 0x18);
+        setButtonsTouch(functor + 4, 0);
+        if (ld8(dialog + D_OTHER_USER)) {
+            openWith(g::openPopUpMemberExpel, dialog, true, functor + 0x1C);
+            return;
+        }
+        st8(dialog + D_LEAVING, 1);
+        call(g::SceneManager_closeCurrentPopup, {sceneManager(), 0});
+        call(g::AudioPlaySystemSEDecide, {});
+        st8(sceneManager() + SM_MENU_OPEN, 0);
+        if (ld32(dialog + D_CAN_CLOSE + 16) && call(g::FunctionBool_call, {dialog + D_CAN_CLOSE}) != 1) return;
+        changeSceneLayerTo(GOT_CREATE_AVATAR_EDIT, 1, 1, 1);
+    }
+
+    // $_6 (invitation) {+4 buttons, +0x18 dialog, +0x1C $_73's captures}: the buttons locked, the "closed"
+    // callback parked in the dialog; the party offer popup after the popup delay, or first the payment info
+    static void invitation(uint32_t functor, uint32_t /*sender*/, uint32_t typeRef) {
+        if (ld32(typeRef) != TOUCH_ENDED) return;
+        const uint32_t dialog = ld32(functor + 0x18);
+        setButtonsTouch(functor + 4, 0);
+        call(g::AudioPlaySystemSEDecide, {});
+        call(g::OtherClosedAssign, {dialog + aid::D_ON_POPUP_CLOSED, functor + 0x1C});
+        const uint32_t api = call(fn::APIManager_getInstance, {});
+        const uint32_t count = ld32(api + API_PAYMENT + 4), payment = ld32(api + API_PAYMENT);
+        if (count) call(fn::shared_add, {count});
+        if (payment) aid::afterPopupDelay(dialog, VT_OPEN_OFFER);
+        else aid::requestPaymentInfo(dialog, VT_OFFER_PAYMENT_DONE);
+        if (count) call(fn::shared_release, {count});
+    }
+
+    // $_6's payment info result {dialog}(ok): the loading indicator off; the offer popup after the popup delay,
+    // or the API error dialog
+    static void offerPaymentDone(uint32_t functor, uint32_t okRef) {
+        const uint32_t ok = ld8(okRef);
+        const uint32_t dialog = ld32(functor + 4);
+        call(g::SceneManager_enableLoadingIndicator, {sceneManager(), 0});
+        if (ok) aid::afterPopupDelay(dialog, VT_OPEN_OFFER_LATE);
+        else aid::apiErrorDialog(VT_OFFER_PAYMENT_ERROR);
+    }
+
+    // $_6's lambda() / lambda(bool)'s lambda() {dialog}: the party offer popup with the parked "closed" callback
+    static void openOffer(uint32_t functor) {
+        const uint32_t dialog = ld32(functor + 4);
+        Frame f;
+        const uint32_t cb = f.alloc(20);
+        call(g::FunctionVB_copy, {cb, dialog + aid::D_ON_POPUP_CLOSED});
+        call(g::openPopUpOffer, {dialog, cb});
+        functionDestroy(cb);
+    }
 };
 }  // namespace
 
@@ -182,3 +265,9 @@ RW_FUNCTION(0x54C326, "AvatarInfoDialog::createLayout::$_72 operator()", AvatarI
 RW_FUNCTION(0x54C6D8, "AvatarInfoDialog::createLayout::$_3::lambda() operator()", AvatarInfoButtons::openComment);
 RW_FUNCTION(0x54C244, "sub_54C244 (createLayout $_72 std::function)", ownClosed);
 RW_FUNCTION(0x54AE30, "sub_54AE30 (createLayout $_73 std::function)", otherClosed);
+RW_FUNCTION(0x54AF14, "AvatarInfoDialog::createLayout::$_73 operator()", AvatarInfoButtons::otherClosedCall);
+RW_FUNCTION(0x54BCC0, "AvatarInfoDialog::createLayout::$_5 operator() (button D)", AvatarInfoButtons::buttonD);
+RW_FUNCTION(0x54B514, "AvatarInfoDialog::createLayout::$_6 operator() (invitation)", AvatarInfoButtons::invitation);
+RW_FUNCTION(0x54B7C0, "AvatarInfoDialog::createLayout::$_6::lambda(bool) operator() (payment info)", AvatarInfoButtons::offerPaymentDone);
+RW_FUNCTION(0x54BB54, "AvatarInfoDialog::createLayout::$_6::lambda() operator() (party offer)", AvatarInfoButtons::openOffer);
+RW_FUNCTION(0x54B994, "AvatarInfoDialog::createLayout::$_6::lambda(bool)::lambda() operator() (party offer)", AvatarInfoButtons::openOffer);

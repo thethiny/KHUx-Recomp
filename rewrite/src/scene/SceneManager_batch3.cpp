@@ -1,7 +1,7 @@
 // SceneManager: lambda bodies and std::function slots that run in game but were left after batch 2 (batch 3, named
 // from their __func vtables' target_type). `functor` is the __func object: vtable at +0, then the captures (the
 // SceneManager at +4 for most).
-#include "SceneUi.hpp"
+#include "ScrollRowTouch.hpp"   // rowContainsTouch (+ SceneUi.hpp)
 
 using namespace scene;
 
@@ -78,6 +78,14 @@ constexpr uint32_t VT_prevChangeNext_26 = 0xF603A0;
 constexpr uint32_t VT_prevChangeNext_inner = 0xF603F8;
 constexpr uint32_t VT_initGlobalMenu_17 = 0xF60558;
 constexpr uint32_t VT_createHeader_13 = 0xF606B8;
+// the footer menu's touch moved, the scene change hooks
+constexpr uint32_t MENU_BUTTONS = 7;
+constexpr uint32_t SceneShopTop_callShopAPI = 0x68BB9D;                    // (function<void(bool)>)
+constexpr uint32_t SceneAdventureSelect_callAdventureSelectAPI = 0x71D261; // (function<void(bool)>)
+constexpr uint32_t SceneUtil_callPrepareMypageAPIs = 0x46F37D;            // (function<void(bool)>)
+constexpr uint32_t APIManager_executeUserSphereCheck = 0x4CCBC1;           // (api, SphereLockType, const function&)
+constexpr uint32_t SPHERE_LOCK_MENU = 3;
+constexpr uint32_t SceneManager_changeSceneLayer = 0x612B99;   // (mgr, const function<Layer*()>&, bool, bool, FadeType)
 
 }  // namespace
 
@@ -430,6 +438,70 @@ struct SceneManagerBatch3 {
         call(SceneManager_generateTouchMoveEffect, {self, at});
         call(Vec2_dtor, {at});
     }
+
+    // initGlobalMenu $_17 [this, buttons root (+8), button images root (+0xC)](Touch*, Event*): a touch moving
+    // over the open menu (after the tutorial) lights the button under it and darkens the one lit before
+    static void globalMenuMoved(uint32_t functor, uint32_t touchPtr) {
+        const uint32_t self = ld32(functor + 4);
+        if (!ld8(self + SM_MENU_SHOWN)) return;
+        const uint32_t touch = ld32(touchPtr);
+        if (int32_t(call(SceneUtil_getNexTutorialphase, {})) < TUTORIAL_PHASE_DONE) return;
+        const uint32_t index = call(GlobalMenu_buttonAt, {functor + 8, touch});
+        const uint32_t selected = ld32(self + SM_MENU_SELECTED);
+        if (index == selected) return;
+        Frame f;
+        if (selected != 0xFFFFFFFFu)
+            setButtonImage(f, menuButton(f, ld32(functor + 0xC), selected), S_BAR_BUTTON_OFF, selected);
+        if (index != 0xFFFFFFFFu)
+            setButtonImage(f, menuButton(f, ld32(functor + 0xC), index), S_BAR_BUTTON_ON, index);
+        st32(self + SM_MENU_SELECTED, index);
+    }
+
+    // sub_6357F8(&root, Touch*): the footer button (0..6) under the touch, -1 for none
+    static uint32_t buttonAt(uint32_t rootRef, uint32_t touch) {
+        for (uint32_t i = 0; i < MENU_BUTTONS; i++) {
+            Frame f;
+            if (rowContainsTouch(menuButton(f, ld32(rootRef), i), touch)) return i;
+        }
+        return 0xFFFFFFFFu;
+    }
+
+    // initGlobalMenu $_121's scene change hooks and closeGlobalMenu's ($_19 .. $_23, the same code) [](function<void
+    // (bool)> done): the next scene's API calls with `done`; all but My Page's first mark the API busy and drop the
+    // pending payment callback
+    // done moved out of the argument, then `callApi(copy of done)`
+    static void hookCall(uint32_t donePtr, uint32_t callApi, bool reset) {
+        Frame f;
+        const uint32_t done = f.alloc(24);
+        call(fn::function_vb_move, {done, donePtr});
+        if (reset) apiBusyDropPayment();
+        const uint32_t copy = f.alloc(24);
+        functionCopy(copy, done);
+        call(callApi, {copy});
+        functionDestroy(copy);
+        functionDestroy(done);
+    }
+    static void hookShop(uint32_t, uint32_t donePtr) { hookCall(donePtr, SceneShopTop_callShopAPI, true); }
+    static void hookAdventure(uint32_t, uint32_t donePtr) {
+        hookCall(donePtr, SceneAdventureSelect_callAdventureSelectAPI, true);
+    }
+    static void hookMyPage(uint32_t, uint32_t donePtr) { hookCall(donePtr, SceneUtil_callPrepareMypageAPIs, false); }
+    static void hookSphere(uint32_t, uint32_t donePtr) {
+        Frame f;
+        const uint32_t done = f.alloc(24);
+        call(fn::function_vb_move, {done, donePtr});
+        apiBusyDropPayment();
+        call(APIManager_executeUserSphereCheck, {call(fn::APIManager_getInstance, {}), SPHERE_LOCK_MENU, done});
+        functionDestroy(done);
+    }
+
+    // initGlobalMenu $_121's run-out end [this]: the next scene's layer (faded), then its factory dropped
+    static void runOutDone(uint32_t functor) {
+        const uint32_t self = ld32(functor + 4);
+        call(SceneManager_changeSceneLayer, {self, self + SM_NEXT_LAYER, 1, 1, 1});
+        functionDestroy(self + SM_NEXT_LAYER);
+        st32(self + SM_NEXT_LAYER + 16, 0);
+    }
 };
 
 using L = SceneManagerBatch3;
@@ -450,3 +522,15 @@ RW_FUNCTION(0x6349CC, "SceneManager (sub_6349CC): callPrevChangeNextSceneAPIs bo
 RW_FUNCTION(0x611AA0, "SceneManager (sub_611AA0): a shadowed text from the text data", L::setShadowText);
 RW_FUNCTION(0x611B60, "SceneManager (sub_611B60): assign a touch lambda", L::assignTouchLambda);
 RW_FUNCTION(0x6359EC, "SceneManager::initGlobalMenu::$_16 (sub_6359EC): the footer menu touched", L::globalMenuTouched);
+
+RW_FUNCTION(0x635554, "SceneManager::initGlobalMenu::$_17::operator() (touch moved)", L::globalMenuMoved);
+RW_FUNCTION(0x6357F8, "SceneManager (sub_6357F8): the footer button under a touch", L::buttonAt);
+RW_FUNCTION(0x636758, "SceneManager::initGlobalMenu::$_121 Shop hook", L::hookShop);
+RW_FUNCTION(0x634E44, "SceneManager::closeGlobalMenu::$_23 (Shop hook)", L::hookShop);
+RW_FUNCTION(0x636A7C, "SceneManager::initGlobalMenu::$_121 Adventure hook", L::hookAdventure);
+RW_FUNCTION(0x635168, "SceneManager::closeGlobalMenu::$_21 (Adventure hook)", L::hookAdventure);
+RW_FUNCTION(0x636910, "SceneManager::initGlobalMenu::$_121 Sphere hook", L::hookSphere);
+RW_FUNCTION(0x634FFC, "SceneManager::closeGlobalMenu::$_22 (Sphere hook)", L::hookSphere);
+RW_FUNCTION(0x636D0C, "SceneManager::initGlobalMenu::$_121 My Page hook", L::hookMyPage);
+RW_FUNCTION(0x635320, "SceneManager::closeGlobalMenu::$_19 (My Page hook)", L::hookMyPage);
+RW_FUNCTION(0x636C3E, "SceneManager::initGlobalMenu::$_121 run-out end", L::runOutDone);

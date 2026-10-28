@@ -17,7 +17,16 @@ constexpr uint32_t TimezoneVector_pushBackSlow = 0x544D15;  // vector<Timezone>:
 constexpr uint32_t TimezoneSort = 0x54D231;                 // std::__sort(first, last, comp)
 constexpr uint32_t CheckBox_addEventListener = rwlib::cocos2d::ui::CheckBox::addEventListener;    // (box, const function<void(Ref*, EventType)>&)
 constexpr uint32_t CheckBox_setSelectedState = rwlib::cocos2d::ui::CheckBox::setSelectedState;    // (box, bool)
-constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
+constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9, AudioPlaySystemSECancel = 0x5C0D81;
+constexpr uint32_t FunctionVB_call = 0x474139;              // std::function<void(bool)>::operator()(bool)
+constexpr uint32_t TimezoneSet_insertUnique = 0x54CE39;     // (pair out, tree, const Timezone&)
+constexpr uint32_t TimezoneSet_assignMulti = 0x54CC0D;      // (tree, first, last)
+constexpr uint32_t TimezoneSet_destroy = 0x54CD73;          // (tree, node)
+constexpr uint32_t ZoneRemove = 0x5442B1;                   // sub_5442B0(&dialog, zone): the zone erased from +0x444
+constexpr uint32_t SceneManager_enableLoadingIndicator = 0x60D169;   // (sm, bool)
+constexpr uint32_t SceneManager_closeCurrentPopup = 0x6216A1;        // (sm, bool) -> bool
+constexpr uint32_t APIManager_getInstance = 0x4BA8C9, APIManager_openErrorDialog = 0x4C3C8D;   // (api, function<void()>, bool)
+constexpr uint32_t APIManager_executeUserPlaystyleUpdate = 0x4C8741; // (api, set<Timezone>&, style, function<void(bool)>)
 }  // namespace g
 
 constexpr uint32_t S_Json = 0xDFE423, S_TxtPlayTime = 0xDFE450, S_TxtSelect = 0xDFE4B7, S_TxtSetting = 0xDFE4C2,
@@ -47,6 +56,11 @@ constexpr uint32_t VT_OkTouch = 0xF57EBC;              // Button_Ok {ok, dialog,
 constexpr uint32_t VT_CancelTouch = 0xF57E90;          // Button_Close (no captures)
 constexpr uint32_t VT_CanClose = 0xF57E64;             // openPopup's function<bool()> {close}
 constexpr uint32_t VT_Closed = 0xF57E0C;               // openPopup's result {ok, -, view, layer, shadow, onClosed}
+constexpr uint32_t VT_Closing = 0xF57E38;              // the close animation's end {layer, shadow, view}
+constexpr uint32_t VT_Updated = 0xF57EE8;              // executeUserPlaystyleUpdate's result {view, layer, shadow, -, onClosed}
+constexpr uint32_t VT_UpdateError = 0xF57F14;          // the error dialog's callback (no captures)
+constexpr uint32_t API_SHOW_ERROR = 0x14;              // APIManager: uint8, the error dialog is wanted
+constexpr uint32_t G_SHADOW_FADE = 0xFD65C0;           // GOT: the popup shadow's fade time (float)
 
 // text->setString(TextData `id`) then its shadow / the shadow first
 void textShadow(uint32_t text, int32_t id) {
@@ -122,6 +136,134 @@ struct AvatarInfoPlayStyle {
             vcall(box, V_SET_TOUCH_ENABLED, {box, (count < MAX_ZONES || chosen) ? 1u : 0u});
             call(g::CheckBox_setSelectedState, {box, chosen ? 1u : 0u});
         }
+    }
+
+    // the popup's close {view, layer, shadow, -, onClosed}(result): the view shrinks (a lambda {layer, shadow,
+    // view} ends the close), the shadow fades out, then onClosed(result) when there is one (sub_543260)
+    static void close(uint32_t ctx, uint32_t result) {
+        const uint32_t view = ld32(ctx);
+        {
+            Frame f;
+            const uint32_t fo = newFunction(f, VT_Closing, {ld32(ctx + 4), ld32(ctx + 8), view});
+            call(fn::Node_runAction, {view, SceneUtil::createClosePopupAnimation(view, fo)});
+            functionDestroy(fo);
+        }
+        call(fn::Node_runAction, {ld32(ctx + 8), call(fn::FadeTo_create, {ld32(ld32(G_SHADOW_FADE)), 0})});
+        if (ld32(ctx + 0x20)) call(g::FunctionVB_call, {ctx + 0x10, result & 0xFF});
+    }
+
+    // a time box {dialog, dialog, boxes A..F, dialog}(sender, type): checked -> the zone added while fewer than
+    // three are chosen; unchecked -> removed; then the boxes synced ($_26..$_31)
+    template <uint32_t Zone> static void zoneTouch(uint32_t self, uint32_t, uint32_t typep) {
+        const uint32_t type = ld32(typep);
+        const uint32_t dialog = ld32(self + 4);
+        call(g::AudioPlaySystemSEDecide, {});
+        if (type) {
+            call(g::ZoneRemove, {self + 0x24, Zone});
+        } else {
+            const uint32_t vec = dialog + D_EDIT_ZONES;
+            if (((ld32(vec + 4) - ld32(vec)) >> 2) <= MAX_ZONES - 1) {
+                Frame f;
+                pushZone(vec, Zone, f.alloc(4));
+            }
+        }
+        syncZones(self + 8);
+    }
+
+    // a style box {dialog, box 3, dialog, box 2, box 1}(sender, type): checked -> the style chosen and the three
+    // boxes show it; unchecked -> no style ($_33..$_35)
+    template <uint32_t Style> static void styleTouch(uint32_t self, uint32_t, uint32_t typep) {
+        const uint32_t edit = ld32(self + 4) + D_EDIT_STYLE;
+        const uint32_t type = ld32(typep);
+        call(g::AudioPlaySystemSEDecide, {});
+        if (type) {
+            st32(edit, 0);
+            return;
+        }
+        st32(edit, Style);
+        const uint32_t dialog = ld32(self + 12);
+        call(g::CheckBox_setSelectedState, {ld32(self + 8), ld32(dialog + D_EDIT_STYLE) == 3 ? 1u : 0u});
+        call(g::CheckBox_setSelectedState, {ld32(self + 16), ld32(dialog + D_EDIT_STYLE) == 2 ? 1u : 0u});
+        call(g::CheckBox_setSelectedState, {ld32(self + 20), ld32(dialog + D_EDIT_STYLE) == 1 ? 1u : 0u});
+    }
+
+    // Button_Ok {-, ok, dialog, view, layer, shadow, -, onClosed}(sender, type): ended -> the button disabled, the
+    // edited style and the chosen zones (as a set) become the player's and go to the server ($_38)
+    static void okTouch(uint32_t self, uint32_t, uint32_t typep) {
+        if (ld32(typep) != 2) return;
+        const uint32_t dialog = ld32(self + 12);
+        call(g::AudioPlaySystemSEDecide, {});
+        const uint32_t ok = ld32(self + 8);
+        vcall(ok, V_SET_TOUCH_ENABLED, {ok, 0});
+        st32(dialog + D_STYLE, ld32(dialog + D_EDIT_STYLE));
+        Frame f;
+        const uint32_t tree = f.alloc(12);       // std::set<Timezone>: begin node, root (the end node's left), size
+        st32(tree + 4, 0);
+        st32(tree + 8, 0);
+        st32(tree, tree + 4);
+        const uint32_t vec = dialog + D_EDIT_ZONES;
+        {
+            const uint32_t key = f.alloc(4), result = f.alloc(8);
+            for (uint32_t z = 1; z <= ZONES; z++) {
+                const uint32_t it = lowerBound(ld32(vec), (ld32(vec + 4) - ld32(vec)) >> 2, int32_t(z));
+                if (it == ld32(vec + 4) || int32_t(ld32(it)) > int32_t(z)) continue;
+                st32(key, z);
+                call(g::TimezoneSet_insertUnique, {result, tree, key});
+            }
+        }
+        const uint32_t zones = dialog + D_ZONES;
+        if (zones != tree) call(g::TimezoneSet_assignMulti, {zones, ld32(tree), tree + 4});
+        const uint32_t closer = f.alloc(0x28);   // {view, layer, shadow, -, onClosed}
+        for (uint32_t k = 0; k < 12; k += 4) st32(closer + k, ld32(self + 16 + k));
+        call(g::FunctionVB_copy, {closer + 0x10, self + 0x20});
+        call(g::SceneManager_enableLoadingIndicator, {sceneManager(), 1});
+        const uint32_t api = call(g::APIManager_getInstance, {});
+        const uint32_t style = ld32(dialog + D_STYLE);
+        const uint32_t copy = f.alloc(0x28);
+        for (uint32_t k = 0; k < 12; k += 4) st32(copy + k, ld32(closer + k));
+        functionCopy(copy + 0x10, closer + 0x10);
+        const uint32_t fo = f.alloc(20);
+        st32(fo + 16, 0);
+        const uint32_t obj = call(fn::operator_new, {0x30});
+        if (obj) {
+            st32(obj, VT_Updated);
+            for (uint32_t k = 0; k < 12; k += 4) st32(obj + 8 + k, ld32(copy + k));
+            call(g::FunctionVB_move, {obj + 0x18, copy + 0x10});
+        }
+        st32(fo + 16, obj);
+        call(g::APIManager_executeUserPlaystyleUpdate, {api, zones, style, fo});
+        functionDestroy(fo);
+        functionDestroy(copy + 0x10);
+        functionDestroy(closer + 0x10);
+        call(g::TimezoneSet_destroy, {tree, ld32(tree + 4)});
+    }
+
+    // the play style update's result {-, view, layer, shadow, -, onClosed}(ok): the loading indicator off; ok ->
+    // the popup closes with true; else the API error dialog when one is wanted ($_38 lambda(bool))
+    static void updated(uint32_t self, uint32_t okp) {
+        const uint32_t ok = ld8(okp);
+        call(g::SceneManager_enableLoadingIndicator, {sceneManager(), 0});
+        if (ok) {
+            call(g::SceneManager_closeCurrentPopup, {sceneManager(), 1});
+            close(self + 8, 1);
+            return;
+        }
+        if (!ld8(call(g::APIManager_getInstance, {}) + API_SHOW_ERROR)) return;
+        const uint32_t api = call(g::APIManager_getInstance, {});
+        Frame f;
+        const uint32_t fo = newFunction(f, VT_UpdateError, {});
+        call(g::APIManager_openErrorDialog, {api, fo, 1});
+        functionDestroy(fo);
+    }
+
+    // openPopup's result {-, ok, -, view, layer, shadow, -, onClosed}(closed by OK): closed otherwise (the back key,
+    // Button_Close) -> the cancel sound, the OK button disabled and the popup closes with false ($_41)
+    static void closed(uint32_t self, uint32_t byOkp) {
+        if (ld8(byOkp)) return;
+        call(g::AudioPlaySystemSECancel, {});
+        const uint32_t ok = ld32(self + 8);
+        vcall(ok, V_SET_TOUCH_ENABLED, {ok, 0});
+        close(self + 0x10, 0);
     }
 
     static void open(uint32_t dialog, uint32_t onClosed) {
@@ -270,3 +412,16 @@ struct AvatarInfoPlayStyle {
 
 RW_FUNCTION(0x5376D0, "AvatarInfoDialog::openPopUpPlayStyle(function<void(bool)>)", AvatarInfoPlayStyle::open);
 RW_FUNCTION(0x539240, "AvatarInfoDialog::openPopUpPlayStyle time boxes (sub_539240)", AvatarInfoPlayStyle::syncZones);
+RW_FUNCTION(0x543260, "AvatarInfoDialog::openPopUpPlayStyle close (sub_543260)", AvatarInfoPlayStyle::close);
+RW_FUNCTION(0x544C3C, "AvatarInfoDialog::openPopUpPlayStyle::$_26 operator() (time box A)", AvatarInfoPlayStyle::zoneTouch<1>);
+RW_FUNCTION(0x544ADC, "AvatarInfoDialog::openPopUpPlayStyle::$_27 operator() (time box B)", AvatarInfoPlayStyle::zoneTouch<2>);
+RW_FUNCTION(0x54497C, "AvatarInfoDialog::openPopUpPlayStyle::$_28 operator() (time box C)", AvatarInfoPlayStyle::zoneTouch<3>);
+RW_FUNCTION(0x544818, "AvatarInfoDialog::openPopUpPlayStyle::$_29 operator() (time box D)", AvatarInfoPlayStyle::zoneTouch<4>);
+RW_FUNCTION(0x5446B8, "AvatarInfoDialog::openPopUpPlayStyle::$_30 operator() (time box E)", AvatarInfoPlayStyle::zoneTouch<5>);
+RW_FUNCTION(0x5441D8, "AvatarInfoDialog::openPopUpPlayStyle::$_31 operator() (time box F)", AvatarInfoPlayStyle::zoneTouch<6>);
+RW_FUNCTION(0x5440B2, "AvatarInfoDialog::openPopUpPlayStyle::$_33 operator() (style A)", AvatarInfoPlayStyle::styleTouch<3>);
+RW_FUNCTION(0x543FA6, "AvatarInfoDialog::openPopUpPlayStyle::$_34 operator() (style B)", AvatarInfoPlayStyle::styleTouch<2>);
+RW_FUNCTION(0x543E9E, "AvatarInfoDialog::openPopUpPlayStyle::$_35 operator() (style C)", AvatarInfoPlayStyle::styleTouch<1>);
+RW_FUNCTION(0x5436B8, "AvatarInfoDialog::openPopUpPlayStyle::$_38 operator() (Button_Ok)", AvatarInfoPlayStyle::okTouch);
+RW_FUNCTION(0x543C88, "AvatarInfoDialog::openPopUpPlayStyle::$_38 lambda(bool) operator() (update result)", AvatarInfoPlayStyle::updated);
+RW_FUNCTION(0x5431F4, "AvatarInfoDialog::openPopUpPlayStyle::$_41 operator() (popup closed)", AvatarInfoPlayStyle::closed);

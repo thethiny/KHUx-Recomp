@@ -413,6 +413,71 @@ struct DeckKeyBladePopup {
         if (ld32(before + 4)) call(fn::shared_release, {ld32(before + 4)});
     }
 };
+
+// ---- the opened slot's LWF handlers
+constexpr uint32_t DeckMedalView_setIsShowDarklightMagnification = 0x52BFDD;
+constexpr uint32_t SceneUtil_createFadeOutAnimation = 0x45BCE5;
+constexpr uint32_t VT_GlowFaded = 0xF63F44;       // the fade's end {area, lwf}
+constexpr uint32_t V_LWF_LOAD_MOVIE = 0x2F0;      // the LWF node's vslot 0x2F0: (shared_ptr out, node, path, slot, name, done)
+constexpr uint32_t MOVIE_FRAMES = 0x98, MOVIE_FRAME = 0x9C;
+constexpr uint32_t S_BlankSlotFmt = 0xE0450F;     // "lwf/keyblade/KeyEvo/medal_blank_slot%d/medal_blank_slot%d.lwf"
+constexpr uint32_t S_MedalGlowLwf = 0xE0454D;     // "lwf/keyblade/KeyEvo/KeyEvo_Medal_02/KeyEvo_Medal_02.lwf"
+constexpr uint32_t S_EmptyName = 0xDF8A1A;        // ""
+
+// "medal_blank_slot" load {lwf node, slot}(slot index): the slot's blank LWF loaded into the node
+void blankSlotLoad(uint32_t self, uint32_t slotp) {
+    const uint32_t index = ld32(slotp);
+    const uint32_t node = ld32(self + 4), slot = ld32(self + 8);
+    const uint32_t load = ld32(ld32(node) + V_LWF_LOAD_MOVIE);
+    Frame f;
+    const uint32_t path = stringBuffer(f, {S_BlankSlotFmt, slot, slot});
+    const uint32_t none = newEmptyFunction(f);
+    const uint32_t out = f.alloc(8);
+    call(load, {out, node, path, index, S_EmptyName, none});
+    sharedRelease(out);
+    functionDestroy(none);
+}
+
+// "_root" enterFrame {medal view, lwf, area}(movie): at the movie's last frame the medal view shows its darklight
+// magnification and the LWF fades out (then the glow LWF)
+void slotEnterFrame(uint32_t self, uint32_t moviep) {
+    const uint32_t movie = ld32(moviep);
+    if (ld32(movie + MOVIE_FRAME) != ld32(movie + MOVIE_FRAMES)) return;
+    call(DeckMedalView_setIsShowDarklightMagnification, {ld32(self + 4), 1});
+    const uint32_t lwf = ld32(self + 8);
+    Frame f;
+    const uint32_t done = newFunction(f, VT_GlowFaded, {ld32(self + 0xC), lwf});
+    call(fn::Node_runAction, {lwf, call(SceneUtil_createFadeOutAnimation, {lwf, done})});
+    functionDestroy(done);
+}
+
+// the fade's end {area, lwf}: the faded LWF removed, the medal glow LWF centred on the area's TYpe node
+void glowFaded(uint32_t self) {
+    const uint32_t area = ld32(self + 4);
+    vcall(area, node::removeChild, {area, ld32(self + 8), 1});
+    const uint32_t glow = call(g::AudioLWFNode_create, {S_MedalGlowLwf, 0});
+    Frame f;
+    const uint32_t name = f.alloc(12);        // the short string "TYpe", built inline
+    st8(name, 4 << 1);
+    st8(name + 1, 'T');
+    st8(name + 2, 'Y');
+    st8(name + 3, 'p');
+    st8(name + 4, 'e');
+    st8(name + 5, 0);
+    const uint32_t type = SceneUtil::searchNodeByName(ld32(self + 4), name);
+    strFree(name);
+    const uint32_t setPosition = ld32(ld32(glow) + node::setPosition);
+    const float w = ldf(vcall(type, node::getContentSize, {type}));
+    const float h = ldf(vcall(type, node::getContentSize, {type}) + 4);
+    const uint32_t pos = f.alloc(8);
+    call(g::Vec2_ctor, {pos, fbits(w * 0.5f), fbits(h * 0.5f)});
+    call(setPosition, {glow, pos});
+    call(g::Vec2_dtor, {pos});
+    vcall(type, node::addChild, {type, glow});
+}
 }  // namespace
 
 RW_FUNCTION(0x665584, "SceneDeckEdit::openKeyBladePopup(int, shared_ptr<UserKeyBladeData>)", DeckKeyBladePopup::open);
+RW_FUNCTION(0x67CB70, "SceneDeckEdit::openKeyBladePopup::$_29 medal_blank_slot load (sub_67CB70)", blankSlotLoad);
+RW_FUNCTION(0x67CCF0, "SceneDeckEdit::openKeyBladePopup::$_29 _root enterFrame (sub_67CCF0)", slotEnterFrame);
+RW_FUNCTION(0x67CE5C, "SceneDeckEdit::openKeyBladePopup::$_29 glow fade end (sub_67CE5C)", glowFaded);

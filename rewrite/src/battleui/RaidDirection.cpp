@@ -581,3 +581,62 @@ void to_end(uint32_t self, uint32_t done) {
 RW_FUNCTION(0x5F93CC, "RaidDirection::to_end", to_end);
 
 }  // namespace raid_direction
+
+// ------------------------------------------------------------------------------------------------ helper lambdas
+// raid_Cover_sub1 / sub2's lambdas {this, helper index}: the helper's hit ($_6 covers, $_9 attackers) and their
+// jump motion ($_5, $_8)
+namespace {
+constexpr uint32_t Avatar_changeMotion = 0x5C63C5;      // (avatar, Avatar::Motion)
+constexpr uint32_t RaidBoss_changeMotion = 0x5D6815;    // (boss, RaidBoss::Motion)
+constexpr uint32_t RaidBossActor_makeWholeAttackPoint = 0x5F3B65;
+constexpr uint32_t MarkerMap_find = 0x5F1251;           // unordered_map<int, BattleMarker*>::find(map, const int&)
+constexpr uint32_t display_damage = 0x5EB551;           // (int, Node*)
+constexpr uint32_t BOSS_MARKERS = 0x88C;                // RaidBossActor: unordered_map<int, BattleMarker*>
+constexpr uint32_t MOTION_ATTACK = 2, MOTION_JUMP = 0x10, BOSS_MOTION_DAMAGE = 2;
+constexpr uint32_t FLIPPED_SLOTS = 0x15;                // helper slots 0, 2, 4 face the other way
+constexpr float HELPER_SCALE = 1.3f;
+
+uint32_t helperAt(uint32_t dir, uint32_t vectorOffset, uint32_t index) { return ld32(ld32(dir + vectorOffset) + 4 * index); }
+void helperMotion(uint32_t dir, uint32_t vectorOffset, uint32_t index, uint32_t motion) {
+    call(Avatar_changeMotion, {ld32(helperAt(dir, vectorOffset, index) + AVATAR_ACTOR_AVATAR), motion});
+}
+
+// the helper attacks: its attack motion facing its side, the damage shown at the boss marker `key` (when the boss
+// has it), the boss's damage motion and its whole attack point
+void helperHit(uint32_t functor, uint32_t helpers, uint32_t hp, uint32_t key) {
+    const uint32_t dir = ld32(functor + 4);
+    helperMotion(dir, helpers, ld32(functor + 8), MOTION_ATTACK);
+    const uint32_t index = ld32(functor + 8);
+    const float sx = ((FLIPPED_SLOTS >> index) & 1) ? -HELPER_SCALE : HELPER_SCALE;
+    const uint32_t actor = helperAt(dir, helpers, index);
+    vcall(actor, V_SET_SCALE_XY, {actor, fb(sx), fb(HELPER_SCALE)});
+    uint32_t boss = ld32(dir + BOSS_ACTOR);
+    const uint32_t node = call(MarkerMap_find, {boss + BOSS_MARKERS, key});
+    if (node) {
+        call(display_damage, {ld32(ld32(dir + hp) + 4 * ld32(functor + 8)), ld32(node + 0xC)});
+        boss = ld32(dir + BOSS_ACTOR);
+    }
+    call(RaidBoss_changeMotion, {ld32(boss + BOSS_RAIDBOSS), BOSS_MOTION_DAMAGE});
+    call(RaidBossActor_makeWholeAttackPoint, {boss});
+}
+}  // namespace
+
+// raid_Cover_sub2 $_9: an attacker hits (the boss's marker 0)
+static void attackerHit(uint32_t functor) {
+    Frame f;
+    const uint32_t key = f.alloc(8);
+    st32(key, 0);
+    helperHit(functor, ATTACKERS, ATTACKER_HP, key);
+}
+// raid_Cover_sub1 $_6: a cover hits (the marker of the click point it covers)
+static void coverHit(uint32_t functor) {
+    const uint32_t dir = ld32(functor + 4);
+    helperHit(functor, COVERS, COVER_HP, ld32(dir + COVER_POINT) + 4 * ld32(functor + 8));
+}
+static void attackerJumpMotion(uint32_t functor) { helperMotion(ld32(functor + 4), ATTACKERS, ld32(functor + 8), MOTION_JUMP); }
+static void coverJumpMotion(uint32_t functor) { helperMotion(ld32(functor + 4), COVERS, ld32(functor + 8), MOTION_JUMP); }
+
+RW_FUNCTION(0x5F96F0, "RaidDirection::raid_Cover_sub2 $_9::operator() (attacker hit)", attackerHit);
+RW_FUNCTION(0x5F9866, "RaidDirection::raid_Cover_sub2 $_8::operator() (attacker jump motion)", attackerJumpMotion);
+RW_FUNCTION(0x5F99C4, "RaidDirection::raid_Cover_sub1 $_6::operator() (cover hit)", coverHit);
+RW_FUNCTION(0x5F9AFE, "RaidDirection::raid_Cover_sub1 $_5::operator() (cover jump motion)", coverJumpMotion);

@@ -51,8 +51,11 @@ addr	name	calls	verified	mismatches	unverifiable
 0045A420	SafeBuffer::SafeBuffer(const shared_ptr<bg::Data>&)	15621	333	0	0
 0045A554	SafeBuffer::serialize	340	204	0	0
 0045A604	SafeBuffer::zerofill	1973	11	0	0
+0045A670	std::shared_ptr<bg::MemoryStream>::make_shared<>	748	209	0	0
 0045A7E8	std::__shared_ptr_emplace<bg::MemoryStream>::__on_zero_shared	604	252	0	0
 0045A7F4	std::__shared_ptr_emplace<bg::MemoryStream>::__on_zero_shared_weak	604	252	0	0
+0045A7FC	std::list<SafeBuffer*>::remove	4109	572	0	0
+0045A83E	std::list<SafeBuffer*>::erase(first, last)	3920	472	0	0
 0045A924	sub_45A924	192	2	0	0
 0045A944	nullsub_6	194	2	0	0
 0045A950	Scheduler::scheduleUpdate<Guardian> lambda(float) operator()	547167	6600	0	0
@@ -84,6 +87,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0045C464	SceneUtil::textFieldToUiText	3	2	0	0
 0045C61C	SceneUtil::editBoxEditingDidEnd	2	1	0	0
 0045C774	SceneUtil::openOkDialog4Line	12	12	0	0
+0045C84C	std::function<void(bool)>::function(const&)	1357	363	0	0
 0045C950	SceneUtil::openOkCancelDialog4Line	8	7	0	0
 0045CC00	SceneUtil::openChargeApDialog	1	1	0	0
 0045CD88	SceneUtil::openChargeApPopup	1	1	0	0
@@ -106,6 +110,8 @@ addr	name	calls	verified	mismatches	unverifiable
 00466BA8	SceneUtil::setAdditionalKerningForAtlasLabel	776	16	0	0
 00466C40	SceneUtil::numberToAtlasString	1612	145	0	0
 00466EF4	SceneUtil::openMedalInfoPopup	35	15	0	0
+004683FE	std::function<void(MedalInfoButtonType, bool)>::function(const&)	30	10	0	0
+00468498	std::__vector_base<unsigned long long>::~__vector_base	175	79	0	0
 004684C8	SceneUtil::openTutorialPopup	1087	254	0	0
 00468624	SceneUtil::setButtonEnabled	1042	19	0	0
 00468668	SceneUtil::setNormalColor	42	1	0	0
@@ -121,7 +127,11 @@ addr	name	calls	verified	mismatches	unverifiable
 0046A228	SceneUtil::openAvatarInfoPopup	5	0	0	2
 0046A4AC	SceneUtil::updateDeckStauts	388	67	0	0
 0046A6E4	SceneUtil::updateDeckView(Widget*, UserKeyblade::Keyblade, std::function<void(MedalInfoButtonType, bool, int)>)	511	87	0	21
+0046B05C	std::function<void(MedalInfoButtonType, bool, unsigned long long)>::operator=(function<void(MedalInfoButtonType, bool, int)>&)	36	18	0	0
+0046B118	std::__vector_base<shared_ptr<MedalDataManager::UserMedalData>>::~__vector_base	203	130	0	0
 0046B15C	SceneUtil::changePartnerAvatarPanel(Widget*, StageSupportList::SupportUser, AvatarIconCache*)	134	3	0	7
+0046BE0C	std::__vector_base<Avatar::Expression>::~__vector_base	115	106	0	0
+0046BE36	std::__vector_base<hole::network::api::UserSkill::Skill>::~__vector_base	2	2	0	0
 0046BE74	SceneUtil::changePartnerPanel(Widget*, int, int)	908	63	0	0
 0046C4B4	SceneUtil::clearMedalNewMark	5	5	0	0
 0046C4C4	SceneUtil::setBossTypeImage	14595	3472	0	0
@@ -141,6 +151,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0046FDBC	createSceneLayer<SceneMyPage>()	106	0	0	61
 0046FDC4	SceneUtil::openNewLuxPopup(int, std::function<void()>)	20	6	0	1
 00470724	SceneUtil::openUserTitlePopup(const shared_ptr<UserTitle>&, int, function<void()>)	1	1	0	0
+00470EAC	std::operator+(const string&, const string&)	104230	808	0	0
 00471200	SceneUtil::callPrepareMypageAPIs (sub_471200): the sphere lock check	70	0	0	43
 00471B7C	SceneUtil::NormalTutorialPopup	3	3	0	0
 0047250C	SceneUtil::freeTutorialConvertData	80	21	0	29
@@ -151,11 +162,14 @@ addr	name	calls	verified	mismatches	unverifiable
 00472D74	SceneUtil::dispTutorialCheck	2335	258	0	0
 004732AC	SceneUtil::ClearTutorialPopupIDs	3	3	0	0
 004733C4	SceneUtil::isBenefits	125	61	0	0
+00473610	std::__vector_base<Date>::~__vector_base	25	25	0	0
+0047363E	std::__vector_base<std::string>::~__vector_base	19144	1778	0	0
 00473688	SceneUtil::numberToPlaceString	24	6	0	0
 00473A18	SceneUtil::updateMedalPossessionLabel	3	1	0	0
 00473CAC	SceneUtil count label helper (sub_473CAC)	24	1	0	0
 00473DF4	SceneUtil::callUpdateLockMedalAPI	617	549	0	0
 004741BC	SceneUtil::getCampaignPoint	495	28	0	0
+00474424	std::function<bool(int, shared_ptr<const master::EvCampaign>&)>::operator=(&&)	103	67	0	0
 004744F4	SceneUtil (sub_4744F4): a text's on / off look	667	1	0	0
 00474614	SceneUtil::setButtonEnabled(ImageButton)	20	2	0	0
 0047463C	SceneUtil::openWebViewInfoPopup	2	2	0	0
@@ -164,6 +178,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0047546C	SceneUtil::openAvatarBoardFilterPopup(function<void()>)	2	1	0	0
 00476E80	SceneUtil::openAdventureSelectFilterPopup(function<void(bool)>)	1	1	0	0
 00478928	BaseScrollView<int>::setItemIDs(const vector<int>&)	21	5	0	1
+00478960	std::__vector_base<int>::~__vector_base	213129	2524	0	0
 0047898C	SceneUtil::splitSpaceCheck	2	2	0	0
 00478BA8	SceneUtil::addBackKeyCallback	119	22	0	0
 00478EDC	SceneUtil::openPurchaseSucceededPopup(Node*, int, int, function<void(bool)>)	2	1	0	0
@@ -185,15 +200,30 @@ addr	name	calls	verified	mismatches	unverifiable
 0047ABF4	cocos2d::ui::Widget::updateFlippedX	84578	838	0	0
 0047ABF6	cocos2d::ui::Widget::updateFlippedY	84578	838	0	0
 0047ABF8	cocos2d::ui::Widget::adaptRenderers	56307258	2934814	0	0
+0047ABFA	std::unordered_map<UserLink::PlatformType, UserLink::Info>::find	9	9	0	0
+0047B5FC	std::vector<string>::allocate	657	225	0	0
+0047B62C	std::vector<string>::__construct_at_end(string*, string*)	615	177	0	0
+0047BC68	std::function<void(bool)>::function(&&)	300	39	0	0
 0047CB90	sub_47CB90	9	4	4	1
+0047D5BC	std::vector<int>::assign(int*, int*)	90	50	0	0
+0047D6B0	std::vector<int>::deallocate	157	43	0	0
+0047D6DE	std::vector<int>::allocate	144557	1150	0	0
+0047D708	std::vector<int>::__push_back_slow_path<int>	27489	1804	0	0
+0047D818	std::__split_buffer<int&>::~__split_buffer	19995	1900	0	0
+0047F904	std::function<void()>::function(&&)	249	222	0	0
 0047F970	sub_47F970	32	0	0	0
 0047F990	nullsub_217	32	0	0	0
 0047FA66	sub_47FA66	32	0	0	0
 0047FCA4	sub_47FCA4	64	0	0	0
 0047FCC0	nullsub_220	64	0	0	0
+00481F0C	std::function<void(Node*)>::function(&&)	16	16	0	0
+004821B4	std::function<void(WebView*, string)>::swap	8	8	0	0
+0048286C	std::__murmur2_or_cityhash<unsigned int, 32>::operator()	21428067	10044	0	0
+00483E4C	std::function<bool(Touch*, Event*)>::swap	3521	924	0	0
 00484298	SceneUtil::callPrepareMypageAPIs::$_66 __clone()	76	42	0	0
 004843DC	SceneUtil::callPrepareMypageAPIs::$_66 destroy_deallocate()	113	79	0	0
 00484424	sub_484424	57	0	0	57
+00484464	std::vector<std::string>::__push_back_slow_path<std::string>	1225	423	0	0
 004846B0	sub_4846B0	10	0	0	0
 004846D0	nullsub_238	17	5	0	0
 00484F20	sub_484F20	36	0	0	0
@@ -210,9 +240,22 @@ addr	name	calls	verified	mismatches	unverifiable
 00485700	StartDeckEditDialog::StartDeckEditDialog	92	3	0	0
 004857F8	SceneMyPage::create	107	0	0	2
 0048584C	SceneMyPage::SceneMyPage	107	0	0	0
+00485A38	std::__vector_base<Avatar::Motion>::~__vector_base	8	8	0	0
+00485ABA	std::__vector_base<unsigned int>::~__vector_base	1125	581	0	0
+00485AE4	std::__vector_base<std::vector<unsigned int>>::~__vector_base	8	8	0	0
+00485B14	std::__vector_base<cocos2d::Vec2>::~__vector_base	18	18	0	0
+00485B78	std::__vector_base<cocos2d::ui::Widget*>::~__vector_base	160	160	0	0
+00485BD6	std::__vector_base<AvatarActor*>::~__vector_base	46	46	0	0
 00486F24	nullsub_247	858	49	0	0
 004870D6	sub_4870D6	232	4	0	0
 00487512	sub_487512	232	4	0	0
+00487634	std::vector<Avatar::Expression>::allocate	117	82	0	0
+0048765C	std::function<void(MedalInfoButtonType, bool, int)>::function(const&)	54	18	0	0
+00487690	std::function<void(MedalInfoButtonType, bool, unsigned long long)>::function(function<void(MedalInfoButtonType, bool, int)>)	54	18	0	0
+004876D8	std::function<void(MedalInfoButtonType, bool, unsigned long long)>::swap	94	30	0	0
+00487A00	std::function<void(MedalInfoButtonType, bool, int)>::function(&&)	54	18	0	0
+00487A38	std::vector<shared_ptr<MedalDataManager::UserMedalData>>::__push_back_slow_path	583	316	0	0
+00487B7A	std::__split_buffer<shared_ptr<MedalDataManager::UserMedalData>&>::~__split_buffer	756	262	0	0
 00487D40	nullsub_51	2067	94	0	0
 00487D4A	sub_487D4A	2067	94	0	0
 00488580	sub_488580	13	3	0	0
@@ -220,6 +263,7 @@ addr	name	calls	verified	mismatches	unverifiable
 004885AA	sub_4885AA	6	2	0	0
 0048861C	sub_48861C	26	6	0	0
 0048863C	nullsub_253	35	12	0	0
+00488968	std::function<void(MedalInfoButtonType, bool)>::function(&&)	15	5	0	0
 00488BE8	sub_488BE8	32	3	0	0
 00488C04	nullsub_254	41	12	0	0
 00488C0E	sub_488C0E	4	3	1	0
@@ -249,6 +293,9 @@ addr	name	calls	verified	mismatches	unverifiable
 0048D688	SceneUtil::createShadowSprite $_0 __func::__clone(__base*)	719	25	0	0
 0048D6A8	SceneUtil::createShadowSprite $_0 __func::destroy	1407	227	0	0
 0048D6B2	sub_48D6B2	1507	1507	0	0
+0048D7E8	std::vector<unsigned long long>::allocate	57	13	0	0
+0048D890	std::vector<std::string>::__push_back_slow_path<const std::string&>	7490	1726	0	0
+0048D9B4	std::set<int>::destroy	364498	119	0	0
 0048D9E0	SceneUtil::callPrepareMypageAPIs (sub_48D9E0): the party notice	27	0	0	0
 0048DC44	SceneUtil::callPrepareMypageAPIs $_64 __func::__clone()	118	73	0	0
 0048DD88	SceneUtil::callPrepareMypageAPIs::$_64 destroy_deallocate()	116	91	0	0
@@ -270,6 +317,8 @@ addr	name	calls	verified	mismatches	unverifiable
 0048FF3C	SceneUtil::callPrepareMypageAPIs::$_65 __clone()	78	53	0	0
 00490080	SceneUtil::callPrepareMypageAPIs::$_65 destroy_deallocate()	116	91	0	0
 004900C8	sub_4900C8	58	0	0	58
+00490108	std::function<void(bool)>::operator=(const&)	746	301	0	0
+00490274	std::unordered_map<unsigned long long, int>::find	3332	1296	0	0
 00491360	LWFUtil::preloadResources	37322	2007	1151	0
 0049140C	StringBuffer::StringBuffer(const char*, ...)	651753	24444	0	0
 00491480	StringBuffer::vfset	2948	34	0	0
@@ -281,9 +330,12 @@ addr	name	calls	verified	mismatches	unverifiable
 0049160E	sub_49160E (malloc thunk)	24732	1665	0	0
 00491638	sub_491638	29984	436	0	0
 00491664	bg::MemoryStream::MemoryStream	24124	2403	0	0
+004917C8	std::function<void*(unsigned)>::operator=(const&)	31491	418	0	0
+00491838	std::function<void(void*)>::operator=(const&)	51133	1874	0	0
 00491928	bg::MemoryStream::~MemoryStream	24124	2355	0	0
 00491A78	bg::MemoryStream::write	60616	2528	0	0
 00491AF4	bg::MemoryStream::move	24124	2355	0	0
+00491B78	std::shared_ptr<bg::Data>::make_shared<void*&, unsigned&, function<void(void*)>&>	31631	423	0	0
 00491C70	std::__shared_ptr_emplace<bg::Data>::__on_zero_shared	1732017	26816	1	0
 00491C7C	std::__shared_ptr_emplace<bg::Data>::__on_zero_shared_weak	1326785	22355	0	0
 00491C84	bg::Data::~Data	1241376	19854	0	0
@@ -317,19 +369,36 @@ addr	name	calls	verified	mismatches	unverifiable
 00492C5C	TextFormat::execute(const char*, ...)	321	6	0	0
 00492CAC	TextFormat::execute(const char*, va_list)	528	11	0	0
 00493E04	TextFormat element vector ~__vector_base (sub_493E04)	487	25	0	0
+00493F5A	std::__tree_balance_after_insert	805162	9865	0	0
+00493FFA	std::__tree_left_rotate	365165	2811	0	0
+0049401E	std::__tree_right_rotate	228839	1641	0	0
+00494044	std::vector<char>::__push_back_slow_path<const char&>	21335	760	0	0
+004940EC	std::vector<char>::__push_back_slow_path<char>	1941	309	0	0
+00494194	std::map<unsigned, Tag*>::destroy (TextFormat)	182	38	0	0
+00494250	std::unordered_map<int, int>::find	37	37	0	0
+004942D2	std::unordered_map<int, int>::~__hash_table	162	135	0	0
+00494364	std::unordered_map<int, int>::__node_insert_unique	1640	313	0	0
+004944F8	std::unordered_map<int, int>::rehash	371	202	0	0
+004945D0	std::unordered_map<int, int>::__rehash	296	202	0	0
+004946D4	std::vector<std::vector<char>>::__push_back_slow_path<vector<char>>	2826	254	0	0
+0049489C	std::__vector_base<std::vector<char>>::~__vector_base	2902	318	0	0
 004948EC	shader::set_guilt_shader	111	3	0	0
 00494B14	shader::set_concentration_shader	111	3	0	0
 00494CC8	shader::set_guilt_shader_param	384	38	0	24
+00495294	std::__vector_base<cocos2d::LWFNode*>::~__vector_base	18	18	0	0
 004952C0	GuiltBurstCutInShader::~GuiltBurstCutInShader (deleting)	105	7	0	0
 004952F8	GuiltBurstCutInShader::init	109	3	0	0
 00495560	GuiltBurstCutInShader::addShaderParent	93	3	0	0
 00495604	GuiltBurstCutInShader::update	326703	107784	0	0
 00495DF8	GuiltBurstCutInShader::set_spr_color	4	2	0	0
 00495ED8	GuiltBurstCutInShader::set_lwf_color	29278	3813	0	0
+004960B6	std::__vector_base<MapPlacementObject*>::~__vector_base	24	24	0	0
 004960E0	GuiltBurstCutInShader::updateInit	326703	107784	0	4
 004961F0	GuiltBurstCutInShader::setShaderCutinEnd	2	1	0	0
 00496214	GuiltBurstCutInShader::setShaderConcentrationStart	1	1	0	0
 00496270	GuiltBurstCutInShader::setShaderEnd	1	1	0	0
+00496342	std::__vector_base<cocos2d::Node*>::~__vector_base	479435	1006	0	0
+004964B6	std::__vector_base<MapNonPlayableCharacter*>::~__vector_base	9	9	0	0
 004966BC	BattleUtil::calcMedalStatus	31470	248	0	0
 00496BD0	BattleUtil::calcMedalExp	28295	246	0	0
 00496C98	BattleUtil::calcNeedExp	30504	246	0	0
@@ -340,106 +409,167 @@ addr	name	calls	verified	mismatches	unverifiable
 004976FC	AvatarUtil::getCurrentKeyblade	203	12	0	0
 004977AC	AvatarUtil::getCurrentStyle	116	4	0	0
 0049794C	AvatarUtil::getSupportUserStyle	93	4	0	0
+00497A20	std::unordered_map<int, int>::find (2)	20	20	0	0
+00497AA2	std::set<int>::find	129	94	0	0
 00497B80	hole::network::RESTClient::Connection::init	4144	3470	0	0
+00497DA0	std::function<void(const shared_ptr<RESTClient::Result>&)>::operator=(const&)	552	152	0	0
 00497E10	hole::network::RESTClient::Connection::~Connection	7776	3812	0	0
 00498688	hole::network::AppendQuery	180	32	0	0
+00498A48	std::deque<shared_ptr<RESTClient::Connection>>::push_back(const&)	262	78	0	0
 00498E8C	hole::network::RESTClient::cancelAll	683	545	0	0
+00498F6C	std::vector<shared_ptr<RESTClient::Connection>>::vector(deque iterator, deque iterator)	57	57	0	0
+00498FDE	std::__vector_base<shared_ptr<hole::network::RESTClient::Connection>>::~__vector_base	99	99	0	0
+0049911C	std::function<void(const shared_ptr<RESTClient::Result>&)>::operator()	608	86	48	445
+00499160	std::deque<shared_ptr<RESTClient::Connection>>::pop_front	262	262	0	0
 004991BC	hole::network::RESTClient (sub_4991BC): the decode worker thread	1203	0	0	0
+00499748	std::__thread_specific_ptr<__thread_struct>::reset	266	0	0	0
 0049977C	hole::network::FindSubstringInsensitive	4133	401	0	0
+00499874	std::deque<pair<shared_ptr<Connection>, shared_ptr<Result>>>::push_back(&&)	262	0	0	0
 00499920	sub_499920	7562	3936	0	0
 00499940	nullsub_269	11341	7589	0	0
+00499A50	std::deque<pair<shared_ptr<Connection>, shared_ptr<Result>>>::__add_back_capacity	4	0	0	0
+00499FB4	std::__split_buffer<pair<shared_ptr<RESTClient::Connection>, shared_ptr<RESTClient::Result>>*&>::push_back(&&)	6	0	0	0
+0049A1F8	std::__split_buffer<pair<shared_ptr<RESTClient::Connection>, shared_ptr<RESTClient::Result>>*&>::~__split_buffer	6	0	0	0
+0049A35C	std::__search<FindSubstringInsensitive lambda, __wrap_iter<const char*>>	343	0	0	0
 0049A418	sub_49A418	1202663	29025	0	0
+0049A42A	std::__search<bool (*&)(char, char), const char*, const char*>	3204	620	0	0
+0049A4A6	std::string::__init<__wrap_iter<char*>>	262	0	0	0
+0049A510	std::shared_ptr<hole::network::RESTClient::Result>::make_shared<>	600	599	0	0
 0049A5EC	std::__shared_ptr_emplace<hole::network::RESTClient::Result>::__on_zero_shared	3782	3781	0	0
 0049A5F6	std::__shared_ptr_emplace<hole::network::RESTClient::Result>::__on_zero_shared_weak	3782	3781	0	0
 0049A5FE	rapidjson::internal::Stack<rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>>::~Stack [base destructor]	55851	6225	0	0
 0049A618	rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>::~MemoryPoolAllocator [base destructor]	57405	5930	0	0
+0049AB7C	std::deque<shared_ptr<RESTClient::Connection>>::__add_back_capacity	8	4	0	0
+0049B0E0	std::__split_buffer<shared_ptr<RESTClient::Connection>*&>::push_back(&&)	10	6	0	0
+0049B324	std::__split_buffer<shared_ptr<RESTClient::Connection>*&>::~__split_buffer	10	6	0	0
 0049B418	sub_49B418	15138	9484	0	0
 0049B580	std::__function::__func<std::__bind<void (hole::network::RESTClient::*)(cocos2d::network::HttpClient *,cocos2d::network::HttpResponse *),hole::network::RESTClient*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>,std::allocator<std::__bind<void (hole::network::RESTClient::*)(cocos2d::network::HttpClient *,cocos2d::network::HttpResponse *),hole::network::RESTClient*,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &>>,void ()(cocos2d::network::HttpClient *,cocos2d::network::HttpResponse *)>::destroy	15138	9484	0	0
+0049B5E4	std::shared_ptr<hole::network::RESTClient::Connection>::make_shared<>	600	202	0	0
 0049B6A4	std::__shared_ptr_emplace<hole::network::RESTClient::Connection>::__on_zero_shared	3782	3781	0	0
 0049B6AE	std::__shared_ptr_emplace<hole::network::RESTClient::Connection>::__on_zero_shared_weak	3782	3781	0	0
+0049D100	std::vector<string>::assign	385	142	0	0
+0049D228	std::vector<string>::deallocate	2466	1001	0	0
+0049D278	std::function<int(double, double, double, double)>::operator=(const&)	552	152	0	0
+0049D418	std::function<void(HttpClient*, HttpResponse*)>::operator=(const&)	565	165	0	0
+0049D724	std::vector<char>::assign(const char*, const char*)	73	36	10	0
+0049D800	std::vector<char>::deallocate	139	48	0	0
+0049D822	std::vector<char>::allocate	139	48	0	0
 0049D84A	rapidjson::internal::Stack<rapidjson::CrtAllocator>::~Stack [base destructor]	9416	5558	0	0
 0049D9A0	cocos2d::network::HttpRequest::~HttpRequest [deleting destructor]	7563	3461	0	0
 0049D9AC	hole::network::api::Ret::parse	3754	3754	0	0
 0049DD48	hole::network::api::ReplaceString	1	1	0	0
 0049DFD8	hole::network::api::Login::parse	100	87	0	0
+0049E1B8	std::shared_ptr<hole::network::api::Login>::shared_ptr(hole::network::api::Login*)	9	1	0	0
 0049E20C	hole::network::api::LoginBonus::DailyBonus::init	4	2	0	0
 0049E270	hole::network::api::LoginBonus::parse	2	2	0	0
+0049E3EC	std::shared_ptr<hole::network::api::LoginBonus>::shared_ptr(hole::network::api::LoginBonus*)	1	1	0	0
 0049E448	hole::network::api::User::parse	112	73	0	0
+0049E854	std::shared_ptr<hole::network::api::User>::shared_ptr(hole::network::api::User*)	16	6	0	0
 0049E8A8	hole::network::api::UserPoint::parse	511	312	0	0
+0049EDC8	std::shared_ptr<hole::network::api::UserPoint>::shared_ptr(hole::network::api::UserPoint*)	125	4	0	0
 0049EE1C	hole::network::api::UserDetail::parse	232	130	0	0
+0049F45C	std::shared_ptr<hole::network::api::UserDetail>::shared_ptr(hole::network::api::UserDetail*)	62	3	0	0
 0049F4B0	hole::network::api::StageResumption::parse	233	131	0	0
+0049F670	std::shared_ptr<hole::network::api::StageResumption>::shared_ptr(hole::network::api::StageResumption*)	54	1	0	0
 0049F6C4	hole::network::api::UserAvatar::Coordinate::init	1614	114	0	0
 0049F82C	hole::network::api::UserAvatar::parse	15	0	0	0
+0049F908	std::shared_ptr<hole::network::api::UserAvatar>::shared_ptr(hole::network::api::UserAvatar*)	7	5	0	0
 0049F95C	hole::network::api::UserAvatarAll::parse	96	83	0	0
+0049FA98	std::shared_ptr<hole::network::api::UserAvatarAll>::shared_ptr(hole::network::api::UserAvatarAll*)	9	1	0	0
 0049FAEC	hole::network::api::UserAvatarParts::Part::init	5598	57	0	0
 0049FC0C	hole::network::api::UserAvatarParts::parse	95	82	0	0
+0049FD54	std::shared_ptr<hole::network::api::UserAvatarParts>::shared_ptr(hole::network::api::UserAvatarParts*)	11	3	0	0
 0049FE70	hole::network::api::UserStone::parse	216	140	0	0
+0049FFA4	std::shared_ptr<hole::network::api::UserStone>::shared_ptr(hole::network::api::UserStone*)	47	3	0	0
 0049FFF8	hole::network::api::UserMedal::Medal::init	10418	64	0	0
 004A029C	hole::network::api::UserMedal::parse	255	84	0	0
+004A03E4	std::shared_ptr<hole::network::api::UserMedal>::shared_ptr(hole::network::api::UserMedal*)	280	12	0	0
 004A0438	hole::network::api::UserMedal::parseSimplex	2161	221	0	0
 004A0550	hole::network::api::UserMedal::create	91	19	0	0
 004A0780	hole::network::api::UserSkill::parse	1673	90	0	0
+004A08C8	std::shared_ptr<hole::network::api::UserSkill>::shared_ptr(hole::network::api::UserSkill*)	289	12	0	0
 004A09E4	hole::network::api::UserMaterial::Material::init	4864	57	0	0
 004A0A70	hole::network::api::UserMaterial::parse	254	83	0	0
+004A0BA8	std::shared_ptr<hole::network::api::UserMaterial>::shared_ptr(hole::network::api::UserMaterial*)	50	3	0	0
 004A0BFC	hole::network::api::UserMaterial::create	4332	982	0	0
 004A0CBC	hole::network::api::UserKeyblade::Keyblade::init	1274	71	0	0
 004A0F3C	hole::network::api::UserKeyblade::parse	292	98	0	0
+004A1084	std::shared_ptr<hole::network::api::UserKeyblade>::shared_ptr(hole::network::api::UserKeyblade*)	56	3	0	0
 004A10D8	hole::network::api::UserKeyblade::create	726	338	0	0
 004A11A0	hole::network::api::UserAlbumChallenge::UserAlbumChallenge	1	1	0	0
 004A121C	hole::network::api::UserAlbum::parse	1	1	0	0
 004A1454	hole::network::api::UserAlbumChallenge::parse	1	1	0	0
 004A1620	hole::network::api::UserTitle::Title::init	2190	57	0	0
 004A1688	hole::network::api::UserTitle::parse	274	80	0	0
+004A17C0	std::shared_ptr<hole::network::api::UserTitle>::shared_ptr(hole::network::api::UserTitle*)	56	3	0	0
 004A1814	hole::network::api::UserTitle::create	10	5	0	0
 004A18D4	hole::network::api::UserSupport::parse	93	80	0	0
+004A1CA4	std::shared_ptr<hole::network::api::UserSupport>::shared_ptr(hole::network::api::UserSupport*)	9	1	0	0
 004A204C	hole::network::api::RaidBase::Info::Part::init	350	97	0	0
 004A2118	hole::network::api::RaidBase::Info::init	186	180	0	0
 004A2350	hole::network::api::RaidBase::User::init	51	50	0	0
 004A2424	hole::network::api::RaidBase::init	56	47	0	0
 004A249C	hole::network::api::Raid::init	116	113	0	0
 004A2578	hole::network::api::Raid::parse	142	116	0	0
+004A2608	std::shared_ptr<hole::network::api::Raid>::shared_ptr(hole::network::api::Raid*)	42	21	0	0
 004A267C	hole::network::api::RaidMember::Cooperator::init	4	4	0	0
 004A26E8	hole::network::api::RaidMember::parse	5	4	0	0
+004A28F4	std::shared_ptr<hole::network::api::RaidMember>::shared_ptr(hole::network::api::RaidMember*)	9	3	0	0
 004A2F74	hole::network::api::RaidReward151101::Reward::init	5	0	0	0
 004A325C	hole::network::api::RaidReward151101::parse	143	112	3	0
+004A345C	std::shared_ptr<hole::network::api::RaidReward151101>::shared_ptr(hole::network::api::RaidReward151101*)	22	1	0	0
 004A34B4	hole::network::api::Stage::Story::init	21783	114	0	0
 004A360C	hole::network::api::Stage::Event::init	3	1	0	0
 004A3D3C	hole::network::api::Stage160310::parse	142	116	0	0
+004A3EA0	std::shared_ptr<hole::network::api::Stage160310>::shared_ptr(hole::network::api::Stage160310*)	22	1	0	0
 004A3EF8	hole::network::api::StageEvent::Event::init	3	1	0	0
 004A3F60	hole::network::api::StageEvent::parse	1	1	0	0
+004A4174	std::shared_ptr<hole::network::api::StageEvent>::shared_ptr(hole::network::api::StageEvent*)	2	1	0	0
 004A41CC	hole::network::api::StageSupportList::SupportUser::init	1225	0	28	0
 004A457C	hole::network::api::StageSupportList::parse	260	1	130	0
+004A46E8	std::shared_ptr<hole::network::api::StageSupportList>::shared_ptr(hole::network::api::StageSupportList*)	75	0	0	0
 004A477C	hole::network::api::StageStart::EnemyDropItem::init	28	12	0	0
 004A4830	hole::network::api::StageStart::Treasure::init	201	42	0	0
 004A48E4	hole::network::api::StageStart::RequestData::init	88	43	0	0
 004A4A60	hole::network::api::StageStart::parse	109	46	0	0
+004A4D34	std::shared_ptr<hole::network::api::StageStart>::shared_ptr(hole::network::api::StageStart*)	36	0	0	0
 004A4D88	hole::network::api::StageClear::Reward::init	2	0	0	0
 004A4E14	hole::network::api::StageClear::Property::init	135	15	0	0
 004A4ED4	hole::network::api::StageClear::parse	101	0	41	0
+004A5160	std::shared_ptr<hole::network::api::StageClear>::shared_ptr(hole::network::api::StageClear*)	36	0	0	0
 004A52A8	hole::network::api::RaidStart::RequestData::init	23	21	0	0
 004A533C	hole::network::api::RaidStart::parse	24	21	0	0
+004A5854	std::shared_ptr<hole::network::api::RaidStart>::shared_ptr(hole::network::api::RaidStart*)	9	0	0	0
 004A58A8	hole::network::api::RaidClear::parse	19	0	16	0
 004A5A38	hole::network::api::RaidClear::~RaidClear	6	3	0	0
+004A5A94	std::shared_ptr<hole::network::api::RaidClear>::shared_ptr(hole::network::api::RaidClear*)	9	0	0	0
 004A5AEC	hole::network::api::UserSphere::Sphere::init	5190	63	0	0
 004A5CB8	hole::network::api::UserSphere::parse	274	220	0	0
+004A5ED0	std::shared_ptr<hole::network::api::UserSphere>::shared_ptr(hole::network::api::UserSphere*)	49	16	0	0
 004A5F34	hole::network::api::UserSphere::setSphere	18	9	0	0
 004A6014	hole::network::api::UserPresent::Present::init	20	2	0	0
 004A61E4	hole::network::api::UserPresent::parse	2	2	0	0
 004A649C	hole::network::api::UserPresent::setReceived	1	1	0	0
 004A6658	hole::network::api::SystemNeedUrl::parse	185	172	0	0
 004A6910	hole::network::api::SystemNeedUrl::~SystemNeedUrl	86	57	0	0
+004A69A4	std::shared_ptr<hole::network::api::SystemNeedUrl>::shared_ptr(hole::network::api::SystemNeedUrl*)	18	2	0	0
 004A69FC	hole::network::api::SystemCoppa::parse	99	86	0	0
+004A6C78	std::shared_ptr<hole::network::api::SystemCoppa>::shared_ptr(hole::network::api::SystemCoppa*)	9	1	0	0
 004A6DBC	hole::network::api::SystemInformationList151203::parse	93	80	0	0
+004A6EF4	std::shared_ptr<hole::network::api::SystemInformationList151203>::shared_ptr(hole::network::api::SystemInformationList151203*)	9	1	0	0
 004A6F4C	hole::network::api::SystemInvitecode::parse	1	1	0	0
 004A707C	hole::network::api::PaymentInfo::parse	7	7	0	0
 004A723C	hole::network::api::Party::init	601	400	0	0
 004A7584	hole::network::api::UserParty::parse	756	469	0	0
+004A78C4	std::shared_ptr<hole::network::api::UserParty>::shared_ptr(hole::network::api::UserParty*)	82	6	0	0
 004A79D4	hole::network::api::PartyNotice::NewcomerUser::init	1	1	0	0
 004A7AC8	hole::network::api::PartyNotice::parse	92	65	0	0
+004A7D7C	std::shared_ptr<hole::network::api::PartyNotice>::shared_ptr(hole::network::api::PartyNotice*)	10	1	0	0
 004A7DD4	hole::network::api::PartyLogin::parse	16	0	16	0
 004A7EC8	hole::network::api::PartyMemberList::Detail::init	886	196	0	0
 004A7FD8	hole::network::api::Ranking::init	578	6	0	0
 004A8040	hole::network::api::PartyMemberList::parse	571	0	187	0
+004A8368	std::shared_ptr<hole::network::api::PartyMemberList>::shared_ptr(hole::network::api::PartyMemberList*)	41	3	0	0
 004A83BC	hole::network::api::PartyApplication::Applicant::init	10	2	0	0
 004A8520	hole::network::api::PartyApplication::parse	2	2	0	0
 004A8AF0	hole::network::api::PartyApplicantList::parse	4	1	3	0
@@ -449,22 +579,33 @@ addr	name	calls	verified	mismatches	unverifiable
 004A9228	hole::network::api::PartyInviteList::setOffer	1	1	0	0
 004A97E0	hole::network::api::UserShop::Benefit::init	83	55	0	0
 004A9844	hole::network::api::UserShop::parse	98	85	0	0
+004A9948	std::shared_ptr<hole::network::api::UserShop>::shared_ptr(hole::network::api::UserShop*)	9	1	0	0
 004AA374	hole::network::api::GachaList::Gacha::init	6	1	0	0
 004AA594	hole::network::api::GachaList::parse	1	1	0	0
 004AAD00	hole::network::api::TutorialStatus::parse	97	84	0	0
+004AADB4	std::shared_ptr<hole::network::api::TutorialStatus>::shared_ptr(hole::network::api::TutorialStatus*)	9	1	0	0
 004AB04C	hole::network::api::Record::init	10	0	0	0
 004AB9A4	hole::network::api::UserProfile::parse	5	0	5	0
 004ABD94	hole::network::api::UserProfile::~UserProfile	1	1	0	0
+004ABE38	std::shared_ptr<hole::network::api::UserProfile>::shared_ptr(hole::network::api::UserProfile*)	2	0	0	0
 004ACD30	hole::network::api::UnionRanking::parse	92	79	0	0
 004AD26C	hole::network::api::UserStamp::parse	85	57	0	0
+004AD388	std::shared_ptr<hole::network::api::UserStamp>::shared_ptr(hole::network::api::UserStamp*)	9	1	0	0
 004AD3DC	hole::network::api::UserChat::parse	98	85	0	0
+004AD634	std::shared_ptr<hole::network::api::UserChat>::shared_ptr(hole::network::api::UserChat*)	9	1	0	0
 004AD6C4	hole::network::api::MypageInfo::AdminText::init	116	57	0	0
 004AD764	hole::network::api::MypageInfo::OpenBanner::init	7	7	0	0
 004AD7F8	hole::network::api::MypageInfo::RankingRewards::init	58	57	0	0
 004AD8F8	hole::network::api::MypageInfo::parse	78	58	0	0
+004ADC08	std::shared_ptr<hole::network::api::MypageInfo>::shared_ptr(hole::network::api::MypageInfo*)	19	10	0	0
 004ADC6C	hole::network::api::UserOption::parse	97	84	0	0
+004ADD50	std::shared_ptr<hole::network::api::UserOption>::shared_ptr(hole::network::api::UserOption*)	9	1	0	0
 004ADE18	hole::network::api::UserLink::parse	93	80	0	0
+004AE050	std::__vector_base<hole::network::api::UserLink::Info>::~__vector_base	9	1	0	0
+004AE4A0	std::shared_ptr<hole::network::api::UserLink>::make_shared<>	9	1	0	0
 004AE654	std::__shared_ptr_pointer<hole::network::api::MypageInfo  *>::__on_zero_shared_weak	5	5	0	0
+004AE7F6	std::__vector_base<hole::network::api::RankingReward::Result>::~__vector_base	13	13	0	0
+004AE8D8	std::__vector_base<hole::network::api::UnionRanking::Ranker>::~__vector_base	1	1	0	0
 004AEC78	std::__shared_ptr_pointer<hole::network::api::GachaList  *>::__on_zero_shared	1	1	0	0
 004AECB4	std::__shared_ptr_pointer<hole::network::api::GachaList  *>::__on_zero_shared_weak	1	1	0	0
 004AF08C	std::__shared_ptr_pointer<hole::network::api::PartyMemberList  *>::__on_zero_shared	288	108	0	0
@@ -475,7 +616,15 @@ addr	name	calls	verified	mismatches	unverifiable
 004AF1FC	std::__shared_ptr_pointer<hole::network::api::UserParty  *>::__on_zero_shared_weak	662	397	0	0
 004AF3B4	std::__shared_ptr_pointer<hole::network::api::SystemNeedUrl  *>::__on_zero_shared	70	70	0	0
 004AF3F0	std::__shared_ptr_pointer<hole::network::api::SystemNeedUrl  *>::__on_zero_shared_weak	70	70	0	0
+004AF706	std::vector<int>::vector(const vector&)	199825	1261	0	0
+004AF768	std::map<int, UserSphere::Sphere>::__erase_unique	4	0	0	0
+004AF78A	std::map<int, UserSphere::Sphere>::find	4	0	0	0
+004AF826	std::__tree_remove	18394	2462	0	0
 004AFA70	std::__shared_ptr_pointer<hole::network::api::UserSphere  *>::__on_zero_shared_weak	184	143	0	0
+004AFA78	std::map<int, UserSphere::Sphere>::__insert_unique(pair&&)	517	0	0	0
+004AFAEC	std::map<int, UserSphere::Sphere>::__node_insert_unique	517	0	0	0
+004AFB64	std::map<int, UserSphere::Sphere>::__find_equal	517	0	0	0
+004AFBB0	std::map<int, UserSphere::Sphere>::__insert_node_at	517	0	0	0
 004AFBEC	std::__shared_ptr_pointer<hole::network::api::RaidClear  *>::__on_zero_shared	3	3	0	0
 004AFC28	std::__shared_ptr_pointer<hole::network::api::RaidClear  *>::__on_zero_shared_weak	3	3	0	0
 004AFC3C	std::__shared_ptr_pointer<hole::network::api::RaidStart  *>::__on_zero_shared	3	3	0	0
@@ -491,16 +640,22 @@ addr	name	calls	verified	mismatches	unverifiable
 004AFEA8	std::__shared_ptr_pointer<hole::network::api::RaidReward151101  *>::__on_zero_shared	86	66	0	0
 004AFEE4	std::__shared_ptr_pointer<hole::network::api::RaidReward151101  *>::__on_zero_shared_weak	86	66	0	0
 004AFFF8	std::__shared_ptr_pointer<hole::network::api::Raid  *>::__on_zero_shared_weak	85	67	0	0
+004B0238	std::unordered_map<int, int>::__insert_unique<pair<u64, unsigned>>	225	0	0	0
+004B02A0	std::shared_ptr<hole::network::api::UserTitle>::make_shared<unsigned>	6	0	0	0
 004B03E0	hole::network::api::UserTitle::~UserTitle	1	1	0	0
 004B0414	hole::network::api::UserTitle::~UserTitle (deleting)	94	22	0	0
 004B0458	std::__shared_ptr_pointer<hole::network::api::UserTitle  *>::__on_zero_shared	94	22	0	0
 004B0490	std::__shared_ptr_pointer<hole::network::api::UserTitle  *>::__on_zero_shared_weak	94	22	0	0
+004B0498	std::unordered_map<int, int>::__insert_unique<pair<u64, int>>	300	0	0	0
+004B0814	std::shared_ptr<hole::network::api::UserKeyblade>::make_shared<unsigned>	225	0	0	0
 004B0940	std::__shared_ptr_emplace<hole::network::api::UserKeyblade>::__on_zero_shared	1480	349	0	0
 004B094C	std::__shared_ptr_emplace<hole::network::api::UserKeyblade>::__on_zero_shared_weak	1480	349	0	0
 004B0954	hole::network::api::UserKeyblade::~UserKeyblade	1669	310	0	0
 004B0988	hole::network::api::UserKeyblade::~UserKeyblade (deleting)	234	39	0	0
+004B09C0	std::unordered_map<unsigned long long, int>::~__hash_table	2621	366	0	0
 004B09FA	std::__shared_ptr_pointer<hole::network::api::UserKeyblade  *>::__on_zero_shared	216	35	0	0
 004B0A34	std::__shared_ptr_pointer<hole::network::api::UserKeyblade  *>::__on_zero_shared_weak	216	35	0	0
+004B0A3C	std::shared_ptr<hole::network::api::UserMaterial>::make_shared<unsigned>	1404	0	0	0
 004B0B68	std::__shared_ptr_emplace<hole::network::api::UserMaterial>::__on_zero_shared	5152	1061	0	0
 004B0B74	std::__shared_ptr_emplace<hole::network::api::UserMaterial>::__on_zero_shared_weak	5152	1061	0	0
 004B0B7C	hole::network::api::UserMaterial::~UserMaterial	5094	1004	0	0
@@ -513,6 +668,7 @@ addr	name	calls	verified	mismatches	unverifiable
 004B0DA8	hole::network::api::UserSkill::~UserSkill (deleting)	1592	34	0	0
 004B0DEC	std::__shared_ptr_pointer<hole::network::api::UserSkill  *>::__on_zero_shared	1564	49	0	0
 004B0E24	std::__shared_ptr_pointer<hole::network::api::UserSkill  *>::__on_zero_shared_weak	1564	49	0	0
+004B0E2C	std::shared_ptr<hole::network::api::UserMedal>::make_shared<unsigned>	20	5	0	0
 004B0F58	std::__shared_ptr_emplace<hole::network::api::UserMedal>::__on_zero_shared	876	63	0	0
 004B0F64	std::__shared_ptr_emplace<hole::network::api::UserMedal>::__on_zero_shared_weak	876	63	0	0
 004B0F6C	hole::network::api::UserMedal::~UserMedal	853	41	0	0
@@ -521,14 +677,22 @@ addr	name	calls	verified	mismatches	unverifiable
 004B101C	std::__shared_ptr_pointer<hole::network::api::UserMedal  *>::__on_zero_shared_weak	1559	47	0	0
 004B1030	std::__shared_ptr_pointer<hole::network::api::UserStone  *>::__on_zero_shared	254	116	0	0
 004B1068	std::__shared_ptr_pointer<hole::network::api::UserStone  *>::__on_zero_shared_weak	254	116	0	0
+004B1070	std::unordered_map<unsigned long long, int>::__insert_unique<pair<u64, unsigned>>	54040	0	0	0
+004B1104	std::unordered_map<unsigned long long, int>::__construct_node<pair<u64, unsigned>>	37673	0	0	0
+004B1188	std::unordered_map<unsigned long long, int>::__node_insert_unique	83979	300	0	0
+004B1380	std::unordered_map<unsigned long long, int>::rehash	6657	375	0	0
+004B1458	std::unordered_map<unsigned long long, int>::__rehash	6207	300	0	0
 004B16A0	std::__shared_ptr_emplace<hole::network::api::UserAvatarParts>::__on_zero_shared	784	389	0	0
 004B16AC	std::__shared_ptr_emplace<hole::network::api::UserAvatarParts>::__on_zero_shared_weak	784	389	0	0
 004B16B4	hole::network::api::UserAvatarParts::~UserAvatarParts	762	368	0	0
 004B16E8	hole::network::api::UserAvatarParts::~UserAvatarParts (deleting)	120	52	0	0
 004B172C	std::__shared_ptr_pointer<hole::network::api::UserAvatarParts  *>::__on_zero_shared	116	46	0	0
 004B1764	std::__shared_ptr_pointer<hole::network::api::UserAvatarParts  *>::__on_zero_shared_weak	116	46	0	0
+004B176C	std::unordered_map<unsigned long long, int>::__insert_unique<pair<u64, int>>	4317	0	0	0
+004B1800	std::unordered_map<unsigned long long, int>::__construct_node<pair<u64, int>>	3732	0	0	0
 004B1890	std::__shared_ptr_pointer<hole::network::api::UserAvatarAll  *>::__on_zero_shared	116	46	0	0
 004B18C8	std::__shared_ptr_pointer<hole::network::api::UserAvatarAll  *>::__on_zero_shared_weak	116	46	0	0
+004B18D0	std::unordered_map<int, int>::__insert_unique<pair<int, int>>	295	238	0	0
 004B1990	std::__shared_ptr_pointer<hole::network::api::StageResumption  *>::__on_zero_shared	275	124	0	0
 004B19C8	std::__shared_ptr_pointer<hole::network::api::StageResumption  *>::__on_zero_shared_weak	275	124	0	0
 004B19DC	std::__shared_ptr_pointer<hole::network::api::UserDetail  *>::__on_zero_shared	273	123	0	0
@@ -539,18 +703,50 @@ addr	name	calls	verified	mismatches	unverifiable
 004B1AAC	std::__shared_ptr_pointer<hole::network::api::User  *>::__on_zero_shared_weak	116	46	0	0
 004B1B18	std::__shared_ptr_pointer<hole::network::api::Login  *>::__on_zero_shared	116	46	0	0
 004B1B50	std::__shared_ptr_pointer<hole::network::api::Login  *>::__on_zero_shared_weak	116	46	0	0
+004B1C84	std::shared_ptr<hole::network::api::Ret>::make_shared<>	670	110	0	0
 004B1DB6	std::__shared_ptr_emplace<hole::network::api::Ret>::__on_zero_shared_weak	3393	3393	0	0
+004B1F9A	std::__vector_base<hole::network::api::MypageInfo::OpenBanner>::~__vector_base	2	1	0	0
+004B1FC8	std::__vector_base<hole::network::api::MypageInfo::AdminText>::~__vector_base	2	1	0	0
+004B2014	std::vector<hole::network::api::MypageInfo::OpenBanner>::__push_back_slow_path	19	10	0	0
+004B2158	std::vector<hole::network::api::MypageInfo::AdminText>::__push_back_slow_path	38	11	0	0
 004B234A	hole::network::api::UserStamp::~UserStamp (deleting)	3	3	0	0
+004B2358	std::vector<hole::network::api::RankingReward::Result>::__push_back_slow_path	2	2	0	0
+004B24D4	std::vector<hole::network::api::UnionRanking::Ranker>::__push_back_slow_path	4	4	0	0
+004B26C8	std::vector<hole::network::api::UnionRanking::Info>::__push_back_slow_path	4	4	0	0
 004B2E62	hole::network::api::Party::Party(const Party&)	103	7	0	0
+004B33C4	std::vector<unsigned long long>::deallocate	25	13	0	0
+004B350C	std::__split_buffer<unsigned long long&>::~__split_buffer	227	110	0	0
 004B37E4	hole::network::api::GachaList::Gacha::Gacha(const Gacha&)	24	12	0	0
+004B4718	std::vector<hole::network::api::PartyMemberList::Detail>::__push_back_slow_path	123	9	0	0
 004B49E4	hole::network::api::PartyMemberList::~PartyMemberList (deleting)	372	97	0	0
+004B4A34	std::__vector_base<hole::network::api::PartyMemberList::Detail>::~__vector_base	32	8	0	0
 004B4AC8	hole::network::api::StageSupportList::~StageSupportList (deleting)	290	85	0	0
+004B4B00	std::__vector_base<hole::network::api::PartyNotice::NewcomerUser>::~__vector_base	1	0	0	0
 004B4E54	hole::network::api::UserParty::~UserParty (deleting)	964	376	0	0
+004B4EC8	std::unordered_map<unsigned int, unsigned int>::~__hash_table	16	16	0	0
+004B4EF8	std::unordered_map<unsigned int, unsigned int>::operator[]	72	0	0	0
+004B4F84	std::unordered_map<unsigned int, unsigned int>::__node_insert_unique	72	0	0	0
+004B5118	std::unordered_map<unsigned int, unsigned int>::rehash	40	16	0	0
+004B51F0	std::unordered_map<unsigned int, unsigned int>::__rehash	24	0	0	0
+004B52F2	std::unordered_map<unsigned int, unsigned int>::find	72	0	0	0
+004B53BC	std::map<int, UserSphere::Sphere>::destroy	42	14	0	0
 004B56D4	hole::network::api::RaidStart::~RaidStart (deleting)	6	3	0	0
+004B572C	std::__vector_base<hole::network::api::RaidStart::Player>::~__vector_base	6	6	0	0
 004B5778	hole::network::api::StageClear::~StageClear	47	14	0	0
 004B5810	hole::network::api::StageClear::~StageClear (deleting)	78	14	0	0
 004B581C	hole::network::api::StageStart::~StageStart	366	28	0	0
 004B585C	hole::network::api::StageStart::~StageStart (deleting)	131	5	0	0
+004B58A0	std::__vector_base<hole::network::api::StageEvent::Event>::~__vector_base	1	1	0	0
+004B58EE	std::__vector_base<hole::network::api::Stage::Story>::~__vector_base	617	582	0	0
+004B5924	std::vector<hole::network::api::StageEvent::Event>::__push_back_slow_path	6	1	0	0
+004B5BC8	std::vector<Stage::Story>::vector(const vector&)	414	414	0	0
+004B5C1C	std::vector<Stage::Story>::allocate	828	414	0	0
+004B5C4C	std::vector<Stage::Story>::__construct_at_end	828	414	0	0
+004B5C8C	std::vector<hole::network::api::Stage::Story>::__push_back_slow_path	222	10	0	0
+004B6118	std::__vector_base<hole::network::api::RaidReward151101::Reward>::~__vector_base	15	0	0	0
+004B6174	std::vector<hole::network::api::RaidReward151101::Reward>::__push_back_slow_path	3	0	0	0
+004B69DA	std::__vector_base<hole::network::api::RaidMember::Cooperator>::~__vector_base	9	0	0	0
+004B6A24	std::vector<hole::network::api::RaidMember::Cooperator>::__push_back_slow_path	9	3	0	0
 004B6CEE	hole::network::api::UserAlbum::~UserAlbum (deleting)	1	1	0	0
 004B6D0C	hole::network::api::UserStone::~UserStone (deleting)	264	121	0	0
 004B6D18	hole::network::api::UserAvatarAll::~UserAvatarAll	762	368	0	0
@@ -564,14 +760,28 @@ addr	name	calls	verified	mismatches	unverifiable
 004B6DCC	std::string::replace(pos, n1, const char*, n2) (sub_4B6DCC)	615	47	0	0
 004B6FF4	hole::network::api::Client::Client	90	10	0	0
 004B710C	hole::network::api::LoadJSON	266	6	0	0
+004B7328	std::function<StatusCode(StatusCode, const shared_ptr<Ret>&, const Document&)>::function(const&)	1082	232	0	0
+004B735A	std::deque<api::Client::Request>::push_back(const&)	224	46	0	0
 004B7900	hole::network::api::Client::isLoginAction	3754	3754	0	0
 004B7C58	hole::network::api::createHeaders	3919	3319	0	0
+004B81B4	std::function<void(const shared_ptr<RESTClient::Result>&)>::function(__bind<Client::*(Action, ...)>)	490	106	0	0
+004B9010	std::function<void(const shared_ptr<RESTClient::Result>&)>::function(__bind<Client::*(const Request&, ...)>&&)	24	8	0	0
+004B909C	std::shared_ptr<rapidjson::GenericDocument<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>>>::shared_ptr(rapidjson::GenericDocument<rapidjson::UTF8<char>, rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>>*)	9	1	0	0
+004B9140	std::function<StatusCode(StatusCode, const shared_ptr<Ret>&, const Document&)>::operator()	628	62	0	6
+004B91C0	std::deque<api::Client::Request>::pop_front	280	27	0	0
+004B9344	std::shared_ptr<rapidjson::Document>::make_shared<>	273	162	0	0
 004B9420	std::__shared_ptr_emplace<rapidjson::GenericDocument<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>>>::__on_zero_shared	1526	1088	0	0
 004B942A	std::__shared_ptr_emplace<rapidjson::GenericDocument<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>>>::__on_zero_shared_weak	1526	1088	0	0
 004B943E	std::__shared_ptr_pointer<rapidjson::GenericDocument<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>> *>::__on_zero_shared	71	71	0	0
 004B9484	std::__shared_ptr_pointer<rapidjson::GenericDocument<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>> *>::__on_zero_shared_weak	71	71	0	0
+004B975C	std::shared_ptr<Cipher>::make_shared<array<unsigned char, 32>&>	9	1	0	0
 004B98AA	std::__function::__func<std::__bind<void (hole::network::api::Client::*)(hole::network::api::Action,std::shared_ptr<hole::network::RESTClient::Result> const&),hole::network::api::Client*,hole::network::api::Action const&,std::placeholders::__ph<1> &>,std::allocator<std::__bind<void (hole::network::api::Client::*)(hole::network::api::Action,std::shared_ptr<hole::network::RESTClient::Result> const&),hole::network::api::Client*,hole::network::api::Action const&,std::placeholders::__ph<1> &>>,void ()(std::shared_ptr<hole::network::RESTClient::Result> const&)>::destroy_deallocate	10394	6102	0	0
+004B9910	std::deque<api::Client::Request>::__add_back_capacity	10	4	0	0
+004B9E70	std::__split_buffer<Client::Request*&>::push_back(&&)	14	6	0	0
+004B9F98	std::__split_buffer<Client::Request*&>::push_front(const&)	4	0	0	0
+004BA0B4	std::__split_buffer<Client::Request*&>::~__split_buffer	14	6	0	0
 004BA10C	APIManager::APIManager	102	6	0	0
+004BA87C	std::__vector_base<hole::network::api::RaidBase>::~__vector_base	43	8	0	0
 004BB4C4	APIManager::verifyResponse	2108	1829	279	0
 004C28A0	APIManager::handleError	1	1	0	0
 004C399C	APIManager::reallocate	766	542	0	0
@@ -581,28 +791,56 @@ addr	name	calls	verified	mismatches	unverifiable
 004C47DC	APIManager::removeMedals	1	1	0	0
 004C4A20	APIManager::updateTitle	5	5	0	0
 004C4BAC	APIManager::updateFavoriteKeyblade	133	67	0	0
+004C50D0	std::__vector_base<hole::network::api::UserMaterial::Material>::~__vector_base	1404	0	0	0
+004C50FE	std::__vector_base<hole::network::api::UserKeyblade::Keyblade>::~__vector_base	228	2	0	0
+004C513C	std::__vector_base<hole::network::api::UserMedal::Medal>::~__vector_base	46	5	0	0
+004C51B8	std::__vector_base<hole::network::api::UserTitle::Title>::~__vector_base	6	0	0	0
 004C51E8	APIManager::findMedalSetKeybladeIndex	28295	246	0	0
+004C553C	std::function<StatusCode(StatusCode, const shared_ptr<Ret>&, const Document&)>::function(__bind<APIManager::*>)	490	108	0	0
 004C678C	APIManager.cpp encryptToBase64(std::string*, Cipher&, const void*, size_t)	207	207	0	0
+004D494C	std::vector<hole::network::api::UserKeyblade::Keyblade>::__push_back_slow_path<Keyblade>	135	0	0	0
+004D4B98	std::vector<hole::network::api::UserTitle::Title>::__push_back_slow_path	42	0	0	0
+004D4E58	std::vector<hole::network::api::UserMedal::Medal>::__push_back_slow_path	180	45	0	0
+004D4FCC	std::vector<hole::network::api::UserKeyblade::Keyblade>::__push_back_slow_path<const Keyblade&>	543	3	0	0
+004D5108	std::vector<hole::network::api::UserMaterial::Material>::__push_back_slow_path	9828	0	0	0
+004D5538	std::vector<RaidBase>::deallocate	31	4	0	0
 004D5C82	std::__function::__func<std::__bind<hole::network::api::Client::StatusCode (APIManager::*)(hole::network::api::Action,hole::network::api::Client::StatusCode,std::shared_ptr<hole::network::api::Ret> const&,rapidjson::GenericDocument<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>> const&),APIManager*,hole::network::api::Action&,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &,std::placeholders::__ph<3> &>,std::allocator<std::__bind<hole::network::api::Client::StatusCode (APIManager::*)(hole::network::api::Action,hole::network::api::Client::StatusCode,std::shared_ptr<hole::network::api::Ret> const&,rapidjson::GenericDocument<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>> const&),APIManager*,hole::network::api::Action&,std::placeholders::__ph<1> &,std::placeholders::__ph<2> &,std::placeholders::__ph<3> &>>,hole::network::api::Client::StatusCode ()(hole::network::api::Client::StatusCode,std::shared_ptr<hole::network::api::Ret> const&,rapidjson::GenericDocument<rapidjson::UTF8<char>,rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>> const&)>::destroy_deallocate	11048	7595	0	0
+004D5CF8	std::shared_ptr<hole::network::api::StageStart>::make_shared<StageStart&>	50	50	0	0
 004D5EA0	std::__shared_ptr_emplace<hole::network::api::StageStart>::__on_zero_shared	353	31	0	0
 004D5EAC	std::__shared_ptr_emplace<hole::network::api::StageStart>::__on_zero_shared_weak	353	31	0	0
+004D5FB4	std::shared_ptr<hole::network::api::UserKeyblade>::make_shared<UserKeyblade&>	81	81	0	0
+004D6218	std::shared_ptr<hole::network::api::UserMaterial>::make_shared<UserMaterial&>	81	81	0	0
+004D62D0	std::shared_ptr<hole::network::api::UserSkill>::make_shared<UserSkill&>	81	81	0	0
+004D6388	std::shared_ptr<hole::network::api::UserMedal>::make_shared<UserMedal&>	81	81	0	0
+004D6440	std::shared_ptr<hole::network::api::UserAvatarParts>::make_shared<UserAvatarParts&>	81	81	0	0
+004D64F8	std::shared_ptr<hole::network::api::UserAvatarAll>::make_shared<UserAvatarAll&>	81	81	0	0
 004D664C	std::__shared_ptr_emplace<hole::network::api::UserAvatarAll>::__on_zero_shared	784	389	0	0
 004D6658	std::__shared_ptr_emplace<hole::network::api::UserAvatarAll>::__on_zero_shared_weak	784	389	0	0
+004D66F0	std::shared_ptr<hole::network::api::UserStone>::make_shared<UserStone&>	81	81	0	0
 004D67D4	std::__shared_ptr_emplace<hole::network::api::UserStone>::__on_zero_shared	713	333	0	0
 004D67E0	std::__shared_ptr_emplace<hole::network::api::UserStone>::__on_zero_shared_weak	713	333	0	0
+004D67E8	std::shared_ptr<hole::network::api::StageResumption>::make_shared<StageResumption&>	81	81	0	0
 004D68CC	std::__shared_ptr_emplace<hole::network::api::StageResumption>::__on_zero_shared	747	370	0	0
 004D68D8	std::__shared_ptr_emplace<hole::network::api::StageResumption>::__on_zero_shared_weak	747	370	0	0
+004D68E0	std::shared_ptr<hole::network::api::UserDetail>::make_shared<UserDetail&>	81	81	0	0
 004D69C4	std::__shared_ptr_emplace<hole::network::api::UserDetail>::__on_zero_shared	711	329	0	0
 004D69D0	std::__shared_ptr_emplace<hole::network::api::UserDetail>::__on_zero_shared_weak	711	329	0	0
+004D69D8	std::shared_ptr<hole::network::api::UserPoint>::make_shared<UserPoint&>	81	81	0	0
 004D6ABC	std::__shared_ptr_emplace<hole::network::api::UserPoint>::__on_zero_shared	582	312	0	0
 004D6AC8	std::__shared_ptr_emplace<hole::network::api::UserPoint>::__on_zero_shared_weak	582	312	0	0
+004D6AD0	std::shared_ptr<hole::network::api::User>::make_shared<User&>	81	81	0	0
 004D6BB4	std::__shared_ptr_emplace<hole::network::api::User>::__on_zero_shared	784	389	0	0
 004D6BC0	std::__shared_ptr_emplace<hole::network::api::User>::__on_zero_shared_weak	784	389	0	0
+004D6BC8	std::shared_ptr<hole::network::api::Login>::make_shared<Login&>	81	81	0	0
 004D6CAC	std::__shared_ptr_emplace<hole::network::api::Login>::__on_zero_shared	784	389	0	0
 004D6CB8	std::__shared_ptr_emplace<hole::network::api::Login>::__on_zero_shared_weak	784	389	0	0
+004D6CC0	std::vector<int>::__push_back_slow_path<const int&>	1041	917	0	0
 004D6DD0	std::__hash_table<std::string,std::hash<std::string>,std::equal_to<std::string>,std::allocator<std::string>>::~__hash_table [base destructor]	88	70	0	0
+004D7128	std::vector<hole::network::api::RaidBase>::__push_back_slow_path	3	0	0	0
+004D7460	std::vector<unsigned long long>::assign	16	10	0	0
 004D7570	hole::network::CacheManager::getInstance	58	14	0	0
 004D7584	hole::network::CacheManager::convertURLToCacheFilePath	58	14	0	0
+004D7928	std::shared_ptr<bg::Data>::make_shared<unsigned char*&, unsigned&, void(&)(void*)>	259	110	0	0
 004D7A70	PurchaseManager::getInstance	249	58	0	0
 004D7D8C	PurchaseManager::hasSuspendedTransaction	4	2	0	0
 004D7DB0	PurchaseManager::getSuspendedTransactionProductIDs	2	2	0	0
@@ -613,16 +851,27 @@ addr	name	calls	verified	mismatches	unverifiable
 004D8BD0	PurchaseManager::deserialize	142	22	0	0
 004D8DDC	SaveBin::get<int>	693	56	0	0
 004D8E8C	SaveBin::get<unsigned int>	198	16	0	0
+004D9210	std::__list_imp<shared_ptr<PurchaseManager::Transaction>>::clear	4	4	0	0
 004D9254	bg::ioutil::_write<std::string>(const string&, MemoryStream*, const vector_tag&)	6	6	0	0
+004D9838	std::hash<string>::operator()	19984681	5919	0	0
 004D9890	iap::ProductInfo::ProductInfo(const ProductInfo&)	84	38	0	0
+004D9E70	PurchaseManager::startPurchase $_1::operator()(bool)	1	1	0	0
+004DA470	PurchaseManager::finishPurchase $_0::operator()(bool)	1	1	0	0
+004DA504	std::unordered_set<string>::__insert_unique	47	47	0	0
+004DA7C0	std::unordered_set<string>::__construct_node	9	9	0	0
+004DA824	std::unordered_set<string>::rehash	6	6	0	0
+004DA8FC	std::unordered_set<string>::__rehash	6	6	0	0
 004DAB70	std::__hash_table<std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>>>::~__hash_table [base destructor]	521	179	0	0
+004DAB90	std::unordered_map<string, shared_ptr<bg::Data>>::__deallocate	399	226	0	0
 004DABE8	ChatManager::Message::init	84	7	0	0
 004DAE70	ChatManager::Block::init	72	72	0	0
 004DB0E4	ChatManager::getInstance	91	41	0	0
 004DB18E	ChatManager::ChatManager	58	4	0	0
 004DB224	ChatManager::updateInterval	137	94	0	0
-004DB270	ChatManager::getUser	111	0	1	75
+004DB574	std::function<void(ChatManager::StatusCode, unsigned, unsigned, const vector<Block>&)>::operator()	56	38	0	0
+004DB600	std::__vector_base<ChatManager::Block>::~__vector_base	59	41	0	0
 004DB698	createHeaders(bool)	93	18	0	0
+004DB7AC	std::function<void(ChatManager::StatusCode, unsigned, unsigned, const vector<Block>&)>::function(const&)	114	76	0	0
 004DB7E0	ChatManager::getMessage	10	0	0	10
 004DBC88	ChatManager::update	1	0	0	1
 004DC020	ChatManager::createMessage	1	0	0	1
@@ -645,12 +894,25 @@ addr	name	calls	verified	mismatches	unverifiable
 004DE3E4	ChatManager::getUser  __func::__clone()	148	34	0	0
 004DE498	ChatManager::getUser  __func::destroy_deallocate	229	87	0	0
 004DE4C4	ChatManager::getUser::$_N::operator()	43	43	0	0
+004DE87C	std::vector<ChatManager::Block>::__push_back_slow_path	59	41	0	0
 004DEB5E	ChatManager::Block::Block(const Block&)	244	226	0	0
 004DED64	DownloadManager::start	187	0	0	21
 004DF1F4	DownloadManager::finalize	123	81	0	18
 004DF2A0	DownloadManager::onRespond	135	81	0	24
+004DF584	std::function<void(HttpClient*, HttpResponse*)>::function(__bind<DownloadManager::*>&&)	13	13	0	0
+004DF5E8	std::function<bool(const shared_ptr<bg::Data>&)>::operator()	13	13	0	0
 004DF62C	DownloadManager::cancel	229	43	0	0
 004DF670	std::__hash_table<std::__hash_value_type<unsigned int,std::string>,std::__unordered_map_hasher<unsigned int,std::__hash_value_type<unsigned int,std::string>,std::hash<unsigned int>,true>,std::__unordered_map_equal<unsigned int,std::__hash_value_type<unsigned int,std::string>,std::equal_to<unsigned int>,true>,std::allocator<std::__hash_value_type<unsigned int,std::string>>>::__erase_unique<unsigned int>	48	16	0	0
+004DF690	std::unordered_map<unsigned int, string>::find	20	20	0	0
+004DF714	std::unordered_map<unsigned int, string>::erase	13	13	0	0
+004DF78C	std::unordered_map<unsigned int, string>::remove	13	13	0	0
+004DF884	std::shared_ptr<bg::Data>::make_shared<void*&, unsigned&, void(&)(void*)>	14	14	0	0
+004DFBF4	std::function<bool(const shared_ptr<bg::Data>&)>::function(const&)	39	26	0	0
+004DFC5C	std::unordered_map<unsigned int, string>::__insert_unique	13	13	0	0
+004DFD1C	std::unordered_map<unsigned int, string>::__construct_node	13	13	0	0
+004DFD8E	std::unordered_map<unsigned int, string>::__node_insert_unique	13	13	0	0
+004DFF20	std::unordered_map<unsigned int, string>::rehash	9	9	0	0
+004DFFF8	std::unordered_map<unsigned int, string>::__rehash	9	9	0	0
 004E00FC	SaveBin::set<unsigned char>	1415	273	0	0
 004E0334	SaveBin::get<unsigned char>	1630	202	0	0
 004E04E4	TrackingSDKUtil::sendEventOnlyOnce	737	448	2	0
@@ -679,6 +941,7 @@ addr	name	calls	verified	mismatches	unverifiable
 004E1D0C	Java_org_cocos2dx_cpp_GooglePlayManager_onPurchaseFinish	1	0	0	0
 004E2610	RemoteNotification::needsGetToken	456	424	0	0
 004E262C	RemoteNotification::getToken	69	49	0	0
+004E2750	std::function<void(const char*)>::operator=(const&)	8	8	0	0
 004E27C0	Java_org_cocos2dx_cpp_AppActivity_didRegister	8	8	0	0
 004E2BB0	Java_org_cocos2dx_cpp_TrackingSDKManager_getAppConfig	8	8	0	0
 004E2C80	BoardCopy::copy(const char*)	1	1	0	0
@@ -728,6 +991,7 @@ addr	name	calls	verified	mismatches	unverifiable
 004EB7A8	AppState::addClearTutorialPopupIDs	3	3	0	0
 004EB814	AppState::isClearTutorialPopupIDs	2321	254	0	0
 004EB8B4	AppState::resetClearTutorialPopupIDs	204	67	0	0
+004EB9CC	std::function<void()>::operator=(const&)	8811	1611	0	0
 004EBA3C	AppState::getTutorialCloseFunc	632	76	0	0
 004EBE3A	AppState::getNewAvatarBoardIDs	96	2	0	0
 004EBF6C	AppState::removeNewAvatarBoardIDs	6	6	0	0
@@ -740,17 +1004,31 @@ addr	name	calls	verified	mismatches	unverifiable
 004EC414	AppState::AdventureSelectFilterState::AdventureSelectFilterState(const char*)	100	9	0	0
 004EC478	SaveBin::get<unsigned short>	326	42	0	0
 004EC528	SaveBin::set<unsigned short>	270	48	0	0
+004EC65C	std::__sort<__less<int>&, int*>	46	36	0	0
+004ECB6C	std::vector<unsigned long long>::__push_back_slow_path<const unsigned long long&>	176	149	0	0
+004ED6F0	std::vector<unsigned int>::__push_back_slow_path<unsigned int>	390	390	0	0
 004ED9A0	bg::ioutil::_write<std::vector<unsigned long long>>	429	180	0	0
 004EDA40	bg::ioutil::_write<std::unordered_map<unsigned,unsigned>>	143	64	0	0
 004EDAE8	bg::ioutil::_write<std::vector<int>>	715	304	0	0
 004EDD88	bg::ioutil::_read<std::vector<unsigned long long>>	237	36	0	0
+004EDE7C	std::shared_ptr<AppState::OptionState>::make_shared<>	9	9	0	0
+004EDEDC	std::shared_ptr<AppState::SkillSortFilterState>::make_shared<shared_ptr<bg::Data>&>	9	9	0	0
+004EDF54	std::shared_ptr<AppState::KeyBladeSortFilterState>::make_shared<shared_ptr<bg::Data>&>	18	18	0	0
+004EDFCC	std::shared_ptr<AppState::AdventureSelectFilterState>::make_shared<const char*&>	9	9	0	0
+004EE0BC	std::shared_ptr<AppState::AvatarBoardFilterState>::make_shared<const char*&>	9	9	0	0
+004EE1AC	std::shared_ptr<AppState::MedalSortFilterState>::make_shared<const char*&>	45	45	0	0
+004EE2A4	std::unordered_map<unsigned int, unsigned int>::clear	8	8	0	0
 004EE2E8	bg::ioutil::_read<std::unordered_map<unsigned,unsigned>>	79	12	0	0
 004EE3B0	bg::ioutil::_read<std::vector<int>>	395	60	0	0
+004EE49C	std::shared_ptr<AppState::PersonalInfo>::make_shared<shared_ptr<bg::Data>&>	9	9	0	0
 004EE580	std::__shared_ptr_emplace<AppState::PersonalInfo>::__on_zero_shared	96	0	0	0
 004EE58C	std::__shared_ptr_emplace<AppState::PersonalInfo>::__on_zero_shared_weak	96	0	0	0
 004EE5D4	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<AppState>(AppState *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<AppState>(AppState *,int,bool)::{lambda(float)#1}>,void ()(float)>::__clone	192	0	0	0
 004EE5F4	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<AppState>(AppState *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<AppState>(AppState *,int,bool)::{lambda(float)#1}>,void ()(float)>::destroy	192	0	0	0
 004EE5FE	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<AppState>(AppState *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<AppState>(AppState *,int,bool)::{lambda(float)#1}>,void ()(float)>::operator()	894451	60310	0	0
+004EE640	std::shared_ptr<AppState::LoginInfo>::make_shared<>	9	9	0	0
+004EE71C	std::shared_ptr<AppState::BRIDGEInfo>::make_shared<>	9	9	0	0
+004EE7F8	std::shared_ptr<AppState::PersonalInfo>::make_shared<>	9	9	0	0
 004EE968	StageState::create	89	1	0	0
 004EEB88	StageState::addDamage	4494	1226	0	0
 004EEC28	StageState::addCP	4483	808	0	0
@@ -790,6 +1068,9 @@ addr	name	calls	verified	mismatches	unverifiable
 004F089C	StageState::~StageState	42	1	0	0
 004F0930	StageState::getMaxHP	5191	918	0	0
 004F0994	non-virtual thunk to StageState::getMaxHP (+32)	3	3	0	0
+004F09F8	std::set<unsigned>::find	83	83	0	0
+004F0B40	std::set<unsigned>::destroy	25	25	0	0
+004F0B6C	std::shared_ptr<StageState>::make_shared<>	15	15	0	0
 004F0CCC	std::__shared_ptr_emplace<StageState>::__on_zero_shared	41	1	0	0
 004F0CD8	std::__shared_ptr_emplace<StageState>::__on_zero_shared_weak	41	1	0	0
 004F0CE0	SaveBin::set	14375	1677	0	0
@@ -797,9 +1078,17 @@ addr	name	calls	verified	mismatches	unverifiable
 004F0DEC	SaveBin::get	16032	557	0	0
 004F0E94	SaveBin::serialize	366	177	0	0
 004F0FE8	SaveBin::deserialize	297	24	0	0
+004F11F8	std::shared_ptr<bg::MemoryInputStream>::make_shared<const shared_ptr<bg::Data>&>	27	27	0	0
 004F12C8	std::__shared_ptr_emplace<bg::MemoryInputStream>::__on_zero_shared	21620	360	0	0
 004F12D4	std::__shared_ptr_emplace<bg::MemoryInputStream>::__on_zero_shared_weak	21620	360	0	0
+004F12DC	std::unordered_map<string, shared_ptr<bg::Data>>::clear	24	24	0	0
 004F1314	std::__hash_table<std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,std::shared_ptr<bg::Data>>>>::__erase_unique<std::string>	25558	4033	0	0
+004F15A6	std::unordered_map<string, shared_ptr<bg::Data>>::find	1420	1344	0	0
+004F16A4	std::unordered_map<string, shared_ptr<bg::Data>>::__insert_unique	32554	1490	0	0
+004F1778	std::unordered_map<string, shared_ptr<bg::Data>>::__construct_node	4513	1490	0	0
+004F180E	std::unordered_map<string, shared_ptr<bg::Data>>::__node_insert_unique	4513	1490	0	0
+004F1A1C	std::unordered_map<string, shared_ptr<bg::Data>>::rehash	256	113	0	0
+004F1AF4	std::unordered_map<string, shared_ptr<bg::Data>>::__rehash	256	113	0	0
 004F1D14	StatusChange::clear	1487	383	0	0
 004F1D20	IStatusProtocol::addCondition_common	2	0	0	0
 004F1E00	IStatusProtocol::elapseTurnStatus	448	102	0	0
@@ -819,8 +1108,11 @@ addr	name	calls	verified	mismatches	unverifiable
 004F25CC	IBuffProtocol::buff_add_main	993	1	0	0
 004F27E8	IBuffProtocol::buff_clear	2280	63	0	0
 004F28F8	CommandParser::parse(const std::string&, LWF::Movie*, LWF::Button*)	27399	7532	0	0
+004F3324	std::__vector_base<long>::~__vector_base	14739	1636	0	0
+004F3350	std::vector<long>::__push_back_slow_path<long>	36792	1690	0	0
 004F348C	GestureRecognizer::GestureRecognizer	196	6	0	0
 004F3620	GestureRecognizer::~GestureRecognizer	208	13	0	0
+004F3698	std::function<void(Touch*, Event*)>::swap	10274	1059	0	0
 004F37CC	GestureRecognizer $_3 __func::__clone(__base*)	188	0	0	0
 004F37EC	GestureRecognizer $_3 __func::destroy	436	21	0	0
 004F3868	GestureRecognizer $_2 __func::__clone(__base*)	188	0	0	0
@@ -857,6 +1149,8 @@ addr	name	calls	verified	mismatches	unverifiable
 004F57C0	ScrollBar::setBackgroundVisible(bool)	248	9	0	0
 004F57D2	ScrollBar::~ScrollBar (deleting)	190	4	0	0
 004F57E0	IScrollProtocol::~IScrollProtocol()	189	22	0	0
+004F59D0	std::__vector_base<IScrollProtocol::UpdateData>::~__vector_base	30	30	0	0
+004F59FE	std::__vector_base<float>::~__vector_base	1296	1169	0	0
 004F5A7C	IScrollProtocol::init()	200	2	0	0
 004F5C80	std::function<void(Touch*,Event*)>::operator=(IScrollProtocol::init()::$_2)	400	2	0	0
 004F5CFC	IScrollProtocol::update(float)	130092	9882	0	0
@@ -880,6 +1174,7 @@ addr	name	calls	verified	mismatches	unverifiable
 004F7D20	IScrollProtocol::containsPointInScrollArea(const Vec2&)	42	42	0	0
 004F7DE0	IScrollProtocol::getItemIndex(int)	12	12	0	0
 004F7F40	IScrollProtocol::getLayoutPanel()	8	1	0	0
+004F8404	std::vector<cocos2d::ui::Widget*>::__push_back_slow_path	638	546	0	0
 004F8574	IScrollProtocol::init::$_4 __clone(__base*)	502	2	0	0
 004F8594	IScrollProtocol::init::$_4 destroy()	692	24	0	0
 004F859E	IScrollProtocol::init()::$_4 __func::operator()	267	95	0	0
@@ -910,6 +1205,8 @@ addr	name	calls	verified	mismatches	unverifiable
 004F9C80	CustomTextView::createCustomElement	558	50	0	0
 004F9E14	non-virtual thunk to CustomTextView::textHandler	568	50	0	18
 004F9E9C	CustomTextView::~CustomTextView (deleting)	244	57	0	0
+004F9FCC	std::vector<float>::__push_back_slow_path<float>	3	3	0	0
+004FA108	std::vector<float>::__push_back_slow_path<const float&>	3820	1005	0	0
 004FA3AC	MagicStoneScrollView::~MagicStoneScrollView()	9	3	0	2
 004FA534	MagicStoneScrollView::~MagicStoneScrollView [deleting destructor]	4	0	0	4
 004FA568	MagicStoneScrollView::create()	2	2	0	0
@@ -920,6 +1217,8 @@ addr	name	calls	verified	mismatches	unverifiable
 004FA934	MagicStoneScrollView::changeRow(Widget*, int, int)	237	68	0	124
 004FB758	MagicStoneScrollView::registItemTouchEvent(Widget*, int)	93	71	0	0
 004FB934	MagicStoneScrollView::setProductInfoMap(const unordered_map<string, ProductInfo>*)	9	7	0	0
+004FC308	MagicStoneScrollView::changeRow $_0 __clone(__base*)	80	3	0	0
+004FC336	MagicStoneScrollView::changeRow $_0::operator() (Buy button)	4	3	0	1
 004FC56C	MiniMedalScrollView::~MiniMedalScrollView	7	6	0	0
 004FC898	MiniMedalScrollView::~MiniMedalScrollView (deleting)	8	6	0	0
 004FC8CC	MiniMedalScrollView::init	10	4	0	0
@@ -970,6 +1269,7 @@ addr	name	calls	verified	mismatches	unverifiable
 005003B4	SellMedalScrollView::getSelectedMedals	40	24	0	0
 00500464	SellMedalScrollView::clearSelectedMedals	2	2	0	0
 005004D0	SellMedalScrollView::setMedalShowType	2	0	0	0
+005004F0	std::map<unsigned long long, bool>::destroy	357	1	0	0
 005007D2	nullsub_299	16	8	0	0
 00500C38	nullsub_301	332	42	0	0
 00500EE4	MaterialScrollView::~MaterialScrollView	8	4	0	0
@@ -1070,6 +1370,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00509374	RaidBossScrollView::registItemTouchEvent touch began operator() (sub_509374)	15	15	0	0
 00509554	sub_509554	6	5	0	0
 00509574	nullsub_320	6	5	0	0
+00509898	std::shared_ptr<AvatarIconCache>::make_shared<Texture2D*&, Vec2, float, float>	9	0	0	0
 00509A1C	std::__shared_ptr_emplace<AvatarIconCache>::__on_zero_shared	5	0	0	0
 00509A26	std::__shared_ptr_emplace<AvatarIconCache>::__on_zero_shared_weak	5	0	0	0
 00509A3C	LoadingIndicator::init	126	22	0	0
@@ -1145,6 +1446,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00511950	AvatarTitleScrollView::registItemTouchEvent $_0 __func::destroy	84	42	0	0
 0051195C	BattleResultScrollView cell touch began operator() (sub_51195C)	21	21	0	0
 00511BB4	BattleResultScrollView::~BattleResultScrollView()	58	18	0	0
+00511C84	std::__vector_base<BattleResultScrollView::ResutData>::~__vector_base	27	27	0	0
 00511D18	BattleResultScrollView::~BattleResultScrollView() (deleting)	76	18	0	0
 00511D4C	BattleResultScrollView::create()	139	3	0	0
 00511DA0	BattleResultScrollView::BattleResultScrollView()	105	3	0	0
@@ -1167,6 +1469,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00513D84	BattleResultScrollView::loadResultData()	136	3	0	0
 005142A4	BattleResultScrollView::loadStageResultData()	140	0	7	0
 005147E0	BattleResultScrollView::loadStageResultData add a reward (outlined lambda)	207	0	0	0
+0051517C	std::vector<BattleResultScrollView::ResutData>::__push_back_slow_path	28	28	0	0
 005153E6	BattleResultScrollView::ResutData::ResutData(const ResutData&)	317	2	0	0
 005154C4	BattleResultScrollView::setDropImage $_8 __func::__clone()	33	4	0	0
 00515532	BattleResultScrollView::setDropImage $_8 __func::destroy_deallocate	42	5	0	0
@@ -1174,6 +1477,7 @@ addr	name	calls	verified	mismatches	unverifiable
 005158BC	BattleResultScrollView::pushFrontItem $_4 __func::__clone()	182	76	0	0
 0051596A	BattleResultScrollView::pushFrontItem $_4 __func::destroy_deallocate	287	177	0	0
 00515980	BattleResultScrollView::pushFrontItem $_4 operator()	201	38	0	6
+00516208	std::vector<int>::insert(const_iterator, const int&)	17	17	0	0
 005164A4	sub_5164A4	454	4	0	0
 005164C4	nullsub_348	589	123	0	0
 005164CE	sub_5164CE	237	119	0	0
@@ -1212,6 +1516,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00518F14	nullsub_358	8	1	0	0
 00518F20	BaseEndlessrollView row touch ended lambda (sub_518F20)	13	13	0	0
 005196EC	MyRecordScrollView::~MyRecordScrollView	17	6	0	0
+0051976C	std::__vector_base<MyRecordScrollView::RecordData>::~__vector_base	2	2	0	0
 005197CC	MyRecordScrollView::~MyRecordScrollView [deleting destructor]	14	6	0	0
 00519800	MyRecordScrollView::create	8	6	0	2
 005198B8	MyRecordScrollView::init	11	6	0	3
@@ -1219,10 +1524,15 @@ addr	name	calls	verified	mismatches	unverifiable
 00519F8C	MyRecordScrollBar::setScrollPosition	8070	8070	0	0
 0051A090	MyRecordScrollView::setContentSize	66	64	0	2
 0051AF34	MyRecordScrollView::setEnabledScrollBar	6	1	0	3
+0051B014	std::__vector_base<std::vector<unsigned long long>>::~__vector_base	4	0	0	0
+0051B044	std::__vector_base<std::vector<int>>::~__vector_base	6633	187	0	0
 0051B110	MyRecordScrollBar::create	5	5	0	0
 0051B1D4	MyRecordScrollBar::updateLayout	5	5	0	0
 0051B408	MyRecordScrollBar::init	5	5	0	0
 0051B5C8	MyRecordScrollBar::setPixel	5	5	0	0
+0051B78C	std::vector<MyRecordScrollView::RecordData>::__push_back_slow_path	28	0	0	0
+0051B908	std::vector<vector<unsigned long long>>::allocate	4	0	0	0
+0051B938	std::vector<vector<int>>::allocate	4	0	0	0
 0051B99C	MyRecordScrollView::init::$_1 __clone(__base*)	34	6	0	0
 0051B9BC	MyRecordScrollView::init::$_1 destroy()	51	12	0	0
 0051BA38	MyRecordScrollView::init::$_0 __clone(__base*)	34	6	0	0
@@ -1295,6 +1605,7 @@ addr	name	calls	verified	mismatches	unverifiable
 005250B8	MemberScrollView::changeRow::$_0 operator() (avatar)	8	8	0	0
 00525320	MemberScrollView::changeRow::$_0::lambda()#2 operator() (avatar info)	2	0	0	2
 00525638	BaseSlideView::~BaseSlideView	234	44	0	0
+00525830	std::__vector_base<BaseSlideView::UpdateTarget>::~__vector_base	26	26	0	0
 0052587C	BaseSlideView::~BaseSlideView [deleting destructor]	220	49	0	9
 005258B0	BaseSlideView::init	180	14	0	0
 00525A20	BaseSlideView::init::assignTouchEndLambda (sub_525A20)	290	14	0	0
@@ -1306,6 +1617,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00526110	BaseSlideView::setSlideEnabled	258	4	0	0
 00526140	BaseSlideView::setIndex	146	2	0	0
 00526594	BaseSlideView::setScreenWidth	174	2	0	0
+00526818	std::vector<BaseSlideView::UpdateTarget>::__push_back_slow_path	58	54	0	0
 0052698C	BaseSlideView::init::$_2 __clone(__base*)	338	4	0	0
 005269B0	BaseSlideView::init::$_2 destroy()	814	48	0	0
 005269BC	BaseSlideView::init::$_2::operator()	2	2	0	0
@@ -1335,6 +1647,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0052C008	DeckMedalView::showTypeMatchEffect	619	200	0	0
 0052C1EC	DeckMedalView::changeShowType	179	97	0	0
 0052C1F4	DeckRevolverView::~DeckRevolverView	320	3	0	0
+0052C438	std::__vector_base<DeckMedalView*>::~__vector_base	50	50	0	0
 0052C462	DeckRevolverView::~DeckRevolverView [deleting destructor]	356	8	0	0
 0052C470	DeckRevolverView::create	317	1	0	0
 0052C55C	DeckRevolverView::DeckRevolverView	255	1	0	0
@@ -1355,6 +1668,10 @@ addr	name	calls	verified	mismatches	unverifiable
 0052E168	DeckRevolverView::setMedalData $_7 __func::__clone()	2	1	0	0
 0052E21A	DeckRevolverView::setMedalData $_7 __func::destroy_deallocate	3	2	0	0
 0052E234	DeckRevolverView::setMedalData::$_7::operator()	1	0	1	0
+0052E480	std::vector<shared_ptr<MedalDataManager::UserMedalData>>::assign	79	30	0	0
+0052E59C	std::vector<shared_ptr<MedalDataManager::UserMedalData>>::__construct_at_end	76	24	0	0
+0052E5D2	std::vector<shared_ptr<MedalDataManager::UserMedalData>>::deallocate	74	24	0	0
+0052E618	std::vector<shared_ptr<MedalDataManager::UserMedalData>>::allocate	76	24	0	0
 0052E674	DeckRevolverView::init $_6 __func::__clone(__base*)	664	12	0	0
 0052E694	DeckRevolverView::init $_6 __func::destroy	1008	18	0	0
 0052E69E	sub_52E69E	526	88	0	0
@@ -1370,6 +1687,14 @@ addr	name	calls	verified	mismatches	unverifiable
 00530304	sub_530304	343	16	0	0
 00530324	nullsub_417	708	27	0	0
 00530330	DeckRevolverView::init::$_1::operator()	6	6	0	0
+005306D4	std::vector<DeckMedalView*>::__push_back_slow_path	330	129	0	0
+00530810	std::map<string, function<void(LWF::Movie*)>>::destroy	140473	1400	0	0
+00530868	std::map<string, function<void(LWF::Movie*)>>::__insert_unique(hint, const pair&)	48203	1400	0	0
+0053091C	std::map<string, function<void(LWF::Movie*)>>::__construct_node	49603	1400	0	0
+005309BC	std::map<string, function<void(LWF::Movie*)>>::__node_insert_unique(hint)	49603	1400	0	0
+00530A2C	std::map<string, function<void(LWF::Movie*)>>::__find_equal(hint)	49603	1400	0	0
+00530CC0	std::map<string, function<void(LWF::Movie*)>>::__insert_node_at	49603	1400	0	0
+00530E0E	std::function<void(LWF::Movie*)>::function(const&)	124044	1530	0	0
 00530E48	DeckMedalView::updateLayout::$_0 __func::__clone()	33	8	0	0
 00530EAA	DeckMedalView::updateLayout::$_0 __func::destroy_deallocate	34	19	0	0
 00530EB4	DeckMedalView::updateLayout::$_0::operator()	235	235	0	0
@@ -1381,6 +1706,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00531300	ImageButton::ImageButton()	1871	62	0	0
 00531414	ImageButton::init(std::string, bool)	1871	62	0	0
 005315B0	ImageButton::addTouchEventListener(std::function)	3055	128	0	0
+005315C0	std::function<void(Ref*, Widget::TouchEventType)>::operator=(const&)	36255	1507	0	0
 00531630	ImageButton::setTargetImageView(ui::ImageView*)	606	43	0	0
 00531640	ImageButton::updateImage()	963	48	0	0
 005318C0	ImageButton::setTargetView(Node*, float)	1774	65	0	0
@@ -1402,11 +1728,13 @@ addr	name	calls	verified	mismatches	unverifiable
 00532154	nullsub_423	4491	200	0	0
 00532160	ImageButton::init::$_0::operator()	1419	1363	0	56
 0053259C	AvatarInfoDialog::~AvatarInfoDialog	17	6	0	3
+005329D4	std::__vector_base<APIManager::Timezone>::~__vector_base	2	2	0	0
 00532A10	AvatarInfoDialog::~AvatarInfoDialog [deleting destructor]	8	6	0	2
 00532A30	AvatarInfoDialog::create	2	2	0	0
 00532A9C	AvatarInfoDialog::AvatarInfoDialog	5	5	0	0
 00532E3C	AvatarInfoDialog::init	7	5	0	0
 00532E94	AvatarInfoDialog::open	14	0	0	6
+0053327C	std::function<bool()>::operator=(const&)	60	60	0	0
 005332EC	AvatarInfoDialog::createLayout	3	1	0	2
 00534E78	BaseSlideView::create	166	14	0	0
 00534F50	AvatarInfoDialog::close	5	5	0	0
@@ -1451,6 +1779,9 @@ addr	name	calls	verified	mismatches	unverifiable
 005427FC	AvatarInfoDialog::openPopUpSelectSubName::$_44 destroy()	2	2	0	0
 00542870	AvatarInfoDialog::openPopUpSelectSubName::$_43 __clone(__base*)	4	4	0	0
 0054288C	AvatarInfoDialog::openPopUpSelectSubName::$_43 destroy()	4	4	0	0
+005462A4	AvatarInfoDialog::openPopUpSubName::$_17 operator() (Button_Plate)	16	16	0	0
+00546570	AvatarInfoDialog::openPopUpSubName::$_16 operator() (popup closed)	2	0	0	2
+00546A7C	AvatarInfoDialog::openPopUpSubName::$_16 lambda(bool) operator() (title update result)	6	2	0	0
 00546D84	AvatarInfoDialog::close::$_12 __clone(__base*)	20	5	0	0
 00546DA4	AvatarInfoDialog::close::$_12 destroy()	25	10	0	0
 00546E7C	AvatarInfoDialog::createLayout::$_11 __clone(__base*)	4	4	0	0
@@ -1459,12 +1790,18 @@ addr	name	calls	verified	mismatches	unverifiable
 00546FC4	AvatarInfoDialog::createLayout::$_10 destroy()	6	6	0	0
 005470D0	AvatarInfoDialog::createLayout::$_9 __clone(__base*)	2	2	0	0
 005470F4	AvatarInfoDialog::createLayout::$_9 destroy()	4	4	0	0
+00547310	AvatarInfoDialog::createLayout::$_8 page updater (sub_547310)	36	28	0	0
+0054A064	std::function<Widget*(int)>::operator()	60	35	0	0
+0054A0E4	AvatarInfoDialog::createLayout::$_8 time zone label (sub_54A0E4)	72	12	0	0
 0054A5AC	AvatarInfoDialog::createLayout::$_8::lambda(float,int) destroy()	8	8	0	0
+0054A5B8	AvatarInfoDialog::createLayout::$_8 Lux gauge lambda(float, u64) (sub_54A5B8)	26	0	0	0
 0054A73C	AvatarInfoDialog::createLayout::$_8::lambda(N9SceneUtil19MedalInfoButtonTypeEbi) __clone(__base*)	8	8	0	0
 0054A758	AvatarInfoDialog::createLayout::$_8::lambda(N9SceneUtil19MedalInfoButtonTypeEbi) destroy()	12	10	0	0
 0054AE30	sub_54AE30 (createLayout $_73 std::function)	1	1	0	0
 0054B008	AvatarInfoDialog::createLayout::$_8::lambda(PNS4_3RefENS6_14TouchEventTypeE) __clone(__base*)	40	40	0	0
 0054B02C	AvatarInfoDialog::createLayout::$_8::lambda(PNS4_3RefENS6_14TouchEventTypeE) destroy()	54	54	0	0
+0054B036	AvatarInfoDialog::createLayout::$_8 Close_Button lambda (sub_54B036)	8	8	0	0
+0054B0D0	std::__lower_bound<__less<APIManager::Timezone>&, set iterator>	216	12	0	0
 0054B2F8	AvatarInfoDialog::createLayout::$_7 __clone(__base*)	2	2	0	0
 0054B318	AvatarInfoDialog::createLayout::$_7 destroy()	4	4	0	0
 0054BC28	AvatarInfoDialog::createLayout::$_5 __clone()	2	2	0	0
@@ -1484,6 +1821,14 @@ addr	name	calls	verified	mismatches	unverifiable
 0054CA3C	AvatarInfoDialog::createLayout::$_2 __clone()	2	2	0	0
 0054CACA	AvatarInfoDialog::createLayout::$_2 destroy_deallocate()	4	4	0	0
 0054CAD4	AvatarInfoDialog::createLayout::$_2 operator() (button A)	12	12	0	0
+0054CC0C	std::set<APIManager::Timezone>::__assign_multi	2	0	0	0
+0054CD72	std::set<APIManager::Timezone>::destroy	12	2	0	0
+0054CD9E	std::set<APIManager::Timezone>::__insert_multi(const&)	4	0	0	0
+0054CE08	std::set<APIManager::Timezone>::__insert_node_at	8	0	0	0
+0054CE38	std::set<APIManager::Timezone>::__insert_unique(&&)	4	0	0	0
+0054CE7C	std::set<APIManager::Timezone>::__node_insert_unique	4	0	0	0
+0054CEF4	std::set<APIManager::Timezone>::__find_equal	4	0	0	0
+0054D058	AvatarInfoDialog::open's /user/profile answer (sub_54D058)	2	0	0	0
 0054D740	ColosseumScrollView::~ColosseumScrollView	2	2	0	0
 0054D858	ColosseumScrollView::create	1	1	0	0
 0054D8AC	ColosseumScrollView::ColosseumScrollView	2	2	0	0
@@ -1643,6 +1988,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0056B6C0	AdvStageScrollView::setSubMisstionInfo (sub mission text lambda)	873	23	0	0
 0056BD34	AdvStageScrollView::setSubMisstionInfo (bonus panel lambda)	504	15	0	0
 0056C210	AdvStageScrollView::setRaidBossInfo(Widget*, const RaidBase::Info&)	11674	3623	0	2
+0056CB50	std::array<RaidBase::Info::Part, 6>::at const	3982	400	0	0
 0056CBC8	AdvStageScrollView::updateRaidBossInfoTime(Widget*, const RaidBase::Info&)	51231	7367	0	17
 0056E558	AdvStageScrollView::setStoryTitle	153	15	0	11
 0056ECB0	AdvStageScrollView::setStoryTitle (label lambda)	780	15	0	0
@@ -1687,6 +2033,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00573340	AdvStageScrollView::setColosseumInfo $_8 __func::__clone() (sub_573340)	66	11	0	0
 005733F8	AdvStageScrollView::setColosseumInfo $_8 __func::destroy_deallocate() (sub_5733F8)	88	33	0	0
 005734F8	StartDeckEditDialog::~StartDeckEditDialog	176	85	0	0
+00573590	std::__vector_base<shared_ptr<const master::EvCampaign>>::~__vector_base	62	62	0	0
 005735D2	StartDeckEditDialog::~StartDeckEditDialog [deleting destructor]	89	85	0	0
 005735DE	StartDeckEditDialog::create	86	3	0	0
 00573634	StartDeckEditDialog::init	89	3	0	0
@@ -1793,6 +2140,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0057D914	nullsub_620	338	82	0	0
 0057D91E	sub_57D91E	114	0	0	0
 0057D95C	BattleResultDialog::~BattleResultDialog	73	71	0	0
+0057DA50	std::__vector_base<BattleResultDialog::LevelUpSkill>::~__vector_base	15	15	0	0
 0057DA7E	BattleResultDialog::~BattleResultDialog (deleting)	75	71	0	0
 0057DA8A	BattleResultDialog::create	120	2	0	0
 0057DAE0	BattleResultDialog::BattleResultDialog	127	15	0	0
@@ -1967,18 +2315,26 @@ addr	name	calls	verified	mismatches	unverifiable
 0058DF70	BuyMagicStoneDialog::init $_2 __func::__clone()	60	12	0	0
 0058E0E8	BuyMagicStoneDialog::init  __func::destroy_deallocate	78	27	0	0
 0058E124	BuyMagicStoneDialog::init $_2::operator()(bool)	12	6	0	0
+0058E42C	BuyMagicStoneDialog::init $_2 inner lambda __clone()	6	6	0	0
 0058E552	BuyMagicStoneDialog::init  __func::destroy_deallocate	46	10	0	0
+0058E584	BuyMagicStoneDialog::init $_2 inner lambda::operator()(bool, const unordered_map*)	2	2	0	0
 00590ABC	BuyMagicStoneDialog::open $_0 __func::__clone()	132	24	0	0
 00590B70	BuyMagicStoneDialog::open $_0 __func::destroy_deallocate	151	44	0	0
+00590B9C	BuyMagicStoneDialog::open $_0::operator()(vector<int>, const unordered_map*, bool)	4	2	0	0
+005919D0	BuyMagicStoneDialog::open $_0 closed lambda __clone()	6	4	0	0
 00591B28	BuyMagicStoneDialog::open $_0 __func::destroy_deallocate	18	16	0	0
+00591B70	BuyMagicStoneDialog::open $_0 closed lambda::operator()(bool)	2	2	0	0
 00591DBC	BuyMagicStoneDialog::open $_0 __func::__clone()	6	6	0	0
 00591E7C	BuyMagicStoneDialog::open $_0 __func::destroy_deallocate	12	12	0	0
+00591EA8	BuyMagicStoneDialog::open $_0 removed lambda::operator()()	2	2	0	0
 00591F4C	BuyMagicStoneDialog::open $_0 __func::__clone(__base*)	6	4	0	0
 00591F6C	BuyMagicStoneDialog::open $_0 __func::destroy	12	10	0	0
 00591FE0	BuyMagicStoneDialog::open $_0 __func::__clone(__base*)	12	8	0	0
 00591FFC	BuyMagicStoneDialog::open $_0 __func::destroy	18	14	0	0
 0059207C	BuyMagicStoneDialog::open $_0 __func::__clone(__base*)	6	4	0	0
 005920A0	BuyMagicStoneDialog::open $_0 __func::destroy	12	4	0	0
+005920AC	BuyMagicStoneDialog::open $_0 pack chosen lambda::operator()(int)	1	0	0	0
+005922FC	BuyMagicStoneDialog::open $_0 purchase lambda::operator()(bool)	2	1	0	0
 005924BC	BuyMagicStoneDialog::open $_0 __func::__clone(__base*)	12	8	0	0
 005924D8	BuyMagicStoneDialog::open $_0 __func::destroy	18	14	0	0
 00592560	BuyMagicStoneDialog::open $_0 __func::__clone(__base*)	36	26	0	0
@@ -2027,6 +2383,7 @@ addr	name	calls	verified	mismatches	unverifiable
 005995C0	nullsub_714	280	10	0	0
 00599930	sub_599930	519	44	0	0
 0059994C	nullsub_86	1038	45	0	0
+00599A3C	std::vector<shared_ptr<const master::EvCampaign>>::assign	18	18	0	0
 00599C30	CampaignAnimationView::~CampaignAnimationView (deleting)	111	7	0	0
 00599C68	MedalListScrollView::~MedalListScrollView	10	5	0	0
 00599EF0	MedalListScrollView::~MedalListScrollView [deleting destructor]	8	4	0	0
@@ -2054,6 +2411,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0059B8EC	nullsub_720	1246	127	0	0
 0059B8F8	MedalListScrollView press lambda __func::operator() (sub_59B8F8)	618	618	0	0
 0059BADC	BaseStageScrollView::~BaseStageScrollView() [base]	112	22	0	0
+0059BD10	std::__vector_base<BaseStageScrollView::UpdateData>::~__vector_base	15	15	0	0
 0059BD94	BaseStageScrollView::init	198	1	0	0
 0059BF24	std::function<void(Touch*,Event*)>::operator=(BaseStageScrollView::init::$_2&&)	284	1	0	0
 0059BFA0	BaseStageScrollView::update(float)	370216	8400	0	0
@@ -2320,9 +2678,11 @@ addr	name	calls	verified	mismatches	unverifiable
 005B33C8	nullsub_813	180	33	0	0
 005B351E	sub_5B351E	44	12	0	0
 005B371E	sub_5B371E	44	12	0	0
+005B42A6	std::map<int, unsigned>::destroy	24	12	0	0
 005B42D4	RaidSubdueScrollView::~RaidSubdueScrollView()	4	1	0	0
 005B43A0	RaidSubdueScrollView::~RaidSubdueScrollView() (deleting)	5	1	0	0
 005B43D4	RaidSubdueScrollView::setDrawFrame(Widget*, int)	24	3	0	0
+005B5720	std::map<int, RaidSubdueScrollView::SubdueData>::operator[]	63	0	0	0
 005B57A8	RaidSubdueScrollView::init()	9	3	0	0
 005B58B4	RaidSubdueScrollView::reflectionList(vector<SubdueData>&)	7	3	0	2
 005B5B28	RaidSubdueScrollView::createRow(int, int)	18	3	0	0
@@ -2339,6 +2699,11 @@ addr	name	calls	verified	mismatches	unverifiable
 005B7D86	sub_5B7D86	3	2	0	0
 005B7DBC	RaidBossResultPopUp::popUpRaidBossResult request lambda operator() (sub_5B7DBC)	1	1	0	0
 005B9608	RaidSubdueScrollView::create()	7	3	0	2
+005B965C	std::__vector_base<RaidSubdueScrollView::SubdueData>::~__vector_base	9	0	0	0
+005B9868	std::vector<RaidSubdueScrollView::SubdueData>::__push_back_slow_path	18	0	0	0
+005B9AF4	std::vector<RaidMember::Cooperator>::vector(const vector&)	9	0	0	0
+005B9B48	std::vector<RaidMember::Cooperator>::allocate	9	0	0	0
+005B9B78	std::vector<RaidMember::Cooperator>::__construct_at_end	9	0	0	0
 005B9C3C	sub_5B9C3C	16	4	0	0
 005B9C5C	nullsub_818	18	12	0	0
 005BA250	nullsub_819	11	2	0	0
@@ -2354,14 +2719,21 @@ addr	name	calls	verified	mismatches	unverifiable
 005BA7E2	sub_5BA7E2	36	8	0	0
 005BA9CA	RaidSubdueScrollView::registItemTouchEvent $_0 __func::destroy_deallocate	32	6	0	0
 005BA9E0	RaidSubdueScrollView::registItemTouchEvent $_0 __func::operator()	2	2	0	0
+005BAB10	std::map<int, RaidSubdueScrollView::SubdueData>::destroy	14	1	0	0
+005BAB4C	std::map<int, RaidSubdueScrollView::SubdueData>::__find_equal_key	63	0	0	0
+005BAB98	std::map<int, RaidSubdueScrollView::SubdueData>::__insert_node_at	18	0	0	0
 005BCF7C	ImageDownloader::ImageDownloader	238	6	0	0
 005BCFA8	ImageDownloader::~ImageDownloader	177	39	0	0
 005BD06C	ImageDownloader::cancelAllImageHandle	138	39	0	0
 005BD4D8	ImageDownloader::update	448131	17662	0	0
+005BE57E	std::map<string, unsigned>::destroy	46	46	0	0
+005BEC6C	std::map<string, Image*>::destroy	46	46	0	0
+005BECA6	std::map<string, function<void(bool, const char*)>>::destroy	23	23	0	0
 005BECFC	audio::Manager::getInstance	908991	43279	0	0
 005BEDE8	audio::Manager::create	144	16	0	0
 005BEEF4	audio::Manager::load	16560	1244	0	1
 005BF028	audio::Manager::removeBank	3353	315	0	0
+005BF060	std::list<audio::Manager::Bank>::push_back(const&)	2	2	0	0
 005BF0A0	audio::Manager::unload	81	61	20	0
 005BF138	audio::Manager::unloadAll	625	473	53	4
 005BF18C	audio::Manager::lock	1098	32	0	0
@@ -2372,6 +2744,7 @@ addr	name	calls	verified	mismatches	unverifiable
 005BF424	audio::Manager::pause	16	3	1	0
 005BF48C	audio::Manager::resume(int, int)	3	0	0	0
 005BF4FC	audio::Manager::update	908558	20889	0	0
+005BF58C	std::list<audio::Manager::Bank>::erase(pos)	2	2	0	0
 005BF5BC	audio::Layer::removeFinishedSound	428	4	0	0
 005BF66C	audio::Manager::updateQueue	895773	54842	188	0
 005BF6EA	audio::Layer::pause	8	4	0	0
@@ -2379,7 +2752,33 @@ addr	name	calls	verified	mismatches	unverifiable
 005BF784	audio::Layer::playSE	15007	1225	1657	4
 005BF810	audio::Layer::playBGM	767	1	0	0
 005BF824	audio::Layer::setVolume	420	60	0	0
+005BF8C6	std::multimap<int, int>::__insert_multi(const pair&)	1156	1070	0	0
+005BF922	std::multimap<int, int>::__insert_node_at	276768	2465	0	0
+005BF952	std::map<int, audio::Manager::StartParameter>::__insert_unique(pair&&)	1156	1070	0	0
+005BF9A0	std::map<int, audio::Manager::StartParameter>::__node_insert_unique	2211	1070	0	0
+005BFA18	std::map<int, audio::Manager::StartParameter>::__find_equal	2211	1070	0	0
+005BFA64	std::map<int, audio::Manager::StartParameter>::__insert_node_at	2211	1070	0	0
+005BFA94	std::map<int, audio::Manager::StartParameter>::erase	1112	1090	0	0
+005BFAE2	std::map<int, audio::Manager::StartParameter>::find	171	162	0	0
+005BFB26	std::map<int, shared_ptr<audio::Layer>>::find	1177	1087	0	0
+005BFBE4	std::map<int, shared_ptr<audio::Layer>>::__insert_unique(pair&&)	21	21	0	0
+005BFC40	std::map<int, shared_ptr<audio::Layer>>::__node_insert_unique	42	21	0	0
+005BFCB8	std::map<int, shared_ptr<audio::Layer>>::__find_equal	42	21	0	0
+005BFD04	std::map<int, shared_ptr<audio::Layer>>::__insert_node_at	42	21	0	0
+005BFD34	std::shared_ptr<audio::Layer>::make_shared<audio::Manager&>	27	27	0	0
+005BFE0C	std::multimap<int, int>::destroy	684318	57	0	0
 005BFE38	std::__hash_table<int,std::hash<int>,std::equal_to<int>,std::allocator<int>>::__erase_unique<int>	705	3	0	0
+005BFE58	std::unordered_set<int>::find	1005	981	0	0
+005C002E	std::unordered_set<int>::__insert_unique	296	193	0	0
+005C01F4	std::unordered_set<int>::rehash	61	61	0	0
+005C02CC	std::unordered_set<int>::__rehash	61	61	0	0
+005C03D0	std::unordered_map<int, audio::Manager::Bank>::erase	567	567	0	0
+005C0444	std::unordered_map<int, audio::Manager::Bank>::remove	567	567	0	0
+005C053A	std::unordered_map<int, audio::Manager::Bank>::__insert_unique	737	538	0	0
+005C05C0	std::unordered_map<int, audio::Manager::Bank>::__node_insert_unique	650	539	0	0
+005C0754	std::unordered_map<int, audio::Manager::Bank>::rehash	34	34	0	0
+005C082C	std::unordered_map<int, audio::Manager::Bank>::__rehash	34	34	0	0
+005C092E	std::unordered_map<int, audio::Manager::Bank>::find	2532	1300	0	0
 005C09E4	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<audio::Manager>(audio::Manager *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<audio::Manager>(audio::Manager *,int,bool)::{lambda(float)#1}>,void ()(float)>::__clone	180	2	0	0
 005C0A04	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<audio::Manager>(audio::Manager *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<audio::Manager>(audio::Manager *,int,bool)::{lambda(float)#1}>,void ()(float)>::destroy	180	2	0	0
 005C0A0E	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<audio::Manager>(audio::Manager *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<audio::Manager>(audio::Manager *,int,bool)::{lambda(float)#1}>,void ()(float)>::operator()	875938	41796	0	1
@@ -2394,17 +2793,33 @@ addr	name	calls	verified	mismatches	unverifiable
 005C19B4	AudioClearGameMainBGMStack	613	559	10	0
 005C1A64	AudioGetGameMainBGMResouceID()	323	108	0	0
 005C1A78	AudioPlayGameMainSEOneShot	109	15	0	0
+005C1B30	std::unordered_map<int, audio::ResourceID>::__insert_unique	15	15	0	0
+005C1B96	std::unordered_map<int, audio::ResourceID>::__node_insert_unique	15	15	0	0
+005C1D28	std::unordered_map<int, audio::ResourceID>::rehash	5	5	0	0
+005C1E00	std::unordered_map<int, audio::ResourceID>::__rehash	5	5	0	0
+005C1F04	std::__deque_base<pair<audio::ResourceID, int>>::clear	26	26	0	0
 005C200C	sub_5C200C	192	2	0	0
 005C2028	nullsub_828	194	2	0	0
 005C2034	AudioSystemInit::$_0::operator()	698178	94209	3	0
+005C20C8	std::unordered_map<int, audio::ResourceID>::erase	15	15	0	0
+005C2124	std::unordered_map<int, audio::ResourceID>::remove	15	15	0	0
 005C227C	audio::initResourceIDMap	304	5	0	0
 005C2298	audio::convertSENameToResourceID	5738	1778	0	0
+005C23B8	std::unordered_map<string, int>::__insert_unique	33	33	0	0
+005C2478	std::unordered_map<string, int>::__construct_node	33	33	0	0
+005C2504	std::unordered_map<string, int>::__node_insert_unique	57	57	0	0
+005C2710	std::unordered_map<string, int>::rehash	30	30	0	0
+005C27E8	std::unordered_map<string, int>::__rehash	30	30	0	0
+005C2996	std::unordered_map<string, int>::find	4391	588	0	0
+005C2A92	std::unordered_map<string, int>::clear	32	32	0	0
 005C2BF4	FlashNode::set_node_color_add	4205	1877	0	0
 005C2D60	FlashNode::set_bad_status	7701	1876	0	0
 005C2E84	FlashNode::set_loops	1106	146	0	0
 005C2F48	FlashNode::change_sub	14461	389	0	0
 005C3170	FlashNode::reflection_status	2219	417	0	0
 005C32F4	FlashNode::FlashNode(bool)	2228	203	0	0
+005C37D8	std::__deque_base<FlashNode::ActFlag>::~__deque_base	152	132	0	0
+005C3804	std::__deque_base<int>::~__deque_base	152	132	0	0
 005C3830	CommandParser::~CommandParser	3046	578	0	0
 005C3AF6	FlashNode::update	1613950	16920	0	0
 005C3B04	FlashNode::updateSound	2658288	25252	0	0
@@ -2422,6 +2837,10 @@ addr	name	calls	verified	mismatches	unverifiable
 005C401C	FlashNode::FlashNode $_7 __func::__clone(__base*)	2273	196	0	0
 005C403C	FlashNode::FlashNode $_7 __func::destroy	4163	360	0	0
 005C4048	FlashNode::FlashNode $_7 (ActFlag 6)	110	88	0	0
+005C40C8	std::deque<FlashNode::ActFlag>::push_back(&&)	15	15	0	0
+005C412C	std::deque<FlashNode::ActFlag>::__add_back_capacity	4	2	0	0
+005C4690	std::__split_buffer<FlashNode::ActFlag*&>::push_back(&&)	6	4	0	0
+005C48D4	std::__split_buffer<FlashNode::ActFlag*&>::~__split_buffer	6	4	0	0
 005C4934	FlashNode::FlashNode $_6 __func::__clone(__base*)	2273	196	0	0
 005C4954	FlashNode::FlashNode $_6 __func::destroy	4163	360	0	0
 005C4960	FlashNode::FlashNode $_6 (ActFlag 4)	1484	971	0	0
@@ -2440,12 +2859,17 @@ addr	name	calls	verified	mismatches	unverifiable
 005C55A0	FlashNode::FlashNode $_1 __func::__clone(__base*)	2273	196	0	0
 005C55C0	FlashNode::FlashNode $_1 __func::destroy	4163	360	0	0
 005C55CA	FlashNode::FlashNode $_1 (sound command)	1906	395	0	0
+005C560C	std::__split_buffer<FlashNode::ActFlag*>::~__split_buffer	397	245	0	0
+005C5638	std::__split_buffer<int*>::~__split_buffer	397	245	0	0
 005C5698	FlashNode::reflection_status $_0 __func::__clone(__base*)	4	0	0	0
 005C56B8	FlashNode::reflection_status $_0 __func::destroy	5	1	0	0
 005C56C2	FlashNode::reflection_status $_0 (effect done: set_loops)	2	1	0	0
+005C5700	std::__deque_base<int>::clear	284	132	0	0
+005C57AC	std::__deque_base<FlashNode::ActFlag>::clear	284	132	0	0
 005C5882	Avatar::create(const Avatar::Style&, bool)	780	55	0	3
 005C58C8	Avatar::Avatar(bool)	714	17	0	0
 005C5D9C	Avatar::InstanceInfo::InstanceInfo()	845	9	0	0
+005C5E54	std::__vector_base<Avatar::InstanceInfo>::~__vector_base	147	127	0	0
 005C5EDC	Avatar::Avatar(const Avatar::Style&, bool)	835	17	0	0
 005C5F14	Avatar::changeStyle	726	17	0	0
 005C6068	Avatar::~Avatar	1098	379	0	0
@@ -2470,6 +2894,7 @@ addr	name	calls	verified	mismatches	unverifiable
 005C6F3C	Avatar::changeHairColor	721	17	0	0
 005C6FCC	Avatar::changeKeyblade(int, int)	721	17	0	0
 005C70C0	Avatar::forEachAccessory	1748	19	0	0
+005C7184	std::function<void(Avatar::InstanceInfo&, int, int, const char*)>::operator()	219	184	0	0
 005C7210	Avatar::changeAccessories	721	17	0	0
 005C7358	Avatar::setInstanceName	10	0	0	0
 005C7574	Avatar::changeLWF	2781	1516	0	0
@@ -2497,6 +2922,7 @@ addr	name	calls	verified	mismatches	unverifiable
 005C8850	Avatar::updateNode $_8 __func::__clone()	672826	8558	0	0
 005C88B2	Avatar::updateNode $_8 __func::destroy_deallocate	916743	6709	0	0
 005C88BC	Avatar::updateNode::$_8::operator()	6499819	11699	0	0
+005C8B14	std::function<bool(LWF::LWF*)>::function(const&)	68021	2270	0	0
 005C8B50	Avatar::updateNode $_7 __func::__clone()	672826	8558	0	0
 005C8BB2	Avatar::updateNode $_7 __func::destroy_deallocate	916743	6709	0	0
 005C8BBC	Avatar::updateNode::$_7::operator()	223507	6278	0	0
@@ -2509,15 +2935,23 @@ addr	name	calls	verified	mismatches	unverifiable
 005C9088	Avatar $_3 __func::__clone(__base*)	596	38	0	0
 005C90A8	Avatar $_3 __func::destroy	1393	269	0	0
 005C90B4	Avatar::Avatar(bool)::$_3::operator()	8706	3347	0	0
+005C914C	std::unordered_map<char const*, Avatar::Expression>::find	2812	796	0	0
 005C9228	Avatar $_2 __func::__clone(__base*)	596	38	0	0
 005C9248	Avatar $_2 __func::destroy	1393	269	0	0
 005C9254	sub_5C9254	8831	3344	0	0
 005C92CC	Avatar $_1 __func::__clone(__base*)	596	38	0	0
 005C92EC	Avatar $_1 __func::destroy	1393	269	0	0
 005C92F8	sub_5C92F8	3351	1502	0	0
+005C9340	std::vector<Avatar::InstanceInfo>::__push_back_slow_path	164	129	0	0
+005C96BC	std::unordered_map<const char*, Avatar::Expression>::__insert_unique	104	104	0	0
+005C9750	std::unordered_map<const char*, Avatar::Expression>::__construct_node	104	104	0	0
+005C97A4	std::unordered_map<char const*, Avatar::Expression>::__node_insert_unique	104	104	0	0
+005C995C	std::unordered_map<char const*, Avatar::Expression>::rehash	32	32	0	0
+005C9A34	std::unordered_map<char const*, Avatar::Expression>::__rehash	32	32	0	0
 005C9B74	(anonymous namespace)::$_0 __func::__clone(__base*)	811784	11882	0	0
 005C9B90	(anonymous namespace)::$_0 __func::destroy	818038	13438	0	0
 005C9B9A	(anonymous namespace)::$_0 __func::operator()	11103	3789	0	0
+005C9BE4	std::function<void(const string&, LWF::Movie*, LWF::Button*)>::operator=(const&)	791	732	0	0
 005C9DB4	AvatarIcon::create(const Avatar::Style&, Texture2D*, const Vec2&, float, float, const vector<Expression>&)	279	21	0	0
 005C9E8C	AvatarIcon::init	459	29	0	0
 005CA184	AvatarIcon::create(Avatar*, Texture2D*, const Vec2&, float, float, const vector<Expression>&)	178	3	0	0
@@ -2525,6 +2959,7 @@ addr	name	calls	verified	mismatches	unverifiable
 005CA458	AvatarIcon::changeExpression(Avatar::Expression, float)	2745	1084	0	0
 005CA5C0	AvatarIcon::clone	92	4	0	0
 005CA740	AvatarIconCache::AvatarIconCache(Texture2D*, const Vec2&, float, float, const vector<Avatar::Expression>&)	292	4	0	0
+005CA800	std::vector<Avatar::Expression>::vector(const vector&)	35	26	0	0
 005CA864	AvatarIconCache::setLimit(unsigned int)	235	2	0	0
 005CA8FC	AvatarIconCache::~AvatarIconCache()	235	25	0	0
 005CA9A8	AvatarIconCache::find(unsigned long long)	192	3	0	0
@@ -2533,12 +2968,22 @@ addr	name	calls	verified	mismatches	unverifiable
 005CAA90	AvatarIconCache::add(unsigned long long, Avatar*)	137	3	0	0
 005CAB74	LRUCache<unsigned long long, shared_ptr<AvatarIcon>>::insert	178	3	0	0
 005CAD6C	LRUCache<unsigned long long, shared_ptr<AvatarIcon>>::update	8	1	0	0
+005CADBC	std::function<unsigned(const shared_ptr<AvatarIcon>&)>::operator()	24	15	0	0
+005CAE38	std::unordered_map<unsigned long long, shared_ptr<AvatarIcon>>::__insert_unique	24	15	0	0
+005CAEF0	std::unordered_map<unsigned long long, shared_ptr<AvatarIcon>>::__construct_node	21	15	0	0
+005CAF7C	std::unordered_map<unsigned long long, shared_ptr<AvatarIcon>>::__node_insert_unique	21	15	0	0
+005CB174	std::unordered_map<unsigned long long, shared_ptr<AvatarIcon>>::rehash	21	15	0	0
+005CB24C	std::unordered_map<unsigned long long, shared_ptr<AvatarIcon>>::__rehash	21	15	0	0
+005CB4D4	std::unordered_map<unsigned long long, shared_ptr<AvatarIcon>>::find	57	30	0	0
 005CB5B8	shared_ptr<AvatarIcon> control block (AvatarIconCache::add $_2) __on_zero_shared	138	1	0	0
 005CB5F0	AvatarIconCache::add $_2 __shared_ptr_pointer::__on_zero_shared_weak	138	1	0	0
 005CB628	AvatarIconCache::setLimit $_1 __func::__clone(__base*)	590	2	0	0
 005CB644	AvatarIconCache::setLimit $_1 __func::destroy	827	25	0	0
 005CB64E	AvatarIconCache::setLimit $_1 (cost of an icon: 1)	178	3	0	0
+005CB688	std::function<unsigned(const shared_ptr<AvatarIcon>&)>::operator=(const&)	42	33	0	0
 005CBD24	std::__hash_table<std::__hash_value_type<unsigned long long,std::shared_ptr<AvatarIcon>>,std::__unordered_map_hasher<unsigned long long,std::__hash_value_type<unsigned long long,std::shared_ptr<AvatarIcon>>,std::hash<unsigned long long>,true>,std::__unordered_map_equal<unsigned long long,std::__hash_value_type<unsigned long long,std::shared_ptr<AvatarIcon>>,std::equal_to<unsigned long long>,true>,std::allocator<std::__hash_value_type<unsigned long long,std::shared_ptr<AvatarIcon>>>>::~__hash_table [base destructor]	239	23	0	0
+005CBD44	std::unordered_map<unsigned long long, shared_ptr<AvatarIcon>>::__deallocate	31	31	0	0
+005CBD6C	std::__list_imp<unsigned long long>::clear	12	12	0	0
 005CBDE0	AvatarIcon::~AvatarIcon (deleting)	375	47	0	0
 005CBE24	Enemy::create	1242	2	0	0
 005CBE60	Enemy::Enemy	1411	69	0	0
@@ -2671,6 +3116,8 @@ addr	name	calls	verified	mismatches	unverifiable
 005D4D86	LuxNumber::init::$_0::operator()	1384	1384	0	0
 005D4DD0	LWFNodeGroup::create	125	5	0	0
 005D4E14	LWFNodeGroup::LWFNodeGroup	130	5	0	0
+005D4F74	std::vector<const char*>::vector(const char**, const char**)	9	9	0	0
+005D4FD6	std::__vector_base<const char*>::~__vector_base	272824	1814	0	0
 005D5000	LWFNodeGroup::update	204736	91497	28	0
 005D5020	LWFNodeGroup::changeInternal	96	85	11	0
 005D520C	LWFNodeGroup::change	411	161	0	0
@@ -2685,6 +3132,7 @@ addr	name	calls	verified	mismatches	unverifiable
 005D54AC	LWFNodeGroup::LWFNodeGroup::$_0 __clone(__base*)	274	7	0	0
 005D54CC	LWFNodeGroup::LWFNodeGroup::$_0 destroy()	399	18	0	0
 005D54D6	LWFNodeGroup::LWFNodeGroup::$_0 operator()	162	12	0	0
+005D5514	std::vector<const char*>::allocate	21	12	0	0
 005D553C	BattleMarker::create	78	0	0	0
 005D5580	BattleMarker::BattleMarker	78	0	0	0
 005D59F4	BattleMarker::set_scene	78	0	0	0
@@ -2720,6 +3168,7 @@ addr	name	calls	verified	mismatches	unverifiable
 005D7864	RaidBoss::updateTargetPos $_3 __clone(dst)	6658	486	0	0
 005D7884	RaidBoss::updateTargetPos $_3 destroy	7613	789	0	0
 005D7890	RaidBoss::updateTargetPos $_3 operator()	3544	161	0	0
+005D78F8	std::unordered_map<string, Vec2>::find	11410	600	0	0
 005D7A28	RaidBoss::updateTargetPos $_2 __clone(dst)	4951	476	0	0
 005D7A48	RaidBoss::updateTargetPos $_2 destroy	5938	739	0	0
 005D7A52	RaidBoss::updateTargetPos $_2 operator()	1837	272	0	0
@@ -2729,6 +3178,7 @@ addr	name	calls	verified	mismatches	unverifiable
 005D7C80	RaidBoss::updateTargetPos $_0 __clone(dst)	19829	486	0	0
 005D7CA4	RaidBoss::updateTargetPos $_0 destroy	25959	829	0	0
 005D7CB0	RaidBoss::updateTargetPos $_0 operator()	4543	483	0	0
+005D844E	std::unordered_map<string, Vec2>::__deallocate	7642	600	0	0
 005D8484	std::__hash_table<std::__hash_value_type<std::string,cocos2d::Vec2>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,cocos2d::Vec2>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,cocos2d::Vec2>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,cocos2d::Vec2>>>::~__hash_table [base destructor]	189781	94698	0	0
 005D84A4	ShowEffect::create	1076	2	0	0
 005D84E0	ShowEffect::ShowEffect(int)	1054	2	0	0
@@ -2795,6 +3245,9 @@ addr	name	calls	verified	mismatches	unverifiable
 005DAE90	MapFieldLayer::addFieldMapNode	7040	1014	0	0
 005DAF28	MapFieldLayer::removeFieldMapNode	3223	1585	0	0
 005DB030	MapFieldLayer::addLayerMapNode	360	1	0	0
+005DB090	std::vector<MapNode*>::__push_back_slow_path<MapNode* const&>	122	122	0	0
+005DB1A0	std::__split_buffer<MapNode*&>::~__split_buffer	282	159	0	0
+005DB1CC	std::__vector_base<MapNode*>::~__vector_base	76	76	0	0
 005DB1F8	MapGateMarker::~MapGateMarker	16	0	0	0
 005DB240	MapGateMarker::~MapGateMarker (deleting)	16	0	0	0
 005DB24C	MapGateMarker::init	18	0	0	0
@@ -2809,6 +3262,9 @@ addr	name	calls	verified	mismatches	unverifiable
 005DBABC	MapMaterial::firstCall	107	2	0	0
 005DBB60	MapMaterial::finalCall	116	22	0	0
 005DBB64	MapMaterial::popup	9	0	9	0
+005DBC44	std::vector<MapPrizes*>::__push_back_slow_path<MapPrizes* const&>	434	433	0	0
+005DBD54	std::__split_buffer<MapPrizes*&>::~__split_buffer	987	554	0	0
+005DBD80	std::__vector_base<MapPrizes*>::~__vector_base	30552	600	0	0
 005DBDB8	MapNonPlayableCharacter::~MapNonPlayableCharacter	32	12	0	0
 005DBE48	MapNonPlayableCharacter::~MapNonPlayableCharacter (deleting)	38	12	0	0
 005DBE54	MapNonPlayableCharacter::init(const Info*)	37	1	0	0
@@ -2869,6 +3325,9 @@ addr	name	calls	verified	mismatches	unverifiable
 005DEE04	MapPrizes::createArmature $_0 __func::__clone(__base*)	22076	1151	0	0
 005DEE20	MapPrizes::createArmature $_0 __func::destroy	30334	1274	0	0
 005DEE2A	MapPrizes::createArmature $_0 (movement event, empty)	3166	3071	0	0
+005DEE60	std::vector<MapPrize*>::__push_back_slow_path<MapPrize* const&>	1395	600	0	0
+005DEF70	std::__split_buffer<MapPrize*&>::~__split_buffer	2414	800	0	0
+005DEF9C	std::__vector_base<MapPrize*>::~__vector_base	1220	600	0	0
 005DEFC8	MapTreasure::~MapTreasure	159	8	0	0
 005DF08C	MapTreasure::~MapTreasure (deleting)	234	8	0	0
 005DF098	MapTreasure::init	212	8	0	0
@@ -2893,7 +3352,9 @@ addr	name	calls	verified	mismatches	unverifiable
 005DFF6A	MedalDeck::getCurrentMedalInfo	2163	843	0	0
 005DFFFC	MedalDeck::getCurrentDefense	268	32	0	0
 005E007C	MedalDeck::forEachMedal	363	59	0	2
+005E00C0	std::function<bool(const MedalDeck::MedalInfo&)>::operator()	126	126	0	0
 005E0104	MedalDeck::isBurstSingleSelect	423	4	0	0
+005E03B4	std::function<void(const shared_ptr<const master::Medal>&)>::operator()	90	90	0	0
 005E03F8	MedalDeck::isNextEnemyTurn	235	129	0	0
 005E041C	MedalDeck::isCurrentFirstMedal	283	149	0	0
 005E0440	MedalDeck::isCurrentFriendMedal	374	80	0	0
@@ -2910,6 +3371,7 @@ addr	name	calls	verified	mismatches	unverifiable
 005E34D8	PlayerStatusIndicator::setCP	4630	806	0	0
 005E3980	PlayerStatusIndicator::setupHPText	1164	1049	0	0
 005E3B98	PlayerStatusIndicator::setDef	178	15	0	0
+005E407C	std::vector<string>::__construct_at_end(const string*, const string*)	61	61	0	0
 005E41EC	PlayerStatusIndicator::init $_0 __func::__clone(__base*)	89	0	0	0
 005E420C	PlayerStatusIndicator::init $_0 __func::destroy	213	14	0	0
 005E4216	PlayerStatusIndicator::init $_0 (HP animation step)	2459	1049	0	0
@@ -3040,6 +3502,7 @@ addr	name	calls	verified	mismatches	unverifiable
 005F0D20	RaidBattle::use_skill	1	1	0	0
 005F0DFC	RaidBattle::setRaidEnemyPoisonEffect	1	1	0	0
 005F11EC	RaidBattle::~RaidBattle [deleting destructor]	2	0	0	0
+005F1250	std::unordered_map<int, BattleMarker*>::find	255	255	0	0
 005F1308	RaidBattle::RaidBossEndSequence $_2 __func::__clone(__base*)	24	18	0	0
 005F1328	RaidBattle::RaidBossEndSequence $_2 __func::destroy	38	28	0	0
 005F13B4	sub_5F13B4	276	276	0	0
@@ -3082,6 +3545,7 @@ addr	name	calls	verified	mismatches	unverifiable
 005F43B2	RaidBossActor::set_buff_param_parts	55	0	0	0
 005F44BC	RaidBossActor::get_api_hp	78	0	0	0
 005F4760	RaidBossActor::calc_total_attack_damage	17	0	0	0
+005F4A04	std::vector<RaidStart::Player>::vector(const vector&)	6	6	0	0
 005F4A58	RaidBossActor::MinHPRateRaidTeam	7	7	0	0
 005F4CBC	RaidBossActor::getDefense	1286	637	0	0
 005F4D7C	RaidBossActor::setAttackDamage	1328	1044	0	0
@@ -3104,8 +3568,15 @@ addr	name	calls	verified	mismatches	unverifiable
 005F6A98	RaidBossActor::elapsePartsTurn	4	1	0	0
 005F6B38	RaidBossActor::elapsePartsCount	12	3	0	0
 005F6BD8	RaidBossActor::UpdateStatus	78	35	0	0
+005F7114	std::unordered_map<int, BattleMarker*>::__insert_unique	9	9	0	0
+005F717A	std::unordered_map<int, BattleMarker*>::__node_insert_unique	9	9	0	0
+005F730C	std::unordered_map<int, BattleMarker*>::rehash	6	6	0	0
+005F73E4	std::unordered_map<int, BattleMarker*>::__rehash	6	6	0	0
+005F74E8	std::function<void(BattleMarker*)>::swap	9	9	0	0
 005F761C	RaidBossActor::make_marker $_0 __func::__clone(__base*)	75	0	0	0
 005F7644	RaidBossActor::make_marker $_0 __func::destroy (nullsub_99)	138	0	0	0
+005F7A22	std::__fill_n_false<__bitset<1, 3>>	13	13	0	0
+005F7AA0	std::unordered_map<int, BattleMarker*>::~__hash_table	3	3	0	0
 005F7ADC	RaidDirection::RaidDirection	3	3	0	0
 005F7B2C	RaidDirection::~RaidDirection [base destructor]	2	0	0	0
 005F7BEC	RaidDirection::~RaidDirection [deleting destructor]	18	0	0	0
@@ -3116,6 +3587,8 @@ addr	name	calls	verified	mismatches	unverifiable
 005F8544	RaidDirection::raid_NoCover	3	3	0	0
 005F8D80	RaidDirection::setup_helper	3	3	0	0
 005F93CC	RaidDirection::to_end	4	2	0	0
+005F94AC	std::vector<AvatarActor*>::__push_back_slow_path	83	83	0	0
+005F95BC	std::__split_buffer<AvatarActor*&>::~__split_buffer	113	62	0	0
 005F9B88	sub_5F9B88	88	22	0	0
 005F9BA8	nullsub_929	127	44	0	0
 005F9D46	sub_5F9D46	69	66	0	0
@@ -3166,6 +3639,10 @@ addr	name	calls	verified	mismatches	unverifiable
 005FB3D4	SceneBattleBase::init_UI::$_0::destroy	438	45	0	0
 005FB3DE	SceneBattleBase::init_UI::$_0::operator()	606	289	0	0
 005FB430	StageFieldManager::StageFieldManager	89	1	0	0
+005FB6E0	std::__vector_base<MapFieldLayer*>::~__vector_base	9	9	0	0
+005FB73E	std::__vector_base<MapMaterial*>::~__vector_base	9	9	0	0
+005FB79C	std::__vector_base<MapTreasure*>::~__vector_base	9	9	0	0
+005FB7FA	std::__vector_base<MapGateMarker*>::~__vector_base	9	9	0	0
 005FB824	StageUI::StageUI	89	1	0	0
 005FB8AC	SceneActionMap::createLayer	68	0	0	3
 005FB8DA	StageSkipActionMap::create	4	4	0	0
@@ -3179,6 +3656,8 @@ addr	name	calls	verified	mismatches	unverifiable
 005FC8CC	StageDirection::create	66	1	0	0
 005FC920	CommonDirection::create	89	1	0	0
 005FC974	AimTarget::create	67	1	0	0
+005FC9C4	std::function<bool(Touch*, Event*)>::operator=(__bind<bool (SceneActionMap::*)(Touch*, Event*), SceneActionMap*, _1, _2>&&)	7	7	0	0
+005FCA48	std::function<void(Touch*, Event*)>::operator=(__bind<void (SceneActionMap::*)(Touch*, Event*), SceneActionMap*, _1, _2>&&)	21	21	0	0
 005FCACC	SceneActionMap::setNewMap	88	0	0	2
 005FCDEC	SceneActionMap::update	106436	14063	151	200
 005FD000	SceneActionMap::updateBattleMode	38693	37820	187	686
@@ -3210,9 +3689,11 @@ addr	name	calls	verified	mismatches	unverifiable
 00601290	SceneActionMap::toBattleModeSetup	12	0	0	5
 00601364	createSceneLayer<SceneBattleResult>()	93	0	0	15
 0060136C	SceneActionMap::makeTalkWindow	12	4	0	0
+00601970	std::unordered_map<SpeechDisp*, deque<string>>::operator[]	1	1	0	0
 00601A14	SceneActionMap::setTalkText	12	4	0	0
 00601C20	SpeechDisp::create	30	0	0	0
 00601CD0	std::string::find(char, size_t) (sub_601CD0)	6864	619	0	0
+00601D94	std::__deque_base<string>::~__deque_base	243	225	0	0
 00601E3C	SceneActionMap::toIntrludeModeSetup	62	59	0	0
 00601EEC	SceneActionMap::changedMapTutorial	12	6	0	0
 006022F8	SceneActionMap::enemy_state_update_turn_attack	74	34	0	0
@@ -3243,11 +3724,22 @@ addr	name	calls	verified	mismatches	unverifiable
 00603B7C	SceneActionMap::toLoadingModeSetup::$_40::lambda()::lambda() __clone(__base*)	36	6	0	0
 00603BA0	SceneActionMap::toLoadingModeSetup::$_40::lambda()::lambda() destroy()	48	12	0	0
 00603BAA	SceneActionMap::toLoadingModeSetup::$_40::lambda()::lambda() operator()	12	6	0	0
+00603C08	std::unordered_map<SpeechDisp*, deque<string>>::__insert_unique	1	1	0	0
+00603CC0	std::unordered_map<SpeechDisp*, deque<string>>::__construct_node	1	1	0	0
+00603D60	std::unordered_map<SpeechDisp*, deque<string>>::__node_insert_unique	1	1	0	0
+00603F40	std::unordered_map<SpeechDisp*, deque<string>>::rehash	1	1	0	0
+00604018	std::unordered_map<SpeechDisp*, deque<string>>::__rehash	1	1	0	0
+0060411A	std::__split_buffer<string*>::~__split_buffer	689	433	0	0
+006046B4	std::__split_buffer<string*&>::push_back(&&)	1	1	0	0
+006048F8	std::__split_buffer<string*&>::~__split_buffer	1	1	0	0
 00604984	SceneActionMap::makeTalkWindow::$_39 operator()	4	4	0	0
 00604B60	SceneActionMap::makeTalkWindow::$_39::lambda() operator()	4	4	0	0
 00604EE0	std::__hash_table<std::__hash_value_type<SpeechDisp *,std::deque<std::string>>,std::__unordered_map_hasher<SpeechDisp *,std::__hash_value_type<SpeechDisp *,std::deque<std::string>>,std::hash<SpeechDisp *>,true>,std::__unordered_map_equal<SpeechDisp *,std::__hash_value_type<SpeechDisp *,std::deque<std::string>>,std::equal_to<SpeechDisp *>,true>,std::allocator<std::__hash_value_type<SpeechDisp *,std::deque<std::string>>>>::__erase_unique<SpeechDisp *>	32	0	0	0
+00604F00	std::unordered_map<SpeechDisp*, deque<string>>::find	3	3	0	0
 00605192	SceneActionMap::updateTalkMode::$_35 operator()	4	4	0	0
 00605242	SceneActionMap::updateTalkMode::$_34 operator()	4	4	0	0
+00605284	std::unordered_map<SpeechDisp*, deque<string>>::clear	2	2	0	0
+006052BC	std::unordered_map<SpeechDisp*, deque<string>>::__deallocate	17	17	0	0
 006053F0	SceneBattleResult::create()	102	0	0	11
 006054AC	SceneActionMap::updateIntrludeMode::$_32 __clone(__base*)	186	154	0	0
 006054C8	SceneActionMap::updateIntrludeMode::$_32 destroy()	248	216	0	0
@@ -3304,6 +3796,7 @@ addr	name	calls	verified	mismatches	unverifiable
 006066F0	SceneActionMap::init::$_12 __clone(__base*)	134	2	0	0
 00606710	SceneActionMap::init::$_12 destroy()	248	22	0	0
 0060671A	sub_60671A	101	34	0	0
+00606758	std::function<void(GestureRecognizer*, const Vec2&, unsigned)>::swap	15	15	0	0
 00606888	SceneActionMap::init::$_11 __clone(__base*)	67	1	0	0
 006068A8	SceneActionMap::init::$_11 destroy()	173	15	0	0
 006068B2	sub_6068B2	261	261	0	0
@@ -3333,13 +3826,27 @@ addr	name	calls	verified	mismatches	unverifiable
 00607288	SceneActionMap::init::$_0 __clone(__base*)	134	2	0	0
 006072A8	SceneActionMap::init::$_0 destroy()	248	42	0	0
 006072B2	sub_6072B2	113	16	0	0
+006072F4	std::__deque_base<string>::clear	462	225	0	0
 006073C4	SpeechDisp::~SpeechDisp (deleting)	30	2	0	0
 006073D0	cocos2d::Label::getTTFConfig	73049	977	0	0
 006073E8	cocos2d::Label::getString	287092	55821	0	0
+00607440	std::function<void(Vec2&)>::operator=(const&)	12	12	0	0
+006075E0	std::function<void(function<void(bool)>)>::operator=(const&)	24	23	0	0
+00607780	std::function<bool(unsigned)>::operator=(const&)	30	30	0	0
+00607920	std::function<bool(const Vec2&, const Vec2&)>::operator=(const&)	12	12	0	0
+00607AC0	std::function<bool(float, float)>::operator=(const&)	164	164	0	0
 00607C60	AimTarget::AimTarget	67	1	0	0
 00607CE0	StageExploreManager::StageExploreManager	66	1	0	0
 00607D3C	StageManager::StageManager	82	2	0	0
 00607E60	StageManager::StageMapInfo::StageMapInfo	82	2	0	0
+00607F5C	std::__vector_base<MapNonPlayableCharacter::Info*>::~__vector_base	12	12	0	0
+00607F86	std::__vector_base<MapMaterial::Info*>::~__vector_base	12	12	0	0
+00607FB0	std::__vector_base<MapTreasure::Info*>::~__vector_base	12	12	0	0
+00607FDA	std::__vector_base<MapTransferInfo*>::~__vector_base	12	12	0	0
+00608004	std::__vector_base<MapEnemyTeamInfo*>::~__vector_base	12	12	0	0
+0060802E	std::unordered_map<int, vector<MapJumpInfo*>*>::~__hash_table	12	12	0	0
+0060805C	std::unordered_map<int, MapFieldLayer*>::~__hash_table	12	12	0	0
+00608096	std::unordered_map<SpeechDisp*, deque<string>>::~__hash_table	17	17	0	0
 006080B8	SceneActionMap::SceneActionMap	6	6	0	0
 006081A8	SceneRaidBattle::~SceneRaidBattle	17	1	0	0
 00608220	SceneRaidBattle::~SceneRaidBattle(deleting)	17	1	0	16
@@ -3368,6 +3875,9 @@ addr	name	calls	verified	mismatches	unverifiable
 0060AA62	SceneRaidBattle::advanceBattleSequence	130	130	0	0
 0060AAA8	SceneRaidBattle::enemy_state_update_turn_attack	48	0	0	0
 0060AAD4	SceneRaidBattle::enemy_state_update_turn_defense	62	31	0	0
+0060B01C	std::vector<MapPrizes*>::assign	30344	600	0	0
+0060B110	std::vector<MapPrizes*>::deallocate	24346	800	0	0
+0060B13E	std::vector<MapPrizes*>::allocate	24346	800	0	0
 0060B19C	SceneRaidBattle::loadUIComplete::$_18::__clone(__base*)	23	0	0	0
 0060B1BC	SceneRaidBattle::loadUIComplete::$_18::destroy	41	1	0	0
 0060B1C6	SceneRaidBattle::loadUIComplete::$_18::operator()	226	226	0	0
@@ -3422,11 +3932,13 @@ addr	name	calls	verified	mismatches	unverifiable
 0060C090	SceneRaidBattle::init::$_0::__clone(__base*)	44	0	0	0
 0060C0B0	SceneRaidBattle::init::$_0::destroy	62	0	0	0
 0060C0BA	SceneRaidBattle::init::$_0::operator()	27	5	0	0
+0060C10C	std::vector<cocos2d::LWFNode*>::__push_back_slow_path	9	9	0	0
 0060C248	SceneManager::createScene	157	22	0	1
 0060C26C	SceneManager::getInstance	136504	22682	0	0
 0060C2BC	SceneManager::create	118	22	0	0
 0060C310	SceneManager::SceneManager	118	22	0	0
 0060CB00	SceneManager::init	176	22	0	0
+0060CE4C	std::function<Layer*()>::operator=(Layer* (*)())	5	5	0	0
 0060CED8	createSceneLayer<SceneSplash>()	2	2	0	0
 0060CEE0	LoadingIndicator::create	177	22	0	1
 0060CF64	SceneManager::setEnabledTouchEffect	209	54	0	0
@@ -3452,6 +3964,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00612764	SceneManager::generateTouchMoveEffect	12323	5193	0	64
 006128EC	SceneManager::changeBackground	246	11	0	0
 00612B98	SceneManager::changeSceneLayer	936	349	0	0
+00612E28	std::function<Layer*()>::operator=(const&)	100	99	0	0
 00612F4C	SceneManager::hideInfoHeader	16	1	0	0
 00613090	SceneManager::hideHeaderRight	2	1	0	0
 006130B0	SceneManager::hideTitleHeader	161	9	0	0
@@ -3493,10 +4006,18 @@ addr	name	calls	verified	mismatches	unverifiable
 0062186C	SceneManager::callCurrentSceneRunOutAnimation	2	2	0	0
 006219E0	SceneManager::ChainOfTutorialAdventureSelect	1	0	0	0
 00622B20	sub_622B20	2	0	0	0
+00622B64	std::vector<function<void(bool)>>::__push_back_slow_path<const&>	16	16	0	0
+00622D00	std::vector<function<bool()>>::__push_back_slow_path	16	16	0	0
 00624BC6	sub_624BC6	1	1	0	0
 0062551C	SceneManager::openNoTapScreen $_102 __func::__clone(__base*)	70	6	0	0
 0062553C	SceneManager::openNoTapScreen $_102 __func::destroy	63	8	0	0
 00625546	SceneManager::openNoTapScreen::$_102::operator()	6	3	0	0
+00631150	SceneManager::openChatPopup $_44::operator() (payment info)	1	0	0	1
+00631418	SceneManager::openChatPopup $_41::operator() (Button_Send)	4	3	0	1
+00631BDC	SceneManager::openChatPopup $_128::operator() (message created)	1	1	0	0
+0063204C	SceneManager::openChatPopup $_38 body (sub_63204C): reopen	3	2	0	0
+006322D4	SceneManager::openChatPopup $_40::operator() (text changed)	1	1	0	0
+00632610	SceneManager::openChatPopup $_39::operator() (Close_Button)	4	4	0	0
 00633A74	sub_633A74	339	99	0	0
 00633A94	nullsub_117	553	229	0	0
 00633A9E	SceneManager::chatDataUpdate::$_34::operator()	108	65	0	0
@@ -3518,13 +4039,20 @@ addr	name	calls	verified	mismatches	unverifiable
 00634D80	sub_634D80	8128	2098	0	0
 00634DA0	nullsub_1104	11105	4064	0	0
 00634DAA	sub_634DAA	4013	2050	0	0
+00634E44	SceneManager::closeGlobalMenu::$_23 (Shop hook)	1	0	0	1
+00634FFC	SceneManager::closeGlobalMenu::$_22 (Sphere hook)	1	0	0	1
+00635168	SceneManager::closeGlobalMenu::$_21 (Adventure hook)	1	0	0	1
+00635320	SceneManager::closeGlobalMenu::$_19 (My Page hook)	2	0	0	2
 00635470	sub_635470	428	32	0	0
 00635490	nullsub_1109	666	58	0	0
 00635520	SceneManager::initGlobalMenu::$_17 __clone(__base*)	137	15	0	0
 00635548	nullsub_1110	318	41	0	0
+00635554	SceneManager::initGlobalMenu::$_17::operator() (touch moved)	38	38	0	0
+006357F8	SceneManager (sub_6357F8): the footer button under a touch	81	43	0	0
 006359E2	sub_6359E2	104	17	0	0
 006359EC	SceneManager::initGlobalMenu::$_16 (sub_6359EC): the footer menu touched	273	272	1	0
 00636E28	SceneSphereBoardSelect::create	6	3	0	0
+00636F14	std::function<Layer*()>::swap	134	67	0	0
 00637044	sub_637044	390	71	0	0
 00637064	nullsub_1117	501	80	0	0
 00637070	SceneManager::initGlobalMenu::$_14::operator()	89	86	0	0
@@ -3532,12 +4060,16 @@ addr	name	calls	verified	mismatches	unverifiable
 0063718C	nullsub_1118	462	27	0	0
 006373A4	sub_6373A4	344	16	0	0
 006373C4	nullsub_1119	462	46	0	0
+006373D0	SceneManager::createHeader::$_12::operator() (Chat)	4	3	0	1
 0063748C	sub_63748C	342	17	0	0
 006374AC	nullsub_1120	461	46	0	0
+006374B8	SceneManager::createHeader::$_11::operator() (avatar)	4	3	0	1
 006376D8	SceneManager::createHeader::$_10 __clone(__base*)	338	15	0	0
 006376FC	SceneManager::createHeader::$_10 destroy()	457	44	0	0
+00637708	SceneManager::createHeader::$_10::operator() (Jewels)	8	6	0	2
 0063790C	SceneManager::createHeader::$_9 __clone(__base*)	342	16	0	0
 00637930	SceneManager::createHeader::$_9 destroy()	459	45	0	0
+0063793C	SceneManager::createHeader::$_9::operator() (AP tip)	4	4	0	0
 00637B90	SceneManager::update::$_7 __clone(__base*)	224	46	0	0
 00637BB0	SceneManager::update::$_7 destroy()	177	93	0	0
 00637EB8	createSceneLayer<SceneTitle>()	116	0	0	50
@@ -3559,7 +4091,6 @@ addr	name	calls	verified	mismatches	unverifiable
 00638414	SceneManager::init $_0 __func::__clone(__base*)	164	22	0	0
 00638430	SceneManager::init $_0 __func::destroy	164	22	0	0
 0063843A	sub_63843A	71	71	0	0
-00638474	SceneSplash::create	123	0	18	1
 006384E8	SceneManager::openChatPopup $_129 __func::__clone() (sub_6384E8)	16	8	0	0
 0063854E	SceneManager::openChatPopup $_129 __func::destroy_deallocate	9	6	0	0
 00638558	SceneManager::openChatPopup $_129::operator()(bool) (sub_638558)	10	0	0	10
@@ -3668,6 +4199,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00649F40	sub_649F40	36	9	0	0
 00649F5C	nullsub_1175	38	17	0	0
 00649F68	SceneMyPage::initLeftButtons::$_46 page-out lambda operator()	1	1	0	0
+0064A064	std::vector<cocos2d::Vec2>::__push_back_slow_path<const Vec2&>	30	30	0	0
 0064A270	SceneRanking::create()	2	0	0	2
 0064A2C4	SceneRanking::SceneRanking()	6	5	0	0
 0064A908	SceneMyPage::initBannerArea::$_39 __clone(__base*)	7	0	0	0
@@ -3682,8 +4214,11 @@ addr	name	calls	verified	mismatches	unverifiable
 0064B8F8	SceneMyPage::loadShopBanner::$_36 __clone(__base*)	21	0	0	0
 0064B920	SceneMyPage::loadShopBanner::$_36 destroy()	21	0	0	0
 0064B92C	SceneMyPage::loadShopBanner::$_36::operator()	14	7	0	0
+0064C430	std::vector<Avatar::Motion>::__push_back_slow_path	23	23	0	0
 0064DAF0	SceneMyPage::createPartyAvatar::$_21 __clone(__base*)	134	0	0	0
 0064DB14	SceneMyPage::createPartyAvatar::$_21 destroy()	223	36	0	0
+0064DE08	std::vector<std::vector<unsigned int>>::__push_back_slow_path<const&>	50	50	0	0
+0064DFA8	std::vector<cocos2d::Vec2>::__push_back_slow_path<Vec2>	50	50	0	0
 0064E100	SceneMyPage::setCameraPosition::$_20 __clone()	280	122	0	0
 0064E19E	sub_64E19E	927	254	0	0
 0064E1B4	sub_64E1B4	39	22	0	0
@@ -3747,6 +4282,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00652188	SceneMyPage::init::$_1 destroy()	171	20	0	0
 006524A8	SceneMyPage::init::$_0 __clone(__base*)	106	0	0	0
 006524C8	SceneMyPage::init::$_0 destroy()	233	56	0	0
+00652510	std::map<int, Image*>::destroy	24	12	0	0
 0065253C	std::__hash_table<std::__hash_value_type<std::string,cocos2d::Value>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,cocos2d::Value>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,cocos2d::Value>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,cocos2d::Value>>>::~__hash_table [base destructor]	250897	12409	0	0
 00652594	ScenePartyTop::callPartyTopAPI	31	0	0	16
 00652A70	ScenePartyTop::~ScenePartyTop	31	21	0	1
@@ -3912,6 +4448,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0066527C	IMedalSortFilter::getShowType	4	2	0	0
 006652C0	SceneDeckEdit::openMedalSelectPanel	5	5	0	0
 006654E8	MiniMedalScrollView::clearDisableMedals	4	4	0	0
+00665538	std::vector<shared_ptr<MedalDataManager::UserMedalData>>::vector(const vector&)	2	0	0	0
 00665584	SceneDeckEdit::openKeyBladePopup(int, shared_ptr<UserKeyBladeData>)	1	1	0	0
 00666F84	SceneDeckEdit strengthen result arrow (sub_666F84)	2	1	0	0
 0066707C	SceneDeckEdit::updateDeckStauts	21	11	0	0
@@ -4103,15 +4640,22 @@ addr	name	calls	verified	mismatches	unverifiable
 00679304	nullsub_130	22	0	0	0
 006795AC	sub_6795AC	10	0	0	0
 006795CC	nullsub_127	22	0	0	0
+006795D8	SceneDeckEdit::initMedalSelectPanel::$_20 operator() (medal selected)	1	1	0	0
 0067988E	sub_67988E	17	8	0	0
+00679896	SceneDeckEdit::initMedalSelectPanel::$_20::lambda(MedalInfoButtonType, bool) operator()	166	166	0	0
 00679928	sub_679928	20	0	0	0
 00679948	nullsub_1348	32	0	0	0
+00679954	SceneDeckEdit::initMedalSelectPanel::$_19 operator() (Close_Button)	4	4	0	0
+00679A1C	SceneDeckEdit::openKeyBladePanel::$_18 operator() (panel closed)	2	1	0	0
+00679BCA	SceneDeckEdit::openKeyBladePanel::$_98::lambda() operator() (panel gone)	1	1	0	0
 00679D28	sub_679D28	20	0	0	0
 00679D48	nullsub_1352	32	0	0	0
+00679D54	SceneDeckEdit::initKeyBladePanel::$_16 operator() (Close_Button)	4	4	0	0
 00679E24	nullsub_1353	32	0	0	0
 0067AF98	sub_67AF98	8	2	0	0
 0067B00C	sub_67B00C	20	0	0	0
 0067B02C	nullsub_1361	30	0	0	0
+0067B038	SceneDeckEdit::runInAnimation::$_13 operator() (slid in)	1	1	0	0
 0067B60C	nullsub_1363	10	0	0	0
 0067B616	nullsub_1364	10	0	0	0
 0067B680	sub_67B680	40	0	0	0
@@ -4119,24 +4663,32 @@ addr	name	calls	verified	mismatches	unverifiable
 0067B6AA	sub_67B6AA	7	5	0	0
 0067B71C	sub_67B71C	25	5	0	0
 0067B73C	nullsub_1366	30	10	0	0
+0067B748	SceneDeckEdit::init::$_11 operator() (finish)	1	1	0	0
+0067BA7C	SceneDeckEdit::init::$_11::lambda(bool) operator() (keyblades sent)	2	1	0	0
 0067BBD4	sub_67BBD4	10	0	0	0
 0067BBF4	nullsub_1367	22	6	0	0
 0067BC70	sub_67BC70	10	0	0	0
 0067BC90	nullsub_1368	22	6	0	0
+0067BC9A	SceneDeckEdit::init::$_9 operator() (page updater)	5	4	0	0
 0067BD48	sub_67BD48	10	0	0	0
 0067BD64	nullsub_1369	22	6	0	0
+0067BD70	SceneDeckEdit::init::$_8 operator() (page factory)	6	3	0	0
 0067C0B8	sub_67C0B8	20	0	0	0
 0067C0D8	nullsub_1370	32	0	0	0
 0067C1E0	sub_67C1E0	20	0	0	0
 0067C200	nullsub_1371	32	0	0	0
 0067C308	sub_67C308	20	0	0	0
 0067C328	nullsub_1372	32	0	0	0
+0067C334	SceneDeckEdit::init::$_5 operator() (Button_List)	4	4	0	0
 0067C4D4	sub_67C4D4	14	4	0	0
 0067C4F0	nullsub_1373	16	8	0	0
+0067C4FC	SceneDeckEdit::init::$_5::lambda() operator() (to the medal list)	1	1	0	0
 0067C628	sub_67C628	20	0	0	0
 0067C648	nullsub_1374	32	0	0	0
+0067C654	SceneDeckEdit::init::$_4 operator() (Button_KB)	4	4	0	0
 0067C768	sub_67C768	20	0	0	0
 0067C788	nullsub_1375	32	0	0	0
+0067C794	SceneDeckEdit::init::$_3 operator() (Button_Medal)	4	4	0	0
 0067C8A8	sub_67C8A8	20	5	0	0
 0067C8C8	nullsub_1376	30	10	0	0
 0067C8D2	sub_67C8D2	4	2	0	0
@@ -4145,6 +4697,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0067C96E	sub_67C96E	5	5	0	0
 0067C9E0	sub_67C9E0	20	5	0	0
 0067CA00	nullsub_1378	32	11	0	0
+0067CA0C	SceneDeckEdit::init::$_0 operator() (onEnter)	14	6	8	0
 0067CFD4	MiniMedalScrollView::MiniMedalScrollView	5	4	0	0
 0067D8AC	SceneTitle::~SceneTitle (deleting)	69	5	0	43
 0067D8D0	SceneTitle::init	128	0	0	0
@@ -4551,6 +5104,7 @@ addr	name	calls	verified	mismatches	unverifiable
 006B1ECC	SceneEvolveMedal::init id-set lambda __func::__clone() (sub_6B1ECC)	4	2	0	0
 006B3528	SceneEvolveMedal::init $_8 __func::__clone(__base*) (sub_6B3528)	1	1	0	0
 006B37F0	SceneEvolveMedal::init $_7 __func::operator()(Touch*, Event*) (sub_6B37F0)	1	1	0	0
+006B5C24	std::multimap<int, int>::find	79653	2165	0	0
 006B6430	SceneSphereBoardSelect::~SceneSphereBoardSelect	1	1	0	0
 006B6494	SceneSphereBoardSelect::~SceneSphereBoardSelect (deleting)	1	1	0	0
 006B64B4	SceneSphereBoardSelect::init	6	3	0	0
@@ -4590,6 +5144,8 @@ addr	name	calls	verified	mismatches	unverifiable
 006BC790	SceneSphereBoardSelect::initSphereBoardList::$_5 destroy()	4	0	0	0
 006BC810	SceneSphereBoardSelect::initSphereBoardList::$_4 __clone(__base*)	2	0	0	0
 006BC830	SceneSphereBoardSelect::initSphereBoardList::$_4 destroy()	4	0	0	0
+006BCB58	std::set<int>::__insert_node_at	218529	1400	0	0
+006BCB88	std::set<int>::__find_equal	218529	1400	0	0
 006BCE78	SceneSphereBoard::create	8	0	0	5
 006BCF50	SceneSphereBoardSelect::init::$_2 __clone(__base*)	12	3	0	0
 006BCF70	SceneSphereBoardSelect::init::$_2 destroy()	14	4	0	0
@@ -4704,6 +5260,7 @@ addr	name	calls	verified	mismatches	unverifiable
 006C5AE4	SceneLight::next_scene::$_6 __clone(__base*)	56	0	0	0
 006C5B0C	SceneLight::next_scene::$_6 destroy()	67	12	0	0
 006C5B16	sub_6C5B16	13	0	2	7
+006C5C94	std::vector<Avatar::Expression>::__push_back_slow_path<Expression>	2	2	0	0
 006C5DD8	SceneLight::init::$_5 __clone(__base*)	15	0	0	0
 006C5DF8	SceneLight::init::$_5 destroy()	30	0	0	0
 006C5E78	SceneLight::init::$_4 __clone(__base*)	15	0	0	0
@@ -4721,6 +5278,7 @@ addr	name	calls	verified	mismatches	unverifiable
 006C62CC	SceneLight::init::$_0 __clone(__base*)	30	0	0	0
 006C62EC	SceneLight::init::$_0 destroy()	45	0	0	0
 006C62F6	sub_6C62F6	23	9	0	0
+006C6334	std::map<int, Label*>::destroy	2	2	0	0
 006C6360	SceneLight::SceneLight	11	0	0	0
 006C6588	SceneRaidList::~SceneRaidList (deleting)	2	1	0	1
 006C65AC	SceneRaidList::init	6	1	0	0
@@ -5142,10 +5700,15 @@ addr	name	calls	verified	mismatches	unverifiable
 006F55D0	nullsub_144	24	3	0	0
 006F6024	sub_6F6024	10	0	0	0
 006F6044	nullsub_1860	24	3	0	0
+006F6094	std::function<void(const string&, LWF::TextRenderer*)>::operator=(const&)	6	6	0	0
 006F6234	std::__hash_table<std::__hash_value_type<std::string,std::list<int>>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,std::list<int>>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,std::list<int>>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,std::list<int>>>>::~__hash_table [base destructor]	14	3	0	0
+006F6254	std::unordered_map<string, list<int>>::__deallocate	3	3	0	0
 006F628A	std::__hash_table<std::__hash_value_type<std::string,SpeechDisp *>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,SpeechDisp *>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,SpeechDisp *>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,SpeechDisp *>>>::~__hash_table [base destructor]	14	3	0	0
+006F62AA	std::unordered_map<string, SpeechDisp*>::__deallocate	3	3	0	0
+006F62D6	std::unordered_set<SpeechDisp*>::~__hash_table	3	3	0	0
 006F6328	SceneLoginBonus::create	3	3	0	0
 006F63C4	SceneLoginBonus::~SceneLoginBonus	3	3	0	0
+006F6428	std::__vector_base<shared_ptr<const master::LoginBonus>>::~__vector_base	4	4	0	0
 006F647C	SceneLoginBonus::~SceneLoginBonus [deleting destructor]	3	1	0	2
 006F649C	SceneLoginBonus::init	4	2	0	0
 006F710C	SceneLoginBonus::initLoginBonus	1	1	0	0
@@ -5177,6 +5740,7 @@ addr	name	calls	verified	mismatches	unverifiable
 006FB138	SceneLoginBonus::runInAnimation::$_4 destroy()	8	2	0	0
 006FB144	SceneLoginBonus::runInAnimation $_4 __func::operator() (sub_6FB144)	1	1	0	0
 006FB25C	SceneLoginBonus openMemoryBonus lambda __func::operator() (sub_6FB25C)	1	1	0	0
+006FB494	std::vector<shared_ptr<const master::LoginBonus>>::__push_back_slow_path<const&>	6	6	0	0
 006FB5C0	SceneLoginBonus::init::$_2 __clone(__base*)	4	0	0	0
 006FB5E0	SceneLoginBonus::init::$_2 destroy()	6	0	0	0
 006FB5EC	sub_6FB5EC	30	14	0	0
@@ -5633,6 +6197,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00735910	SceneNotice::callPrepareAPI $_0 __func::__clone(__base*)	255	77	0	0
 0073592C	SceneNotice::callPrepareAPI $_0 __func::destroy	330	152	0	0
 00735938	SceneNotice::callPrepareAPI $_0 operator()	67	8	0	59
+00736654	std::__vector_base<Avatar::Style>::~__vector_base	1	1	0	0
 00737CFC	SceneUnionRanking::createScene	1	1	0	0
 00737DD0	SceneUnionRanking::settingUnionRankingLwf	1	1	0	0
 00738508	SceneUnionRanking::init	2	2	0	0
@@ -5859,6 +6424,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0074E870	BaseActorManager::update_burst_enable	277740	131227	0	0
 0074E8AC	BaseActorManager::isPlayerAttackSkipStatus	410	255	0	0
 0074E9A0	StageActorManager::StageActorManager	89	1	0	0
+0074EACC	std::__vector_base<EnemyActor*>::~__vector_base	72	72	0	0
 0074EB24	StageActorManager::~StageActorManager	87	29	0	0
 0074ED50	StageActorManager::~StageActorManager(deleting)	116	29	0	0
 0074ED5C	StageActorManager::init	90	1	0	0
@@ -5907,6 +6473,7 @@ addr	name	calls	verified	mismatches	unverifiable
 007529B8	StageActorManager::doDisengageAttackEnd	87	43	0	0
 00752C8C	StageActorManager::pauseToAllActor	8	4	0	0
 00752CD0	StageActorManager::resumeToAllActor	6	3	0	0
+007531E0	std::vector<EnemyActor*>::__push_back_slow_path	60	60	0	0
 00753354	StageActorManager::deployHitEffect $_3 __func::__clone(__base*)	4128	157	0	0
 00753378	StageActorManager::deployHitEffect $_3 __func::destroy	4676	585	0	0
 00753382	StageActorManager::deployHitEffect $_3	418	338	0	0
@@ -5918,6 +6485,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0075355C	StageActorManager::setupEnemyActorPlatoon $_0 __func::__clone(__base*)	1838	0	0	0
 0075357C	StageActorManager::setupEnemyActorPlatoon $_0 __func::destroy	3678	208	0	0
 00753586	StageActorManager::setupEnemyActorPlatoon $_0	349207	12906	0	0
+007535CC	std::function<bool(EnemyActor*)>::operator=(const&)	304	304	0	0
 0075376C	StageBattleManager::StageBattleManager	67	1	0	0
 007537A0	StageBattleManager::~StageBattleManager	70	8	0	0
 007537FC	StageBattleManager::~StageBattleManager(deleting)	98	8	0	0
@@ -5952,6 +6520,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00754EB0	StageFieldManager::init	90	1	0	0
 00754EC4	StageFieldManager::setStageRaid	23	0	0	0
 007550D4	StageFieldManager::setStageMapInfo	88	4	0	0
+00755428	std::unordered_map<int, MapFieldLayer*>::at	77	77	0	0
 00755508	StageFieldManager::addMapNodeToField	6605	998	0	0
 007555BC	StageFieldManager::getWeatherNode	88	4	0	0
 00755674	StageFieldManager::getCameraMapPosition	188894	44134	0	0
@@ -5991,6 +6560,17 @@ addr	name	calls	verified	mismatches	unverifiable
 00758368	sub_758368	10294	1928	0	0
 00758388	nullsub_2192	14088	5397	0	0
 00758392	sub_758392	5236	2455	0	0
+00758594	std::vector<MapGateMarker*>::__push_back_slow_path<MapGateMarker* const&>	1	1	0	0
+007586A4	std::__split_buffer<MapGateMarker*&>::~__split_buffer	2	1	0	0
+007586D0	std::vector<MapNonPlayableCharacter*>::__push_back_slow_path<MapNonPlayableCharacter* const&>	5	5	0	0
+007587E0	std::__split_buffer<MapNonPlayableCharacter*&>::~__split_buffer	11	6	0	0
+0075880C	std::vector<MapTreasure*>::__push_back_slow_path<MapTreasure* const&>	9	9	0	0
+0075891C	std::__split_buffer<MapTreasure*&>::~__split_buffer	24	15	0	0
+00758948	std::vector<MapMaterial*>::__push_back_slow_path<MapMaterial* const&>	38	38	0	0
+00758A58	std::__split_buffer<MapMaterial*&>::~__split_buffer	85	47	0	0
+00758A84	std::vector<MapFieldLayer*>::__push_back_slow_path<MapFieldLayer* const&>	17	17	0	0
+00758B94	std::__split_buffer<MapFieldLayer*&>::~__split_buffer	38	21	0	0
+00758BC0	std::unordered_map<int, MapFieldLayer*>::find	154	77	0	0
 00758C44	StageManager::~StageManager	70	21	0	0
 00758DCC	StageManager::clearMapInfo	151	23	0	0
 00758E5C	StageManager::~StageManager (deleting)	98	21	0	0
@@ -6022,8 +6602,15 @@ addr	name	calls	verified	mismatches	unverifiable
 0075BBE4	StageManager::getStageEnemyPlatoonCount	67	1	0	0
 0075BBE8	StageManager::getAvatarActorStylePlayable	67	1	0	0
 0075BBEE	StageManager::getAvatarActorStyleFriend	67	1	0	0
+0075BC00	std::vector<MapEnemyTeamInfo*>::reserve	7	7	0	0
 0075BCD0	StageManager::setupEncountArea	601	5	0	0
 0075BDF4	StageManager::hasRandomEnemySymbol	601	5	0	0
+0075BE94	std::vector<MapTransferInfo*>::reserve	7	7	0	0
+0075BF54	std::vector<MapTreasure::Info*>::reserve	7	7	0	0
+0075C014	std::vector<MapMaterial::Info*>::reserve	7	7	0	0
+0075C0E8	std::vector<MapNonPlayableCharacter::Info*>::reserve	7	7	0	0
+0075C1A8	std::vector<MapJumpInfo*>::vector(size_t)	57	57	0	0
+0075C1FE	std::__vector_base<MapJumpInfo*>::~__vector_base	97	97	0	0
 0075C228	StageManager::getEnemyPlatoonInfo	88	4	0	0
 0075C22C	StageManager::getEnemyTeamInfo	479	195	0	0
 0075C260	StageManager::isInsideTeamEncountArea	358777	1184	0	0
@@ -6036,6 +6623,25 @@ addr	name	calls	verified	mismatches	unverifiable
 0075CA34	StageManager enemy highest kind operator() (sub_75CA34)	6	6	0	0
 0075CB46	StageManager::countOnDeckMedalAttribute::$_0 destroy_deallocate()	3	1	0	0
 0075CB50	StageManager enemy sizes operator() (sub_75CB50)	42	42	0	0
+0075CC08	std::unordered_map<int, MapFieldLayer*>::clear	36	36	0	0
+0075CC4A	std::unordered_map<int, MapFieldLayer*>::find (2)	205	205	0	0
+0075CCCC	std::vector<MapPlacementObject*>::__push_back_slow_path	115	115	0	0
+0075CE08	std::vector<MapNode*>::__push_back_slow_path	4	4	0	0
+0075CF18	std::unordered_map<int, MapFieldLayer*>::__insert_unique	31	31	0	0
+0075CF7E	std::unordered_map<int, MapFieldLayer*>::__node_insert_unique	31	31	0	0
+0075D110	std::unordered_map<int, MapFieldLayer*>::rehash	19	19	0	0
+0075D1E8	std::unordered_map<int, MapFieldLayer*>::__rehash	19	19	0	0
+0075D2EA	std::unordered_map<int, vector<MapJumpInfo*>*>::clear	24	24	0	0
+0075D32C	std::unordered_map<int, vector<MapJumpInfo*>*>::__insert_unique	97	97	0	0
+0075D392	std::unordered_map<int, vector<MapJumpInfo*>*>::__node_insert_unique	97	97	0	0
+0075D524	std::unordered_map<int, vector<MapJumpInfo*>*>::rehash	20	20	0	0
+0075D5FC	std::unordered_map<int, vector<MapJumpInfo*>*>::__rehash	20	20	0	0
+0075D6FE	std::vector<MapJumpInfo*>::allocate	114	57	0	0
+0075D838	std::__split_buffer<MapNonPlayableCharacter::Info*&>::~__split_buffer	11	6	0	0
+0075D974	std::__split_buffer<MapMaterial::Info*&>::~__split_buffer	16	9	0	0
+0075DAB0	std::__split_buffer<MapTreasure::Info*&>::~__split_buffer	12	7	0	0
+0075DBEC	std::__split_buffer<MapTransferInfo*&>::~__split_buffer	2	1	0	0
+0075DD28	std::__split_buffer<MapEnemyTeamInfo*&>::~__split_buffer	16	9	0	0
 0075DD90	StageSkipActionMap::init	8	4	0	0
 0075DEC8	StageSkipActionMap::update	30	29	0	1
 0075E37C	StageSkipActionMap::takeTreasureContent	16	8	0	0
@@ -6098,8 +6704,10 @@ addr	name	calls	verified	mismatches	unverifiable
 00763B3C	MedalDeck::MedalDeck()	95	2	0	0
 00763C1C	StageUtil::getEnemyDropPrizes	3391	22	0	0
 00763DF8	StageUtil::getTreasurePrizes	194	12	0	0
+00764080	std::function<StageStart::Treasure(unsigned)>::operator()	46	46	0	0
 00764100	StageUtil::findStory	3858	47	0	0
 00764268	StageUtil::setupRaidGlobalVariables	24	0	0	0
+00764738	std::function<StageStart::Treasure(unsigned)>::swap	24	24	0	0
 00764918	StageUtil::getTreasurePrizes::$_0 __clone(__base*)	144	0	0	0
 00764934	StageUtil::getTreasurePrizes::$_0 destroy()	288	0	0	0
 0076493E	StageUtil::getTreasurePrizes::$_0::operator()	211	0	0	0
@@ -6191,11 +6799,13 @@ addr	name	calls	verified	mismatches	unverifiable
 0076B3A8	MedalDataManager::getMedalData::$_1 __func::operator()	28295	246	0	0
 0076B4BC	MedalDataManager::getMedalData::$_0 __func::destroy	28295	246	0	0
 0076B4E4	MedalDataManager::getMedalData::$_0 __func::operator()	28295	246	0	0
+0076B528	std::shared_ptr<MedalDataManager::UserMedalData>::make_shared<>	1808	729	0	0
 0076B5F4	std::__shared_ptr_emplace<MedalDataManager::UserMedalData>::__on_zero_shared	38119	1864	0	0
 0076B602	std::__shared_ptr_emplace<MedalDataManager::UserMedalData>::__on_zero_shared_weak	38119	1864	0	0
 0076B60C	KeyBladeDataManager::getInstance	2922	167	0	0
 0076B658	KeyBladeDataManager::getKeyBladeData	2414	161	0	0
 0076B808	KeyBladeDataManager::getKeyBladeImagePath	508	92	0	0
+0076B870	std::shared_ptr<KeyBladeDataManager::UserKeyBladeData>::make_shared<>	392	252	0	0
 0076B98C	std::__shared_ptr_emplace<KeyBladeDataManager::UserKeyBladeData>::__on_zero_shared	2506	171	0	0
 0076B998	std::__shared_ptr_emplace<KeyBladeDataManager::UserKeyBladeData>::__on_zero_shared_weak	2506	171	0	0
 0076B9A0	KeyBladeDataManager::UserKeyBladeData::~UserKeyBladeData	2442	140	0	0
@@ -6214,10 +6824,25 @@ addr	name	calls	verified	mismatches	unverifiable
 0076D0A0	MasterDataManager::getData	20736	295	0	0
 0076D0B4	MasterDataManager::reset	1	1	0	0
 0076E704	LRUCache<unsigned long long, shared_ptr<const SafeBuffer>>::update	170292	25561	0	0
+0076E754	std::function<unsigned(const shared_ptr<const SafeBuffer>&)>::operator()	1397	1130	0	0
 0076E798	LRUCache<unsigned long long, shared_ptr<const SafeBuffer>>::removeData	1932	3	0	0
+0076E7D0	std::unordered_map<unsigned long long, shared_ptr<const SafeBuffer>>::__insert_unique	1397	1130	0	0
+0076E888	std::unordered_map<unsigned long long, shared_ptr<const SafeBuffer>>::__construct_node	1255	1130	0	0
+0076E914	std::unordered_map<unsigned long long, shared_ptr<SafeBuffer const>>::__node_insert_unique	1255	1130	0	0
+0076EB0C	std::unordered_map<unsigned long long, shared_ptr<SafeBuffer const>>::rehash	57	55	0	0
+0076EBE4	std::unordered_map<unsigned long long, shared_ptr<SafeBuffer const>>::__rehash	57	55	0	0
+0076EE6C	std::unordered_map<unsigned long long, shared_ptr<SafeBuffer const>>::find	24881	1585	0	0
 0076EFD4	MasterDataManager $_0 __func::__clone(__base*)	144	0	0	0
 0076EFF0	MasterDataManager $_0 __func::destroy	144	0	0	0
 0076EFFA	MasterDataManager::MasterDataManager $_0 operator()(const shared_ptr<const SafeBuffer>&)	23775	262	0	0
+0076F034	std::function<unsigned(const shared_ptr<const SafeBuffer>&)>::operator=(const&)	8	8	0	0
+0076F200	std::unordered_map<int, long>::clear	392	392	0	0
+0076F242	std::unordered_map<int, long>::__node_insert_unique	1600	1600	0	0
+0076F3D4	std::unordered_map<int, long>::rehash	64	64	0	0
+0076F4AC	std::unordered_map<int, long>::__rehash	64	64	0	0
+0076F5AE	std::unordered_map<int, long>::find	2843	1379	0	0
+0076F630	std::set<int>::__insert_unique(const int&)	217129	1400	0	0
+0076F6B8	std::unordered_map<int, long>::__insert_unique	107536	1600	0	0
 00772302	std::__function::__func<char const* (*)(void),std::allocator<char const* (*)(void)>,char const* ()(void)>::operator()	3577	0	0	0
 007728AC	ResourceDataManager::getInstance()	7236	3117	0	0
 00772960	ResourceDataManager::ResourceDataManager()	101	2	0	0
@@ -6491,6 +7116,8 @@ addr	name	calls	verified	mismatches	unverifiable
 007AD610	cocostudio::ArmatureDataManager::getAnimationData	30500	1536	0	0
 007AD77C	cocostudio::ArmatureDataManager::getTextureData	1383590	8239	0	0
 007ADBF0	cocostudio::ArmatureDataManager::isAutoLoadSpriteFile	3788	44	0	0
+007AFB6E	std::unordered_map<string, cocostudio::RelativeData>::clear	91	91	0	0
+007AFBA6	std::unordered_map<string, cocostudio::RelativeData>::__deallocate	75	75	0	0
 007B91CC	cocostudio::SpriteFrameCacheHelper::addSpriteFrameFromFile	4231	182	0	2
 007BB40E	cocostudio::ComAudio::createInstance	1010	79	0	0
 007BB52C	cocostudio::ComAudio::~ComAudio [deleting destructor]	907	719	0	0
@@ -6505,6 +7132,9 @@ addr	name	calls	verified	mismatches	unverifiable
 007BE454	cocostudio::DictionaryHelper::getDictionaryFromArray_json	198082	2087	0	0
 007BE46E	cocostudio::DictionaryHelper::checkObjectExist_json	41037	292	0	0
 007C5A9C	cocostudio::WidgetPropertiesReader0300::setPropsForAllWidgetFromJsonDictionary	259262	5405	18	191
+007C8A4C	std::__vector_base<cocos2d::Component*>::~__vector_base	1119	715	0	0
+007C9234	std::__split_buffer<cocos2d::Component*&>::~__split_buffer	1099	890	0	0
+007C9370	std::__find_end<bool (*&)(char, char), const char*, const char*>	69	59	0	0
 007C9444	cocostudio sendEvent(unsigned int)	4	4	0	0
 007CF490	sub_7CF490	509	36	0	0
 007CF4AC	nullsub_178	511	36	0	0
@@ -6530,9 +7160,13 @@ addr	name	calls	verified	mismatches	unverifiable
 007E4A32	std::__function::__func<std::__bind<void (cocos2d::network::HttpClient::*)(void),cocos2d::network::HttpClient*>,std::allocator<std::__bind<void (cocos2d::network::HttpClient::*)(void),cocos2d::network::HttpClient*>>,void ()(void)>::operator()	3833	3830	0	3
 007E4E94	cocos2d::network::CURLRaii::~CURLRaii [base destructor]	768	0	0	0
 007E510C	cocos2d::network::HttpResponse::~HttpResponse [deleting destructor]	4122	30	0	0
+007EC624	std::map<string, bool>::operator[]	134333	1400	0	0
 007EC890	LWF::LWFBitmapRenderer::Destruct	746613	72327	0	0
 007EC8A6	LWF::LWFBitmapRenderer::Bind	14670	3553	0	0
 007ECCEC	LWF::Renderer::~Renderer [base destructor]	814720	64435	0	0
+007ECCF6	std::map<string, bool>::__find_equal_key	135733	1400	0	0
+007ECE14	std::map<string, bool>::__construct_node_with_key	13391	1382	0	0
+007ECE58	std::map<string, bool>::__insert_node_at	13391	1382	0	0
 007ED198	LWF::LWFRendererFactory::Init	202396	9549	0	0
 007ED19A	LWF::LWFRendererFactory::BeginRender	17313341	200508	0	0
 007ED834	LWF::LWFRendererFactory::SetBlendMode	7055149	202153	0	0
@@ -6545,13 +7179,26 @@ addr	name	calls	verified	mismatches	unverifiable
 007EE7A4	cocos2d::LWFNode::draw	2405515	42851	0	0
 007EF0AC	std::__shared_ptr_emplace<LWF::LWF>::__on_zero_shared	212022	7514	0	0
 007EF0B6	std::__shared_ptr_emplace<LWF::LWF>::__on_zero_shared_weak	212022	7511	0	0
+007EF43E	std::__vector_base<pair<int, function<void(LWF::Movie*, LWF::Button*)>>>::~__vector_base	1514	818	0	0
+007EF4CE	std::__vector_base<pair<int, function<void(LWF::Movie*)>>>::~__vector_base	1102254	1004	0	0
+007EF51A	std::__vector_base<pair<int, function<void(LWF::Button*, int)>>>::~__vector_base	68702	1004	0	0
+007EF566	std::__vector_base<pair<int, function<void(LWF::Button*)>>>::~__vector_base	618318	1003	0	0
+007EF6C0	std::shared_ptr<LWF::LWF>::make_shared<shared_ptr<Data>&, shared_ptr<LWFRendererFactory>&, void*&>	1107	780	0	0
+007EF788	std::shared_ptr<LWF::LWFRendererFactory>::make_shared<LWFNode*>	19284	1001	0	0
 007EF870	std::__shared_ptr_emplace<LWF::LWFRendererFactory>::__on_zero_shared	215801	7296	0	0
 007EF87C	std::__shared_ptr_emplace<LWF::LWFRendererFactory>::__on_zero_shared_weak	215801	7296	0	0
+007EF884	std::__list_imp<cocos2d::LWFNode::ClipInfo>::clear	836	709	0	0
 007F02C8	LRUCache<unsigned, shared_ptr<LWF::Data>>::find	232407	7946	0	0
 007F031C	LRUCache<unsigned, shared_ptr<LWF::Data>>::insert	25528	38	0	0
 007F0452	cocos2d::LWFResourceCache::unloadLWFData	14796	3693	0	0
 007F0D3C	LRUCache<string, shared_ptr<LWFTextRendererContext>>::find	1	1	0	0
 007F0D90	LRUCache<string, shared_ptr<LWFTextRendererContext>>::insert	1	1	0	0
+007F0F1A	std::__list_imp<string>::clear	40	40	0	0
+007F0F60	std::unordered_map<string, shared_ptr<LWFTextRendererContext>>::clear	91	91	0	0
+007F0FCE	std::__list_imp<unsigned int>::clear	88	88	0	0
+007F1002	std::unordered_map<unsigned int, shared_ptr<unordered_map<string, Value>>>::clear	91	91	0	0
+007F1062	std::unordered_map<unsigned int, shared_ptr<LWF::Data>>::clear	91	91	0	0
+007F109A	std::unordered_map<unsigned int, shared_ptr<LWF::Data>>::__deallocate	58	58	0	0
 007F1C2C	std::__shared_ptr_emplace<cocos2d::LWFTextRendererContext>::__on_zero_shared	1	1	0	0
 007F1C3E	std::__shared_ptr_emplace<cocos2d::LWFTextRendererContext>::__on_zero_shared_weak	1	1	0	0
 007F5262	std::__repeat_one_loop<char>::~__repeat_one_loop [deleting destructor]	4	2	0	0
@@ -6561,6 +7208,11 @@ addr	name	calls	verified	mismatches	unverifiable
 007F962C	std::__shared_ptr_pointer<std::__empty_state<char> *>::__on_zero_shared	2	2	0	0
 007F9664	std::__shared_ptr_pointer<std::__empty_state<char> *>::__on_zero_shared_weak	2	2	0	0
 007F966C	std::__end_state<char>::~__end_state [deleting destructor]	4	2	0	0
+007F9FA4	std::unordered_map<unsigned int, shared_ptr<LWF::Data>>::operator[]	3756	1315	0	0
+007FA0EC	std::unordered_map<unsigned int, shared_ptr<LWF::Data>>::__node_insert_unique	1474	1315	0	0
+007FA280	std::unordered_map<unsigned int, shared_ptr<LWF::Data>>::rehash	48	48	0	0
+007FA358	std::unordered_map<unsigned int, shared_ptr<LWF::Data>>::__rehash	48	48	0	0
+007FA5C6	std::unordered_map<unsigned int, shared_ptr<LWF::Data>>::find	31579	2355	0	0
 007FA70C	std::__shared_ptr_emplace<LWF::Data>::__on_zero_shared	19080	10153	0	0
 007FA716	std::__shared_ptr_emplace<LWF::Data>::__on_zero_shared_weak	19080	10153	0	0
 007FBFDC	LWF::LWFTextTTFRenderer::~LWFTextTTFRenderer [base destructor]	1	0	0	0
@@ -6593,10 +7245,20 @@ addr	name	calls	verified	mismatches	unverifiable
 00810804	LWF::Movie::AddHandlers	2338	423	0	0
 00810D18	LWF::Movie::Exec	17537324	1395987	0	0
 00812A5A	LWF::Movie::ClearMovieEventHandler	4966	1845	0	0
+00813356	std::map<string, shared_ptr<LWF::LWFContainer>>::find	26687	1400	0	0
+008133DA	std::map<string, shared_ptr<LWF::LWFContainer>>::__lower_bound	28087	1400	0	0
 00813AE8	std::__shared_ptr_emplace<LWF::Graphic>::__on_zero_shared	2143	1427	0	0
 00813AF4	std::__shared_ptr_emplace<LWF::Graphic>::__on_zero_shared_weak	2143	1427	0	0
+00814AE0	std::function<bool(LWF::LWF*)>::operator=(const&)	18366	1000	0	0
+00814B50	std::map<string, shared_ptr<LWF::LWFContainer>>::operator[]	21963	1400	0	0
+00814F06	std::map<string, shared_ptr<LWF::LWFContainer>>::__find_equal_key	23363	1400	0	0
+00815024	std::map<string, shared_ptr<LWF::LWFContainer>>::__construct_node_with_key	23363	1400	0	0
+0081506C	std::map<string, shared_ptr<LWF::LWFContainer>>::__insert_node_at	23363	1400	0	0
+0081509C	std::function<bool(LWF::LWF*)>::swap	19366	1000	0	0
+00815188	std::shared_ptr<LWF::LWFContainer>::make_shared<Movie*, shared_ptr<LWF>&>	18366	1000	0	0
 008153CC	std::__shared_ptr_emplace<LWF::LWFContainer>::__on_zero_shared	209083	7498	0	0
 008153D8	std::__shared_ptr_emplace<LWF::LWFContainer>::__on_zero_shared_weak	209083	7498	0	0
+008153E0	std::map<int, shared_ptr<LWF::LWFContainer>>::find	26687	1400	0	0
 00815C2A	LWF::Movie::Play	17828	8716	0	0
 00815C32	LWF::Movie::Stop	19391	5023	0	0
 00815C3A	LWF::Movie::NextFrame	10464	5535	0	0
@@ -6620,7 +7282,12 @@ addr	name	calls	verified	mismatches	unverifiable
 00819194	cocos2d::plugin::WebView::~WebView [deleting destructor]	66	13	0	0
 00819220	cocos2d::plugin::WebView::loadUrl	119	56	0	0
 008192AC	cocos2d::plugin::WebView::setScalesPageToFit	119	56	0	0
+008193C8	std::unordered_map<int, plugin::WebViewImpl*>::operator[]	12	12	0	0
 008194E0	cocos2d::plugin::WebViewImpl::~WebViewImpl [deleting destructor]	71	13	0	0
+0081A5B4	std::unordered_map<int, plugin::WebViewImpl*>::find	24	24	0	0
+0081A7AA	std::unordered_map<int, plugin::WebViewImpl*>::__node_insert_unique	8	8	0	0
+0081A93C	std::unordered_map<int, plugin::WebViewImpl*>::rehash	8	8	0	0
+0081AA14	std::unordered_map<int, plugin::WebViewImpl*>::__rehash	8	8	0	0
 0081AB18	_JNIEnv::CallStaticBooleanMethod	59	1	0	0
 0081AB6C	_JNIEnv::CallStaticIntMethod	283	108	0	0
 0081ABF0	Java_org_cocos2dx_lib_Cocos2dxWebViewHelper_shouldStartLoading	2	0	0	0
@@ -6725,9 +7392,14 @@ addr	name	calls	verified	mismatches	unverifiable
 008436A0	callVideoNonParameterFun(int,const char*)	246	108	0	0
 0084372C	setVideoRectJNI(int,int,int,int,int)	128	128	0	0
 00843854	setVideoURLJNI(int, int, const std::string&)	153	48	0	0
+00843BC4	std::unordered_map<int, experimental::ui::VideoPlayer*>::operator[]	16	16	0	0
 00843D3C	cocos2d::experimental::ui::VideoPlayer::~VideoPlayer [deleting destructor]	120	48	0	0
 008441F4	cocos2d::experimental::ui::VideoPlayer::addEventListener	155	48	0	0
 00844530	std::__hash_table<std::__hash_value_type<int,cocos2d::experimental::ui::VideoPlayer *>,std::__unordered_map_hasher<int,std::__hash_value_type<int,cocos2d::experimental::ui::VideoPlayer *>,std::hash<int>,true>,std::__unordered_map_equal<int,std::__hash_value_type<int,cocos2d::experimental::ui::VideoPlayer *>,std::equal_to<int>,true>,std::allocator<std::__hash_value_type<int,cocos2d::experimental::ui::VideoPlayer *>>>::__erase_unique<int>	120	48	0	0
+00844550	std::unordered_map<int, experimental::ui::VideoPlayer*>::find	32	32	0	0
+00844726	std::unordered_map<int, experimental::ui::VideoPlayer*>::__node_insert_unique	8	8	0	0
+008448B8	std::unordered_map<int, experimental::ui::VideoPlayer*>::rehash	8	8	0	0
+00844990	std::unordered_map<int, experimental::ui::VideoPlayer*>::__rehash	8	8	0	0
 0085304C	cocos2d::extension::Scale9Sprite::~Scale9Sprite [deleting destructor]	23234	262	0	0
 00853E04	cocos2d::extension::Scale9Sprite::setContentSize	171927	8138	0	0
 00854454	cocos2d::extension::Scale9Sprite::initWithFile	25259	685	0	0
@@ -6808,6 +7480,8 @@ addr	name	calls	verified	mismatches	unverifiable
 00880F5C	cocos2d::FontFreeType::getFontMaxHeight	4518	150	0	0
 00880F66	cocos2d::FontFreeType::getFontAscender	4518	150	0	0
 00881980	std::__hash_table<std::__hash_value_type<std::string,cocos2d::_DataRef>,std::__unordered_map_hasher<std::string,std::__hash_value_type<std::string,cocos2d::_DataRef>,std::hash<std::string>,true>,std::__unordered_map_equal<std::string,std::__hash_value_type<std::string,cocos2d::_DataRef>,std::equal_to<std::string>,true>,std::allocator<std::__hash_value_type<std::string,cocos2d::_DataRef>>>::__erase_unique<std::string>	606	40	0	0
+00884594	std::__vector_base<cocos2d::Label::LetterInfo>::~__vector_base	7204	1000	0	0
+008845CA	std::__vector_base<cocos2d::SpriteBatchNode*>::~__vector_base	7204	1000	0	0
 00884614	cocos2d::Label::~Label [deleting destructor]	79987	622	0	1
 00884DF8	cocos2d::Label::getScaleX	5407	69	0	0
 008869A4	cocos2d::Label::getAdditionalKerning	948	24	0	0
@@ -6922,8 +7596,11 @@ addr	name	calls	verified	mismatches	unverifiable
 008DC53C	bg::InputStreamFactory::setAssetManager	178	78	0	0
 008DC554	bg::InputStreamFactory::open	3667	419	0	0
 008DC5F0	bg::InputStreamFactory::create	20915	1115	0	0
+008DC67C	std::shared_ptr<bg::MemoryInputStream>::make_shared<const void*&, unsigned&, const function<void(void*)>&>	1651	1336	0	0
+008DC6E8	std::shared_ptr<bg::FileInputStream>::make_shared<const char*&, bool&>	482	482	0	0
 008DC7CC	std::__shared_ptr_emplace<bg::FileInputStream>::__on_zero_shared	181	15	0	0
 008DC7D8	std::__shared_ptr_emplace<bg::FileInputStream>::__on_zero_shared_weak	181	15	0	0
+008DC7E0	std::shared_ptr<bg::AssetInputStream>::make_shared<const char*&>	18	18	0	0
 008DC8CC	std::__shared_ptr_emplace<bg::AssetInputStream>::__on_zero_shared	96	2	0	0
 008DC8D8	std::__shared_ptr_emplace<bg::AssetInputStream>::__on_zero_shared_weak	96	2	0	0
 008DC8E0	sub_8DC8E0	1464120	26106	0	0
@@ -6932,6 +7609,8 @@ addr	name	calls	verified	mismatches	unverifiable
 008DC9CC	bg::Archive::getKey	921821	1812	0	0
 008DCBA8	bg::Archive::getData	305037	20081	0	0
 008DCDFC	bg::Archive::convert	25713	1281	0	0
+008DD040	std::shared_ptr<bg::Data>::make_shared<unsigned char*&, unsigned&, function<void(void*)>&>	70853	1994	0	0
+008DD0AC	std::shared_ptr<bg::Data>::make_shared<char*&, int, function<void(void*)>&>	123066	1800	0	0
 008DD1A4	bg::vfs (sub_8DD1A4): the statics on first use	904626	18664	0	0
 008DD46C	bg::vfs::readData	279696	18510	0	0
 008DD564	bg::vfs::exists	120563	1676	0	0
@@ -6940,9 +7619,18 @@ addr	name	calls	verified	mismatches	unverifiable
 008DD790	bg::vfs::unmount	143	19	0	0
 008DD7A4	bg::vfs (sub_8DD7A4): unmount an id	110	5	0	0
 008DD830	bg::vfs archive (sub_8DD830): open	85	5	0	0
+008DDA90	std::unordered_map<const char*, int>::__insert_unique	1304712	1600	0	0
+008DDB08	std::unordered_map<const char*, int>::__construct_node	1600	1600	0	0
+008DDB5C	std::unordered_map<char const*, int>::__node_insert_unique	1600	1600	0	0
+008DDD14	std::unordered_map<char const*, int>::rehash	64	64	0	0
+008DDDEC	std::unordered_map<char const*, int>::__rehash	64	64	0	0
+008DDEFE	std::function<void(void*)>::operator=(&&)	16	16	0	0
+008DDF4A	std::unordered_map<const char*, int>::clear	16	16	0	0
 008DE104	bg::vfs archive (sub_8DE104): constructor	85	5	0	0
+008DE18C	std::unordered_map<char const*, int>::find	527498	1839	0	0
 008DE234	bg::vfs archive (sub_8DE234): the entry by index	125374	7043	0	0
 008DE2DC	bg::vfs archive (sub_8DE2DC): the entry by name	125374	7043	0	0
+008DE358	std::unordered_map<char const*, int>::find (2)	31859	1792	0	0
 008DF01E	cocos2d::Size::Size [base constructor]	7131153	104439	0	0
 008DF026	cocos2d::Size::Size [base constructor]	19851699	682068	0	0
 008DF02C	cocos2d::Size::Size [base constructor]	79789397	1690803	0	0
@@ -7006,9 +7694,20 @@ addr	name	calls	verified	mismatches	unverifiable
 008EFE68	cocos2d::Director::getTextureCache	1573617	88132	0	0
 008F0624	cocos2d::Director::getWinSize	19529833	669288	0	0
 008F0E9C	cocos2d::DisplayLinkDirector::stopAnimation	100	2	0	0
+008F10F0	std::map<int, ActionManager*>::__node_insert_unique	28	14	0	0
+008F1168	std::map<int, ActionManager*>::__find_equal	28	14	0	0
+008F11B4	std::map<int, ActionManager*>::__insert_node_at	28	14	0	0
+008F11E4	std::map<int, ActionManager*>::__find_equal_key	2715	1352	0	0
+008F1230	std::map<int, Scheduler*>::__find_equal_key const	28	21	0	0
 008F13CC	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<cocos2d::ActionManager>(cocos2d::ActionManager *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<cocos2d::ActionManager>(cocos2d::ActionManager *,int,bool)::{lambda(float)#1}>,void ()(float)>::__clone	326	160	0	0
 008F13EC	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<cocos2d::ActionManager>(cocos2d::ActionManager *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<cocos2d::ActionManager>(cocos2d::ActionManager *,int,bool)::{lambda(float)#1}>,void ()(float)>::destroy	326	160	0	0
 008F13F6	std::__function::__func<void cocos2d::Scheduler::scheduleUpdate<cocos2d::ActionManager>(cocos2d::ActionManager *,int,bool)::{lambda(float)#1},std::allocator<void cocos2d::Scheduler::scheduleUpdate<cocos2d::ActionManager>(cocos2d::ActionManager *,int,bool)::{lambda(float)#1}>,void ()(float)>::operator()	1353516	48758	29	9
+008F143C	std::map<int, ActionManager*>::__insert_unique(pair&&)	14	14	0	0
+008F1484	std::map<int, Scheduler*>::__insert_unique(pair&&)	14	14	0	0
+008F14CC	std::map<int, Scheduler*>::__node_insert_unique	28	14	0	0
+008F1544	std::map<int, Scheduler*>::__find_equal	28	14	0	0
+008F1590	std::map<int, Scheduler*>::__insert_node_at	28	14	0	0
+008F1608	std::map<int, Scheduler*>::__find_equal_key	2715	1352	0	0
 008F2240	cocos2d::Event::~Event [base destructor]	14807	8434	0	0
 008F459C	cocos2d::EventDispatcher::setEnabled	79	79	0	0
 008F65E2	sub_8F65E2	14430	8057	0	0
@@ -7094,6 +7793,13 @@ addr	name	calls	verified	mismatches	unverifiable
 00918B54	LRUCache<unsigned, shared_ptr<Texture2D>>::update	814018	22911	0	0
 00918B98	LRUCache<unsigned, shared_ptr<Texture2D>>::removeLRUData	15260	51	0	0
 00918BC0	LRUCache<unsigned, shared_ptr<Texture2D>>::removeData	15351	55	0	0
+00918BF4	std::unordered_map<unsigned int, shared_ptr<Texture2D>>::__insert_unique	9863	1623	0	0
+00918C54	std::unordered_map<unsigned int, shared_ptr<Texture2D>>::__node_insert_unique	2300	1631	0	0
+00918DE8	std::unordered_map<unsigned int, shared_ptr<Texture2D>>::rehash	58	56	0	0
+00918EC0	std::unordered_map<unsigned int, shared_ptr<Texture2D>>::__rehash	58	56	0	0
+00918FC4	std::unordered_map<unsigned int, shared_ptr<Texture2D>>::erase	4749	1010	0	0
+00919038	std::unordered_map<unsigned int, shared_ptr<Texture2D>>::remove	1264	1010	0	0
+0091912E	std::unordered_map<unsigned int, shared_ptr<Texture2D>>::find	280508	1686	0	0
 009191BC	shared_ptr<Texture2D> control block (TextureCache::insertTexture $_2) __on_zero_shared	21172	794	0	2843
 009191F0	shared_ptr<Texture2D> control block (TextureCache::insertTexture $_2) __on_zero_shared_weak	21172	3173	0	0
 009191F8	std::__hash_table<std::__hash_value_type<unsigned int,std::shared_ptr<cocos2d::Texture2D>>,std::__unordered_map_hasher<unsigned int,std::__hash_value_type<unsigned int,std::shared_ptr<cocos2d::Texture2D>>,std::hash<unsigned int>,true>,std::__unordered_map_equal<unsigned int,std::__hash_value_type<unsigned int,std::shared_ptr<cocos2d::Texture2D>>,std::equal_to<unsigned int>,true>,std::allocator<std::__hash_value_type<unsigned int,std::shared_ptr<cocos2d::Texture2D>>>>::__erase_unique<unsigned int>	147	61	0	0
@@ -7193,6 +7899,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00A4251C	Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeTouchesEnd	2627	0	0	0
 00A42578	Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeTouchesMove	10440	0	0	0
 00A42824	Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeKeyDown	11	0	0	0
+00A428A4	std::unordered_map<int, EventKeyboard::KeyCode>::find	1	1	0	0
 00A465D4	deflateInit_	27080	2723	0	0
 00A47F20	inflateInit_	180171	10525	0	0
 00A4C448	sub_A4C448	328767	13223	0	0

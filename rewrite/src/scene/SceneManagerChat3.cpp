@@ -161,16 +161,6 @@ void stampImagePath(uint32_t out, uint32_t prefix, uint32_t prefixLen, uint32_t 
     call(fn::string_append, {out, STR_Png, 4});
 }
 
-// copy a std::string into `dst` like the inlined copy constructor
-void strCopy(uint32_t dst, uint32_t src) {
-    if (strIsLong(src)) {
-        strInit(dst, ld32(src + 8), ld32(src + 4));
-    } else {
-        st32(dst, ld32(src));
-        st32(dst + 4, ld32(src + 4));
-        st32(dst + 8, ld32(src + 8));
-    }
-}
 
 // an armature "ArrowAnim" playing `name` under `arrow`, moved by (50, 50); pos = the Vec2 kept for both arrows
 uint32_t addArrowAnim(uint32_t arrow, uint32_t name, uint32_t nameLen, uint32_t pos, bool construct) {

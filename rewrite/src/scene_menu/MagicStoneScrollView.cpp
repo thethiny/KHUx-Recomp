@@ -2,7 +2,8 @@
 #include "MagicStoneScrollView.hpp"
 
 #include "../master/Shop.hpp"
-#include "../scene/SceneUi.hpp"
+#include "../actor/FunctionThunks.hpp"
+#include "../scene/ScrollRowTouch.hpp"
 
 using namespace scene;
 using Self = MagicStoneScrollView;
@@ -395,3 +396,50 @@ void Self::setProductInfoMap(Self *self, Addr products) {
 }
 RW_FUNCTION(0x4FB934, "MagicStoneScrollView::setProductInfoMap(const unordered_map<string, ProductInfo>*)",
             MagicStoneScrollView::setProductInfoMap);
+
+// ------------------------------------------------------------------------------------------------ row touch lambdas
+// registItemTouchEvent's lambdas: the rows' tap (scene/ScrollRowTouch.hpp) with this view's touch state; a tap that
+// ends on a pack reports its index (+0x670) through the function at +0x638 once the tap animation ends ($_4)
+namespace {
+constexpr uint32_t VT_TapDone = 0xF55B80;          // $_4 {this, index}: the tap animation's end
+constexpr uint32_t F_ON_TAP = 0x638, F_INSIDE = 0x66D, F_INDEX = 0x670, F_RUNNING = 0x674, F_TOUCH_Y = 0x678;
+constexpr uint32_t F_ON_BUY = 0x650;               // std::function<void(int)>: a Buy button (the shop id)
+constexpr uint32_t FunctionInt_call = 0x4F321D;    // std::function<void(int)>::operator()(int)
+constexpr uint32_t TapRow = 0x4FBC61;              // $_2's body (the tap)
+constexpr uint32_t V_SET_LOCAL_Z = 0x0C;
+constexpr RowTouch ROW_TOUCH = {F_INSIDE, F_INDEX, F_RUNNING, F_TOUCH_Y, VT_TapDone, 4};
+
+uint32_t tapRow(uint32_t captures, uint32_t touch) { return rowTap(ROW_TOUCH, captures, touch); }
+uint32_t touchMoved(uint32_t self, uint32_t touchp) { return rowTouchMoved(ROW_TOUCH, self, touchp, TapRow); }
+uint32_t touchBegan(uint32_t self, uint32_t touchp) { return rowTouchBegan(ROW_TOUCH, self, touchp, true); }
+
+// $_4 {this, index}: the row back to its z order; the tapped index reported when the touch stayed on the row
+void tapDone(uint32_t self) {
+    const uint32_t view = ld32(self + 4);
+    const uint32_t row = ld32(ld32(view + rowtouch::F_ROWS) + 4 * ld32(self + 8));
+    vcall(row, V_SET_LOCAL_Z, {row, 0});
+    if (ld32(view + F_ON_TAP + 0x10) && ld8(view + F_INSIDE)) call(FunctionInt_call, {view + F_ON_TAP, ld32(view + F_INDEX)});
+    st8(view + F_RUNNING, 0);
+    st8(view + F_INSIDE, 0);
+}
+
+// changeRow $_0 {this, shop id}(sender, type): the Buy button reports the shop id
+void buyTouch(uint32_t self, uint32_t, uint32_t typep) {
+    if (ld32(typep) != 2) return;
+    const uint32_t view = ld32(self + 4);
+    if (ld32(view + F_ON_BUY + 0x10)) call(FunctionInt_call, {view + F_ON_BUY, ld32(self + 8)});
+}
+}  // namespace
+
+RW_FUNCTION(0x4FBC60, "MagicStoneScrollView::registItemTouchEvent $_2 body (the row tap)", tapRow);
+RW_FUNCTION(0x4FBF9C, "MagicStoneScrollView::registItemTouchEvent $_1::operator() (touch moved)", touchMoved);
+RW_FUNCTION(0x4FC140, "MagicStoneScrollView::registItemTouchEvent $_0::operator() (touch began)", touchBegan);
+RW_FUNCTION(0x4FBE9C, "MagicStoneScrollView::registItemTouchEvent $_4::operator() (tap done)", tapDone);
+RW_FUNCTION(0x4FC336, "MagicStoneScrollView::changeRow $_0::operator() (Buy button)", buyTouch);
+RW_FUNCTION(0x4FC0E0, "MagicStoneScrollView::registItemTouchEvent $_0 __clone()", (fnthunk::cloneWords<VT_TouchBegan, 0xC, 2>));
+RW_FUNCTION(0x4FC110, "MagicStoneScrollView::registItemTouchEvent $_0 __clone(__base*)", (fnthunk::cloneIntoWords<VT_TouchBegan, 2>));
+RW_FUNCTION(0x4FBF2C, "MagicStoneScrollView::registItemTouchEvent $_1 __clone()", (fnthunk::cloneWords<VT_TouchMoved, 0x1C, 6>));
+RW_FUNCTION(0x4FBF64, "MagicStoneScrollView::registItemTouchEvent $_1 __clone(__base*)", (fnthunk::cloneIntoWords<VT_TouchMoved, 6>));
+RW_FUNCTION(0x4FBE6C, "MagicStoneScrollView::registItemTouchEvent $_4 __clone(__base*)", (fnthunk::cloneIntoWords<VT_TapDone, 2>));
+RW_FUNCTION(0x4FC2D8, "MagicStoneScrollView::changeRow $_0 __clone()", (fnthunk::cloneWords<VT_BuyTouch, 0xC, 2>));
+RW_FUNCTION(0x4FC308, "MagicStoneScrollView::changeRow $_0 __clone(__base*)", (fnthunk::cloneIntoWords<VT_BuyTouch, 2>));

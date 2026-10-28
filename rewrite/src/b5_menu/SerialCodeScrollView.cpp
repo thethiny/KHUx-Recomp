@@ -85,16 +85,6 @@ uint32_t findNodeF(uint32_t root, uint32_t fmt, uint32_t n) {
 void readField(uint32_t row, uint32_t dst, uint32_t offset, uint32_t size) {
     call(g::SafeBuffer_read, {row, dst, ld32(row + 0xC) + offset, size, offset});
 }
-// the copy constructor of std::string, as inlined: a long string through __init, a short one word by word
-void strCopy(uint32_t dst, uint32_t src) {
-    if (strIsLong(src)) {
-        strInit(dst, ld32(src + 8), ld32(src + 4));
-        return;
-    }
-    st32(dst, ld32(src));
-    st32(dst + 4, ld32(src + 4));
-    st32(dst + 8, ld32(src + 8));
-}
 }  // namespace
 
 namespace {

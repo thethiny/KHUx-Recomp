@@ -1047,3 +1047,795 @@ void cloneDeckChanged(uint32_t self, uint32_t dst) {
 RW_FUNCTION(0x677E00, "SceneDeckEdit::updateDeckView $_ __func::__clone(dst) (sub_677E00)", deck_edit::cloneDeckChanged);
 
 }  // namespace deck_edit
+
+// ------------------------------------------------------------------------------------------------ init's lambdas
+namespace {
+namespace lam {
+constexpr uint32_t Node_scheduleUpdate = 0x894BA7;
+constexpr uint32_t AudioReplaceGameMainBGM = 0x5C0FA1;      // (id, fade ms)
+constexpr uint32_t AudioManager_getInstance = 0x5BECFD, AudioManager_load = 0x5BEEF5;   // (manager, ResourceID)
+constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
+constexpr uint32_t AppState_getTutorialCloseFunc = 0x4EBA3D;   // (function out, app, popup id)
+constexpr uint32_t AppState_execTutorialCloseFunc = 0x4EBA5D;  // (app, popup id)
+constexpr uint32_t SceneDeckEdit_openMedalSelectPanel = 0x6652C1;
+constexpr uint32_t SceneDeckEdit_updateDeckView = 0x667539;    // (scene, page, index, bool current)
+constexpr uint32_t SceneDeckEdit_runUpdateKeybladeEvent = 0x668045;
+constexpr uint32_t SceneManager_isOpenedPopup = 0x621519;
+constexpr uint32_t FunctionBool_call = 0x51022D;               // std::function<bool()>::operator()
+constexpr uint32_t FunctionWidgetInt_call = 0x54A065;          // std::function<Widget*(int)>::operator()(int)
+constexpr uint32_t IInOutAnimation_runOutAnimation = 0x6F24B5; // (mixin, function<void()>)
+constexpr uint32_t SceneUtil_clearMedalNewMark = 0x46C4B5;
+constexpr uint32_t SceneMixedMedal_callPrepareAPI = 0x69F475;  // (function<void(bool)> by value)
+constexpr uint32_t BaseSlideView_changeNextPage = 0x526245, BaseSlideView_changePreviousPage = 0x5263ED;
+constexpr uint32_t BGM_DECK_EDIT = 501000920, BGM_FADE = 500, SE_PAGE = 509000170, SE_MEDAL_SET = 509000050;
+constexpr uint32_t TUTORIAL_MEDAL = 110, TUTORIAL_KEYBLADE = 113;
+constexpr uint32_t SLIDE_MOVING = 0x5C0, SLIDE_DRAGGING = 0x5C1;   // BaseSlideView: uint8 each
+constexpr uint32_t INOUT = 0x288;                              // SceneDeckEdit: its IInOutAnimation
+constexpr uint32_t NEW_MARKS = 0x37C;                          // uint8: clear the medals' "new" marks on leaving
+constexpr uint32_t MIX_PREPARE = 0x3A0;                        // uint8: the mixed medal scene needs its prepare API
+constexpr uint32_t SM_LIST_SCROLL = 0x2A0, SM_LIST_INDEX = 0x2A4;   // SceneManager: the medal list's saved position
+constexpr uint32_t GOT_CREATE_MEDAL_LIST = 0xFD60BC;           // GOT: createSceneLayer<SceneMedalList>
+constexpr uint32_t VT_ListLeave = 0xF63DB8;                    // $_5's lambda() (no captures)
+constexpr uint32_t VT_FinishDone = 0xF63C84;                   // $_11's lambda(bool) (heap 0x28)
+constexpr uint32_t S_ScrollJson = 0xE0448B, S_CenterUIKB = 0xE044B8;   // "cocostudio/publish/DeckEditScene_Scroll.json"
+
+// the deck page can take a touch: ready, the slide view not moving or dragged
+bool pageIdle(uint32_t me) {
+    if (!ld8(me + READY)) return false;
+    const uint32_t slide = ld32(me + SLIDE);
+    return !ld8(slide + SLIDE_MOVING) && !ld8(slide + SLIDE_DRAGGING);
+}
+
+// a tutorial popup `id` waiting to be closed: its close callback taken (and dropped), then closed through AppState
+void closeTutorialPopup(uint32_t id) {
+    Frame f;
+    const uint32_t fn = f.alloc(20);
+    call(AppState_getTutorialCloseFunc, {fn, call(fn::AppState_getInstance, {}), id});
+    const bool waiting = ld32(fn + 16) != 0;
+    functionDestroy(fn);
+    if (waiting) call(AppState_execTutorialCloseFunc, {call(fn::AppState_getInstance, {}), id});
+}
+}  // namespace lam
+
+// $_0 onEnter {scene}: the update schedule, the deck BGM, the page / medal sounds loaded
+void onEnter(uint32_t self) {
+    call(lam::Node_scheduleUpdate, {ld32(self + 4)});
+    call(lam::AudioReplaceGameMainBGM, {lam::BGM_DECK_EDIT, lam::BGM_FADE});
+    call(lam::AudioManager_load, {call(lam::AudioManager_getInstance, {}), lam::SE_PAGE});
+    call(lam::AudioManager_load, {call(lam::AudioManager_getInstance, {}), lam::SE_MEDAL_SET});
+}
+
+// $_3 Button_Medal {scene}(sender, type): ended on an idle page -> the medal tutorial popup closed, the medal panel
+void medalTouched(uint32_t self, uint32_t, uint32_t typep) {
+    if (ld32(typep) != 2) return;
+    const uint32_t me = ld32(self + 4);
+    if (!lam::pageIdle(me)) return;
+    call(lam::AudioPlaySystemSEDecide, {});
+    lam::closeTutorialPopup(lam::TUTORIAL_MEDAL);
+    call(lam::SceneDeckEdit_openMedalSelectPanel, {me});
+}
+
+// $_4 Button_KB {scene}(sender, type): ended on an idle page -> the keyblade tutorial popup closed, the keyblade
+// panel
+void keybladeTouched(uint32_t self, uint32_t, uint32_t typep) {
+    if (ld32(typep) != 2) return;
+    const uint32_t me = ld32(self + 4);
+    if (!lam::pageIdle(me)) return;
+    lam::closeTutorialPopup(lam::TUTORIAL_KEYBLADE);
+    call(lam::AudioPlaySystemSEDecide, {});
+    call(g::SceneDeckEdit_openKeyBladePanel, {me, 0});
+}
+
+// $_5 Button_List {scene}(sender, type): ended on an idle page with no popup, when the scene may finish -> the
+// buttons off, the scene animates out, then the medal list ($_5's lambda)
+void listTouched(uint32_t self, uint32_t, uint32_t typep) {
+    if (ld32(typep) != 2) return;
+    const uint32_t me = ld32(self + 4);
+    if (!lam::pageIdle(me)) return;
+    if (call(lam::SceneManager_isOpenedPopup, {smgr()})) return;
+    call(lam::AudioPlaySystemSEDecide, {});
+    if (call(lam::FunctionBool_call, {me + PREPARE_FINISH}) != 1) return;
+    st8(me + READY, 0);
+    for (uint32_t b : {BUTTON_MEDAL, BUTTON_LIST, BUTTON_KB, BUTTON_SORT})
+        vcall(ld32(me + b), V_WIDGET_SET_TOUCH_ENABLED, {ld32(me + b), 0});
+    Frame f;
+    const uint32_t then = newFunction(f, lam::VT_ListLeave, {});
+    call(lam::IInOutAnimation_runOutAnimation, {me + lam::INOUT, then});
+    functionDestroy(then);
+}
+// $_5's lambda(): the medal list's saved position reset, then the medal list scene
+void listLeave() {
+    const uint32_t sm = smgr();
+    st32(sm + lam::SM_LIST_INDEX, 0);
+    st32(sm + lam::SM_LIST_SCROLL, 0);
+    changeSceneLayerTo(lam::GOT_CREATE_MEDAL_LIST, 1, 0, 0);
+}
+
+// $_6 / $_7 the arrows {scene}(sender, type): touch began -> the page sound, the slide view turns
+template <uint32_t Turn> void arrowTouched(uint32_t self, uint32_t, uint32_t typep) {
+    if (ld32(typep) != 0) return;
+    const uint32_t me = ld32(self + 4);
+    playLayerSE(lam::SE_PAGE);
+    call(Turn, {ld32(me + SLIDE)});
+}
+
+// $_8 the slide view's page factory (int): DeckEditScene_Scroll.json with the revolver, keyblade and top panels'
+// Panel_1 not touchable
+uint32_t makePage(uint32_t /*self*/, uint32_t /*index*/) {
+    Frame f;
+    const uint32_t file = newStr(f, lam::S_ScrollJson, 44);
+    const uint32_t page = SceneUtil::createNodeWithSceneFile(file);
+    strFree(file);
+    for (const auto &[name, len] : {std::pair{S_CenterUIRevolver, 17u}, std::pair{lam::S_CenterUIKB, 11u},
+                                    std::pair{S_CenterUITop, 12u}}) {
+        const uint32_t panel = findNode(findNode(page, name, len), S_Panel1, 7);
+        vcall(panel, V_WIDGET_SET_TOUCH_ENABLED, {panel, 0});
+    }
+    return page;
+}
+
+// $_9 the slide view's page updater {scene}(page, index, current): a missing page from the factory, then the deck
+// view of keyblade `index` on it
+uint32_t updatePage(uint32_t self, uint32_t pagep, uint32_t indexp, uint32_t currentp) {
+    const uint32_t me = ld32(self + 4);
+    const uint32_t current = ld8(currentp);
+    const uint32_t index = ld32(indexp);
+    uint32_t page = ld32(pagep);
+    if (!page) {
+        page = call(lam::FunctionWidgetInt_call, {ld32(me + SLIDE) + SLIDE_MAKE_PAGE, index});
+        call(rwlib::cocos2d::Ref::retain, {page});
+    }
+    call(lam::SceneDeckEdit_updateDeckView, {me, page, index, current ? 1u : 0u});
+    return page;
+}
+
+// $_11 the scene's finish callback {scene}(function<void(bool)> done): the medals' new marks cleared when wanted, the
+// finish callback dropped, then the changed keyblades sent (runUpdateKeybladeEvent) with $_11's lambda(bool)
+// {done, scene} as its result
+void finish(uint32_t self, uint32_t donep) {
+    Frame f;
+    const uint32_t done = f.alloc(20);
+    call(g::Function_vb_move, {done, donep});
+    const uint32_t me = ld32(self + 4);
+    if (ld8(me + lam::NEW_MARKS)) call(lam::SceneUtil_clearMedalNewMark, {});
+    const uint32_t sm = smgr();
+    {
+        const uint32_t none = newEmptyFunction(f);
+        call(g::SceneManager_setFinishSceneCallback, {sm, none});
+        functionDestroy(none);
+    }
+    const uint32_t copy = f.alloc(20);
+    functionCopy(copy, done);
+    const uint32_t fo = f.alloc(20);
+    st32(fo + 16, 0);
+    const uint32_t obj = call(fn::operator_new, {0x28});
+    if (obj) {
+        st32(obj, lam::VT_FinishDone);
+        call(g::Function_vb_move, {obj + 8, copy});
+        st32(obj + 0x20, me);
+    }
+    st32(fo + 16, obj);
+    call(lam::SceneDeckEdit_runUpdateKeybladeEvent, {me, fo, 0});
+    functionDestroy(fo);
+    functionDestroy(copy);
+    functionDestroy(done);
+}
+// $_11's lambda(bool) {-, done, scene}(sent): failed -> done(false); sent -> the back key's callback emptied, then
+// the mixed medal scene's prepare API first when it needs one (done goes along), else done(true)
+void finishDone(uint32_t self, uint32_t sentp) {
+    if (!ld8(sentp)) {
+        call(g::Function_vb_call, {self + 8, 0});
+        return;
+    }
+    const uint32_t me = ld32(self + 0x20);
+    const uint32_t sm = smgr();
+    st8(sm + SM_BACK_FLAG, 1);
+    {
+        Frame f;
+        const uint32_t none = newEmptyFunction(f);
+        call(g::Function_vb_assign, {sm + SM_BACK_CALLBACK, none});
+        functionDestroy(none);
+    }
+    if (!ld8(me + lam::MIX_PREPARE)) {
+        call(g::Function_vb_call, {self + 8, 1});
+        return;
+    }
+    Frame f;
+    const uint32_t copy = f.alloc(20);
+    call(g::Function_vb_copy, {copy, self + 8});
+    call(lam::SceneMixedMedal_callPrepareAPI, {copy});
+    functionDestroy(copy);
+}
+}  // namespace
+
+RW_FUNCTION(0x67CA0C, "SceneDeckEdit::init::$_0 operator() (onEnter)", onEnter);
+RW_FUNCTION(0x67C794, "SceneDeckEdit::init::$_3 operator() (Button_Medal)", medalTouched);
+RW_FUNCTION(0x67C654, "SceneDeckEdit::init::$_4 operator() (Button_KB)", keybladeTouched);
+RW_FUNCTION(0x67C334, "SceneDeckEdit::init::$_5 operator() (Button_List)", listTouched);
+RW_FUNCTION(0x67C4FC, "SceneDeckEdit::init::$_5::lambda() operator() (to the medal list)", listLeave);
+RW_FUNCTION(0x67C20C, "SceneDeckEdit::init::$_6 operator() (left arrow)", arrowTouched<lam::BaseSlideView_changePreviousPage>);
+RW_FUNCTION(0x67C0E4, "SceneDeckEdit::init::$_7 operator() (right arrow)", arrowTouched<lam::BaseSlideView_changeNextPage>);
+RW_FUNCTION(0x67BD70, "SceneDeckEdit::init::$_8 operator() (page factory)", makePage);
+RW_FUNCTION(0x67BC9A, "SceneDeckEdit::init::$_9 operator() (page updater)", updatePage);
+RW_FUNCTION(0x67B748, "SceneDeckEdit::init::$_11 operator() (finish)", finish);
+RW_FUNCTION(0x67BA7C, "SceneDeckEdit::init::$_11::lambda(bool) operator() (keyblades sent)", finishDone);
+
+// ------------------------------------------------------------------------------------------------ the tutorial and
+// panel lambdas
+namespace {
+namespace lam2 {
+constexpr uint32_t BaseSlideView_updateLayout = 0x525EB5, BaseSlideView_setSlideEnabled = 0x526111;
+constexpr uint32_t TutorialMisc_create = 0x777BB5;            // master::TutorialMisc::create(shared_ptr out, id)
+constexpr uint32_t AppState_isClearTutorialPopupIDs = 0x4EB815;   // (app, popup id) -> bool
+constexpr uint32_t AppState_setTutorialCloseFunc = 0x4EB8D9;  // (function out, app, function close, popup id)
+constexpr uint32_t SceneUtil_openTutorialPopup = 0x4684C9;    // (function out, id, function onClosed, Node* target, 3 x 0)
+constexpr uint32_t SceneDeckEdit_setKeybladeArrowVisible = 0x663DD9;
+constexpr uint32_t SceneDeckEdit_onTapMedalInfoButton = 0x667DC1; // (scene, type, bool, -, u64 user medal id)
+constexpr uint32_t DeckRevolverView_getTouchMedalIndex = 0x52D605;     // (view, Vec2, bool) -> int
+constexpr uint32_t DeckRevolverView_getTouchMedalPosition = 0x52D7B9;  // (Vec2 out, view, Vec2)
+constexpr uint32_t Vec2_copy = 0x8E4C03, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+constexpr uint32_t AudioPlaySystemSECancel = 0x5C0D81;
+constexpr uint32_t SafeBuffer_read = 0x45A269;                // (sb, dst, src, len, offset)
+constexpr uint32_t TUTORIAL_MISC_KEYBLADES = 5;                // TutorialMisc 5 +0xC: the keyblades a deck tutorial wants
+constexpr uint32_t TUTORIAL_MEDAL_DRAG = 111, TUTORIAL_REVOLVER = 115;
+constexpr uint32_t SM_KEYBLADE_PANEL = 0x2E0;                 // SceneManager: uint8, the keyblade panel is open
+constexpr uint32_t API_KEYBLADES = 0xEC;                      // APIManager: shared_ptr<SafeBuffer> user keyblades
+constexpr uint32_t REV_SLOT_NODES = 0x32C;                    // DeckRevolverView: vector<Node*> the medal slots
+constexpr uint32_t VT_RevolverTutorial = 0xF63BD4;            // $_13's lambda()#2 {scene}
+constexpr uint32_t VT_FewKeyblades = 0xF63C00;                // $_13's lambda()#1 (no captures)
+constexpr uint32_t VT_PanelClosed = 0xF639C4;                 // openKeyBladePanel::$_98's lambda() {scene, view, scale}
+
+// SceneUtil::openTutorialPopup(id, no callback, target) and its close function handed to AppState; true when
+// AppState kept one (the popup is up)
+bool tutorialPopupOn(uint32_t id, uint32_t target) {
+    const uint32_t app = call(fn::AppState_getInstance, {});
+    Frame f;
+    const uint32_t none = newEmptyFunction(f);
+    const uint32_t close = f.alloc(20);
+    call(SceneUtil_openTutorialPopup, {close, id, none, target, 0, 0, 0});
+    const uint32_t kept = f.alloc(20);
+    call(AppState_setTutorialCloseFunc, {kept, app, close, id});
+    const bool up = ld32(kept + 16) != 0;
+    functionDestroy(kept);
+    functionDestroy(close);
+    functionDestroy(none);
+    return up;
+}
+bool tutorialCleared(uint32_t id) {
+    return call(AppState_isClearTutorialPopupIDs, {call(fn::AppState_getInstance, {}), id}) == 1;
+}
+}  // namespace lam2
+
+// runInAnimation::$_13 {scene}: the slide view laid out; with fewer keyblades than the deck tutorial needs (TutorialMisc
+// 5) its popup 22; else popup 28 (then the revolver tutorial) and the medal / keyblade tutorials (110 on
+// Button_Medal while 14 is not cleared, 113 on Button_KB once 18 is), each locking the other button
+void slideIn(uint32_t self) {
+    const uint32_t me = ld32(self + 4);
+    call(lam2::BaseSlideView_updateLayout, {ld32(me + SLIDE), 1});
+    Frame f;
+    const uint32_t row = f.alloc(8);
+    call(lam2::TutorialMisc_create, {row, lam2::TUTORIAL_MISC_KEYBLADES});
+    uint32_t wanted = 0;
+    if (ld32(row)) {
+        const uint32_t v = f.alloc(4);
+        call(lam2::SafeBuffer_read, {ld32(row), v, ld32(ld32(row) + 0xC) + 0xC, 4, 0xC});
+        wanted = ld32(v);
+    }
+    const uint32_t a = api();
+    const uint32_t ctrl = ld32(a + lam2::API_KEYBLADES + 4), keyblades = ld32(a + lam2::API_KEYBLADES);
+    addRef(ctrl);
+    if (wanted > ld32(keyblades + 0x20)) {
+        {
+            Frame t;
+            const uint32_t then = newFunction(t, lam2::VT_RevolverTutorial, {me});
+            const uint32_t close = t.alloc(20);
+            call(lam2::SceneUtil_openTutorialPopup, {close, 28, then, 0, 0, 0, 0});
+            functionDestroy(close);
+            functionDestroy(then);
+        }
+        if (!lam2::tutorialCleared(14) && lam2::tutorialPopupOn(110, ld32(me + BUTTON_MEDAL)))
+            vcall(ld32(me + BUTTON_KB), V_WIDGET_SET_TOUCH_ENABLED, {ld32(me + BUTTON_KB), 0});
+        if (lam2::tutorialCleared(18) && lam2::tutorialPopupOn(113, ld32(me + BUTTON_KB)))
+            vcall(ld32(me + BUTTON_MEDAL), V_WIDGET_SET_TOUCH_ENABLED, {ld32(me + BUTTON_MEDAL), 0});
+    } else {
+        Frame t;
+        const uint32_t then = newFunction(t, lam2::VT_FewKeyblades, {});
+        const uint32_t close = t.alloc(20);
+        call(lam2::SceneUtil_openTutorialPopup, {close, 22, then, 0, 0, 0, 0});
+        functionDestroy(close);
+        functionDestroy(then);
+    }
+    release(ctrl);
+    release(ld32(row + 4));
+}
+
+// $_13's lambda()#2 {scene}: once tutorial 28 is cleared, popup 115 on the revolver's first medal slot; up -> both
+// buttons locked
+void revolverTutorial(uint32_t self) {
+    const uint32_t me = ld32(self + 4);
+    if (!lam2::tutorialCleared(28)) return;
+    const uint32_t revolver = ld32(me + REVOLVER);
+    const uint32_t slots = revolver + lam2::REV_SLOT_NODES;
+    if (ld32(slots + 4) == ld32(slots)) call(g::VECTOR_AT_THROW, {});
+    if (!lam2::tutorialPopupOn(lam2::TUTORIAL_REVOLVER, ld32(ld32(slots)))) return;
+    vcall(ld32(me + BUTTON_KB), V_WIDGET_SET_TOUCH_ENABLED, {ld32(me + BUTTON_KB), 0});
+    vcall(ld32(me + BUTTON_MEDAL), V_WIDGET_SET_TOUCH_ENABLED, {ld32(me + BUTTON_MEDAL), 0});
+}
+
+// initKeyBladePanel::$_16 / initMedalSelectPanel::$_19 the panels' close buttons {scene}(sender, type): ended (the
+// keyblade panel: on an idle page) -> the current popup closed
+void keybladePanelClose(uint32_t self, uint32_t, uint32_t typep) {
+    if (ld32(typep) != 2 || !lam::pageIdle(ld32(self + 4))) return;
+    call(g::SceneManager_closeCurrentPopup, {smgr(), 0});
+}
+void medalPanelClose(uint32_t self, uint32_t, uint32_t typep) {
+    if (ld32(typep) != 2 || !ld8(ld32(self + 4) + READY)) return;
+    call(g::SceneManager_closeCurrentPopup, {smgr(), 0});
+}
+
+// openKeyBladePanel::$_18 {scene, view, button, button, scale}(closed by OK): closed otherwise -> (when the scene may
+// finish) the cancel sound and the panel flag off; the arrows shown, three widgets off, the panel shrinks and
+// $_98's lambda restores the scene
+void keybladePanelClosed(uint32_t self, uint32_t byOkp) {
+    if (ld8(byOkp)) return;
+    const uint32_t me = ld32(self + 4);
+    if (ld8(me + CAN_FINISH)) {
+        call(lam2::AudioPlaySystemSECancel, {});
+        st8(smgr() + lam2::SM_KEYBLADE_PANEL, 0);
+    }
+    call(lam2::SceneDeckEdit_setKeybladeArrowVisible, {me, 1});
+    for (uint32_t k : {8u, 0xCu, 0x10u}) vcall(ld32(self + k), V_WIDGET_SET_TOUCH_ENABLED, {ld32(self + k), 0});
+    const uint32_t view = ld32(self + 8);
+    Frame f;
+    const uint32_t done = newFunction(f, lam2::VT_PanelClosed, {me, view, ld32(self + 0x14)});
+    call(fn::Node_runAction, {view, SceneUtil::createClosePopupAnimation(view, done)});
+    functionDestroy(done);
+}
+// openKeyBladePanel::$_98's lambda() {scene, view, scale}: the strength popup hidden, the view's scale back, the
+// slide view and the medal / keyblade buttons on again
+void keybladePanelRestored(uint32_t self) {
+    const uint32_t me = ld32(self + 4);
+    setVisible(ld32(me + KBSTRENGTH), 0);
+    const uint32_t view = ld32(self + 8);
+    vcall(view, node::setScale, {view, ld32(self + 0xC)});
+    call(lam2::BaseSlideView_setSlideEnabled, {ld32(me + SLIDE), 1});
+    vcall(ld32(me + BUTTON_MEDAL), V_WIDGET_SET_TOUCH_ENABLED, {ld32(me + BUTTON_MEDAL), 1});
+    vcall(ld32(me + BUTTON_KB), V_WIDGET_SET_TOUCH_ENABLED, {ld32(me + BUTTON_KB), 1});
+}
+
+// initMedalSelectPanel::$_20's lambda(MedalInfoButtonType, bool) {-, scene, -, user medal id}: the medal info popup's
+// button -> onTapMedalInfoButton(type, false, id)
+void medalInfoButton(uint32_t self, uint32_t typep, uint32_t) {
+    const uint32_t me = ld32(self + 8);
+    call(lam2::SceneDeckEdit_onTapMedalInfoButton, {me, ld32(typep), 0, me, ld32(self + 0x10), ld32(self + 0x14)});
+}
+
+// initMedalSelectPanel::$_21 {scene}(user medal id, touch, float* position out): the revolver's medal slot under the
+// touch (its position out when there is one); -1 while the drag tutorial (111) waits and the slot is not the first
+uint32_t medalDragTarget(uint32_t self, uint32_t, uint32_t touchp, uint32_t outp) {
+    Frame f;
+    const uint32_t touch = f.alloc(8);
+    call(lam2::Vec2_copy, {touch, touchp});
+    const uint32_t out = ld32(outp);
+    const uint32_t me = ld32(self + 4);
+    const uint32_t revolver = ld32(me + REVOLVER);
+    const uint32_t tmp = f.alloc(8);
+    call(lam2::Vec2_copy, {tmp, touch});
+    const int32_t index = int32_t(call(lam2::DeckRevolverView_getTouchMedalIndex, {revolver, tmp, 1}));
+    call(lam2::Vec2_dtor, {tmp});
+    if (index >= 0) {
+        const uint32_t rev = ld32(me + REVOLVER);
+        const uint32_t at = f.alloc(8), pos = f.alloc(8);
+        call(lam2::Vec2_copy, {at, touch});
+        call(lam2::DeckRevolverView_getTouchMedalPosition, {pos, rev, at});
+        call(lam2::Vec2_dtor, {at});
+        st32(out, ld32(pos));
+        st32(out + 4, ld32(pos + 4));
+        call(lam2::Vec2_dtor, {pos});
+    }
+    const uint32_t closeFn = f.alloc(20);
+    call(lam::AppState_getTutorialCloseFunc, {closeFn, call(fn::AppState_getInstance, {}), lam2::TUTORIAL_MEDAL_DRAG});
+    const bool waiting = ld32(closeFn + 16) != 0;
+    functionDestroy(closeFn);
+    call(lam2::Vec2_dtor, {touch});
+    return (waiting && index != 0) ? 0xFFFFFFFFu : uint32_t(index);
+}
+}  // namespace
+
+RW_FUNCTION(0x67B038, "SceneDeckEdit::runInAnimation::$_13 operator() (slid in)", slideIn);
+RW_FUNCTION(0x67B430, "SceneDeckEdit::runInAnimation::$_13::lambda()#2 operator() (revolver tutorial)", revolverTutorial);
+RW_FUNCTION(0x679D54, "SceneDeckEdit::initKeyBladePanel::$_16 operator() (Close_Button)", keybladePanelClose);
+RW_FUNCTION(0x679954, "SceneDeckEdit::initMedalSelectPanel::$_19 operator() (Close_Button)", medalPanelClose);
+RW_FUNCTION(0x679A1C, "SceneDeckEdit::openKeyBladePanel::$_18 operator() (panel closed)", keybladePanelClosed);
+RW_FUNCTION(0x679BCA, "SceneDeckEdit::openKeyBladePanel::$_98::lambda() operator() (panel gone)", keybladePanelRestored);
+RW_FUNCTION(0x679896, "SceneDeckEdit::initMedalSelectPanel::$_20::lambda(MedalInfoButtonType, bool) operator()", medalInfoButton);
+RW_FUNCTION(0x679310, "SceneDeckEdit::initMedalSelectPanel::$_21 operator() (drag target)", medalDragTarget);
+
+// ------------------------------------------------------------------------------------------------ the medal panel
+namespace {
+namespace lam3 {
+constexpr uint32_t AppState_removeNewUserMedalID = 0x4EB2C5;   // (app, -, u64 user medal id)
+constexpr uint32_t DeckRevolverView_setMedalData = 0x52D981;   // (view, slot, shared_ptr<UserMedalData>, bool, bool)
+constexpr uint32_t SceneDeckEdit_updateDeckStauts = 0x66707D;  // (-, page, shared_ptr<UserKeyBladeData>, medals)
+constexpr uint32_t SceneDeckEdit_updateDeckData = 0x667EF9;
+constexpr uint32_t SceneUtil_openMedalInfoPopup = 0x466EF5;    // (data, bool, bool, bool, buttons fn, 0, closed fn, 0)
+constexpr uint32_t SafeBuffer_read = 0x45A269;
+constexpr uint32_t REV_KEYBLADE = 0x2B8;                       // DeckRevolverView: shared_ptr<UserKeyBladeData>
+constexpr uint32_t API_USER = 0x94;                            // APIManager: shared_ptr<SafeBuffer> user detail
+constexpr uint32_t VT_InfoButton = 0xF63940;                   // $_20's lambda(MedalInfoButtonType, bool) (heap 0x18)
+}  // namespace lam3
+
+// initMedalSelectPanel::$_22 {scene}(slot, user medal id): the medal's "new" mark dropped, the medal set on the
+// revolver's slot, the deck status refreshed; slot 0 during the drag tutorial (111) -> the deck data updated and the
+// tutorial popup closed
+void medalSet(uint32_t self, uint32_t slotp, uint32_t idp) {
+    const uint32_t slot = ld32(slotp);
+    const uint32_t lo = ld32(idp), hi = ld32(idp + 4);
+    const uint32_t me = ld32(self + 4);
+    call(lam3::AppState_removeNewUserMedalID, {call(fn::AppState_getInstance, {}), 0, lo, hi});
+    Frame f;
+    const uint32_t data = medalData(f, call(g::MedalDataManager_getInstance, {}), lo, hi);
+    const uint32_t revolver = ld32(me + REVOLVER);
+    const uint32_t copy = f.alloc(8);
+    st32(copy, ld32(data));
+    st32(copy + 4, ld32(data + 4));
+    addRef(ld32(copy + 4));
+    call(lam3::DeckRevolverView_setMedalData, {revolver, slot, copy, 1, 0});
+    release(ld32(copy + 4));
+    const uint32_t page = ld32(me + TOP);
+    const uint32_t rev = ld32(me + REVOLVER);
+    const uint32_t keyblade = f.alloc(8);
+    const uint32_t ctrl = ld32(rev + lam3::REV_KEYBLADE + 4);
+    st32(keyblade, ld32(rev + lam3::REV_KEYBLADE));
+    st32(keyblade + 4, ctrl);
+    addRef(ctrl);
+    const uint32_t rev2 = ld32(me + REVOLVER);
+    call(lam3::SceneDeckEdit_updateDeckStauts, {rev2, page, keyblade, rev2 + REV_MEDALS});
+    release(ctrl);
+    if (!slot) {
+        const uint32_t closeFn = f.alloc(20);
+        call(lam::AppState_getTutorialCloseFunc, {closeFn, call(fn::AppState_getInstance, {}), lam2::TUTORIAL_MEDAL_DRAG});
+        if (ld32(closeFn + 16)) {
+            functionDestroy(closeFn);
+            call(lam3::SceneDeckEdit_updateDeckData, {me});
+            call(lam::AppState_execTutorialCloseFunc, {call(fn::AppState_getInstance, {}), lam2::TUTORIAL_MEDAL_DRAG});
+        }
+    }
+    release(ld32(data + 4));
+}
+
+// initMedalSelectPanel::$_20 {scene}(user medal id, -): unless the drag tutorial (111) waits, the medal's info popup
+// (its buttons through a heap lambda {scene, 0, id}; the info shows the deck's medal state from the user byte 0x54)
+void medalSelected(uint32_t self, uint32_t idp, uint32_t) {
+    const uint32_t lo = ld32(idp), hi = ld32(idp + 4);
+    const uint32_t me = ld32(self + 4);
+    {
+        Frame f;
+        const uint32_t closeFn = f.alloc(20);
+        call(lam::AppState_getTutorialCloseFunc, {closeFn, call(fn::AppState_getInstance, {}), lam2::TUTORIAL_MEDAL_DRAG});
+        if (ld32(closeFn + 16)) {
+            functionDestroy(closeFn);
+            return;
+        }
+    }
+    call(lam::AudioPlaySystemSEDecide, {});
+    Frame f;
+    const uint32_t data = medalData(f, call(g::MedalDataManager_getInstance, {}), lo, hi);
+    const uint32_t a = api();
+    const uint32_t copy = f.alloc(8);
+    st32(copy, ld32(data));
+    st32(copy + 4, ld32(data + 4));
+    addRef(ld32(copy + 4));
+    const uint32_t flag = f.alloc(4);
+    const uint32_t user = ld32(a + lam3::API_USER);
+    call(lam3::SafeBuffer_read, {user, flag, ld32(user + 0xC) + 0x54, 1, 0x54});
+    const uint32_t shown = ld8(flag);
+    const uint32_t buttons = f.alloc(20);
+    st32(buttons + 16, 0);
+    const uint32_t obj = call(fn::operator_new, {0x18});
+    if (obj) {
+        st32(obj, lam3::VT_InfoButton);
+        st32(obj + 8, me);
+        st32(obj + 0xC, 0);
+        st32(obj + 0x10, lo);
+        st32(obj + 0x14, hi);
+    }
+    st32(buttons + 16, obj);
+    const uint32_t none = newEmptyFunction(f);
+    call(lam3::SceneUtil_openMedalInfoPopup, {copy, shown ? 1u : 0u, 1, 1, buttons, 0, none, 0});
+    functionDestroy(none);
+    functionDestroy(buttons);
+    release(ld32(copy + 4));
+    release(ld32(data + 4));
+}
+}  // namespace
+
+RW_FUNCTION(0x678FD8, "SceneDeckEdit::initMedalSelectPanel::$_22 operator() (medal set)", medalSet);
+RW_FUNCTION(0x6795D8, "SceneDeckEdit::initMedalSelectPanel::$_20 operator() (medal selected)", medalSelected);
+
+// ------------------------------------------------------------------------------------------------ keyblade strengthening
+// initKeyBladePanel::$_15 (Power Up) and its lambdas. The captured keyblade record (UserKeyblade::Keyblade, 0x58
+// bytes) travels from lambda to lambda; some copies carry a word the original never writes (a block's leading
+// padding, a lambda's trailing padding): those functions keep the original frame so the stale bytes are the same.
+namespace {
+namespace kbx {
+constexpr uint32_t SceneManager_setCanTouchHeader = 0x60E86D;
+constexpr uint32_t SceneUtil_openOkCancelDialog4Line = 0x45C951;   // (message, function<void(bool)>, int, int)
+constexpr uint32_t SceneUtil_CompleteTutorialPhase = 0x472A75;     // (function<void()>, int, bool)
+constexpr uint32_t APIManager_executeKeybladeEnhance = 0x4C9F75;   // (api, -, u64 user keyblade id, function<void(bool)>)
+constexpr uint32_t APIManager_openErrorDialog = 0x4C3C8D;          // (api, function<void()>, bool)
+constexpr uint32_t SceneDeckEdit_openKeyBladePopup = 0x665585;     // (scene, keyblade id, shared_ptr<UserKeyBladeData>)
+constexpr uint32_t SceneDeckEdit_playKeybladeEvolve = 0x669115;    // (-, previous, keyblade, function<void()>)
+constexpr uint32_t ENHANCE_RESULT = 0x67AA21;                      // sub_67AA20 (the result popup, below)
+constexpr uint32_t SafeBuffer_read = 0x45A269;
+constexpr uint32_t STRENGTH_ID = 0x39C;        // SceneDeckEdit: the strengthened keyblade's master id (row +0)
+constexpr uint32_t ROW = 0x20;                 // UserKeyBladeData: its master::Keyblade row (SafeBuffer*)
+constexpr uint32_t ROW_EVOLVES = 0xCC;         // master::Keyblade: the keyblade it evolves into
+constexpr uint32_t API_SHOW_ERROR = 0x14;
+constexpr int32_t TXT_CONFIRM = 101900004;     // "Strengthen %s?"
+constexpr uint32_t TUTORIAL_STRENGTHEN = 114;
+constexpr uint32_t VT_Confirmed = 0xF63A74;    // $_15's lambda(bool) (heap 0xD0)
+constexpr uint32_t VT_Enhanced = 0xF63AA0;     // $_15's lambda(bool)#1 (heap 0x70)
+constexpr uint32_t VT_TutorialDone = 0xF63B50; // $_15's lambda(bool)#2's lambda() (heap 0xC8)
+constexpr uint32_t VT_SlidOut = 0xF63ACC;      // $_15's lambda(bool)#1's lambda() (heap 0x70)
+constexpr uint32_t VT_Evolved = 0xF63AF8;      // its lambda() (heap 0x70)
+constexpr uint32_t VT_EnhanceError = 0xF63B24;
+
+void copyBytes(uint32_t dst, uint32_t src, uint32_t n) { call(g::MEMCPY, {dst, src, n}); }
+
+// getKeyBladeData(user keyblade id, master id, Keyblade{}) into out: the zeroed struct (built at buf, its padding as
+// it was) copied to the stack arguments of the original frame at sp
+void keybladeDataAt(uint32_t sp, uint32_t buf, uint32_t out, uint32_t manager, uint32_t lo, uint32_t hi, uint32_t id) {
+    st32(buf + 0x50, 0);
+    call(g::MEMSET, {buf, 0x14, 0});
+    call(g::MEMSET, {buf + 0x18, 0x35, 0});
+    for (uint32_t k = 0; k < KEYBLADE_SIZE; k += 4) st32(sp + 8 + k, ld32(buf + k));
+    rw::call_exact(g::KeyBladeDataManager_getKeyBladeData, {out, manager, lo, hi, id});
+}
+}  // namespace kbx
+
+// $_15 Power Up {scene, button}(sender, type): ended on an idle page -> the button and Button_List off; the shown
+// keyblade's data (its master id kept at +0x39C) and the "Strengthen <name>?" confirmation, answered by a heap
+// lambda {keyblade, scene, keyblade, button, scene, button, scene}
+void powerUpTouched(uint32_t self, uint32_t, uint32_t typep) {
+    if (ld32(typep) != 2) return;
+    const uint32_t me = ld32(self + 4);
+    if (!lam::pageIdle(me)) return;
+    Frame frame;
+    const uint32_t sp = frame.allocExact(0x750);
+    vcall(ld32(self + 8), V_WIDGET_SET_TOUCH_ENABLED, {ld32(self + 8), 0});
+    vcall(ld32(me + BUTTON_LIST), V_WIDGET_SET_TOUCH_ENABLED, {ld32(me + BUTTON_LIST), 0});
+    const uint32_t slide = ld32(me + SLIDE);
+    const uint32_t ids = ld32(slide + SLIDE_IDS), index = ld32(slide + SLIDE_INDEX);
+    if (uint32_t(int32_t(ld32(slide + SLIDE_IDS + 4) - ids) >> 2) <= index) call(g::VECTOR_AT_THROW, {slide + SLIDE_IDS});
+    const uint32_t which = ld32(ids + 4 * index);
+    if (keybladeCount(me) <= which) call(g::VECTOR_AT_THROW, {me + KEYBLADES});
+    const uint32_t keyblade = ld32(me + KEYBLADES) + KEYBLADE_SIZE * which;
+    const uint32_t data = sp + 0x9C;
+    kbx::keybladeDataAt(sp, sp + 0x620, data, call(g::KeyBladeDataManager_getInstance, {}), ld32(keyblade),
+                        ld32(keyblade + 4), 0);
+    const uint32_t row = ld32(ld32(data) + kbx::ROW);
+    call(kbx::SafeBuffer_read, {row, sp + 0xA4, ld32(row + 0xC), 4, 0});
+    st32(me + kbx::STRENGTH_ID, ld32(sp + 0xA4));
+    kbx::copyBytes(sp + 0x5C8, keyblade, KEYBLADE_SIZE);      // after the block's unwritten first word
+    kbx::copyBytes(sp + 0x568, keyblade, KEYBLADE_SIZE);
+    kbx::copyBytes(sp + 0x50C, sp + 0x5C4, 0x5C);
+    const uint32_t td = sp + 0x94;
+    call(fn::TextData_get, {td, 0, uint32_t(kbx::TXT_CONFIRM)});
+    const uint32_t format = textDataStr(td);
+    const uint32_t row2 = ld32(ld32(data) + kbx::ROW);
+    call(kbx::SafeBuffer_read, {row2, sp + 0xC4, ld32(row2 + 0xC) + 4, 0x41, 4});
+    call(fn::StringBuffer_ctor, {sp + 0x108, format, sp + 0xC4});
+    sharedRelease(td);
+    const uint32_t message = sp + 0x88;
+    strInitC(message, sp + 0x108);
+    kbx::copyBytes(sp + 0x6D8, sp + 0x568, KEYBLADE_SIZE);
+    kbx::copyBytes(sp + 0x67C, sp + 0x50C, 0x5C);
+    const uint32_t fo = sp + 0xA8;
+    st32(fo + 16, 0);
+    const uint32_t obj = call(fn::operator_new, {0xD0});
+    if (obj) {
+        const uint32_t button = ld32(self + 8);
+        st32(obj, kbx::VT_Confirmed);
+        kbx::copyBytes(obj + 8, sp + 0x6D8, KEYBLADE_SIZE);
+        st32(obj + 0x60, me);
+        kbx::copyBytes(obj + 0x64, sp + 0x67C, 0x5C);
+        st32(obj + 0xC0, button);
+        st32(obj + 0xC4, me);
+        st32(obj + 0xC8, button);
+        st32(obj + 0xCC, me);
+    }
+    st32(fo + 16, obj);
+    call(kbx::SceneUtil_openOkCancelDialog4Line, {message, fo, 0, 0});
+    functionDestroy(fo);
+    strFree(message);
+    release(ld32(data + 4));
+}
+
+// the confirmation {keyblade, scene, -, keyblade, button, scene, button, scene}(yes): no -> the buttons on again;
+// yes -> the loading indicator on, then (during the strengthen tutorial, 114) the tutorial phase completed first
+// with a heap lambda {keyblade, scene, -, keyblade, button, scene}; else /keyblade/enhance for the keyblade
+void powerUpConfirmed(uint32_t self, uint32_t yesp) {
+    if (!ld8(yesp)) {
+        const uint32_t me = ld32(self + 0xCC);
+        vcall(ld32(self + 0xC8), V_WIDGET_SET_TOUCH_ENABLED, {ld32(self + 0xC8), 1});
+        vcall(ld32(me + BUTTON_LIST), V_WIDGET_SET_TOUCH_ENABLED, {ld32(me + BUTTON_LIST), 1});
+        return;
+    }
+    call(lam::AudioPlaySystemSEDecide, {});
+    call(g::SceneManager_enableLoadingIndicator, {smgr(), 1});
+    Frame f;
+    const uint32_t closeFn = f.alloc(20);
+    call(lam::AppState_getTutorialCloseFunc, {closeFn, call(fn::AppState_getInstance, {}), kbx::TUTORIAL_STRENGTHEN});
+    if (!ld32(closeFn + 16)) {
+        const uint32_t a = api();
+        const uint32_t lo = ld32(self + 8), hi = ld32(self + 0xC);
+        const uint32_t copy = f.alloc(0x68);
+        kbx::copyBytes(copy, self + 0x60, 0x68);
+        const uint32_t fo = f.alloc(20);
+        st32(fo + 16, 0);
+        const uint32_t obj = call(fn::operator_new, {0x70});
+        if (obj) {
+            st32(obj, kbx::VT_Enhanced);
+            kbx::copyBytes(obj + 8, copy, 0x68);
+        }
+        st32(fo + 16, obj);
+        call(kbx::APIManager_executeKeybladeEnhance, {a, 0, lo, hi, fo});
+        functionDestroy(fo);
+        return;
+    }
+    functionDestroy(closeFn);
+    const uint32_t copy = f.alloc(0xC0);
+    kbx::copyBytes(copy, self + 8, KEYBLADE_SIZE);
+    kbx::copyBytes(copy + KEYBLADE_SIZE, self + 0x60, 0x68);
+    const uint32_t copy2 = f.alloc(0xC0);
+    kbx::copyBytes(copy2, copy, 0xC0);
+    const uint32_t fo = f.alloc(20);
+    st32(fo + 16, 0);
+    const uint32_t obj = call(fn::operator_new, {0xC8});
+    if (obj) {
+        st32(obj, kbx::VT_TutorialDone);
+        kbx::copyBytes(obj + 8, copy2, 0xC0);
+    }
+    st32(fo + 16, obj);
+    call(kbx::SceneUtil_CompleteTutorialPhase, {fo, 0, 1});
+    functionDestroy(fo);
+    call(lam::AppState_execTutorialCloseFunc, {call(fn::AppState_getInstance, {}), kbx::TUTORIAL_STRENGTHEN});
+}
+
+// the tutorial phase done {keyblade, scene, -, keyblade, button, scene}: /keyblade/enhance for the keyblade
+void tutorialPhaseDone(uint32_t self) {
+    const uint32_t a = api();
+    const uint32_t lo = ld32(self + 8), hi = ld32(self + 0xC);
+    Frame f;
+    const uint32_t copy = f.alloc(0x68);
+    kbx::copyBytes(copy, self + 0x60, 0x68);
+    const uint32_t fo = f.alloc(20);
+    st32(fo + 16, 0);
+    const uint32_t obj = call(fn::operator_new, {0x70});
+    if (obj) {
+        st32(obj, kbx::VT_Enhanced);
+        kbx::copyBytes(obj + 8, copy, 0x68);
+    }
+    st32(fo + 16, obj);
+    call(kbx::APIManager_executeKeybladeEnhance, {a, 0, lo, hi, fo});
+    functionDestroy(fo);
+}
+
+// /keyblade/enhance's result {scene, -, keyblade, button, scene}(ok): the loading indicator off; ok -> the scene
+// animates out, then a heap lambda {scene, -, keyblade, button, scene}; else the API error dialog when wanted
+void enhanced(uint32_t self, uint32_t okp) {
+    const uint32_t ok = ld8(okp);
+    const uint32_t me = ld32(self + 8);
+    call(g::SceneManager_enableLoadingIndicator, {smgr(), 0});
+    if (!ok) {
+        if (!ld8(api() + kbx::API_SHOW_ERROR)) return;
+        const uint32_t a = api();
+        Frame f;
+        const uint32_t cb = newFunction(f, kbx::VT_EnhanceError, {});
+        call(kbx::APIManager_openErrorDialog, {a, cb, 1});
+        functionDestroy(cb);
+        return;
+    }
+    Frame frame;
+    const uint32_t sp = frame.allocExact(0x120);
+    kbx::copyBytes(sp + 0x20, self + 0x10, KEYBLADE_SIZE);   // after the block's unwritten first word
+    const uint32_t button = ld32(self + 0x68), scene = ld32(self + 0x6C);
+    kbx::copyBytes(sp + 0xA8, sp + 0x1C, 0x5C);
+    const uint32_t fo = sp + 0x78;
+    st32(fo + 16, 0);
+    const uint32_t obj = call(fn::operator_new, {0x70});
+    if (obj) {
+        st32(obj, kbx::VT_SlidOut);
+        st32(obj + 8, me);
+        kbx::copyBytes(obj + 0xC, sp + 0xA8, 0x5C);
+        st32(obj + 0x68, button);
+        st32(obj + 0x6C, scene);
+    }
+    st32(fo + 16, obj);
+    call(lam::IInOutAnimation_runOutAnimation, {me + lam::INOUT, fo});
+    functionDestroy(fo);
+}
+
+// the scene animated out {scene, -, keyblade, button, scene}: the header touchable; the keyblade's data before
+// (by the master id kept at +0x39C) and after; the same evolution target -> the result popup at once (sub_67AA20),
+// else the evolution animation first, then the popup
+void enhancedSlidOut(uint32_t self) {
+    const uint32_t me = ld32(self + 8);
+    Frame frame;
+    const uint32_t sp = frame.allocExact(0x260);
+    call(kbx::SceneManager_setCanTouchHeader, {smgr(), 1});
+    const uint32_t before = sp + 0x98, after = sp + 0x90;
+    const uint32_t manager = call(g::KeyBladeDataManager_getInstance, {});
+    kbx::keybladeDataAt(sp, sp + 0x180, before, manager, 0, 0, ld32(me + kbx::STRENGTH_ID));
+    const uint32_t manager2 = call(g::KeyBladeDataManager_getInstance, {});
+    kbx::keybladeDataAt(sp, sp + 0x128, after, manager2, ld32(self + 0x10), ld32(self + 0x14), 0);
+    const uint32_t result = sp + 0xC0;        // the result lambda {keyblade, scene, button, scene} (0x68)
+    kbx::copyBytes(result, self + 0x10, KEYBLADE_SIZE);
+    st32(result + 0x58, me);
+    st32(result + 0x5C, ld32(self + 0x68));
+    st32(result + 0x60, ld32(self + 0x6C));
+    const uint32_t rowBefore = ld32(ld32(before) + kbx::ROW);
+    call(kbx::SafeBuffer_read, {rowBefore, sp + 0xA0, ld32(rowBefore + 0xC) + kbx::ROW_EVOLVES, 4, kbx::ROW_EVOLVES});
+    const uint32_t rowAfter = ld32(ld32(after) + kbx::ROW);
+    call(kbx::SafeBuffer_read, {rowAfter, sp + 0xA4, ld32(rowAfter + 0xC) + kbx::ROW_EVOLVES, 4, kbx::ROW_EVOLVES});
+    if (ld32(sp + 0xA0) == ld32(sp + 0xA4)) {
+        call(kbx::ENHANCE_RESULT, {result});
+    } else {
+        const uint32_t prev = sp + 0x88, next = sp + 0x80;
+        st32(prev, ld32(before));
+        const uint32_t prevCtrl = ld32(before + 4);
+        st32(prev + 4, prevCtrl);
+        addRef(prevCtrl);
+        st32(next, ld32(after));
+        const uint32_t nextCtrl = ld32(after + 4);
+        st32(next + 4, nextCtrl);
+        addRef(nextCtrl);
+        kbx::copyBytes(sp + 0x1D8, result, 0x68);
+        const uint32_t fo = sp + 0xA8;
+        st32(fo + 16, 0);
+        const uint32_t obj = call(fn::operator_new, {0x70});
+        if (obj) {
+            st32(obj, kbx::VT_Evolved);
+            kbx::copyBytes(obj + 8, sp + 0x1D8, 0x68);
+        }
+        st32(fo + 16, obj);
+        // playKeybladeEvolve does not use its first argument
+        call(kbx::SceneDeckEdit_playKeybladeEvolve, {0, prev, next, fo});
+        functionDestroy(fo);
+        release(nextCtrl);
+        release(prevCtrl);
+    }
+    release(ld32(after + 4));
+    release(ld32(before + 4));
+}
+
+// the result popup {keyblade, scene, button, scene} (also the evolution's end, through its __func): the keyblade's
+// strengthen result popup, the buttons on again and Button_List off
+void enhanceResult(uint32_t result) {
+    const uint32_t me = ld32(result + 0x58);
+    const uint32_t manager = call(g::KeyBladeDataManager_getInstance, {});
+    Frame f;
+    const uint32_t data = keybladeData(f, manager, ld32(result), ld32(result + 4));
+    const uint32_t id = ld32(me + kbx::STRENGTH_ID);
+    const uint32_t copy = f.alloc(8);
+    st32(copy, ld32(data));
+    const uint32_t ctrl = ld32(data + 4);
+    st32(copy + 4, ctrl);
+    addRef(ctrl);
+    call(kbx::SceneDeckEdit_openKeyBladePopup, {me, id, copy});
+    release(ctrl);
+    const uint32_t button = ld32(result + 0x5C), scene = ld32(result + 0x60);
+    vcall(button, V_WIDGET_SET_TOUCH_ENABLED, {button, 1});
+    vcall(ld32(scene + BUTTON_LIST), V_WIDGET_SET_TOUCH_ENABLED, {ld32(scene + BUTTON_LIST), 1});
+    vcall(ld32(me + BUTTON_LIST), V_WIDGET_SET_TOUCH_ENABLED, {ld32(me + BUTTON_LIST), 0});
+    release(ld32(data + 4));
+}
+}  // namespace
+
+RW_FUNCTION(0x679E30, "SceneDeckEdit::initKeyBladePanel::$_15 operator() (Power Up)", powerUpTouched);
+RW_FUNCTION(0x67A25C, "SceneDeckEdit::initKeyBladePanel::$_15::lambda(bool)#2 operator() (confirmed)", powerUpConfirmed);
+RW_FUNCTION(0x67AD24, "SceneDeckEdit::initKeyBladePanel::$_15::lambda(bool)#2::lambda() operator() (tutorial phase done)", tutorialPhaseDone);
+RW_FUNCTION(0x67A52C, "SceneDeckEdit::initKeyBladePanel::$_15::lambda(bool)#1 operator() (enhanced)", enhanced);
+RW_FUNCTION(0x67A74C, "SceneDeckEdit::initKeyBladePanel::$_15::lambda(bool)#1::lambda() operator() (slid out)", enhancedSlidOut);
+RW_FUNCTION(0x67AA20, "SceneDeckEdit::initKeyBladePanel::$_15 result popup (sub_67AA20)", enhanceResult);

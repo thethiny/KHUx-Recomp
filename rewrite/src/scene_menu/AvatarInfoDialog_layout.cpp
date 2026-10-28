@@ -4,6 +4,8 @@
 #include "AvatarInfoDialog.hpp"
 
 using namespace scene;
+using aid::sbRead;
+using aid::S_Empty;
 
 namespace {
 namespace c {
@@ -18,7 +20,6 @@ constexpr uint32_t SceneUtil_setShadow = 0x45BD15;
 constexpr uint32_t SceneUtil_setButtonEnabled = 0x468625;    // (Button*, Text*, bool enabled, bool)
 constexpr uint32_t EaseSineOut_create = rwlib::cocos2d::EaseSineOut::create;
 constexpr uint32_t APIManager_getInstance = 0x4BA8C9;
-constexpr uint32_t SafeBuffer_read = 0x45A269;               // (sb, dst, src, len, offset)
 constexpr uint32_t String_assignCopy = 0x498A1D;             // sub_498A1C: std::string::operator=(const string&)
 constexpr uint32_t String_assign = 0x48D811;                 // sub_48D810: std::string::assign(const char*, n)
 constexpr uint32_t U64Vector_assign = 0x4D7461;              // vector<unsigned long long>::assign(first, last)
@@ -33,10 +34,7 @@ constexpr uint32_t Widget_addTouchEventListener = rwlib::cocos2d::ui::Widget::ad
 constexpr uint32_t WidgetFactory_swap = 0x54B1C5;            // function<Widget*(int)>::swap
 constexpr uint32_t WidgetUpdater_swap = 0x547159;            // function<Widget*(Widget*, int, bool)>::swap
 constexpr uint32_t FunctionVB_swap = 0x490179;               // function<void(bool)>::swap
-constexpr uint32_t ImageButton_create = 0x531239;            // (string, bool)
-constexpr uint32_t ImageButton_setTargetView = 0x5318C1;     // (Node*, float)
 constexpr uint32_t ImageButton_setTargetAnchorPoint = 0x5318CF;
-constexpr uint32_t ImageButton_addTouchEventListener = 0x5315B1;
 constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff;
 constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 }  // namespace c
@@ -44,7 +42,7 @@ constexpr uint32_t Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 // guest string literals
 constexpr uint32_t S_UnderUI = 0xDFE20F, S_ButtonA = 0xDFE217, S_ButtonB = 0xDFE220, S_ButtonC = 0xDFE229,
                    S_ButtonD = 0xDFE232, S_ButtonInvitation = 0xDFDC26, S_TxtA = 0xDFE23B, S_TxtB = 0xDFE241,
-                   S_TxtC = 0xDFE247, S_TxtD = 0xDFE24D, S_Txt = 0xDF94D1, S_Empty = 0xDF8A1A,
+                   S_TxtC = 0xDFE247, S_TxtD = 0xDFE24D, S_Txt = 0xDF94D1,
                    S_LeftUI = 0xDF85F0, S_RightUI = 0xDF85F7;
 
 // the touch lambdas' __func vtables
@@ -75,10 +73,6 @@ constexpr uint32_t F_FRIEND_IDS = 0x3E8;    // vector<unsigned long long>
 constexpr uint32_t F_IS_FRIEND = 0x2CA;
 
 inline uint32_t api() { return call(c::APIManager_getInstance, {}); }
-
-void sbRead(uint32_t sb, uint32_t dst, uint32_t offset, uint32_t len) {
-    rw::call(c::SafeBuffer_read, {sb, dst, ld32(sb + 0xC) + offset, len, offset});
-}
 
 // dst = src for a std::shared_ptr, as inlined: retain the new, store, release the old
 void copyShared(uint32_t dst, uint32_t src) {
@@ -119,35 +113,43 @@ void setTextData(uint32_t text, int32_t id) {
 
 void showNode(uint32_t node, uint32_t visible) { vcall(node, node::setVisible, {node, visible}); }
 
-// a heap lambda with its captured words; the std::function at fo takes it (0 when operator new failed)
-void heapLambda(uint32_t fo, uint32_t size, uint32_t vtable, std::initializer_list<uint32_t> captures) {
-    st32(fo + 16, 0);
-    const uint32_t obj = call(fn::operator_new, {size});
-    if (obj) {
-        st32(obj, vtable);
-        uint32_t k = 4;
-        for (uint32_t w : captures) { st32(obj + k, w); k += 4; }
-    }
-    st32(fo + 16, obj);
-}
-
 // one arrow (an ImageButton over the first child of LeftUI / RightUI) that flips the slide view
 void addArrow(uint32_t root, uint32_t name, uint32_t len, uint32_t vtable, uint32_t view) {
     const uint32_t ui = findChild(root, name, len);
     const uint32_t target = ld32(ld32(vcall(ui, node::getChildren, {ui})));
     Frame f;
     const uint32_t empty = newStr(f, S_Empty, 0);
-    const uint32_t button = call(c::ImageButton_create, {empty, 1});
+    const uint32_t button = call(aid::ImageButton_create, {empty, 1});
     strFree(empty);
-    call(c::ImageButton_setTargetView, {button, target, fbits(1.0f)});
+    call(aid::ImageButton_setTargetView, {button, target, fbits(1.0f)});
     const uint32_t anchor = f.alloc(8);
     call(c::Vec2_ctor, {anchor, fbits(-0.5f), fbits(-0.5f)});
     call(c::ImageButton_setTargetAnchorPoint, {button, anchor});
     call(c::Vec2_dtor, {anchor});
     vcall(target, node::addChildZ, {target, button, 10});
     const uint32_t onTouch = newFunction(f, vtable, {view});
-    call(c::ImageButton_addTouchEventListener, {button, onTouch});
+    call(aid::ImageButton_addTouchEventListener, {button, onTouch});
     functionDestroy(onTouch);
+}
+
+// LeftUI / RightUI {view}(sender, type): touch began -> the page sound, the slide view turns ($_10 / $_11)
+constexpr uint32_t SE_PAGE = 509000170;
+constexpr uint32_t BaseSlideView_changeNextPage = 0x526245, BaseSlideView_changePreviousPage = 0x5263ED;
+template <uint32_t Turn> void arrowTouch(uint32_t self, uint32_t, uint32_t typep) {
+    if (ld32(typep) != 0) return;
+    playLayerSE(SE_PAGE);
+    call(Turn, {ld32(self + 4)});
+}
+
+// the dialog's sub-popup closed {dialog, view}(-): the cancel sound, the buttons under the page locked, the slide
+// view's touch on ($_9)
+void subPopupClosed(uint32_t self) {
+    constexpr uint32_t AudioPlaySystemSECancel = 0x5C0D81, VSLOT_SLIDE_TOUCH = 0x31C;
+    const uint32_t dialog = ld32(self + 4);
+    call(AudioPlaySystemSECancel, {});
+    AvatarInfoDialog::setTouchEnabledUnderUIButtons(rw::host_ptr<AvatarInfoDialog>(dialog), 0);
+    const uint32_t view = ld32(self + 8);
+    vcall(view, VSLOT_SLIDE_TOUCH, {view, 1});
 }
 }  // namespace
 
@@ -451,3 +453,6 @@ void createLayout(AvatarInfoDialog *self, uint32_t showActions) {
 }
 
 RW_FUNCTION(0x5332EC, "AvatarInfoDialog::createLayout", createLayout);
+RW_FUNCTION(0x546EA8, "AvatarInfoDialog::createLayout::$_11 operator() (RightUI)", arrowTouch<BaseSlideView_changeNextPage>);
+RW_FUNCTION(0x546FD0, "AvatarInfoDialog::createLayout::$_10 operator() (LeftUI)", arrowTouch<BaseSlideView_changePreviousPage>);
+RW_FUNCTION(0x5470FE, "AvatarInfoDialog::createLayout::$_9 operator() (sub-popup closed)", subPopupClosed);

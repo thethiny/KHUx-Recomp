@@ -236,7 +236,7 @@ struct SceneAdventureSelectBatch3 {
         const uint32_t api = call(APIManager_getInstance, {});
         Frame f;
         const uint32_t done = f.alloc(24);
-        heapLambda(done, VT_raidList_done, 0x18,
+        heapLambda(done, 0x18, VT_raidList_done,
                    {self, ld32(functor + 8), ld32(functor + 0xC), ld32(functor + 0x10), ld32(functor + 0x14)});
         call(APIManager_executeRaidList, {api, done});
         functionDestroy(done);
@@ -250,7 +250,7 @@ struct SceneAdventureSelectBatch3 {
         if (ok) {
             Frame f;
             const uint32_t out = f.alloc(24);
-            heapLambda(out, VT_raidList_out, 0x18,
+            heapLambda(out, 0x18, VT_raidList_out,
                        {ld32(functor + 8), ld32(functor + 0xC), ld32(functor + 0x10), ld32(functor + 0x14), self});
             call(SAS_changeOutAnimation, {self, out});
             functionDestroy(out);

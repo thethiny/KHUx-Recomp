@@ -109,16 +109,6 @@ bool strEq(uint32_t a, uint32_t b) {
     if (n != strSize(b)) return false;
     return std::memcmp(rw::host_ptr<uint8_t>(strData(a)), rw::host_ptr<uint8_t>(strData(b)), n) == 0;
 }
-// the inlined copy constructor: a long string goes through __init, a short one is three words
-void strCopy(uint32_t dst, uint32_t src) {
-    if (strIsLong(src)) {
-        strInit(dst, ld32(src + 8), ld32(src + 4));
-    } else {
-        st32(dst, ld32(src));
-        st32(dst + 4, ld32(src + 4));
-        st32(dst + 8, ld32(src + 8));
-    }
-}
 // string::find(needle, from) as libc++ inlines it (std::__search with char equality)
 uint32_t strFind(uint32_t s, uint32_t needle, uint32_t from) {
     uint32_t n = strSize(s), m = strSize(needle);

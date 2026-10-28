@@ -834,6 +834,42 @@ uint32_t c80Dtor(uint32_t s) { return twoFnDtor(s, 0xF57C80, 0x28); }
 void c80Delete(uint32_t s) { c80Dtor(s); call(fn::operator_delete, {s}); }
 uint32_t c80Destroy(uint32_t s) { return twoFnDestroy(s, 0x28); }
 
+// the title list's choice {-, widget, shadow, layer, -, done, ids}(title id): when the list is the current popup it
+// closes: it shrinks, then a heap lambda {shadow, widget, layer, -, done, ids, id} ends the choice
+void subNameChosen(uint32_t functor, uint32_t idRef) {
+    constexpr uint32_t SM_closeCurrentPopup = 0x6216A1;            // (sm, bool) -> bool
+    constexpr uint32_t FunctionVI_copy = 0x539C99, FunctionVI_move = 0x543045;
+    constexpr uint32_t VectorInt_copy = 0x4AF707, VectorInt_dtor = 0x478961;
+    constexpr uint32_t VT_Chosen = 0xF57DE0;
+    const uint32_t id = ld32(idRef);
+    if (call(SM_closeCurrentPopup, {call(g::SM_getInstance, {}), 1}) != 1) return;
+    const uint32_t widget = ld32(functor + 8);
+    Frame f;
+    const uint32_t copy = f.alloc(0x38);   // {shadow, widget, layer, -, done (+0x10), ids (+0x28), id (+0x34)}
+    st32(copy, ld32(functor + 0xC));
+    st32(copy + 4, widget);
+    st32(copy + 8, ld32(functor + 0x10));
+    call(FunctionVI_copy, {copy + 0x10, functor + 0x18});
+    call(VectorInt_copy, {copy + 0x28, functor + 0x30});
+    st32(copy + 0x34, id);
+    const uint32_t fo = f.alloc(20);
+    st32(fo + 16, 0);
+    const uint32_t obj = call(fn::operator_new, {0x40});
+    if (obj) {
+        st32(obj, VT_Chosen);
+        for (uint32_t k = 0; k < 12; k += 4) st32(obj + 8 + k, ld32(copy + k));
+        call(FunctionVI_move, {obj + 0x18, copy + 0x10});
+        for (uint32_t k = 0; k < 12; k += 4) st32(obj + 0x30 + k, ld32(copy + 0x28 + k));
+        for (uint32_t k = 0; k < 12; k += 4) st32(copy + 0x28 + k, 0);
+        st32(obj + 0x3C, ld32(copy + 0x34));
+    }
+    st32(fo + 16, obj);
+    call(fn::Node_runAction, {widget, SceneUtil::createClosePopupAnimation(widget, fo)});
+    functionDestroy(fo);
+    call(VectorInt_dtor, {copy + 0x28});
+    functionDestroy(copy + 0x10);
+}
+
 // the sub name choice's result {Close, title list, widget, 2 words}(bool chosen): taps off; cancelled: the close
 // animation (its end {word, widget, word})
 void subNameResult(uint32_t functor, uint32_t okRef) {
@@ -881,6 +917,7 @@ RW_FUNCTION(0x541DC8, "AvatarInfoDialog lambda F57C80 __func::~__func (sub_541DC
 RW_FUNCTION(0x541E20, "AvatarInfoDialog lambda F57C80 __func::~__func (deleting) (sub_541E20)", c80Delete);
 RW_FUNCTION(0x541F98, "AvatarInfoDialog lambda F57C80 __func::destroy (sub_541F98)", c80Destroy);
 RW_FUNCTION(0x5425D0, "AvatarInfoDialog sub name choice result (sub_5425D0)", subNameResult);
+RW_FUNCTION(0x542BE4, "AvatarInfoDialog title list choice (sub_542BE4)", subNameChosen);
 
 RW_FUNCTION(0x53A640, "AvatarInfoDialog::openPopUpOffer(function<void(bool)>)", openPopUpOffer);
 RW_FUNCTION(0x53B38C, "AvatarInfoDialog::openPopUpJoinRequest(function<void(bool)>)", openPopUpJoinRequest);

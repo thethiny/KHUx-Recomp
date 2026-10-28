@@ -1,6 +1,7 @@
 // ChatScrollView::changeRow: one chat message in a row (see ChatScrollView.hpp).
 #include "ChatScrollView.hpp"
 
+#include "../scene/ChatMessage.hpp"
 #include "../scene/SceneUi.hpp"
 
 using namespace scene;
@@ -379,3 +380,33 @@ uint32_t Self::changeRow(Self *self, Addr row, int32_t index, int32_t) {
     return 0;
 }
 RW_FUNCTION(0x556CB8, "ChatScrollView::changeRow", ChatScrollView::changeRow);
+
+// ------------------------------------------------------------------------------------------------ changeRow $_0
+namespace {
+constexpr uint32_t SceneManager_getChatPopupDisp = 0x613E91;
+constexpr uint32_t SceneManager_openDeletePostPopup = 0x619145;   // (mgr, ChatMessage by value)
+constexpr uint32_t SceneManager_openCheckPostPopup = 0x619F05;    // (mgr, ChatMessage by value)
+constexpr float ROW_VISIBLE_Y = -20.0f;                           // rows scrolled further down take no taps
+}  // namespace
+
+// changeRow $_0 {-, row widget (+8), own message (+0xC), ChatMessage (+0x10)}(sender, type): a message tapped on
+// a shown row of the open chat -> its delete popup (own message) or its check popup (someone else's)
+static void chatMessageTouched(uint32_t functor, uint32_t, uint32_t typep) {
+    if (ld32(typep) != 2) return;
+    Frame f;
+    const uint32_t pos = f.alloc(8);
+    const uint32_t row = ld32(functor + 8);
+    call(g::Vec2_copy, {pos, vcall(row, node::getPosition, {row})});
+    if (ldf(pos + 4) > ROW_VISIBLE_Y && vcall(ld32(functor + 8), node::isVisible, {ld32(functor + 8)}) == 1 &&
+        call(SceneManager_getChatPopupDisp, {sceneManager()})) {
+        call(fn::AudioPlaySystemSEDecide, {});
+        const bool own = ld8(functor + 0xC) != 0;
+        const uint32_t sm = sceneManager();
+        const uint32_t message = f.alloc(chatmsg::MSG_SIZE);
+        chatmsg::msgCopy(message, functor + 0x10);
+        call(own ? SceneManager_openDeletePostPopup : SceneManager_openCheckPostPopup, {sm, message});
+        chatmsg::msgDestroy(message);
+    }
+    call(g::Vec2_dtor, {pos});
+}
+RW_FUNCTION(0x55D830, "ChatScrollView::changeRow $_0::operator()", chatMessageTouched);

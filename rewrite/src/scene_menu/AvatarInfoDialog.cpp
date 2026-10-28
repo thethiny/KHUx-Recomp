@@ -246,6 +246,36 @@ void AvatarInfoDialog::setTouchEnabledUnderUIButtons(AvatarInfoDialog *self, uin
     }
 }
 
+namespace {
+// /user/profile's answer {dialog, flag}(ok): the loading indicator off; ok -> the popup sound and the page built
+// (createLayout(flag)); else the scene manager locked and the API error dialog (its callback below)
+void profileLoaded(uint32_t self, uint32_t okp) {
+    constexpr uint32_t AudioPlaySystemSEPopUp = 0x5C0E09, createLayout = 0x5332ED;
+    constexpr uint32_t VT_ProfileError = 0xF58964;
+    const uint32_t ok = ld8(okp);
+    const uint32_t dialog = ld32(self + 4);
+    call(aid::SceneManager_enableLoadingIndicator, {sceneManager(), 0});
+    if (ok) {
+        call(AudioPlaySystemSEPopUp, {});
+        call(createLayout, {dialog, ld8(self + 8)});
+        return;
+    }
+    st8(sceneManager() + aid::SM_LOCKED, 1);
+    aid::apiErrorDialog(VT_ProfileError);
+}
+
+// the profile error dialog's callback: unless the request is retried, the scene manager unlocked and the dialog's
+// popup closed
+void profileError() {
+    constexpr uint32_t APIManager_needsRetry = 0x4C3C63, SceneManager_closeCurrentPopup = 0x6216A1;
+    if (call(APIManager_needsRetry, {call(aid::APIManager_getInstance, {})})) return;
+    st8(sceneManager() + aid::SM_LOCKED, 0);
+    call(SceneManager_closeCurrentPopup, {sceneManager(), 0});
+}
+}  // namespace
+
+RW_FUNCTION(0x54D058, "AvatarInfoDialog::open's /user/profile answer (sub_54D058)", profileLoaded);
+RW_FUNCTION(0x54D1D0, "AvatarInfoDialog::open's profile error dialog callback (sub_54D1D0)", profileError);
 RW_FUNCTION(0x532A30, "AvatarInfoDialog::create", AvatarInfoDialog::create);
 RW_FUNCTION(0x532A9C, "AvatarInfoDialog::AvatarInfoDialog", AvatarInfoDialog::construct);
 RW_FUNCTION(0x532E3C, "AvatarInfoDialog::init", AvatarInfoDialog::init);

@@ -291,3 +291,54 @@ RW_FUNCTION(0x55BA84, "ChatStampListScrollView::init", ChatStampList::init);
 RW_FUNCTION(0x55BDA2, "ChatStampListScrollView::createRow", ChatStampList::createRow);
 RW_FUNCTION(0x55BDE0, "ChatStampListScrollView::changeRow", ChatStampList::changeRow);
 RW_FUNCTION(0x55C4D4, "ChatStampListScrollView::setStampList", ChatStampList::setStampList);
+
+// ------------------------------------------------------------------------------------------------ changeRow $_3
+namespace {
+constexpr uint32_t SM_STAMP_BLOCKED = 0x2FC;           // SceneManager: byte, the stamp list ignores taps
+constexpr uint32_t F_ROWS = 0x590;                     // std::vector<Widget*> the rows
+constexpr uint32_t S_StampCursor = 0xDFEEB9;           // "stampCursor"
+constexpr char STAMP_ON[] = "Stamp_On";                // built inline as a short string
+constexpr uint32_t FunctionVB_call = 0x474139;
+
+// a row's child `name` hidden (when there is one)
+void hideChild(uint32_t row, uint32_t nameSlot) {
+    const uint32_t node = SceneUtil::searchNodeByName(row, nameSlot);
+    strFree(nameSlot);
+    if (node) vcall(node, node::setVisible, {node, 0});
+}
+}  // namespace
+
+// changeRow $_3 {row, view, stamp number}(sender, type): a stamp tapped -> the other rows' marks and cursors off,
+// its cursor toggled, the stamp chosen (number - 1) and the view told whether the cursor shows
+static void stampTouched(uint32_t functor, uint32_t, uint32_t typep) {
+    if (ld32(typep) != 2) return;
+    const uint32_t view = ld32(functor + 8);
+    if (ld8(sceneManager() + SM_STAMP_BLOCKED)) return;
+    const uint32_t tapped = ld32(functor + 4);
+    if (vcall(tapped, node::isVisible, {tapped}) != 1) return;
+    for (uint32_t i = 0; int32_t(i) < int32_t(ld32(view + F_ROWS + 4) - ld32(view + F_ROWS)) >> 2; i++) {
+        const uint32_t row = ld32(ld32(view + F_ROWS) + 4 * i);
+        if (row == ld32(functor + 4)) continue;
+        Frame f;
+        const uint32_t on = f.alloc(12);
+        st8(on, uint8_t(sizeof(STAMP_ON) - 1) << 1);
+        for (uint32_t k = 0; k + 1 < sizeof(STAMP_ON); k++) st8(on + 1 + k, uint8_t(STAMP_ON[k]));
+        st8(on + sizeof(STAMP_ON), 0);
+        hideChild(row, on);
+        const uint32_t cursor = f.alloc(12);
+        strInitC(cursor, S_StampCursor);
+        hideChild(row, cursor);
+    }
+    uint32_t cursor;
+    {
+        Frame f;
+        const uint32_t name = f.alloc(12);
+        strInitC(name, S_StampCursor);
+        cursor = SceneUtil::searchNodeByName(ld32(functor + 4), name);
+        strFree(name);
+    }
+    vcall(cursor, node::setVisible, {cursor, vcall(cursor, node::isVisible, {cursor}) ^ 1u});
+    st32(view + F_SELECTED, ld32(functor + 0xC) - 1);
+    if (ld32(view + F_ON_SELECT + 16)) call(FunctionVB_call, {view + F_ON_SELECT, vcall(cursor, node::isVisible, {cursor})});
+}
+RW_FUNCTION(0x55CAC8, "ChatStampListScrollView::changeRow $_3::operator()", stampTouched);

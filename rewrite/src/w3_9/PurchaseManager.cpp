@@ -575,3 +575,93 @@ void PurchaseManager::deserialize(PurchaseManager *self, uint32_t data) {
     rw::call(SAVEBIN_DTOR, {bin});
 }
 RW_FUNCTION(0x4D8BD0, "PurchaseManager::deserialize", PurchaseManager::deserialize);
+
+// ---------------------------------------------------------------------------------------------- request callbacks
+namespace {
+constexpr uint32_t SAFEBUFFER_READ = 0x45A269;         // SafeBuffer::read(sb, dst, src, n, index)
+constexpr uint32_t API_NEEDS_RETRY = 0x4C3C63;         // APIManager::needsRetry()
+constexpr uint32_t API_PURCHASE_RESULT = 0x240;        // APIManager: shared_ptr<SafeBuffer> purchase/prepare's result (bridgeTransId at 0)
+constexpr uint32_t STORE_PURCHASE = 0x4E10D7;          // iap::StoreManager::purchase(const string& productId)
+constexpr uint32_t STORE_FINISH_PURCHASE = 0x4E1495;   // iap::StoreManager::finishPurchase(const string& productId)
+
+// the bridgeTransId of purchase/prepare's result, read into the frame slot `off` (SafeBuffer::read, index 0)
+uint32_t readBridgeTransId(const guest::Frame &f, uint32_t off, uint32_t sb) {
+    put32(f, 0, 0);
+    rw::call_exact(SAFEBUFFER_READ, {sb, f.addr(off), load32(sb + 0xC), 4, 0});
+    return get32(f, off);
+}
+}  // namespace
+
+// startPurchase::$_1 {resume +8, node +0xC, this +0x10, callback +0x18, productId +0x30}(ok): purchase/prepare
+// answered. A resumed transaction gets its bridgeTransId, goes to state 2 and is finished (purchase/finish); a new
+// one becomes the current transaction (bridgeTransId, productId), is listed first, and the store buys the product.
+// Failed: the callback is told (false) when the error is retried, else the connection ends.
+void PurchaseManager::onPrepared(uint32_t lambda, uint32_t okp) {
+    guest::Frame f(0x48);   // push {r4-r7, lr}; sub sp, #0x34
+    const uint8_t ok = rw::load<uint8_t>(okp);
+    PurchaseManager *self = rw::host_ptr<PurchaseManager>(load32(lambda + 0x10));
+    const uint32_t api = rw::call(API_GET_INSTANCE, {});
+    if (!ok) {
+        if (rw::call(API_NEEDS_RETRY, {api}) == 1) {
+            if (self->callbackFn) rw::call(FUNCTION_VB_CALL, {self->addr() + 0x10, 0});
+        } else {
+            rw::call(FINALIZE_CONNECTION, {self->addr(), 0});
+        }
+        return;
+    }
+    const uint32_t sb = load32(api + API_PURCHASE_RESULT);
+    const uint32_t ctrl = load32(api + API_PURCHASE_RESULT + 4);
+    if (ctrl) guest::addRef(ctrl);
+    if (rw::load<uint8_t>(lambda + 8)) {
+        const uint32_t node = load32(lambda + 0xC);
+        const uint32_t id = readBridgeTransId(f, 0x28, sb);
+        Transaction *tx = txOf(node);
+        tx->bridgeTransId = id;
+        tx->state = 2;
+        rw::call(APPSTATE_SAVE, {rw::call(APPSTATE_GET_INSTANCE, {})});
+        rw::call(FINISH_PURCHASE, {self->addr(), load32(lambda + 0xC), lambda + 0x18, 1});
+    } else {
+        rw::call(TX_MAKE_SHARED, {f.addr(0x20)});
+        const uint32_t obj = get32(f, 0x20), newCtrl = get32(f, 0x24);
+        put32(f, 0x20, 0);
+        put32(f, 0x24, 0);
+        self->current.obj = obj;
+        const uint32_t oldCtrl = self->current.ctrl;
+        self->current.ctrl = newCtrl;
+        releaseCtrl(oldCtrl);
+        const uint32_t id = readBridgeTransId(f, 0x2C, sb);
+        rw::save<uint32_t>(load32(self->addr() + 0x2C), id);
+        rw::call(STRING_ASSIGN, {load32(self->addr() + 0x2C) + 4, lambda + 0x30});
+        rw::call(TX_LIST_PUSH_FRONT, {self->addr() + 4, self->addr() + 0x2C});
+        rw::call(APPSTATE_SAVE, {rw::call(APPSTATE_GET_INSTANCE, {})});
+        const uint32_t store = rw::call(STORE_GET_INSTANCE, {});
+        const uint32_t pid = (rw::load<uint8_t>(lambda + 0x30) & 1) ? load32(lambda + 0x38) : lambda + 0x31;
+        const uint32_t s = f.addr(0x14);
+        rw::call(STRING_INIT, {s, pid, rw::call(STRLEN, {pid})});
+        rw::call(STORE_PURCHASE, {store, s});
+        if (rw::load<uint8_t>(s) & 1) guest::deleteObject(get32(f, 0x1C));
+    }
+    releaseCtrl(ctrl);
+}
+RW_FUNCTION(0x4D9E70, "PurchaseManager::startPurchase $_1::operator()(bool)", PurchaseManager::onPrepared);
+
+// finishPurchase::$_0 {this +8, node +0xC, shared_ptr<Transaction> +0x10, resume +0x18, callback +0x20}(ok):
+// purchase/finish answered. Done: the transaction leaves the list (saved) and the store consumes the product; a
+// fresh purchase ends the connection, a resumed one only clears `connecting` and tells the callback. Failed: the
+// callback is told (false).
+void PurchaseManager::onFinished(uint32_t lambda, uint32_t okp) {
+    const uint8_t ok = rw::load<uint8_t>(okp);
+    if (ok) {
+        PurchaseManager *self = rw::host_ptr<PurchaseManager>(load32(lambda + 8));
+        rw::call(TX_LIST_ERASE, {self->addr() + 4, load32(lambda + 0xC)});
+        rw::call(APPSTATE_SAVE, {rw::call(APPSTATE_GET_INSTANCE, {})});
+        rw::call(STORE_FINISH_PURCHASE, {rw::call(STORE_GET_INSTANCE, {}), load32(lambda + 0x10) + 4});
+        if (!rw::load<uint8_t>(lambda + 0x18)) {
+            rw::call(FINALIZE_CONNECTION, {self->addr(), 1});
+            return;
+        }
+        self->connecting = 0;
+    }
+    if (load32(lambda + 0x30)) rw::call(FUNCTION_VB_CALL, {lambda + 0x20, ok ? 1u : 0u});
+}
+RW_FUNCTION(0x4DA470, "PurchaseManager::finishPurchase $_0::operator()(bool)", PurchaseManager::onFinished);

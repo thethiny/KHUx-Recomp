@@ -36,7 +36,7 @@ void setLockText(uint32_t text, uint32_t miscId) {
 void addHeapTouch(uint32_t widget, uint32_t vtable, uint32_t size, std::initializer_list<uint32_t> captures) {
     Frame f;
     uint32_t fo = f.alloc(20);
-    heapLambda(fo, vtable, size, captures);
+    heapLambda(fo, size, vtable, captures);
     call(fn::Widget_addTouchEventListener, {widget, fo});
     functionDestroy(fo);
 }

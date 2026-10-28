@@ -57,16 +57,6 @@ uint32_t jni(uint32_t env, uint32_t offset, std::initializer_list<uint32_t> args
 }
 void deleteLocalRef(uint32_t env, uint32_t ref) { jni(env, JNI_DELETE_LOCAL_REF, {env, ref}); }
 uint32_t impl() { return ld32(STORE_MANAGER); }
-// std::string copy construction (long strings re-allocated)
-void strCopy(uint32_t dst, uint32_t src) {
-    if (strIsLong(src)) {
-        strInit(dst, ld32(src + 8), ld32(src + 4));
-    } else {
-        st32(dst, ld32(src));
-        st32(dst + 4, ld32(src + 4));
-        st32(dst + 8, ld32(src + 8));
-    }
-}
 }  // namespace
 
 // ------------------------------------------------------------------------------------------------ StoreManager

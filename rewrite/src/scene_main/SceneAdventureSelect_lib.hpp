@@ -128,20 +128,6 @@ constexpr uint32_t API_USER = 0x94;                       // SafeBuffer* of the 
 constexpr uint32_t API_BENEFITS = 0xAC;                   // std::vector<...>* (the user's benefits)
 constexpr uint32_t USER_RANK = 0x40;
 
-// A std::function at `dst` whose callable is a heap __func (vtable, then `captures`), `size` bytes: the
-// libc++ constructor for a lambda too big for the inline buffer (+16 cleared first; nothing stored when operator
-// new returns null).
-inline uint32_t heapLambda(uint32_t dst, uint32_t vtable, uint32_t size, std::initializer_list<uint32_t> captures) {
-    st32(dst + 16, 0);
-    uint32_t obj = call(fn::operator_new, {size});
-    if (obj) {
-        st32(obj, vtable);
-        uint32_t k = 4;
-        for (uint32_t c : captures) { st32(obj + k, c); k += 4; }
-    }
-    st32(dst + 16, obj);
-    return obj;
-}
 
 
 // animations

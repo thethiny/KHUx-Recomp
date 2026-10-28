@@ -448,6 +448,22 @@ uint32_t psi::vibrate::create(float duration, float strength, uint32_t offset) {
 }
 RW_FUNCTION(0x5E2A10, "(anonymous)::Vibrate::create (sub_5E2A10)", psi::vibrate::create);
 
+// Vibrate::clone(): a new Vibrate with this one's duration, strength and offset (kept when initWithDuration fails:
+// the copy is autoreleased either way)
+static uint32_t vibrateClone(uint32_t self) {
+    const uint32_t a = rw::call(guest::OPERATOR_NEW, {psi::vibrate::SIZE});
+    rw::call(0x5E47ED, {a});   // Vibrate::Vibrate
+    const uint32_t strength = ld32(self + 0x30);
+    if (rw::call(ActionInterval_initWithDuration, {a, ld32(self + 0x24)}) == 1) {
+        st32(a + 0x30, strength);
+        st32(a + 0x38, ld32(self + 0x38));
+        st32(a + 0x34, ld32(self + 0x34));
+    }
+    rw::call(Ref_autorelease, {a});
+    return a;
+}
+RW_FUNCTION(0x5E48E4, "(anonymous)::Vibrate::clone (sub_5E48E4)", vibrateClone);
+
 // ------------------------------------------------------------------------------------------- lambda $_0
 // init $_0 [this](float scale): the HP animation node's scaleX is the HP rate shown; move the front gauge layers
 // (arc04 / side sprite04) and the HP number along.

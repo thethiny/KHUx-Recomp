@@ -80,6 +80,9 @@ struct PurchaseManager {
     static void purchase(PurchaseManager *self, uint32_t productId, uint32_t callback);
     static void finalizeConnection(PurchaseManager *self, uint32_t success);
     static void abort(PurchaseManager *self);
+    // the request callbacks: startPurchase::$_1 (purchase/prepare), finishPurchase::$_0 (purchase/finish)
+    static void onPrepared(uint32_t lambda, uint32_t okp);
+    static void onFinished(uint32_t lambda, uint32_t okp);
     static uint32_t findInvalidTransaction(const PurchaseManager *self, const IapPurchase *purchase);
     static uint32_t existsSameTransaction(const PurchaseManager *self, const IapPurchase *purchase);
     static void checkResumedPurchase(PurchaseManager *self, const IapPurchase *purchase);

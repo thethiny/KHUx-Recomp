@@ -5,6 +5,72 @@
 
 #include "../scene/SceneUi.hpp"
 
+// Helpers shared by createLayout and the slide view's page updater (AvatarInfoDialog_pages.cpp)
+namespace aid {
+constexpr uint32_t SafeBuffer_read = 0x45A269;               // (sb, dst, src, len, offset)
+constexpr uint32_t ImageButton_create = 0x531239;            // (string, bool)
+constexpr uint32_t ImageButton_setTargetView = 0x5318C1;     // (Node*, float)
+constexpr uint32_t ImageButton_addTouchEventListener = 0x5315B1;
+constexpr uint32_t S_Empty = 0xDF8A1A;                       // ""
+
+// SafeBuffer::read of len bytes at offset into dst
+inline void sbRead(uint32_t sb, uint32_t dst, uint32_t offset, uint32_t len) {
+    rw::call(SafeBuffer_read, {sb, dst, scene::ld32(sb + 0xC) + offset, len, offset});
+}
+
+// the scene manager, API manager and dialog state the page lambdas share
+constexpr uint32_t SM_POPUP_DELAY = 0x300;                   // SceneManager: float, the popup open animation time
+constexpr uint32_t SM_LOCKED = 0x309;                        // SceneManager: uint8
+constexpr uint32_t SM_PAYMENT_WAIT = 0x4CC, SM_ON_PAYMENT = 0x548;   // uint8, std::function<void(bool)>
+constexpr uint32_t API_SHOW_ERROR = 0x14;                    // APIManager: uint8, the error dialog is wanted
+constexpr uint32_t API_PAYMENT = 0x1D4;                      // APIManager: shared_ptr<SafeBuffer> payment info
+constexpr uint32_t D_ON_POPUP_CLOSED = 0x480;                // AvatarInfoDialog: std::function<void(bool)>
+constexpr uint32_t SceneManager_enableLoadingIndicator = 0x60D169;   // (sm, bool)
+constexpr uint32_t SceneManager_openNoTapScreen = 0x61FB25;          // (sm, float seconds)
+constexpr uint32_t APIManager_getInstance = 0x4BA8C9;
+constexpr uint32_t APIManager_openErrorDialog = 0x4C3C8D;            // (api, function<void()>, bool)
+constexpr uint32_t APIManager_executePaymentInfo = 0x4CE74D;         // (api, const function<void(bool)>&)
+constexpr uint32_t FunctionVB_assign = 0x490109;                     // std::function<void(bool)>::operator=
+
+// the payment info from the server first (the popups need the player's age): the scene manager's payment
+// callback emptied, the loading indicator on, then /payment/info with the lambda {dialog} (`vt`) as its callback
+inline void requestPaymentInfo(uint32_t dialog, uint32_t vt) {
+    const uint32_t sm = scene::sceneManager();
+    scene::st8(sm + SM_PAYMENT_WAIT, 1);
+    scene::Frame f;
+    const uint32_t none = scene::newEmptyFunction(f);
+    rw::call(FunctionVB_assign, {sm + SM_ON_PAYMENT, none});
+    scene::functionDestroy(none);
+    rw::call(SceneManager_enableLoadingIndicator, {scene::sceneManager(), 1});
+    const uint32_t api = rw::call(APIManager_getInstance, {});
+    const uint32_t cb = scene::newFunction(f, vt, {dialog});
+    rw::call(APIManager_executePaymentInfo, {api, cb});
+    scene::functionDestroy(cb);
+}
+
+// the API error dialog with a capture-less callback (`vt`), when the API manager wants one
+inline void apiErrorDialog(uint32_t vt) {
+    if (!scene::ld8(rw::call(APIManager_getInstance, {}) + API_SHOW_ERROR)) return;
+    const uint32_t api = rw::call(APIManager_getInstance, {});
+    scene::Frame f;
+    const uint32_t cb = scene::newFunction(f, vt, {});
+    rw::call(APIManager_openErrorDialog, {api, cb, 1});
+    scene::functionDestroy(cb);
+}
+
+// after the popup open time (taps blocked meanwhile): the lambda {dialog} (`vt`), through the dialog's actions
+inline void afterPopupDelay(uint32_t dialog, uint32_t vt) {
+    const uint32_t sm = scene::sceneManager();
+    rw::call(SceneManager_openNoTapScreen, {sm, scene::ld32(scene::sceneManager() + SM_POPUP_DELAY)});
+    const uint32_t wait = rw::call(scene::fn::DelayTime_create, {scene::ld32(scene::sceneManager() + SM_POPUP_DELAY)});
+    scene::Frame f;
+    const uint32_t then = scene::newFunction(f, vt, {dialog});
+    const uint32_t done = rw::call(scene::fn::CallFunc_create, {then});
+    rw::call(scene::fn::Node_runAction, {dialog, rw::call(scene::fn::Sequence_create, {wait, done, 0})});
+    scene::functionDestroy(then);
+}
+}  // namespace aid
+
 struct AvatarInfoDialog {
     using Addr = uint32_t;
     static constexpr uint32_t SIZE = 0x4C8;
