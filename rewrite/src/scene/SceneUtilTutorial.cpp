@@ -662,3 +662,87 @@ bool SceneUtil::TutorialMaskWidget::init(TutorialMaskWidget *self) {
     return true;
 }
 RW_FUNCTION(0x47ABD2, "SceneUtil::TutorialMaskWidget::init", SceneUtil::TutorialMaskWidget::init);
+
+// ================================================================================================ the lambdas
+namespace {
+namespace tutorialpopup {
+constexpr uint32_t AppState_addClearTutorialPopupIDs = 0x4EB7A9;   // (app, id)
+constexpr uint32_t SceneUtil_ClearTutorialPopupIDs = 0x4732AD;     // (id, function<void()>)
+constexpr uint32_t SM_closeCurrentPopup = 0x6216A1;
+constexpr uint32_t SceneUtil_createClosePopupAnimation = 0x45BC61;
+constexpr uint32_t VT_GotoClear = 0xF54508, VT_OkClear = 0xF5458C;   // $_70 / $_69's step {popup, button, layer}
+constexpr uint32_t VT_GotoClosed = 0xF54534, VT_OkClosed = 0xF545B8; // the steps' close ends {button, node}
+constexpr uint32_t TOUCH_ENDED = 2;
+
+// $_70 / $_69 (Go to / OK) {button, other, popup, layer, tutorial id}(sender, type): both buttons off (OK: the
+// other may be missing), the decide sound, the popup marked seen, then its close (`step` {popup, button, layer})
+void buttonTouched(uint32_t f, uint32_t typeRef, bool otherOptional, uint32_t step) {
+    if (ld32(typeRef) != TOUCH_ENDED) return;
+    vcall(ld32(f + 4), node::setTouchEnabled, {ld32(f + 4), 0});
+    const uint32_t other = ld32(f + 8);
+    if (!otherOptional || other) vcall(other, node::setTouchEnabled, {other, 0});
+    call(fn::AudioPlaySystemSEDecide, {});
+    const uint32_t popup = ld32(f + 0xC), layer = ld32(f + 0x10), button = ld32(f + 4);
+    call(AppState_addClearTutorialPopupIDs, {call(fn::AppState_getInstance, {}), ld32(f + 0x14)});
+    Frame fr;
+    const uint32_t next = newFunction(fr, step, {popup, button, layer});
+    call(SceneUtil_ClearTutorialPopupIDs, {ld32(f + 0x14), next});
+    functionDestroy(next);
+}
+void gotoTouched(uint32_t f, uint32_t, uint32_t typeRef) { buttonTouched(f, typeRef, false, VT_GotoClear); }
+void okTouched(uint32_t f, uint32_t, uint32_t typeRef) { buttonTouched(f, typeRef, true, VT_OkClear); }
+
+// the step {popup, button, layer}: the popup shrinks (its end `vt` gets {button, layer})
+void shrinkStep(uint32_t f, uint32_t vt) {
+    const uint32_t popup = ld32(f + 4);
+    Frame fr;
+    const uint32_t end = newFunction(fr, vt, {ld32(f + 8), ld32(f + 0xC)});
+    call(fn::Node_runAction, {popup, call(SceneUtil_createClosePopupAnimation, {ld32(f + 0xC), end})});
+    functionDestroy(end);
+}
+void gotoStep(uint32_t f) { shrinkStep(f, VT_GotoClosed); }
+void okStep(uint32_t f) { shrinkStep(f, VT_OkClosed); }
+
+// the close end {button, node}: the popup closed (`arg`) with the button on meanwhile, the node shown again
+void closedEnd(uint32_t f, uint32_t arg) {
+    vcall(ld32(f + 4), node::setTouchEnabled, {ld32(f + 4), 1});
+    call(SM_closeCurrentPopup, {sceneManager(), arg});
+    const uint32_t shown = ld32(f + 8);
+    if (shown) vcall(shown, node::setVisible, {shown, 1});
+    vcall(ld32(f + 4), node::setTouchEnabled, {ld32(f + 4), 0});
+}
+void gotoClosedEnd(uint32_t f) { closedEnd(f, 0); }
+void okClosedEnd(uint32_t f) { closedEnd(f, 1); }
+// $_73 {node}: the popup closed, the node shown again
+void closedShow(uint32_t f) {
+    call(SM_closeCurrentPopup, {sceneManager(), 0});
+    const uint32_t shown = ld32(f + 4);
+    if (shown) vcall(shown, node::setVisible, {shown, 1});
+}
+}  // namespace tutorialpopup
+}  // namespace
+
+RW_FUNCTION(0x4831E0, "SceneUtil::NormalTutorialPopup $_70::operator() (Go to)", tutorialpopup::gotoTouched);
+RW_FUNCTION(0x483584, "SceneUtil::NormalTutorialPopup $_69::operator() (OK)", tutorialpopup::okTouched);
+RW_FUNCTION(0x483360, "SceneUtil::NormalTutorialPopup $_70 lambda()#1::operator()", tutorialpopup::gotoStep);
+RW_FUNCTION(0x483700, "SceneUtil::NormalTutorialPopup $_69 lambda()#1::operator()", tutorialpopup::okStep);
+RW_FUNCTION(0x4834A6, "SceneUtil::NormalTutorialPopup $_70 lambda()#1 lambda()#1::operator()", tutorialpopup::gotoClosedEnd);
+RW_FUNCTION(0x483842, "SceneUtil::NormalTutorialPopup $_69 lambda()#1 lambda()#1::operator()", tutorialpopup::okClosedEnd);
+RW_FUNCTION(0x482EB6, "SceneUtil::NormalTutorialPopup $_73::operator()", tutorialpopup::closedShow);
+
+namespace {
+// updateTutorialStatus $_74 (sent) {-, show errors +8, -, done function<void()> +0x10}(ok): the indicator off;
+// ok -> done(); else the API error when errors are shown
+void tutorialStatusUpdated(uint32_t f, uint32_t okRef) {
+    constexpr uint32_t VT_StatusError = 0xF5442C;
+    const uint32_t ok = ld8(okRef);
+    call(SceneManager_enableLoadingIndicator, {sceneManager(), 0});
+    if (ok) {
+        if (ld32(f + 0x20)) call(fn::function_vv_call, {f + 0x10});
+    } else if (ld8(f + 8)) {
+        apiErrorDialogIfShown(VT_StatusError);
+    }
+}
+}  // namespace
+
+RW_FUNCTION(0x482CC4, "SceneUtil::updateTutorialStatus $_74::operator()(bool)", tutorialStatusUpdated);

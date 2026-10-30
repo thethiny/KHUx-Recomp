@@ -9,12 +9,7 @@ using namespace scene;
 namespace {
 namespace g {
 constexpr uint32_t SceneUtil_getNexTutorialphase = 0x472B31;
-constexpr uint32_t SceneUtil_openMedalInfoPopup = 0x466EF5;   // (shared_ptr medal, bool, bool, bool,
-                                                              //  function<void(ButtonType, bool)>, vector<Skill>*,
-                                                              //  function<void()>, bool)
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
-constexpr uint32_t MedalDataManager_getInstance = 0x76AD69;
-constexpr uint32_t MedalDataManager_getMedalData = 0x76ADB5;  // (sret, mgr, u64 id, int, UserMedal::Medal)
 constexpr uint32_t Touch_getLocation = rwlib::cocos2d::Touch::getLocation, Node_convertToNodeSpace = rwlib::cocos2d::Node::convertToNodeSpace;
 constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff, Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
 }  // namespace g
@@ -22,7 +17,6 @@ constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff, Rect_conta
 constexpr int32_t TUTORIAL_DONE_PHASE = 0x3E3;   // 995
 // SceneMixedMedal
 constexpr uint32_t MIX_BUSY = 0x34C, MIX_CAN_TAP = 0x38C;
-constexpr uint32_t API_USER_SETTINGS = 0x94;      // SafeBuffer; +0x54 byte: a display setting
 constexpr uint32_t VT_BaseInfoResult = 0xF65654;  // $_29 UlbE_ {.., scene +8, 0 +0xC, medal id +0x10}
 constexpr uint32_t VT_BaseInfoClosed = 0xF65628;  // $_29's popup closed lambda {scene}
 // MaterialScrollView
@@ -51,32 +45,10 @@ struct MedalLambdas {
         if (int32_t(call(g::SceneUtil_getNexTutorialphase, {})) < TUTORIAL_DONE_PHASE) return;
         call(g::AudioPlaySystemSEDecide, {});
         st8(scene + MIX_BUSY, 1);
-        uint32_t mgr = call(g::MedalDataManager_getInstance, {});
         Frame f;
         uint32_t medal = f.alloc(8);
-        call(g::MedalDataManager_getMedalData, {medal, mgr, lo, hi, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                                0, 0, 0});
-        uint32_t api = call(fn::APIManager_getInstance, {});
-        uint32_t copy = f.alloc(8);
-        st32(copy, ld32(medal));
-        st32(copy + 4, ld32(medal + 4));
-        if (ld32(copy + 4)) call(fn::shared_add, {ld32(copy + 4)});
-        uint32_t setting = ld8(safeBytes(f, ld32(api + API_USER_SETTINGS), 0x54, 1));
-        uint32_t result = newEmptyFunction(f);
-        uint32_t heap = call(fn::operator_new, {0x18});
-        if (heap) {
-            st32(heap, VT_BaseInfoResult);
-            st32(heap + 8, scene);
-            st32(heap + 0xC, 0);
-            st32(heap + 0x10, lo);
-            st32(heap + 0x14, hi);
-        }
-        st32(result + 16, heap);
-        uint32_t closed = newFunction(f, VT_BaseInfoClosed, {scene});
-        call(g::SceneUtil_openMedalInfoPopup, {copy, setting ? 1u : 0u, 0, 1, result, 0, closed, 1});
-        functionDestroy(closed);
-        functionDestroy(result);
-        if (ld32(copy + 4)) call(fn::shared_release, {ld32(copy + 4)});
+        medalDataById(medal, lo, hi);
+        openUserMedalInfo(medal, scene, lo, hi, VT_BaseInfoResult, VT_BaseInfoClosed, 1);
         sharedRelease(medal);
     }
 

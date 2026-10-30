@@ -1,4 +1,5 @@
 // SceneUtil popups of the menus: the album challenge list.
+#include "../scene/FilterPopup.hpp"
 #include "../scene/SceneUi.hpp"
 
 using namespace scene;
@@ -601,9 +602,87 @@ uint32_t openAdventureSelectFilterPopup(uint32_t done) {
     releaseRef(ld32(state + 4));
     return 1;
 }
+
+// openAdventureSelectFilterPopup's lambdas. The state: 0 on, 1 / 2 challenge, 3 / 4 story, 5 power, 6 speed, 7 magic.
+namespace advfilter {
+constexpr uint32_t ON = 0, CH1 = 1, CH2 = 2, ST1 = 3, ST2 = 4, POW = 5, SPD = 6, MAG = 7;
+constexpr filter::Flags ANY = {ST1, ST2, CH1, CH2, POW, SPD, MAG};
+constexpr filter::Flags ALL = {ON, CH1, CH2, ST1, ST2, POW, SPD, MAG};
+constexpr uint32_t VT_ClosedEnd = 0xF53D20;   // $_116's end {layer, shadow, popup}
+
+// $_105..$_111 (a check box)
+void st1Touched(uint32_t f, uint32_t, uint32_t typeRef) { filter::boxTouched(f, typeRef, ST1, ANY); }
+void st2Touched(uint32_t f, uint32_t, uint32_t typeRef) { filter::boxTouched(f, typeRef, ST2, ANY); }
+void ch1Touched(uint32_t f, uint32_t, uint32_t typeRef) { filter::boxTouched(f, typeRef, CH1, ANY); }
+void ch2Touched(uint32_t f, uint32_t, uint32_t typeRef) { filter::boxTouched(f, typeRef, CH2, ANY); }
+void powTouched(uint32_t f, uint32_t, uint32_t typeRef) { filter::boxTouched(f, typeRef, POW, ANY); }
+void spdTouched(uint32_t f, uint32_t, uint32_t typeRef) { filter::boxTouched(f, typeRef, SPD, ANY); }
+void magTouched(uint32_t f, uint32_t, uint32_t typeRef) { filter::boxTouched(f, typeRef, MAG, ANY); }
+// $_103 (Release) {state, -, release, text, story1, state, -, story2, challenge 1 / 2, power, speed, magic}
+void releaseTouched(uint32_t f, uint32_t, uint32_t typeRef) {
+    filter::releaseTouched(f, typeRef, ALL, {ST1, ST2, CH1, CH2, POW, SPD, MAG});
+}
+// $_116 (closed) {-, 10 controls +8, state +0x30, -, the snapshot +0x38, done function<void(bool)> +0x40, shadow,
+// popup, layer}(ok): the controls off; OK -> saved; Close -> the snapshot put back; done(ok); the popup closes
+void closed(uint32_t f, uint32_t okRef) {
+    const uint32_t ok = ld8(okRef);
+    filter::controlsOff(f, 10);
+    if (ok)
+        call(filter::AppState_save, {call(fn::AppState_getInstance, {})});
+    else
+        filter::restore(f + 0x30, f + 0x38, ALL);
+    call(fn::function_vb_call, {f + 0x40, ok != 0});
+    filter::close(ld32(f + 0x58), ld32(f + 0x5C), ld32(f + 0x60), VT_ClosedEnd);
+}
+}  // namespace advfilter
 }  // namespace
 
 RW_FUNCTION(0x476E80, "SceneUtil::openAdventureSelectFilterPopup(function<void(bool)>)", openAdventureSelectFilterPopup);
 RW_FUNCTION(0x4799D8, "SceneUtil::openFBSharePhotoPopup(...)", openFBSharePhotoPopup);
 RW_FUNCTION(0x47A558, "SceneUtil::shareScreenShot(Node*, function<void(RenderTexture*, const string&)>)", shareScreenShot);
 RW_FUNCTION(0x4783C4, "SceneUtil::openAlbumChallengeListPopup()", openAlbumChallengeListPopup);
+RW_FUNCTION(0x47F024, "SceneUtil::openAdventureSelectFilterPopup $_105::operator() (story 1)", advfilter::st1Touched);
+RW_FUNCTION(0x47EDEC, "SceneUtil::openAdventureSelectFilterPopup $_106::operator() (story 2)", advfilter::st2Touched);
+RW_FUNCTION(0x47EBB4, "SceneUtil::openAdventureSelectFilterPopup $_107::operator() (challenge 1)", advfilter::ch1Touched);
+RW_FUNCTION(0x47E97C, "SceneUtil::openAdventureSelectFilterPopup $_108::operator() (challenge 2)", advfilter::ch2Touched);
+RW_FUNCTION(0x47E744, "SceneUtil::openAdventureSelectFilterPopup $_109::operator() (power)", advfilter::powTouched);
+RW_FUNCTION(0x47E50C, "SceneUtil::openAdventureSelectFilterPopup $_110::operator() (speed)", advfilter::spdTouched);
+RW_FUNCTION(0x47E2D4, "SceneUtil::openAdventureSelectFilterPopup $_111::operator() (magic)", advfilter::magTouched);
+RW_FUNCTION(0x47F28C, "SceneUtil::openAdventureSelectFilterPopup $_103::operator() (Release)", advfilter::releaseTouched);
+RW_FUNCTION(0x47DB14, "SceneUtil::openAdventureSelectFilterPopup $_116::operator()(bool) (closed)", advfilter::closed);
+
+namespace {
+namespace albumchallenge {
+constexpr uint32_t SM_SHOW_CLEARED = 0x30B;     // SceneManager byte: the challenge list shows the cleared ones
+constexpr uint32_t VT_ClosedEnd = 0xF53C18;     // $_121's end {layer, shadow, popup}
+constexpr int32_t TXT_SHOW_CLEARED = 103600005, TXT_HIDE_CLEARED = 103600006;
+
+// $_121 (closed) {button, button, shadow, popup, layer}(ok): both buttons off, Close -> the cancel sound; the shadow
+// fades, the popup shrinks
+void closed(uint32_t f, uint32_t okRef) {
+    const uint32_t ok = ld8(okRef);
+    vcall(ld32(f + 4), node::setTouchEnabled, {ld32(f + 4), 0});
+    vcall(ld32(f + 8), node::setTouchEnabled, {ld32(f + 8), 0});
+    if (!ok) call(fn::AudioPlaySystemSECancel, {});
+    call(fn::Node_runAction, {ld32(f + 0xC), call(fn::FadeTo_create, {fbits(0.15f), 0})});
+    const uint32_t popup = ld32(f + 0x10);
+    Frame fr;
+    const uint32_t end = newFunction(fr, VT_ClosedEnd, {ld32(f + 0x14), ld32(f + 0xC), popup});
+    // r0 holds the end's vtable here (the animation does not read it)
+    call(fn::Node_runAction, {popup, call(0x45BC61, {VT_ClosedEnd, end})});   // SceneUtil::createClosePopupAnimation
+    functionDestroy(end);
+}
+// $_118 (show / hide cleared) {label}(sender, type): the decide sound, the setting flipped, the label to match
+void toggleTouched(uint32_t f, uint32_t, uint32_t typeRef) {
+    if (ld32(typeRef) != 2) return;
+    call(fn::AudioPlaySystemSEDecide, {});
+    const uint32_t shown = ld8(sceneManager() + SM_SHOW_CLEARED);
+    const uint32_t flag = sceneManager() + SM_SHOW_CLEARED;
+    st8(flag, shown ? 0 : 1);
+    setTextId(ld32(f + 4), shown ? TXT_HIDE_CLEARED : TXT_SHOW_CLEARED);
+}
+}  // namespace albumchallenge
+}  // namespace
+
+RW_FUNCTION(0x47CE60, "SceneUtil::openAlbumChallengeListPopup $_121::operator()(bool) (closed)", albumchallenge::closed);
+RW_FUNCTION(0x47D444, "SceneUtil::openAlbumChallengeListPopup $_118::operator() (show cleared)", albumchallenge::toggleTouched);

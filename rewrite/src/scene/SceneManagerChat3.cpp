@@ -466,3 +466,223 @@ void SceneManager::openChatStampListPopup(SceneManager *self) {
     call(Vec2_dtor, {arrowPos});
 }
 RW_FUNCTION(0x617C00, "SceneManager::openChatStampListPopup", SceneManager::openChatStampListPopup);
+
+// ------------------------------------------------------------------------------------------------ the popup's lambdas
+namespace {
+namespace sl {
+constexpr uint32_t CHAT_REQUESTING = 0x46D, CHAT_POLL_NOW = 0x46E, CHAT_TIMER = 0x474;   // SceneManager
+constexpr uint32_t CHAT_LAST_ID = 0x408, CHAT_FIRST_ID = 0x40C, CHAT_MAX_ID = 0x414, CHAT_SENT = 0x41C;
+constexpr uint32_t STAMP_MOVING = 0x2FC, STAMP_MOVE_TIME = 0x49C, STAMP_MOVE_TIME2 = 0x4A0, STAMP_MOVE_LEFT = 0x4A4;
+constexpr uint32_t LIST_SELECTED = 0x63C;     // ChatStampListScrollView: the chosen stamp (-1: none)
+constexpr uint32_t VT_StampClosed = 0xF5FD70; // $_58's close end {area, this, layer, shadow, popup} (heap 0x18)
+constexpr uint32_t VT_StampSent = 0xF5FDF4;   // $_56's createMessage answer {this, close, send, -} (heap 0x14)
+constexpr uint32_t S_StampMedal = 0xE035CC, S_StampTalk = 0xE035DC;   // "ISTAMP:MEDAL:%d", "ISTAMP:TALKS:%d"
+constexpr int32_t TXT_SEND_FAILED = 104200029, TXT_CHAT_ERROR_1 = 105000001, TXT_CHAT_ERROR_2 = 105000002;
+constexpr float POLL_AFTER_SEND = 15.0f;
+constexpr uint32_t LAST_IDS_KEPT = 50;
+constexpr uint32_t SceneUtil_createClosePopupAnimation = 0x45BC61;
+constexpr uint32_t SceneUtil_openOkDialog4Line = 0x45C775;
+constexpr uint32_t SceneUtil_setButtonEnabled = 0x468625;    // (Button*, Text*, bool, bool)
+constexpr uint32_t SM_closeCurrentPopup = 0x6216A1;
+constexpr uint32_t ChatManager_getInstance = 0x4DB0E5, ChatManager_createMessage = 0x4DC021;   // (cm, text, answer)
+constexpr uint32_t StringBuffer_fset = 0x491501;            // (sb, fmt, ...)
+constexpr uint32_t Widget_isBright = 0x826FA5, Touch_getStartLocation = 0x900E9B;
+constexpr uint32_t BaseStageScrollView_migrationLeft = 0x59DA99, BaseStageScrollView_migrationRight = 0x59DAB3;
+constexpr uint32_t V_SET_TOUCH_ENABLED = 0x29C;
+constexpr uint32_t TOUCH_BEGAN = 0, TOUCH_ENDED = 2, TOUCH_CANCELED = 3;
+constexpr uint32_t STRINGBUFFER_SIZE = 0x404;               // char[1024] + the length
+
+void setTouchEnabled(uint32_t w, uint32_t on) { vcall(w, V_SET_TOUCH_ENABLED, {w, on}); }
+// the list's arrows {this}(sender, type): pressed -> a page right / left; released -> the move ends
+void arrowTouched(uint32_t f, uint32_t typeRef, uint32_t migrate, uint8_t left) {
+    const uint32_t type = ld32(typeRef);
+    const uint32_t me = ld32(f + 4);
+    if (type == TOUCH_CANCELED || type == TOUCH_ENDED) {
+        st8(me + STAMP_MOVING, 0);
+    } else if (type == TOUCH_BEGAN) {
+        call(fn::AudioPlaySystemSEDecide, {});
+        st32(me + STAMP_MOVE_TIME, 0);
+        st32(me + STAMP_MOVE_TIME2, 0);
+        st8(me + STAMP_MOVE_LEFT, left);
+        st8(me + STAMP_MOVING, uint8_t(call(migrate, {ld32(me + STAMP_LIST), 1})));
+    }
+}
+}  // namespace sl
+
+// $_58 (the popup closed) {send, close, this, popup, area, layer, shadow}: both buttons off, no request running,
+// no poll, the popup shrinks (its end removes it) and the shadow fades out
+void stampPopupClosed(uint32_t f) {
+    sl::setTouchEnabled(ld32(f + 4), 0);
+    sl::setTouchEnabled(ld32(f + 8), 0);
+    const uint32_t me = ld32(f + 0xC);
+    st8(me + sl::CHAT_REQUESTING, 0);
+    st32(me + sl::CHAT_TIMER, 0);
+    st8(me + STAMP_MIGRATING, 0);
+    const uint32_t popup = ld32(f + 0x10);
+    {
+        Frame fr;
+        const uint32_t end = fr.alloc(20);
+        st32(end + 16, 0);
+        const uint32_t area = ld32(f + 0x14), layer = ld32(f + 0x18), shadow = ld32(f + 0x1C);
+        const uint32_t h = call(fn::operator_new, {0x18});
+        if (h) {
+            st32(h, sl::VT_StampClosed);
+            st32(h + 4, area);
+            st32(h + 8, me);
+            st32(h + 0xC, layer);
+            st32(h + 0x10, shadow);
+            st32(h + 0x14, popup);
+        }
+        st32(end + 16, h);
+        call(fn::Node_runAction, {popup, call(sl::SceneUtil_createClosePopupAnimation, {popup, end})});
+        functionDestroy(end);
+    }
+    call(fn::Node_runAction, {ld32(f + 0x1C), call(fn::FadeTo_create, {fbits(0.1f), 0})});
+}
+
+// $_56 (Send) {send, this, close, the rows, this, close, send, -}(sender, type): a stamp chosen and no request
+// running -> the stamp (when the player still has it) sent as "ISTAMP:MEDAL:n" / "ISTAMP:TALKS:n"; nothing
+// chosen (or busy) -> the popup closes
+void stampSendTouched(uint32_t f, uint32_t, uint32_t typeRef) {
+    if (ld32(typeRef) != sl::TOUCH_ENDED) return;
+    const uint32_t me = ld32(f + 8);
+    if (call(sl::Widget_isBright, {ld32(f + 4)}) != 1) return;
+    if (int32_t(ld32(ld32(me + STAMP_LIST) + sl::LIST_SELECTED)) < 0 || ld8(me + sl::CHAT_REQUESTING)) {
+        call(fn::AudioPlaySystemSECancel, {});
+        sl::setTouchEnabled(ld32(f + 0xC), 1);
+        call(sl::SM_closeCurrentPopup, {sceneManager(), 0});
+        return;
+    }
+    st8(me + sl::CHAT_REQUESTING, 1);
+    st32(me + sl::CHAT_TIMER, 0);
+    sl::setTouchEnabled(ld32(f + 4), 0);
+    sl::setTouchEnabled(ld32(f + 0xC), 0);
+    call(fn::AudioPlaySystemSEDecide, {});
+    const uint32_t index = ld32(ld32(me + STAMP_LIST) + sl::LIST_SELECTED);
+    const uint32_t rows = ld32(f + 0x10);
+    if ((ld32(f + 0x14) - rows) / STAMP_ROW_SIZE <= index) call(ThrowOutOfRange, {});
+    const uint32_t stamps = ld32(ld32(call(fn::APIManager_getInstance, {}) + API_USER_STAMPS) + STAMPS_BUFFER);
+    const uint32_t count = ld32(stamps + BUFFER_COUNT);
+    bool sent = false;
+    if (count) {
+        const uint32_t row = rows + STAMP_ROW_SIZE * index;
+        uint32_t id = uint32_t(safe32(stamps, 0)), n = 1, at = 4;
+        bool owned = true;
+        while (id != ld32(row + ROW_STAMP_ID)) {
+            if (n >= count) {
+                owned = false;
+                break;
+            }
+            id = uint32_t(safe32(stamps, at));
+            at += 4;
+            n++;
+        }
+        if (owned) {
+            Frame fr;
+            const uint32_t stamp = masterRow(fr, Stamp_create, id);
+            const uint32_t sb = fr.alloc(sl::STRINGBUFFER_SIZE);
+            st32(sb + 0x400, 0);
+            st8(sb, 0);
+            const int32_t number = safe32(ld32(stamp), STAMP_NUMBER);
+            call(sl::StringBuffer_fset, {sb, ld8(row + ROW_IS_MEDAL) ? sl::S_StampMedal : sl::S_StampTalk, uint32_t(number)});
+            call(fn::SceneManager_enableLoadingIndicator, {sceneManager(), 1});
+            const uint32_t cm = call(sl::ChatManager_getInstance, {});
+            const uint32_t a = ld32(f + 0x1C), b = ld32(f + 0x20), c = ld32(f + 0x24), d = ld32(f + 0x28);
+            const uint32_t answer = fr.alloc(24);
+            st32(answer + 16, 0);
+            const uint32_t h = call(fn::operator_new, {0x14});
+            if (h) {
+                st32(h, sl::VT_StampSent);
+                st32(h + 4, a);
+                st32(h + 8, b);
+                st32(h + 0xC, c);
+                st32(h + 0x10, d);
+            }
+            st32(answer + 16, h);
+            sent = call(sl::ChatManager_createMessage, {cm, sb, answer}) != 0;
+            functionDestroy(answer);
+            sharedRelease(stamp);
+        }
+    }
+    if (sent) return;
+    hideLoadingIndicator();
+    sl::setTouchEnabled(ld32(f + 0xC), 1);
+    failedDialog(sl::TXT_SEND_FAILED);
+}
+
+// $_56's answer {this, close, send, -}(status): 0 -> sent (the ids to poll from, the popup closed, a poll soon);
+// 1 / 2 -> the chat error (buttons on again); 3 -> nothing; else -> "could not send"
+void stampSent(uint32_t f, uint32_t statusRef) {
+    const uint32_t status = ld32(statusRef);
+    const uint32_t me = ld32(f + 4);
+    hideLoadingIndicator();
+    if (status > 3) {
+        failedDialog(sl::TXT_SEND_FAILED);
+        return;
+    }
+    if (status == 0) {
+        st32(me + sl::CHAT_SENT, ld32(me + sl::CHAT_SENT) + 1);
+        st32(me + sl::CHAT_FIRST_ID, 1);
+        const uint32_t last = ld32(me + sl::CHAT_LAST_ID);
+        if (last > sl::LAST_IDS_KEPT) st32(me + sl::CHAT_FIRST_ID, last - sl::LAST_IDS_KEPT);
+        if (ld32(me + sl::CHAT_MAX_ID) < last) st32(me + sl::CHAT_MAX_ID, last);
+        sl::setTouchEnabled(ld32(f + 8), 1);
+        call(sl::SM_closeCurrentPopup, {sceneManager(), 0});
+        stf(me + sl::CHAT_TIMER, sl::POLL_AFTER_SEND);
+        st8(me + sl::CHAT_POLL_NOW, 1);
+        call(fn::SceneManager_enableLoadingIndicator, {sceneManager(), 1});
+    } else if (status == 1 || status == 2) {
+        st8(me + sl::CHAT_REQUESTING, 0);
+        sl::setTouchEnabled(ld32(f + 0xC), 1);
+        sl::setTouchEnabled(ld32(f + 8), 1);
+        okDialogText(status == 1 ? sl::TXT_CHAT_ERROR_1 : sl::TXT_CHAT_ERROR_2);
+    }
+}
+
+// $_54 (a touch on the shadow) {xMax, xMin, yMax, yMin}(touch): a touch that did not start on the popup closes it
+void stampOutsideTouch(uint32_t f, uint32_t touchRef, uint32_t) {
+    const uint32_t touch = ld32(touchRef);
+    bool inside = false;
+    {
+        Frame fr;
+        const uint32_t s1 = fr.alloc(8);
+        call(sl::Touch_getStartLocation, {s1, touch});
+        if (!(ldf(s1) > ldf(f + 4))) {
+            const uint32_t s2 = fr.alloc(8);
+            call(sl::Touch_getStartLocation, {s2, touch});
+            if (!(ldf(f + 8) > ldf(s2))) {
+                const uint32_t s3 = fr.alloc(8);
+                call(sl::Touch_getStartLocation, {s3, touch});
+                if (!(ldf(s3 + 4) > ldf(f + 0xC))) {
+                    const float yMin = ldf(f + 0x10);
+                    const uint32_t s4 = fr.alloc(8);
+                    call(sl::Touch_getStartLocation, {s4, touch});
+                    const float y = ldf(s4 + 4);
+                    call(Vec2_dtor, {s4});
+                    inside = !(yMin > y);
+                }
+                call(Vec2_dtor, {s3});
+            }
+            call(Vec2_dtor, {s2});
+        }
+        call(Vec2_dtor, {s1});
+    }
+    if (inside) return;
+    call(fn::AudioPlaySystemSECancel, {});
+    call(sl::SM_closeCurrentPopup, {sceneManager(), 0});
+}
+
+void stampRightArrow(uint32_t f, uint32_t, uint32_t t) { sl::arrowTouched(f, t, sl::BaseStageScrollView_migrationRight, 0); }
+void stampLeftArrow(uint32_t f, uint32_t, uint32_t t) { sl::arrowTouched(f, t, sl::BaseStageScrollView_migrationLeft, 1); }
+
+// $_47 {send, send text}(selected): the Send button on / off
+void stampSelected(uint32_t f, uint32_t onRef) { call(sl::SceneUtil_setButtonEnabled, {ld32(f + 4), ld32(f + 8), ld8(onRef), 0}); }
+}  // namespace
+
+RW_FUNCTION(0x62E950, "SceneManager::openChatStampListPopup $_58::operator()(bool) (closed)", stampPopupClosed);
+RW_FUNCTION(0x62ED7C, "SceneManager::openChatStampListPopup $_56::operator() (Send)", stampSendTouched);
+RW_FUNCTION(0x62F1C4, "SceneManager::openChatStampListPopup $_132::operator()(StatusCode)", stampSent);
+RW_FUNCTION(0x62F668, "SceneManager::openChatStampListPopup $_54::operator() (touch ended)", stampOutsideTouch);
+RW_FUNCTION(0x62F8C8, "SceneManager::openChatStampListPopup $_52::operator() (right arrow)", stampRightArrow);
+RW_FUNCTION(0x62F9AC, "SceneManager::openChatStampListPopup $_51::operator() (left arrow)", stampLeftArrow);
+RW_FUNCTION(0x630C6E, "SceneManager::openChatStampListPopup $_47::operator()(bool)", stampSelected);

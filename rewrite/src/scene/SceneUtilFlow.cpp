@@ -291,3 +291,19 @@ void SceneUtil::setBossTypeImage(Addr image, int32_t id, uint32_t raid) {
     call(Data_dtor, {data});
 }
 RW_FUNCTION(0x46C4C4, "SceneUtil::setBossTypeImage", SceneUtil::setBossTypeImage);
+
+namespace {
+// callUpdateLockMedalAPI $_76 (sent) {-, done function<void(bool)> +8}(ok): ok -> the lock / unlock queues
+// cleared; done(ok)
+void lockMedalsUpdated(uint32_t f, uint32_t okRef) {
+    constexpr uint32_t AppState_setWillLockUserMedalIDs = 0x4EB351, AppState_setWillUnlockUserMedalIDs = 0x4EB511;
+    const uint32_t ok = ld8(okRef);
+    if (ok) {
+        call(AppState_setWillLockUserMedalIDs, {call(fn::AppState_getInstance, {}), 0});
+        call(AppState_setWillUnlockUserMedalIDs, {call(fn::AppState_getInstance, {}), 0});
+    }
+    call(fn::function_vb_call, {f + 8, ok ? 1u : 0u});
+}
+}  // namespace
+
+RW_FUNCTION(0x4824D0, "SceneUtil::callUpdateLockMedalAPI $_76::operator()(bool)", lockMedalsUpdated);

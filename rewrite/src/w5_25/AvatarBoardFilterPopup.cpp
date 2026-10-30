@@ -3,7 +3,7 @@
 // AvatarBoardFilterState; OK and Close. The touch lambdas ($_88..$_97) are built here; every control stays
 // disabled until the open animation ends ($_98 enables them). The close lambda ($_100) keeps a snapshot of the
 // state taken on open, to put it back on Close.
-#include "../scene/SceneUi.hpp"
+#include "../scene/FilterPopup.hpp"
 
 using namespace scene;
 
@@ -242,6 +242,89 @@ struct AvatarBoardFilterPopup {
         release(ctrl);
     }
 };
+
+// ------------------------------------------------------------------------------------------------ the lambdas
+constexpr uint32_t VT_ClosedEnd = 0xF53F88;   // $_100's end {layer, shadow, popup}
+// the order the lambdas test the flags in for "the filter is on", clear them in, and keep the snapshot in
+constexpr filter::Flags ANY = {KIND_1, KIND_2, KIND_3, KIND_4, AP, HP, COST, AVT, MDL};
+constexpr filter::Flags ALL = {ON, KIND_3, KIND_4, KIND_1, KIND_2, AP, HP, COST, AVT, MDL};
+
+// $_87..$_89 (board kinds 1..3)
+void kind1Touched(uint32_t f, uint32_t, uint32_t typeRef) { filter::boxTouched(f, typeRef, KIND_1, ANY); }
+void kind2Touched(uint32_t f, uint32_t, uint32_t typeRef) { filter::boxTouched(f, typeRef, KIND_2, ANY); }
+void kind3Touched(uint32_t f, uint32_t, uint32_t typeRef) { filter::boxTouched(f, typeRef, KIND_3, ANY); }
+
+// $_90 (board kind 4) {state, -, ap, hp, cost, avt, mdl, state, -, release, text}(sender, type): on -> off with
+// every stat; off -> on
+void kind4Touched(uint32_t f, uint32_t, uint32_t typeRef) {
+    if (ld32(typeRef) != filter::TOUCH_ENDED) return;
+    call(fn::AudioPlaySystemSEDecide, {});
+    const uint32_t state = ld32(f + 4);
+    if (ld8(state + KIND_4)) {
+        st8(state + KIND_4, 0);
+        for (uint32_t i : {AP, HP, COST, AVT, MDL}) st8(ld32(f + 4) + i, 0);
+        uint32_t box = f + 0xC;
+        for (uint32_t i : {AP, HP, COST, AVT, MDL}) {
+            filter::select(ld32(box), ld32(f + 4), i);
+            box += 4;
+        }
+    } else {
+        st8(state + KIND_4, 1);
+    }
+    filter::update(ld32(f + 4), ld32(f + 0x20), ANY, ld32(f + 0x28), ld32(f + 0x2C));
+}
+
+// $_91..$_95 (a stat) {state, -, state, -, kind4, release, text}(sender, type): the stat flipped; turned on, it
+// turns board kind 4 on too (its box ticked before Release is updated)
+void statTouched(uint32_t f, uint32_t typeRef, uint32_t stat) {
+    if (ld32(typeRef) != filter::TOUCH_ENDED) return;
+    call(fn::AudioPlaySystemSEDecide, {});
+    const uint32_t state = ld32(f + 4);
+    if (ld8(state + stat)) {
+        st8(state + stat, 0);
+    } else {
+        st8(state + stat, 1);
+        st8(ld32(f + 4) + KIND_4, 1);
+    }
+    st8(ld32(f + 4) + ON, filter::any(ld32(f + 0xC), ANY));
+    filter::select(ld32(f + 0x14), ld32(f + 4), KIND_4);
+    filter::lightRelease(ld8(ld32(f + 4) + ON) ? 1 : 0, ld32(f + 0x18), ld32(f + 0x1C));
+}
+void apTouched(uint32_t f, uint32_t, uint32_t typeRef) { statTouched(f, typeRef, AP); }
+void hpTouched(uint32_t f, uint32_t, uint32_t typeRef) { statTouched(f, typeRef, HP); }
+void costTouched(uint32_t f, uint32_t, uint32_t typeRef) { statTouched(f, typeRef, COST); }
+void avtTouched(uint32_t f, uint32_t, uint32_t typeRef) { statTouched(f, typeRef, AVT); }
+void mdlTouched(uint32_t f, uint32_t, uint32_t typeRef) { statTouched(f, typeRef, MDL); }
+
+// $_85 (Release) {state, -, release, text, kind1, state, -, kind2, kind3, kind4, ap, hp, cost, avt, mdl}
+void releaseTouched(uint32_t f, uint32_t, uint32_t typeRef) {
+    filter::releaseTouched(f, typeRef, ALL, {KIND_1, KIND_2, KIND_3, KIND_4, AP, HP, COST, AVT, MDL});
+}
+
+// $_100 (closed) {-, 12 controls +8, state +0x38, -, the snapshot +0x40, onClose +0x50, shadow, popup, layer}(ok):
+// the controls off; OK -> saved and onClose(); Close -> the snapshot put back; the popup closes
+void closed(uint32_t f, uint32_t okRef) {
+    const uint32_t ok = ld8(okRef);
+    filter::controlsOff(f, 12);
+    if (ok) {
+        call(filter::AppState_save, {call(fn::AppState_getInstance, {})});
+        call(fn::function_vv_call, {f + 0x50});
+    } else {
+        filter::restore(f + 0x38, f + 0x40, ALL);
+    }
+    filter::close(ld32(f + 0x68), ld32(f + 0x6C), ld32(f + 0x70), VT_ClosedEnd);
+}
 }  // namespace
 
 RW_FUNCTION(0x47546C, "SceneUtil::openAvatarBoardFilterPopup(function<void()>)", AvatarBoardFilterPopup::open);
+RW_FUNCTION(0x481490, "SceneUtil::openAvatarBoardFilterPopup $_85::operator() (Release)", releaseTouched);
+RW_FUNCTION(0x48120C, "SceneUtil::openAvatarBoardFilterPopup $_87::operator() (board kind 1)", kind1Touched);
+RW_FUNCTION(0x480FC0, "SceneUtil::openAvatarBoardFilterPopup $_88::operator() (board kind 2)", kind2Touched);
+RW_FUNCTION(0x480D74, "SceneUtil::openAvatarBoardFilterPopup $_89::operator() (board kind 3)", kind3Touched);
+RW_FUNCTION(0x480AA4, "SceneUtil::openAvatarBoardFilterPopup $_90::operator() (board kind 4)", kind4Touched);
+RW_FUNCTION(0x480820, "SceneUtil::openAvatarBoardFilterPopup $_91::operator() (AP)", apTouched);
+RW_FUNCTION(0x4805B4, "SceneUtil::openAvatarBoardFilterPopup $_92::operator() (HP)", hpTouched);
+RW_FUNCTION(0x480348, "SceneUtil::openAvatarBoardFilterPopup $_93::operator() (Cost)", costTouched);
+RW_FUNCTION(0x4800DC, "SceneUtil::openAvatarBoardFilterPopup $_94::operator() (AVT)", avtTouched);
+RW_FUNCTION(0x47FE70, "SceneUtil::openAvatarBoardFilterPopup $_95::operator() (MDL)", mdlTouched);
+RW_FUNCTION(0x47F630, "SceneUtil::openAvatarBoardFilterPopup $_100::operator()(bool) (closed)", closed);

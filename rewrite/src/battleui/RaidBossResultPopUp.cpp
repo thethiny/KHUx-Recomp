@@ -590,3 +590,93 @@ void raidResultLoaded(uint32_t functor, uint32_t okRef) {
     if (ld32(enemy + 4)) call(shared_release, {ld32(enemy + 4)});
 }
 RW_FUNCTION(0x5B7DBC, "RaidBossResultPopUp::popUpRaidBossResult request lambda operator() (sub_5B7DBC)", raidResultLoaded);
+
+// ------------------------------------------------------------------------------------------------ the popup's lambdas
+namespace {
+using scene::ld8;
+using scene::st8;
+
+constexpr uint32_t VT_SLID_OUT = 0xF5C8A4;       // sub_5BA100's slide-out end {layer, shadow, widget}
+constexpr uint32_t S_AREA_POINT = 0xDF9FB4;      // "Area_Point"
+constexpr uint32_t S_RAID_RESULT_LWF = 0xE00B5F; // "lwf/battleresult/Raid_Result/Raid_Result.lwf"
+constexpr uint32_t SV_MOVING = 0x640, SV_MOVE_LEFT = 0x644, SV_MIGRATING = 0x645;   // RaidSubdueScrollView
+constexpr uint32_t IScrollProtocol_migrationLeft = 0x4F81B9, IScrollProtocol_migrationRight = 0x4F81D3;
+constexpr uint32_t SceneUtil_createRightOutAnimation = 0x45BA3D;   // (node, float, float, function<void()>)
+constexpr uint32_t AudioLWFNode_create = 0x5EB6B5;
+constexpr uint32_t popUpRaidBossResult = 0x5B6DA9;   // (index, const vector<int>& ids, function<void()> by value)
+constexpr uint32_t slideOut = 0x5BA101;             // sub_5BA100 below
+constexpr uint32_t TOUCH_BEGAN = 0, TOUCH_ENDED = 2, TOUCH_CANCELED = 3;
+
+// the list arrows {scroll view}(sender, type): pressed -> the list moves one page (the decide sound); released
+// -> the page move ends
+void arrowTouched(uint32_t f, uint32_t typeRef, uint32_t migrate, uint8_t left) {
+    const uint32_t type = ld32(typeRef);
+    if (type == TOUCH_CANCELED || type == TOUCH_ENDED) {
+        st8(ld32(f + 4) + SV_MIGRATING, 0);
+    } else if (type == TOUCH_BEGAN) {
+        call(scene::fn::AudioPlaySystemSEDecide, {});
+        st32(ld32(f + 4) + SV_MOVING, 0);
+        st8(ld32(f + 4) + SV_MOVE_LEFT, left);
+        st8(ld32(f + 4) + SV_MIGRATING, uint8_t(call(migrate, {ld32(f + 4), 1})));
+    }
+}
+void rightArrow(uint32_t f, uint32_t, uint32_t typeRef) { arrowTouched(f, typeRef, IScrollProtocol_migrationRight, 0); }
+void leftArrow(uint32_t f, uint32_t, uint32_t typeRef) { arrowTouched(f, typeRef, IScrollProtocol_migrationLeft, 1); }
+
+// the popup slid in {widget}: the Raid_Result LWF on its "Area_Point"
+void slidIn(uint32_t f) {
+    const uint32_t widget = ld32(f + 4);
+    Frame fr;
+    const uint32_t name = scene::newShortStr(fr, "Area_Point");
+    const uint32_t point = SceneUtil::searchNodeByName(widget, name);
+    scene::strFree(name);
+    const uint32_t lwf = call(AudioLWFNode_create, {S_RAID_RESULT_LWF, 0});
+    vcall(point, scene::node::addChild, {point, lwf});
+}
+
+// sub_5BA100({widget, layer, shadow}, done): the cancel sound, the popup slides out to the right (its end removes
+// it), done(), the shadow fades out
+void slideOutPopup(uint32_t cap, uint32_t done) {
+    call(scene::fn::AudioPlaySystemSECancel, {});
+    const uint32_t widget = ld32(cap);
+    {
+        Frame fr;
+        const uint32_t end = scene::newFunction(fr, VT_SLID_OUT, {ld32(cap + 4), ld32(cap + 8), widget});
+        const uint32_t anim = call(SceneUtil_createRightOutAnimation, {widget, 0, 0, end});
+        call(rr::Node_runAction, {widget, call(rr::EaseSineOut_create, {anim})});
+        scene::functionDestroy(end);
+    }
+    if (ld32(done + 16)) call(scene::fn::function_vv_call, {done});
+    const uint32_t shadow = ld32(cap + 8);
+    call(rr::Node_runAction, {shadow, call(rr::FadeTo_create, {ld32(ld32(rr::GOT_POPUP_FADE_TIME)), 0})});
+}
+
+// the popup's close {OK, index, ids, widget, layer, shadow, done}(ok): OK off; the last result -> the popup slides
+// out and done(); otherwise it slides out and the next result's popup opens (done passed on)
+void popupClosed(uint32_t f, uint32_t okRef) {
+    if (!ld8(okRef)) return;
+    vcall(ld32(f + 8), V_TOUCH_ENABLED, {ld32(f + 8), 0});
+    const uint32_t index = ld32(f + 0xC);
+    Frame fr;
+    if (index + 1 >= (ld32(f + 0x14) - ld32(f + 0x10)) >> 2) {
+        const uint32_t done = fr.alloc(24);
+        call(rr::Function_copy, {done, f + 0x28});
+        call(slideOut, {f + 0x1C, done});
+        scene::functionDestroy(done);
+        return;
+    }
+    const uint32_t none = scene::newEmptyFunction(fr);
+    call(slideOut, {f + 0x1C, none});
+    scene::functionDestroy(none);
+    const uint32_t done = fr.alloc(24);
+    call(rr::Function_copy, {done, f + 0x28});
+    call(popUpRaidBossResult, {ld32(f + 0xC) + 1, f + 0x10, done});
+    scene::functionDestroy(done);
+}
+}  // namespace
+
+RW_FUNCTION(0x5B9708, "RaidBossResultPopUp::popUpRaidBossResult $_3 right arrow::operator()", rightArrow);
+RW_FUNCTION(0x5B97E8, "RaidBossResultPopUp::popUpRaidBossResult $_3 left arrow::operator()", leftArrow);
+RW_FUNCTION(0x5B9C68, "RaidBossResultPopUp::popUpRaidBossResult $_3 slid in::operator()", slidIn);
+RW_FUNCTION(0x5B9F78, "RaidBossResultPopUp::popUpRaidBossResult $_3 closed::operator()(bool)", popupClosed);
+RW_FUNCTION(0x5BA100, "RaidBossResultPopUp popup slide out (sub_5BA100)", slideOutPopup);

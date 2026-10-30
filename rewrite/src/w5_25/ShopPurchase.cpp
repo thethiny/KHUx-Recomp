@@ -528,3 +528,35 @@ RW_FUNCTION(0x4E10E0, "iap::StoreManagerImpl::purchase(const string&)", ShopPurc
 RW_FUNCTION(0x4E1D0C, "Java_org_cocos2dx_cpp_GooglePlayManager_onPurchaseFinish", ShopPurchase::onPurchaseFinish);
 RW_FUNCTION(0x4D9254, "bg::ioutil::_write<std::string>(const string&, MemoryStream*, const vector_tag&)",
             ShopPurchase::writeString);
+
+namespace {
+// openPurchaseSucceededPopup $_127 (OK) {-, OK, -, popup, layer, shadow, -, callback (bool) +0x20}: OK off, the
+// popup shrinks (its end {layer, shadow, popup, callback, true}) and the shadow fades
+void purchaseOk(uint32_t f) {
+    constexpr uint32_t VT_PurchaseClosedEnd = 0xF53B10, SceneUtil_createClosePopupAnimation = 0x45BC61;
+    vcall(ld32(f + 8), node::setTouchEnabled, {ld32(f + 8), 0});
+    const uint32_t popup = ld32(f + 0x10), layer = ld32(f + 0x14), shadow = ld32(f + 0x18);
+    Frame fr;
+    const uint32_t cb = fr.alloc(24);
+    call(fn::function_vb_copy, {cb, f + 0x20});
+    const uint32_t end = fr.alloc(24);
+    st32(end + 16, 0);
+    const uint32_t h = call(fn::operator_new, {0x38});
+    if (h) {
+        st32(h, VT_PurchaseClosedEnd);
+        st32(h + 8, layer);
+        st32(h + 0xC, shadow);
+        st32(h + 0x10, popup);
+        call(fn::function_vb_move, {h + 0x18, cb});
+        st8(h + 0x30, 1);
+    }
+    st32(end + 16, h);
+    // r0 holds the flag here (the animation does not read it)
+    call(fn::Node_runAction, {popup, call(SceneUtil_createClosePopupAnimation, {h ? 1u : 0u, end})});
+    functionDestroy(end);
+    functionDestroy(cb);
+    call(fn::Node_runAction, {ld32(f + 0x18), call(fn::FadeTo_create, {fbits(0.1f), 0})});
+}
+}  // namespace
+
+RW_FUNCTION(0x47C410, "SceneUtil::openPurchaseSucceededPopup $_127::operator()", purchaseOk);

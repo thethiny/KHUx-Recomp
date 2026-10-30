@@ -18,6 +18,7 @@ constexpr uint32_t SceneManager_getPopupLayer2 = 0x613E71;
 constexpr uint32_t SceneManager_openPopup = 0x61524D;     // (mgr, function<bool()>*, function<void(bool)>*, bool)
 constexpr uint32_t AudioPlaySystemSEPopUp = 0x5C0E09;
 constexpr uint32_t AudioPlaySystemSEDecide = 0x5C0CF9;
+constexpr uint32_t AudioPlaySystemSECancel = 0x5C0D81;
 constexpr uint32_t SceneManager_enableLoadingIndicator = 0x60D169;   // (mgr, bool)
 constexpr uint32_t APIManager_getInstance = 0x4BA8C9;
 constexpr uint32_t AppState_getInstance = 0x4E66DD;
@@ -179,17 +180,109 @@ inline void centerPopup(uint32_t popup) {
 
 inline uint32_t sceneManager() { return call(fn::SceneManager_getInstance, {}); }
 
-// audio::Manager::getInstance()->getLayer(0)->playSE(id, 0, 0)
-inline void playLayerSE(uint32_t id) {
+// the SceneManager's loading indicator hidden when it is shown (has a parent)
+inline void hideLoadingIndicator() {
+    constexpr uint32_t LoadingIndicator_hide = 0x509D69, SM_LOADING_INDICATOR = 0x4C8;
+    const uint32_t sm = sceneManager();
+    const uint32_t indicator = ld32(sm + SM_LOADING_INDICATOR);
+    if (vcall(indicator, node::getParent, {indicator})) call(LoadingIndicator_hide, {ld32(sm + SM_LOADING_INDICATOR)});
+}
+
+// audio::Manager::getInstance()->getLayer(layerId)->playSE(id, 0, 0)
+inline void playLayerSE(uint32_t id, uint32_t layerId = 0) {
     constexpr uint32_t AudioManager_getInstance = 0x5BECFD;
     constexpr uint32_t AudioManager_getLayer = 0x5BF33D;      // (shared_ptr<Layer> out, Manager*, int layer)
     constexpr uint32_t AudioLayer_playSE = 0x5BF785;          // (Layer*, ResourceID, int, int)
     const uint32_t mgr = call(AudioManager_getInstance, {});
     Frame f;
     const uint32_t layer = f.alloc(8);
-    call(AudioManager_getLayer, {layer, mgr, 0});
+    call(AudioManager_getLayer, {layer, mgr, layerId});
     call(AudioLayer_playSE, {ld32(layer), id, 0, 0});
     sharedRelease(layer);
+}
+
+// SceneUtil::openMedalInfoPopup of the shared_ptr<UserMedalData> at `medal` (copied for the call) with the medal
+// info setting (APIManager +0x94, byte +0x54), not editable, buttons shown; the buttons answer through a heap lambda
+// `answerVt` {owner, 0, user medal id} (0x18 bytes), the popup's close through `closedVt` {owner} (0: no callback);
+// `last` the popup's last flag
+inline void openUserMedalInfo(uint32_t medal, uint32_t owner, uint32_t lo, uint32_t hi, uint32_t answerVt,
+                              uint32_t closedVt, uint32_t last) {
+    constexpr uint32_t SceneUtil_openMedalInfoPopup = 0x466EF5;   // (shared_ptr<UserMedalData>&, bool, bool, bool,
+                                                                  //  function<void(ButtonType, bool)>, vector<Skill>*,
+                                                                  //  function<void()>, bool)
+    constexpr uint32_t API_USER_SETTINGS = 0x94;
+    const uint32_t api = call(fn::APIManager_getInstance, {});
+    Frame f;
+    const uint32_t copy = f.alloc(8);
+    st32(copy, ld32(medal));
+    st32(copy + 4, ld32(medal + 4));
+    if (ld32(copy + 4)) call(fn::shared_add, {ld32(copy + 4)});
+    const uint32_t setting = ld8(safeBytes(f, ld32(api + API_USER_SETTINGS), 0x54, 1));
+    const uint32_t answer = newEmptyFunction(f);
+    const uint32_t heap = call(fn::operator_new, {0x18});
+    if (heap) {
+        st32(heap, answerVt);
+        st32(heap + 8, owner);
+        st32(heap + 0xC, 0);
+        st32(heap + 0x10, lo);
+        st32(heap + 0x14, hi);
+    }
+    st32(answer + 16, heap);
+    const uint32_t closed = closedVt ? newFunction(f, closedVt, {owner}) : newEmptyFunction(f);
+    call(SceneUtil_openMedalInfoPopup, {copy, setting ? 1u : 0u, 0, 1, answer, 0, closed, last});
+    functionDestroy(closed);
+    functionDestroy(answer);
+    if (ld32(copy + 4)) call(fn::shared_release, {ld32(copy + 4)});
+}
+
+// LWF movie events: the event name "load" of a {name, std::function} pair (a short string built in place), and
+// LWF::AddMovieEventHandler(movie `name`, a one-entry map<string, function<void(Movie*)>> holding `pair`)
+inline void lwfLoadKey(uint32_t pair) { shortStrAt(pair, "load"); }
+inline void lwfAddMovieHandler(uint32_t lwf, uint32_t name, uint32_t pair) {
+    constexpr uint32_t HandlerMap_insert_unique = 0x530869, HandlerMap_destroy = 0x530811;
+    Frame f;
+    const uint32_t map = f.alloc(12);
+    st32(map + 4, 0);
+    st32(map + 8, 0);
+    st32(map, map + 4);
+    call(HandlerMap_insert_unique, {map, map + 4, pair});
+    call(rwlib::LWF::LWF::AddMovieEventHandler, {lwf, name, map});
+    call(HandlerMap_destroy, {map, ld32(map + 4)});
+}
+
+// tutorial popup `id` over `target` (callback: the popup's std::function<void()>), its close function handed to
+// AppState::setTutorialCloseFunc(id) (the returned function dropped)
+inline void openTutorialWithClose(uint32_t id, uint32_t callback, uint32_t target) {
+    constexpr uint32_t AppState_setTutorialCloseFunc = 0x4EB8D9;   // (sret function, app, const function&, id)
+    const uint32_t app = call(fn::AppState_getInstance, {});
+    Frame f;
+    const uint32_t result = f.alloc(24), old = f.alloc(24);
+    SceneUtil::openTutorialPopup(result, id, callback, target, 0, 0, 0);
+    call(AppState_setTutorialCloseFunc, {old, app, result, id});
+    functionDestroy(old);
+    functionDestroy(result);
+}
+
+// APIManager::openErrorDialog(a no-capture std::function `vt`, true) when the API manager shows errors (+0x14)
+inline void apiErrorDialogIfShown(uint32_t vt) {
+    constexpr uint32_t APIManager_openErrorDialog = 0x4C3C8D;
+    constexpr uint32_t API_SHOW_ERROR = 0x14;
+    if (!ld8(call(fn::APIManager_getInstance, {}) + API_SHOW_ERROR)) return;
+    const uint32_t api = call(fn::APIManager_getInstance, {});
+    Frame f;
+    const uint32_t fo = newFunction(f, vt, {});
+    call(APIManager_openErrorDialog, {api, fo, 1});
+    functionDestroy(fo);
+}
+
+// MedalDataManager::getInstance()->getMedalData(out, user medal id, 0, an empty UserMedal::Medal by value): the
+// shared_ptr<UserMedalData> of a user medal (the by-value record's stack words are passed as zeros)
+inline void medalDataById(uint32_t out, uint32_t lo, uint32_t hi) {
+    constexpr uint32_t MedalDataManager_getInstance = 0x76AD69;
+    constexpr uint32_t MedalDataManager_getMedalData = 0x76ADB5;   // (sret, mgr, u64 id, int, Medal by value)
+    const uint32_t mgr = call(MedalDataManager_getInstance, {});
+    call(MedalDataManager_getMedalData, {out, mgr, lo, hi, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                         0, 0});
 }
 
 // SceneManager::changeSceneLayer(function<Layer*()>, a, b, fade) to the layer of a createSceneLayer<T> (its address
@@ -217,6 +310,32 @@ inline void okDialogText(int32_t id) {
     sharedRelease(text);
 }
 
+// a popup closing: it shrinks (the std::function `end` runs after; destroyed here) and its shadow fades out
+inline void shrinkPopup(uint32_t popup, uint32_t end, uint32_t shadow) {
+    constexpr uint32_t SceneUtil_createClosePopupAnimation = 0x45BC61;
+    call(fn::Node_runAction, {popup, call(SceneUtil_createClosePopupAnimation, {popup, end})});
+    functionDestroy(end);
+    call(fn::Node_runAction, {shadow, call(fn::FadeTo_create, {fbits(0.1f), 0})});
+}
+
+// a request failed: TextData `id`, the cancel sound, `button` (when given) on again, the current popup closed,
+// then the text in an OK dialog
+inline void failedDialog(int32_t id, uint32_t button = 0) {
+    constexpr uint32_t SceneUtil_openOkDialog4Line = 0x45C775, SM_closeCurrentPopup = 0x6216A1;
+    constexpr uint32_t V_SET_TOUCH_ENABLED = 0x29C;
+    Frame f;
+    const uint32_t text = textData(f, id);
+    const uint32_t message = newStr(f, textDataStr(text));
+    call(fn::AudioPlaySystemSECancel, {});
+    if (button) vcall(button, V_SET_TOUCH_ENABLED, {button, 1});
+    call(SM_closeCurrentPopup, {sceneManager(), 0});
+    const uint32_t none = newEmptyFunction(f);
+    call(SceneUtil_openOkDialog4Line, {message, none, 0});
+    functionDestroy(none);
+    strFree(message);
+    sharedRelease(text);
+}
+
 // AppState's tutorial close function `id`: when one is set, it runs (getTutorialCloseFunc's copy dropped first)
 inline void execTutorialCloseIfSet(uint32_t id) {
     constexpr uint32_t AppState_getTutorialCloseFunc = 0x4EBA3D;    // (sret function<void()>, app, id)
@@ -229,12 +348,13 @@ inline void execTutorialCloseIfSet(uint32_t id) {
     if (set) call(AppState_execTutorialCloseFunc, {call(fn::AppState_getInstance, {}), id});
 }
 
-// SceneManager: an API request is about to run (byte +0x4CC) and the pending payment callback (+0x548) is dropped
-inline void apiBusyDropPayment() {
+// SceneManager: an API request is about to run (byte +0x4CC, `busy`) and the pending payment callback (+0x548) is
+// dropped
+inline void apiBusyDropPayment(uint8_t busy = 1) {
     constexpr uint32_t SM_API_BUSY = 0x4CC, SM_ON_PAYMENT = 0x548;
     constexpr uint32_t FunctionVB_assign = 0x490109;   // std::function<void(bool)>::operator=(const function&)
     const uint32_t sm = sceneManager();
-    st8(sm + SM_API_BUSY, 1);
+    st8(sm + SM_API_BUSY, busy);
     Frame f;
     const uint32_t none = newEmptyFunction(f);
     call(FunctionVB_assign, {sm + SM_ON_PAYMENT, none});

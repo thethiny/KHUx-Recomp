@@ -320,10 +320,7 @@ static void stampTouched(uint32_t functor, uint32_t, uint32_t typep) {
         const uint32_t row = ld32(ld32(view + F_ROWS) + 4 * i);
         if (row == ld32(functor + 4)) continue;
         Frame f;
-        const uint32_t on = f.alloc(12);
-        st8(on, uint8_t(sizeof(STAMP_ON) - 1) << 1);
-        for (uint32_t k = 0; k + 1 < sizeof(STAMP_ON); k++) st8(on + 1 + k, uint8_t(STAMP_ON[k]));
-        st8(on + sizeof(STAMP_ON), 0);
+        const uint32_t on = newShortStr(f, STAMP_ON);
         hideChild(row, on);
         const uint32_t cursor = f.alloc(12);
         strInitC(cursor, S_StampCursor);

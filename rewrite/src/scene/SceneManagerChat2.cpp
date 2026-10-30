@@ -54,7 +54,6 @@ constexpr uint32_t Size_ctor = rwlib::cocos2d::Size::ctor_base__ff;             
 constexpr uint32_t APIManager_executePaymentInfo = 0x4CE74D;
 constexpr uint32_t ChatPopup_fetch = 0x61507D;   // openChatPopup $_43::operator() (on the captures, called directly)
 constexpr uint32_t ChatPopup_close = 0x631931;   // the chat popup's close ({this, root, layer, shadow}; chatPopupClose below)
-constexpr uint32_t LoadingIndicator_hide = 0x509D69;
 constexpr uint32_t SceneManager_closeCurrentPopup = 0x6216A1;   // (mgr, bool) -> bool
 constexpr uint32_t AudioPlaySystemSECancel = 0x5C0D81;
 constexpr uint32_t COLOR3B_GRAY = 0x1007EA0, COLOR3B_BLACK = 0x1007E9A;
@@ -70,7 +69,7 @@ constexpr uint32_t VT_Chat_StampTouch = 0xF60004;   // $_42 [this]
 constexpr uint32_t VT_Chat_Payment = 0xF5FFAC;   // $_44 (heap 0x54): the 0x50-byte capture block
 constexpr uint32_t VT_Chat_CanClose = 0xF5FF80;  // $_46 [close button]
 constexpr uint32_t VT_Chat_OnClose = 0xF5FF54;   // $_45 (heap 0x18): [this, this, root, layer, shadow]
-constexpr uint32_t VT_Chat_Closed = 0xF60054;    // the close animation's end (heap 0x14): [layer, this, shadow, root]
+constexpr uint32_t VT_Chat_Closed = 0xF6005C;    // the close animation's end (heap 0x14): [layer, this, shadow, root]
 
 constexpr uint32_t STR_Empty = 0xDF8A1A;
 constexpr uint32_t STR_ChatSceneJson = 0xE032CB;  // "cocostudio/publish/ChatScene.json"
@@ -410,12 +409,6 @@ void SceneManager::openChatPopup(SceneManager *self) {
 RW_FUNCTION(0x613E9C, "SceneManager::openChatPopup", SceneManager::openChatPopup);
 
 namespace {
-// the loading indicator hidden when it is shown (on a parent)
-void hideLoadingIndicator() {
-    SceneManager *mgr = SceneManager::getInstance();
-    const uint32_t indicator = mgr->loadingIndicator;
-    if (vcall(indicator, node::getParent, {indicator})) call(LoadingIndicator_hide, {mgr->loadingIndicator});
-}
 
 // The chat popup's close {this, root, layer, shadow}: the chat flags and poll timer cleared, the loading indicator
 // hidden, the popup shrinks (a heap lambda {layer, this, shadow, root} ends the close) and the shadow fades out.
@@ -738,3 +731,21 @@ RW_FUNCTION(0x631BDC, "SceneManager::openChatPopup $_128::operator() (message cr
 RW_FUNCTION(0x63204C, "SceneManager::openChatPopup $_38 body (sub_63204C): reopen", chatReopen);
 RW_FUNCTION(0x6322D4, "SceneManager::openChatPopup $_40::operator() (text changed)", chatTextChanged);
 RW_FUNCTION(0x632610, "SceneManager::openChatPopup $_39::operator() (Close_Button)", chatCloseTouch);
+
+// ------------------------------------------------------------------------------------------------ chatDataUpdate
+namespace {
+// a chat request finished: not requesting any more, the loading indicator hidden, the pending close (+0x480, set
+// while a request ran) run once and dropped
+void chatRequestDone(uint32_t self) {
+    st8(self + CHAT_REQUESTING, 0);
+    hideLoadingIndicator();
+    if (!ld32(self + CHAT_ON_CLOSE + 16)) return;
+    call(fn::function_vv_call, {self + CHAT_ON_CLOSE});
+    functionDestroy(self + CHAT_ON_CLOSE);
+    st32(self + CHAT_ON_CLOSE + 16, 0);
+}
+}  // namespace
+
+// chatDataUpdate $_126 {this}: the request is over (see chatRequestDone)
+static void chatUpdateDone(uint32_t functor) { chatRequestDone(ld32(functor + 4)); }
+RW_FUNCTION(0x6339A0, "SceneManager::chatDataUpdate $_126::operator()", chatUpdateDone);

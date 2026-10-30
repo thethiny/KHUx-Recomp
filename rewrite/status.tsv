@@ -101,7 +101,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00461FCC	std::operator+(const char*, const std::string&) (sub_461FCC)	3967	747	0	0
 00462048	SceneUtil::getMedalMaxRare	12	2	0	0
 00462194	SceneUtil::updateMedalInfo	33	10	0	0
-004658D4	SceneUtil shadow text from TextData (sub_4658D4)	672	31	0	0
+004658D4	SceneUtil shadow text from TextData (sub_4658D4)	700	32	0	0
 004659F0	SceneUtil::setStatusChangeColor	2152	1	0	0
 00465AB8	SceneUtil::runTicker	13	3	0	0
 00465C84	SceneUtil::updateMixCircle(Widget*, Widget*, Widget*, shared_ptr<UserMedalData>, bool, int, bool, bool, bool, bool, bool)	921	63	0	0
@@ -109,7 +109,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00466B08	SceneUtil::hideSupportMedalEffect	632	1	0	0
 00466BA8	SceneUtil::setAdditionalKerningForAtlasLabel	776	16	0	0
 00466C40	SceneUtil::numberToAtlasString	1612	145	0	0
-00466EF4	SceneUtil::openMedalInfoPopup	35	15	0	0
+00466EF4	SceneUtil::openMedalInfoPopup	36	16	0	0
 004683FE	std::function<void(MedalInfoButtonType, bool)>::function(const&)	30	10	0	0
 00468498	std::__vector_base<unsigned long long>::~__vector_base	175	79	0	0
 004684C8	SceneUtil::openTutorialPopup	1087	254	0	0
@@ -175,7 +175,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0047463C	SceneUtil::openWebViewInfoPopup	2	2	0	0
 00474700	SceneUtil::openWebViewInfoPopup(Layer*, ...)	3	2	0	0
 00474DCC	SceneUtil::openSellOkPopup(int, bool)	4	2	0	0
-0047546C	SceneUtil::openAvatarBoardFilterPopup(function<void()>)	2	1	0	0
+0047546C	SceneUtil::openAvatarBoardFilterPopup(function<void()>)	4	3	0	0
 00476E80	SceneUtil::openAdventureSelectFilterPopup(function<void(bool)>)	1	1	0	0
 00478928	BaseScrollView<int>::setItemIDs(const vector<int>&)	21	5	0	1
 00478960	std::__vector_base<int>::~__vector_base	213129	2524	0	0
@@ -210,15 +210,27 @@ addr	name	calls	verified	mismatches	unverifiable
 0047D6DE	std::vector<int>::allocate	144557	1150	0	0
 0047D708	std::vector<int>::__push_back_slow_path<int>	27489	1804	0	0
 0047D818	std::__split_buffer<int&>::~__split_buffer	19995	1900	0	0
+0047F630	SceneUtil::openAvatarBoardFilterPopup $_100::operator()(bool) (closed)	2	2	0	0
 0047F904	std::function<void()>::function(&&)	249	222	0	0
 0047F970	sub_47F970	32	0	0	0
 0047F990	nullsub_217	32	0	0	0
 0047FA66	sub_47FA66	32	0	0	0
 0047FCA4	sub_47FCA4	64	0	0	0
 0047FCC0	nullsub_220	64	0	0	0
+0047FE70	SceneUtil::openAvatarBoardFilterPopup $_95::operator() (MDL)	4	4	0	0
+004800DC	SceneUtil::openAvatarBoardFilterPopup $_94::operator() (AVT)	4	4	0	0
+00480348	SceneUtil::openAvatarBoardFilterPopup $_93::operator() (Cost)	4	4	0	0
+004805B4	SceneUtil::openAvatarBoardFilterPopup $_92::operator() (HP)	4	4	0	0
+00480820	SceneUtil::openAvatarBoardFilterPopup $_91::operator() (AP)	4	4	0	0
+00480AA4	SceneUtil::openAvatarBoardFilterPopup $_90::operator() (board kind 4)	4	4	0	0
+00480D74	SceneUtil::openAvatarBoardFilterPopup $_89::operator() (board kind 3)	12	12	0	0
+00480FC0	SceneUtil::openAvatarBoardFilterPopup $_88::operator() (board kind 2)	4	4	0	0
+0048120C	SceneUtil::openAvatarBoardFilterPopup $_87::operator() (board kind 1)	4	4	0	0
+00481490	SceneUtil::openAvatarBoardFilterPopup $_85::operator() (Release)	4	4	0	0
 00481F0C	std::function<void(Node*)>::function(&&)	16	16	0	0
 004821B4	std::function<void(WebView*, string)>::swap	8	8	0	0
 0048286C	std::__murmur2_or_cityhash<unsigned int, 32>::operator()	21428067	10044	0	0
+00482A18	std::vector<Date>::__push_back_slow_path<const Date&>	24	24	0	0
 00483E4C	std::function<bool(Touch*, Event*)>::swap	3521	924	0	0
 00484298	SceneUtil::callPrepareMypageAPIs::$_66 __clone()	76	42	0	0
 004843DC	SceneUtil::callPrepareMypageAPIs::$_66 destroy_deallocate()	113	79	0	0
@@ -258,12 +270,15 @@ addr	name	calls	verified	mismatches	unverifiable
 00487B7A	std::__split_buffer<shared_ptr<MedalDataManager::UserMedalData>&>::~__split_buffer	756	262	0	0
 00487D40	nullsub_51	2067	94	0	0
 00487D4A	sub_487D4A	2067	94	0	0
+004881B8	SceneUtil::openMedalInfoPopup $_32::operator()(bool) (closed)	2	1	0	0
 00488580	sub_488580	13	3	0	0
 004885A0	nullsub_252	22	8	0	0
 004885AA	sub_4885AA	6	2	0	0
 0048861C	sub_48861C	26	6	0	0
 0048863C	nullsub_253	35	12	0	0
+00488648	SceneUtil::openMedalInfoPopup $_30::operator() (opened)	1	1	0	0
 00488968	std::function<void(MedalInfoButtonType, bool)>::function(&&)	15	5	0	0
+00488AEC	SceneUtil::openMedalInfoPopup $_28::operator() (Level Up)	4	4	0	0
 00488BE8	sub_488BE8	32	3	0	0
 00488C04	nullsub_254	41	12	0	0
 00488C0E	sub_488C0E	4	3	1	0
@@ -422,18 +437,18 @@ addr	name	calls	verified	mismatches	unverifiable
 0049911C	std::function<void(const shared_ptr<RESTClient::Result>&)>::operator()	608	86	48	445
 00499160	std::deque<shared_ptr<RESTClient::Connection>>::pop_front	262	262	0	0
 004991BC	hole::network::RESTClient (sub_4991BC): the decode worker thread	1203	0	0	0
-00499748	std::__thread_specific_ptr<__thread_struct>::reset	266	0	0	0
+00499748	std::__thread_specific_ptr<__thread_struct>::reset	808	0	0	0
 0049977C	hole::network::FindSubstringInsensitive	4133	401	0	0
-00499874	std::deque<pair<shared_ptr<Connection>, shared_ptr<Result>>>::push_back(&&)	262	0	0	0
+00499874	std::deque<pair<shared_ptr<Connection>, shared_ptr<Result>>>::push_back(&&)	796	0	0	0
 00499920	sub_499920	7562	3936	0	0
 00499940	nullsub_269	11341	7589	0	0
-00499A50	std::deque<pair<shared_ptr<Connection>, shared_ptr<Result>>>::__add_back_capacity	4	0	0	0
-00499FB4	std::__split_buffer<pair<shared_ptr<RESTClient::Connection>, shared_ptr<RESTClient::Result>>*&>::push_back(&&)	6	0	0	0
-0049A1F8	std::__split_buffer<pair<shared_ptr<RESTClient::Connection>, shared_ptr<RESTClient::Result>>*&>::~__split_buffer	6	0	0	0
-0049A35C	std::__search<FindSubstringInsensitive lambda, __wrap_iter<const char*>>	343	0	0	0
+00499A50	std::deque<pair<shared_ptr<Connection>, shared_ptr<Result>>>::__add_back_capacity	12	0	0	0
+00499FB4	std::__split_buffer<pair<shared_ptr<RESTClient::Connection>, shared_ptr<RESTClient::Result>>*&>::push_back(&&)	14	0	0	0
+0049A1F8	std::__split_buffer<pair<shared_ptr<RESTClient::Connection>, shared_ptr<RESTClient::Result>>*&>::~__split_buffer	14	0	0	0
+0049A35C	std::__search<FindSubstringInsensitive lambda, __wrap_iter<const char*>>	877	0	0	0
 0049A418	sub_49A418	1202663	29025	0	0
 0049A42A	std::__search<bool (*&)(char, char), const char*, const char*>	3204	620	0	0
-0049A4A6	std::string::__init<__wrap_iter<char*>>	262	0	0	0
+0049A4A6	std::string::__init<__wrap_iter<char*>>	796	0	0	0
 0049A510	std::shared_ptr<hole::network::RESTClient::Result>::make_shared<>	600	599	0	0
 0049A5EC	std::__shared_ptr_emplace<hole::network::RESTClient::Result>::__on_zero_shared	3782	3781	0	0
 0049A5F6	std::__shared_ptr_emplace<hole::network::RESTClient::Result>::__on_zero_shared_weak	3782	3781	0	0
@@ -451,7 +466,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0049D228	std::vector<string>::deallocate	2466	1001	0	0
 0049D278	std::function<int(double, double, double, double)>::operator=(const&)	552	152	0	0
 0049D418	std::function<void(HttpClient*, HttpResponse*)>::operator=(const&)	565	165	0	0
-0049D724	std::vector<char>::assign(const char*, const char*)	73	36	10	0
+0049D724	std::vector<char>::assign(const char*, const char*)	187	129	10	0
 0049D800	std::vector<char>::deallocate	139	48	0	0
 0049D822	std::vector<char>::allocate	139	48	0	0
 0049D84A	rapidjson::internal::Stack<rapidjson::CrtAllocator>::~Stack [base destructor]	9416	5558	0	0
@@ -527,12 +542,12 @@ addr	name	calls	verified	mismatches	unverifiable
 004A4174	std::shared_ptr<hole::network::api::StageEvent>::shared_ptr(hole::network::api::StageEvent*)	2	1	0	0
 004A41CC	hole::network::api::StageSupportList::SupportUser::init	1225	0	28	0
 004A457C	hole::network::api::StageSupportList::parse	260	1	130	0
-004A46E8	std::shared_ptr<hole::network::api::StageSupportList>::shared_ptr(hole::network::api::StageSupportList*)	75	0	0	0
+004A46E8	std::shared_ptr<hole::network::api::StageSupportList>::shared_ptr(hole::network::api::StageSupportList*)	79	4	0	0
 004A477C	hole::network::api::StageStart::EnemyDropItem::init	28	12	0	0
 004A4830	hole::network::api::StageStart::Treasure::init	201	42	0	0
 004A48E4	hole::network::api::StageStart::RequestData::init	88	43	0	0
 004A4A60	hole::network::api::StageStart::parse	109	46	0	0
-004A4D34	std::shared_ptr<hole::network::api::StageStart>::shared_ptr(hole::network::api::StageStart*)	36	0	0	0
+004A4D34	std::shared_ptr<hole::network::api::StageStart>::shared_ptr(hole::network::api::StageStart*)	38	2	0	0
 004A4D88	hole::network::api::StageClear::Reward::init	2	0	0	0
 004A4E14	hole::network::api::StageClear::Property::init	135	15	0	0
 004A4ED4	hole::network::api::StageClear::parse	101	0	41	0
@@ -559,6 +574,7 @@ addr	name	calls	verified	mismatches	unverifiable
 004A6EF4	std::shared_ptr<hole::network::api::SystemInformationList151203>::shared_ptr(hole::network::api::SystemInformationList151203*)	9	1	0	0
 004A6F4C	hole::network::api::SystemInvitecode::parse	1	1	0	0
 004A707C	hole::network::api::PaymentInfo::parse	7	7	0	0
+004A71E8	std::shared_ptr<hole::network::api::PaymentInfo>::shared_ptr(hole::network::api::PaymentInfo*)	6	6	0	0
 004A723C	hole::network::api::Party::init	601	400	0	0
 004A7584	hole::network::api::UserParty::parse	756	469	0	0
 004A78C4	std::shared_ptr<hole::network::api::UserParty>::shared_ptr(hole::network::api::UserParty*)	82	6	0	0
@@ -582,12 +598,15 @@ addr	name	calls	verified	mismatches	unverifiable
 004A9948	std::shared_ptr<hole::network::api::UserShop>::shared_ptr(hole::network::api::UserShop*)	9	1	0	0
 004AA374	hole::network::api::GachaList::Gacha::init	6	1	0	0
 004AA594	hole::network::api::GachaList::parse	1	1	0	0
+004AA758	std::shared_ptr<hole::network::api::GachaList>::shared_ptr(hole::network::api::GachaList*)	1	1	0	0
 004AAD00	hole::network::api::TutorialStatus::parse	97	84	0	0
 004AADB4	std::shared_ptr<hole::network::api::TutorialStatus>::shared_ptr(hole::network::api::TutorialStatus*)	9	1	0	0
 004AB04C	hole::network::api::Record::init	10	0	0	0
 004AB9A4	hole::network::api::UserProfile::parse	5	0	5	0
 004ABD94	hole::network::api::UserProfile::~UserProfile	1	1	0	0
 004ABE38	std::shared_ptr<hole::network::api::UserProfile>::shared_ptr(hole::network::api::UserProfile*)	2	0	0	0
+004AC28C	std::shared_ptr<hole::network::api::LuxRanking>::shared_ptr(hole::network::api::LuxRanking*)	16	16	0	0
+004AC66C	std::shared_ptr<hole::network::api::PartyRanking>::shared_ptr(hole::network::api::PartyRanking*)	8	8	0	0
 004ACD30	hole::network::api::UnionRanking::parse	92	79	0	0
 004AD26C	hole::network::api::UserStamp::parse	85	57	0	0
 004AD388	std::shared_ptr<hole::network::api::UserStamp>::shared_ptr(hole::network::api::UserStamp*)	9	1	0	0
@@ -621,10 +640,10 @@ addr	name	calls	verified	mismatches	unverifiable
 004AF78A	std::map<int, UserSphere::Sphere>::find	4	0	0	0
 004AF826	std::__tree_remove	18394	2462	0	0
 004AFA70	std::__shared_ptr_pointer<hole::network::api::UserSphere  *>::__on_zero_shared_weak	184	143	0	0
-004AFA78	std::map<int, UserSphere::Sphere>::__insert_unique(pair&&)	517	0	0	0
-004AFAEC	std::map<int, UserSphere::Sphere>::__node_insert_unique	517	0	0	0
-004AFB64	std::map<int, UserSphere::Sphere>::__find_equal	517	0	0	0
-004AFBB0	std::map<int, UserSphere::Sphere>::__insert_node_at	517	0	0	0
+004AFA78	std::map<int, UserSphere::Sphere>::__insert_unique(pair&&)	1104	587	0	0
+004AFAEC	std::map<int, UserSphere::Sphere>::__node_insert_unique	1691	587	0	0
+004AFB64	std::map<int, UserSphere::Sphere>::__find_equal	1691	587	0	0
+004AFBB0	std::map<int, UserSphere::Sphere>::__insert_node_at	1691	587	0	0
 004AFBEC	std::__shared_ptr_pointer<hole::network::api::RaidClear  *>::__on_zero_shared	3	3	0	0
 004AFC28	std::__shared_ptr_pointer<hole::network::api::RaidClear  *>::__on_zero_shared_weak	3	3	0	0
 004AFC3C	std::__shared_ptr_pointer<hole::network::api::RaidStart  *>::__on_zero_shared	3	3	0	0
@@ -646,8 +665,8 @@ addr	name	calls	verified	mismatches	unverifiable
 004B0414	hole::network::api::UserTitle::~UserTitle (deleting)	94	22	0	0
 004B0458	std::__shared_ptr_pointer<hole::network::api::UserTitle  *>::__on_zero_shared	94	22	0	0
 004B0490	std::__shared_ptr_pointer<hole::network::api::UserTitle  *>::__on_zero_shared_weak	94	22	0	0
-004B0498	std::unordered_map<int, int>::__insert_unique<pair<u64, int>>	300	0	0	0
-004B0814	std::shared_ptr<hole::network::api::UserKeyblade>::make_shared<unsigned>	225	0	0	0
+004B0498	std::unordered_map<int, int>::__insert_unique<pair<u64, int>>	569	269	0	0
+004B0814	std::shared_ptr<hole::network::api::UserKeyblade>::make_shared<unsigned>	227	2	0	0
 004B0940	std::__shared_ptr_emplace<hole::network::api::UserKeyblade>::__on_zero_shared	1480	349	0	0
 004B094C	std::__shared_ptr_emplace<hole::network::api::UserKeyblade>::__on_zero_shared_weak	1480	349	0	0
 004B0954	hole::network::api::UserKeyblade::~UserKeyblade	1669	310	0	0
@@ -677,8 +696,8 @@ addr	name	calls	verified	mismatches	unverifiable
 004B101C	std::__shared_ptr_pointer<hole::network::api::UserMedal  *>::__on_zero_shared_weak	1559	47	0	0
 004B1030	std::__shared_ptr_pointer<hole::network::api::UserStone  *>::__on_zero_shared	254	116	0	0
 004B1068	std::__shared_ptr_pointer<hole::network::api::UserStone  *>::__on_zero_shared_weak	254	116	0	0
-004B1070	std::unordered_map<unsigned long long, int>::__insert_unique<pair<u64, unsigned>>	54040	0	0	0
-004B1104	std::unordered_map<unsigned long long, int>::__construct_node<pair<u64, unsigned>>	37673	0	0	0
+004B1070	std::unordered_map<unsigned long long, int>::__insert_unique<pair<u64, unsigned>>	54047	7	0	0
+004B1104	std::unordered_map<unsigned long long, int>::__construct_node<pair<u64, unsigned>>	37680	7	0	0
 004B1188	std::unordered_map<unsigned long long, int>::__node_insert_unique	83979	300	0	0
 004B1380	std::unordered_map<unsigned long long, int>::rehash	6657	375	0	0
 004B1458	std::unordered_map<unsigned long long, int>::__rehash	6207	300	0	0
@@ -688,8 +707,8 @@ addr	name	calls	verified	mismatches	unverifiable
 004B16E8	hole::network::api::UserAvatarParts::~UserAvatarParts (deleting)	120	52	0	0
 004B172C	std::__shared_ptr_pointer<hole::network::api::UserAvatarParts  *>::__on_zero_shared	116	46	0	0
 004B1764	std::__shared_ptr_pointer<hole::network::api::UserAvatarParts  *>::__on_zero_shared_weak	116	46	0	0
-004B176C	std::unordered_map<unsigned long long, int>::__insert_unique<pair<u64, int>>	4317	0	0	0
-004B1800	std::unordered_map<unsigned long long, int>::__construct_node<pair<u64, int>>	3732	0	0	0
+004B176C	std::unordered_map<unsigned long long, int>::__insert_unique<pair<u64, int>>	6764	1603	0	0
+004B1800	std::unordered_map<unsigned long long, int>::__construct_node<pair<u64, int>>	5335	1603	0	0
 004B1890	std::__shared_ptr_pointer<hole::network::api::UserAvatarAll  *>::__on_zero_shared	116	46	0	0
 004B18C8	std::__shared_ptr_pointer<hole::network::api::UserAvatarAll  *>::__on_zero_shared_weak	116	46	0	0
 004B18D0	std::unordered_map<int, int>::__insert_unique<pair<int, int>>	295	238	0	0
@@ -713,22 +732,29 @@ addr	name	calls	verified	mismatches	unverifiable
 004B2358	std::vector<hole::network::api::RankingReward::Result>::__push_back_slow_path	2	2	0	0
 004B24D4	std::vector<hole::network::api::UnionRanking::Ranker>::__push_back_slow_path	4	4	0	0
 004B26C8	std::vector<hole::network::api::UnionRanking::Info>::__push_back_slow_path	4	4	0	0
+004B2B38	std::vector<hole::network::api::PartyRanking::Info>::__push_back_slow_path	8	8	0	0
 004B2E62	hole::network::api::Party::Party(const Party&)	103	7	0	0
+004B2F76	std::__vector_base<hole::network::api::LuxRanking::User>::~__vector_base	8	8	0	0
+004B2FD0	std::vector<hole::network::api::LuxRanking::User>::__push_back_slow_path	16	16	0	0
 004B33C4	std::vector<unsigned long long>::deallocate	25	13	0	0
+004B33F8	std::vector<unsigned long long>::__push_back_slow_path<unsigned long long>	9	9	0	0
 004B350C	std::__split_buffer<unsigned long long&>::~__split_buffer	227	110	0	0
+004B353C	std::__vector_base<hole::network::api::GachaList::Gacha>::~__vector_base	1	1	0	0
+004B35B0	std::vector<hole::network::api::GachaList::Gacha>::__push_back_slow_path	4	4	0	0
 004B37E4	hole::network::api::GachaList::Gacha::Gacha(const Gacha&)	24	12	0	0
+004B3C48	std::vector<hole::network::api::UserShop::Benefit>::__push_back_slow_path	9	9	0	0
 004B4718	std::vector<hole::network::api::PartyMemberList::Detail>::__push_back_slow_path	123	9	0	0
 004B49E4	hole::network::api::PartyMemberList::~PartyMemberList (deleting)	372	97	0	0
 004B4A34	std::__vector_base<hole::network::api::PartyMemberList::Detail>::~__vector_base	32	8	0	0
 004B4AC8	hole::network::api::StageSupportList::~StageSupportList (deleting)	290	85	0	0
-004B4B00	std::__vector_base<hole::network::api::PartyNotice::NewcomerUser>::~__vector_base	1	0	0	0
+004B4B00	std::__vector_base<hole::network::api::PartyNotice::NewcomerUser>::~__vector_base	17	16	0	0
 004B4E54	hole::network::api::UserParty::~UserParty (deleting)	964	376	0	0
 004B4EC8	std::unordered_map<unsigned int, unsigned int>::~__hash_table	16	16	0	0
-004B4EF8	std::unordered_map<unsigned int, unsigned int>::operator[]	72	0	0	0
-004B4F84	std::unordered_map<unsigned int, unsigned int>::__node_insert_unique	72	0	0	0
+004B4EF8	std::unordered_map<unsigned int, unsigned int>::operator[]	147	75	0	0
+004B4F84	std::unordered_map<unsigned int, unsigned int>::__node_insert_unique	147	75	0	0
 004B5118	std::unordered_map<unsigned int, unsigned int>::rehash	40	16	0	0
-004B51F0	std::unordered_map<unsigned int, unsigned int>::__rehash	24	0	0	0
-004B52F2	std::unordered_map<unsigned int, unsigned int>::find	72	0	0	0
+004B51F0	std::unordered_map<unsigned int, unsigned int>::__rehash	50	26	0	0
+004B52F2	std::unordered_map<unsigned int, unsigned int>::find	147	75	0	0
 004B53BC	std::map<int, UserSphere::Sphere>::destroy	42	14	0	0
 004B56D4	hole::network::api::RaidStart::~RaidStart (deleting)	6	3	0	0
 004B572C	std::__vector_base<hole::network::api::RaidStart::Player>::~__vector_base	6	6	0	0
@@ -778,7 +804,7 @@ addr	name	calls	verified	mismatches	unverifiable
 004B98AA	std::__function::__func<std::__bind<void (hole::network::api::Client::*)(hole::network::api::Action,std::shared_ptr<hole::network::RESTClient::Result> const&),hole::network::api::Client*,hole::network::api::Action const&,std::placeholders::__ph<1> &>,std::allocator<std::__bind<void (hole::network::api::Client::*)(hole::network::api::Action,std::shared_ptr<hole::network::RESTClient::Result> const&),hole::network::api::Client*,hole::network::api::Action const&,std::placeholders::__ph<1> &>>,void ()(std::shared_ptr<hole::network::RESTClient::Result> const&)>::destroy_deallocate	10394	6102	0	0
 004B9910	std::deque<api::Client::Request>::__add_back_capacity	10	4	0	0
 004B9E70	std::__split_buffer<Client::Request*&>::push_back(&&)	14	6	0	0
-004B9F98	std::__split_buffer<Client::Request*&>::push_front(const&)	4	0	0	0
+004B9F98	std::__split_buffer<Client::Request*&>::push_front(const&)	7	3	0	0
 004BA0B4	std::__split_buffer<Client::Request*&>::~__split_buffer	14	6	0	0
 004BA10C	APIManager::APIManager	102	6	0	0
 004BA87C	std::__vector_base<hole::network::api::RaidBase>::~__vector_base	43	8	0	0
@@ -798,7 +824,7 @@ addr	name	calls	verified	mismatches	unverifiable
 004C51E8	APIManager::findMedalSetKeybladeIndex	28295	246	0	0
 004C553C	std::function<StatusCode(StatusCode, const shared_ptr<Ret>&, const Document&)>::function(__bind<APIManager::*>)	490	108	0	0
 004C678C	APIManager.cpp encryptToBase64(std::string*, Cipher&, const void*, size_t)	207	207	0	0
-004D494C	std::vector<hole::network::api::UserKeyblade::Keyblade>::__push_back_slow_path<Keyblade>	135	0	0	0
+004D494C	std::vector<hole::network::api::UserKeyblade::Keyblade>::__push_back_slow_path<Keyblade>	141	6	0	0
 004D4B98	std::vector<hole::network::api::UserTitle::Title>::__push_back_slow_path	42	0	0	0
 004D4E58	std::vector<hole::network::api::UserMedal::Medal>::__push_back_slow_path	180	45	0	0
 004D4FCC	std::vector<hole::network::api::UserKeyblade::Keyblade>::__push_back_slow_path<const Keyblade&>	543	3	0	0
@@ -873,7 +899,12 @@ addr	name	calls	verified	mismatches	unverifiable
 004DB698	createHeaders(bool)	93	18	0	0
 004DB7AC	std::function<void(ChatManager::StatusCode, unsigned, unsigned, const vector<Block>&)>::function(const&)	114	76	0	0
 004DB7E0	ChatManager::getMessage	10	0	0	10
+004DBB28	std::function<void(ChatManager::StatusCode, const vector<Message>&, unsigned, unsigned, unsigned)>::operator()	14	6	0	8
+004DBBBC	std::__vector_base<ChatManager::Message>::~__vector_base	15	15	0	0
+004DBC56	std::function<void(ChatManager::StatusCode, const vector<Message>&, unsigned, unsigned, unsigned)>::function(const&)	29	29	0	0
 004DBC88	ChatManager::update	1	0	0	1
+004DBF6C	std::function<void(ChatManager::StatusCode)>::operator()	18	18	0	0
+004DBFEC	std::function<void(ChatManager::StatusCode)>::function(const&)	34	12	0	0
 004DC020	ChatManager::createMessage	1	0	0	1
 004DC364	ChatManager::deleteMessage	1	0	0	1
 004DC900	ChatManager::unblock	2	0	0	2
@@ -890,6 +921,7 @@ addr	name	calls	verified	mismatches	unverifiable
 004DDAB4	ChatManager::getMessage  __func::__clone()	4	0	0	0
 004DDB68	ChatManager::getMessage  __func::destroy_deallocate	8	4	0	0
 004DDB94	ChatManager::getMessage::$_N::operator() (sub_4DDB94)	2	2	0	0
+004DDF04	std::vector<ChatManager::Message>::__push_back_slow_path	147	71	0	0
 004DE204	ChatManager::Message::Message(const Message&)	294	17	0	0
 004DE3E4	ChatManager::getUser  __func::__clone()	148	34	0	0
 004DE498	ChatManager::getUser  __func::destroy_deallocate	229	87	0	0
@@ -1292,6 +1324,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00502228	MaterialScrollView::registItemTouchEvent $_0 __func::destroy	69	24	0	0
 00502234	MaterialScrollView::registItemTouchEvent $_0 __func::operator() (sub_502234)	23	23	0	0
 0050241C	SphereScrollView::~SphereScrollView	4	1	0	1
+0050248C	std::__vector_base<shared_ptr<const master::Sphere>>::~__vector_base	23	22	0	0
 005024CE	SphereScrollView::~SphereScrollView [deleting destructor]	2	1	0	1
 005024DC	SphereScrollView::loadTextureIncentive	119	77	0	14
 005025A8	SphereScrollView::loadTextureBoard	119	91	0	0
@@ -1302,6 +1335,11 @@ addr	name	calls	verified	mismatches	unverifiable
 00502FEE	SphereScrollView::updateAddMove	4605	4605	0	0
 00503008	SphereScrollView::Set_disp_param	1187	1050	0	0
 00503278	SphereScrollView::setSphereBoardNewId	11	3	0	0
+005032B8	std::vector<shared_ptr<const master::Sphere>>::assign	9	8	0	0
+005033D4	std::vector<shared_ptr<const master::Sphere>>::__construct_at_end	30	15	0	0
+0050340A	std::vector<shared_ptr<const master::Sphere>>::deallocate	14	7	0	0
+00503450	std::vector<shared_ptr<const master::Sphere>>::allocate	30	15	0	0
+00503478	std::map<int, UserSphere::Sphere>::find const	1813	601	0	0
 005034BC	SupportCharacterScrollView::~SupportCharacterScrollView()	109	3	0	7
 00503654	SupportCharacterScrollView::~SupportCharacterScrollView [deleting destructor]	104	3	0	0
 00503688	SupportCharacterScrollView::create()	134	3	0	7
@@ -1370,7 +1408,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00509374	RaidBossScrollView::registItemTouchEvent touch began operator() (sub_509374)	15	15	0	0
 00509554	sub_509554	6	5	0	0
 00509574	nullsub_320	6	5	0	0
-00509898	std::shared_ptr<AvatarIconCache>::make_shared<Texture2D*&, Vec2, float, float>	9	0	0	0
+00509898	std::shared_ptr<AvatarIconCache>::make_shared<Texture2D*&, Vec2, float, float>	17	7	0	0
 00509A1C	std::__shared_ptr_emplace<AvatarIconCache>::__on_zero_shared	5	0	0	0
 00509A26	std::__shared_ptr_emplace<AvatarIconCache>::__on_zero_shared_weak	5	0	0	0
 00509A3C	LoadingIndicator::init	126	22	0	0
@@ -1515,6 +1553,8 @@ addr	name	calls	verified	mismatches	unverifiable
 00518EF0	BaseEndlessrollView::init $_2 __func::__clone(__base*)	10	1	0	0
 00518F14	nullsub_358	8	1	0	0
 00518F20	BaseEndlessrollView row touch ended lambda (sub_518F20)	13	13	0	0
+00519150	BaseEndlessrollView::init $_1::operator() (cell touch moved)	6	6	0	0
+00519460	BaseEndlessrollView::init $_0::operator() (cell touch began)	3	3	0	0
 005196EC	MyRecordScrollView::~MyRecordScrollView	17	6	0	0
 0051976C	std::__vector_base<MyRecordScrollView::RecordData>::~__vector_base	2	2	0	0
 005197CC	MyRecordScrollView::~MyRecordScrollView [deleting destructor]	14	6	0	0
@@ -1682,6 +1722,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0052E7CC	DeckRevolverView::init $_4 __func::destroy	676	12	0	0
 0052EA30	DeckRevolverView::init $_3 __func::__clone(__base*)	332	6	0	0
 0052EA50	DeckRevolverView::init $_3 __func::destroy	676	12	0	0
+0052F8C0	std::function<void(MedalInfoButtonType, bool, unsigned long long)>::operator()	4	3	0	0
 00530090	sub_530090	343	16	0	0
 005300B0	nullsub_416	708	27	0	0
 00530304	sub_530304	343	16	0	0
@@ -1876,6 +1917,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00555FF8	SerialCodeScrollView::changeRow(Widget*, int, int)	12	1	0	0
 005567B0	SerialCodeScrollView::registItemTouchEvent	8	8	0	0
 005567B4	ChatScrollView::~ChatScrollView	16	6	0	1
+005568AC	std::__vector_base<ChatScrollView::ChatMessage>::~__vector_base	64	15	0	0
 0055692C	ChatScrollView::~ChatScrollView [deleting destructor]	9	0	0	9
 00556960	ChatScrollView::create	2	2	0	0
 005569F4	ChatScrollView::init	13	5	0	3
@@ -1901,6 +1943,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0055AD74	ChatBlockListScrollView::changeRow	16	4	0	0
 0055B7A0	ChatBlockListScrollView::setBlockList	4	4	0	0
 0055B874	ChatStampListScrollView::~ChatStampListScrollView	1	1	0	0
+0055B938	std::__vector_base<ChatStampListScrollView::ChatStamp>::~__vector_base	43	43	0	0
 0055B9A4	ChatStampListScrollView::~ChatStampListScrollView [deleting destructor]	1	1	0	0
 0055B9D8	ChatStampListScrollView::create	1	1	0	0
 0055BA84	ChatStampListScrollView::init	1	1	0	0
@@ -1918,6 +1961,16 @@ addr	name	calls	verified	mismatches	unverifiable
 0055C7E2	thunk to ChatEditBoxMessageSend::editBoxEditingDidBegin	1	1	0	0
 0055C7E4	thunk to ChatEditBoxMessageSend::editBoxTextChanged	1	1	0	0
 0055C7E6	thunk to ChatEditBoxMessageSend::editBoxReturn	1	1	0	0
+0055C7E8	std::vector<ChatStampListScrollView::ChatStamp>::assign	9	9	0	0
+0055C958	std::vector<ChatStampListScrollView::ChatStamp>::__construct_at_end	54	27	0	0
+0055C9DE	std::vector<ChatStampListScrollView::ChatStamp>::deallocate	18	9	0	0
+0055CA2C	std::vector<ChatStampListScrollView::ChatStamp>::allocate	54	27	0	0
+0055CAC8	ChatStampListScrollView::changeRow $_3::operator()	24	24	0	0
+0055D308	std::vector<ChatScrollView::ChatMessage>::assign	28	7	0	0
+0055D45C	std::vector<ChatScrollView::ChatMessage>::__construct_at_end	56	7	0	0
+0055D51A	std::vector<ChatScrollView::ChatMessage>::deallocate	28	7	0	0
+0055D57C	std::vector<ChatScrollView::ChatMessage>::allocate	56	7	0	0
+0055D830	ChatScrollView::changeRow $_0::operator()	7	7	0	0
 0055DAE4	BaseStageScrollView::BaseStageScrollView()	203	2	0	0
 0055DBF4	BaseScrollView<int>::BaseScrollView()	6	6	0	0
 0055DD24	RankingRewardScrollView::~RankingRewardScrollView	12	2	0	0
@@ -2261,6 +2314,9 @@ addr	name	calls	verified	mismatches	unverifiable
 00588ACC	AdvEventBannerScrollView::loadEventBanner::$_0 __clone(__base*)	33	0	0	0
 00588AF4	AdvEventBannerScrollView::loadEventBanner::$_0 destroy()	33	0	0	0
 00588AFE	AdvEventBannerScrollView::loadEventBanner $_0 __func::operator() (sub_588AFE)	34	34	0	0
+00588C02	std::map<int, Texture2D*>::__find_equal_key	10	10	0	0
+00588C4E	std::map<int, Texture2D*>::__insert_node_at	5	5	0	0
+00588C7E	std::map<int, Texture2D*>::destroy	12	2	0	0
 00588CAC	BuyMagicStoneDialog::open(const function<void()>&, bool)	2	0	0	2
 00588E0C	BuyMagicStoneDialog::init(const function<...>&, Type)	2	0	0	1
 00589208	BuyMagicStoneDialog::initItemIDsAndProductIDs(vector<int>&, vector<string>&)	3	1	0	0
@@ -2597,24 +2653,30 @@ addr	name	calls	verified	mismatches	unverifiable
 005AA80C	OtherMenuDialog::open $_16 __func::destroy	9	6	0	0
 005AA816	sub_5AA816	9	6	0	0
 005AAB40	side menu scene change (sub_5AAB40)	6	1	0	0
+005AAE3C	std::function<Layer*()>::function(&&)	4	4	0	0
 005AB0E0	OtherMenuDialog::open $_14 __func::__clone(__base*)	4	0	0	0
 005AB100	OtherMenuDialog::open $_14 __func::destroy	14	7	0	0
 005AB184	OtherMenuDialog::open $_13 __func::__clone(__base*)	4	0	0	0
 005AB1A0	OtherMenuDialog::open $_13 __func::destroy	14	7	0	0
+005AB1AC	OtherMenuDialog::open $_13 Credits operator()	7	7	0	0
 005AB3C8	OtherMenuDialog::open $_12 __func::__clone(__base*)	4	0	0	0
 005AB3E4	OtherMenuDialog::open $_12 __func::destroy	14	7	0	0
 005AB460	OtherMenuDialog::open $_11 __func::__clone(__base*)	4	0	0	0
 005AB47C	OtherMenuDialog::open $_11 __func::destroy	14	7	0	0
+005AB488	OtherMenuDialog::open $_11 Help operator()	7	7	0	0
 005AB6BC	OtherMenuDialog::open $_10 __func::__clone(__base*)	4	0	0	0
 005AB6D8	OtherMenuDialog::open $_10 __func::destroy	14	7	0	0
 005ABAEC	OtherMenuDialog::open $_9 __func::__clone(__base*)	4	0	0	0
 005ABB0C	OtherMenuDialog::open $_9 __func::destroy	14	7	0	0
+005ABB18	OtherMenuDialog::open $_9 Legal operator()	7	7	0	0
 005ABC08	OtherMenuDialog::open $_8 __func::__clone(__base*)	4	0	0	0
 005ABC24	OtherMenuDialog::open $_8 __func::destroy	14	7	0	0
 005AC144	OtherMenuDialog::open $_7 __func::__clone(__base*)	4	0	0	0
 005AC164	OtherMenuDialog::open $_7 __func::destroy	14	8	0	0
+005AC170	OtherMenuDialog::open $_7 Serial Codes operator()	7	7	0	0
 005AC26C	OtherMenuDialog::open $_6 __func::__clone(__base*)	4	0	0	0
 005AC28C	OtherMenuDialog::open $_6 __func::destroy	14	8	0	0
+005AC298	OtherMenuDialog::open $_6 Union Transfer operator()	7	7	0	0
 005AC5D0	SceneSelectUnion::create	9	9	0	0
 005AC690	OtherMenuDialog::open $_5 __func::__clone(__base*)	12	2	0	0
 005AC6B4	OtherMenuDialog::open $_5 __func::destroy	14	8	0	0
@@ -2641,9 +2703,12 @@ addr	name	calls	verified	mismatches	unverifiable
 005AD3E8	DrawScrollView::~DrawScrollView [deleting destructor]	17	2	0	13
 005AD41C	DrawScrollView::setDrawFrame	434	16	0	119
 005AD6C4	DrawScrollView::initShopTopGachaButton	465	16	0	31
+005AE244	std::map<int, DrawScrollView::GachaData>::operator[]	17	17	0	0
 005AE2CC	DrawScrollView::GachaData::GachaData(const GachaData&)	1932	127	0	0
 005AE390	DrawScrollView::loadShopBanner	465	41	0	6
 005AE4CC	DrawScrollView::init	29	10	0	3
+005AEBF0	std::vector<GachaList::Gacha>::vector(const vector&)	1	1	0	0
+005AEC68	std::map<int, DrawScrollView::ShopData>::operator[]	6	6	0	0
 005AECF4	DrawScrollView::update	6354	3335	0	3
 005AED2C	DrawScrollView::createRow	55	0	0	10
 005AED84	DrawScrollView::changeRow	569	21	0	0
@@ -2678,6 +2743,17 @@ addr	name	calls	verified	mismatches	unverifiable
 005B33C8	nullsub_813	180	33	0	0
 005B351E	sub_5B351E	44	12	0	0
 005B371E	sub_5B371E	44	12	0	0
+005B387C	std::map<int, DrawScrollView::GachaData>::destroy	56	9	0	0
+005B38D2	std::map<int, DrawScrollView::ShopData>::__find_equal_key	12	6	0	0
+005B391E	std::map<int, DrawScrollView::ShopData>::__insert_node_at	12	6	0	0
+005B394E	std::map<int, DrawScrollView::ShopData>::find	6	6	0	0
+005B3992	std::map<int, DrawScrollView::ShopData>::destroy	15	3	0	0
+005B39CC	std::vector<GachaList::Gacha>::allocate	2	1	0	0
+005B3D84	std::map<int, DrawScrollView::GachaData>::__find_equal_key	34	17	0	0
+005B3DD0	std::map<int, DrawScrollView::GachaData>::__insert_node_at	36	18	0	0
+005B3FC8	std::map<int, DrawScrollView::GachaData>::__assign_multi	6	6	0	0
+005B41AC	std::map<int, DrawScrollView::GachaData>::__insert_multi(const pair&)	12	6	0	0
+005B4248	std::map<int, DrawScrollView::GachaData>::__construct_node	12	6	0	0
 005B42A6	std::map<int, unsigned>::destroy	24	12	0	0
 005B42D4	RaidSubdueScrollView::~RaidSubdueScrollView()	4	1	0	0
 005B43A0	RaidSubdueScrollView::~RaidSubdueScrollView() (deleting)	5	1	0	0
@@ -3478,6 +3554,8 @@ addr	name	calls	verified	mismatches	unverifiable
 005EDB30	PauseState::create()	8	4	0	0
 005EDCA0	PauseState::~PauseState()	3	3	0	0
 005EDDD8	PauseState::~PauseState() (deleting)	3	3	0	0
+005EDDE4	std::set<void*>::destroy	1147	8	0	0
+005EDE10	std::set<void*>::__move_assign	3	3	0	0
 005EDE44	RaidBattle::RaidBattle	3	3	0	0
 005EDF50	RaidBattle::start	10	10	0	0
 005EE0AC	RaidBattle::startFriend	1	1	0	0
@@ -3991,8 +4069,10 @@ addr	name	calls	verified	mismatches	unverifiable
 00616248	SceneManager::getChatStampId	10	2	0	0
 00616438	SceneManager::getStringHtmlEncodeUtf	58	2	0	0
 00616DC8	SceneManager::setChatMessageScrollView(const std::vector<ChatManager::Message>&)	4	2	2	0
+00617428	std::vector<ChatScrollView::ChatMessage>::vector(const vector&)	28	7	0	0
 00617474	SceneManager::setChatMessageScrollView()	1	0	1	0
 00617C00	SceneManager::openChatStampListPopup	1	1	0	0
+006190F0	std::vector<ChatStampListScrollView::ChatStamp>::vector(const vector&)	18	18	0	0
 00619144	SceneManager::openDeletePostPopup	2	2	0	0
 0061FB24	SceneManager::openNoTapScreen	35	6	0	0
 0061FC20	SceneManager::openPartyNewPopup(std::function<void()>)	143	62	0	0
@@ -4012,16 +4092,36 @@ addr	name	calls	verified	mismatches	unverifiable
 0062551C	SceneManager::openNoTapScreen $_102 __func::__clone(__base*)	70	6	0	0
 0062553C	SceneManager::openNoTapScreen $_102 __func::destroy	63	8	0	0
 00625546	SceneManager::openNoTapScreen::$_102::operator()	6	3	0	0
-00631150	SceneManager::openChatPopup $_44::operator() (payment info)	1	0	0	1
+0062E950	SceneManager::openChatStampListPopup $_58::operator()(bool) (closed)	12	6	0	0
+0062ED7C	SceneManager::openChatStampListPopup $_56::operator() (Send)	12	9	0	3
+0062F1C4	SceneManager::openChatStampListPopup $_132::operator()(StatusCode)	6	3	0	0
+0062F668	SceneManager::openChatStampListPopup $_54::operator() (touch ended)	9	9	0	0
+0062FA30	std::__sort<medal stamp lambda&, int*>	81	9	0	0
+0062FDA0	medal stamp sort lambda (Stamp field 0x10)	25668	9	0	0
+0062FE58	std::__sort3<medal stamp lambda&, int*>	306	9	0	0
+0062FEF4	std::__sort4<medal stamp lambda&, int*>	18	9	0	0
+0062FF6C	std::__sort5<medal stamp lambda&, int*>	18	9	0	0
+00630180	std::vector<ChatStampListScrollView::ChatStamp>::__push_back_slow_path	75	75	0	0
+00630414	std::__sort<talk stamp lambda&, int*>	9	9	0	0
+00630784	talk stamp sort lambda (Stamp field 0x10)	396	9	0	0
+0063083C	std::__sort3<talk stamp lambda&, int*>	18	9	0	0
+00630C6E	SceneManager::openChatStampListPopup $_47::operator()(bool)	12	6	0	0
+00630CBC	std::vector<ChatScrollView::ChatMessage>::__push_back_slow_path	118	7	0	0
+00631150	SceneManager::openChatPopup $_44::operator() (payment info)	6	0	0	6
 00631418	SceneManager::openChatPopup $_41::operator() (Button_Send)	4	3	0	1
+00631930	SceneManager chat popup close (sub_631930)	4	4	0	0
 00631BDC	SceneManager::openChatPopup $_128::operator() (message created)	1	1	0	0
 0063204C	SceneManager::openChatPopup $_38 body (sub_63204C): reopen	3	2	0	0
 006322D4	SceneManager::openChatPopup $_40::operator() (text changed)	1	1	0	0
 00632610	SceneManager::openChatPopup $_39::operator() (Close_Button)	4	4	0	0
+006327A4	SceneManager::chatDataUpdate block list answer::operator() (sub_6327A4)	4	4	0	0
+00632F58	SceneManager::chatDataUpdate message answer::operator() (sub_632F58)	5	1	0	0
+006339A0	SceneManager::chatDataUpdate $_126::operator()	12	6	0	0
 00633A74	sub_633A74	339	99	0	0
 00633A94	nullsub_117	553	229	0	0
 00633A9E	SceneManager::chatDataUpdate::$_34::operator()	108	65	0	0
 00633B5C	nullsub_1093	2	0	0	0
+00633B68	SceneManager::tutorial_menu $_33::operator()	3	3	0	0
 00634154	nullsub_1099	360	162	0	0
 00634160	SceneManager::updateHeader::$_30::operator()	240	105	0	0
 00634334	SceneManager::hideHeader::$_29 __clone()	53	0	0	0
@@ -4039,7 +4139,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00634D80	sub_634D80	8128	2098	0	0
 00634DA0	nullsub_1104	11105	4064	0	0
 00634DAA	sub_634DAA	4013	2050	0	0
-00634E44	SceneManager::closeGlobalMenu::$_23 (Shop hook)	1	0	0	1
+00634E44	SceneManager::closeGlobalMenu::$_23 (Shop hook)	2	0	0	2
 00634FFC	SceneManager::closeGlobalMenu::$_22 (Sphere hook)	1	0	0	1
 00635168	SceneManager::closeGlobalMenu::$_21 (Adventure hook)	1	0	0	1
 00635320	SceneManager::closeGlobalMenu::$_19 (My Page hook)	2	0	0	2
@@ -4415,6 +4515,7 @@ addr	name	calls	verified	mismatches	unverifiable
 0065DAF4	SceneSaleMedal::backScene::$_12 destroy()	5	5	0	0
 0065DB00	SceneSaleMedal::backScene::$_12 operator() (sub_65DB00)	2	2	0	0
 0065E1F8	SceneEvolveMedal::create	2	2	0	0
+0065E564	std::__vector_base<cocos2d::ui::ImageView*>::~__vector_base	3	3	0	0
 0065E604	sub_65E604	3	0	0	0
 0065E624	nullsub_1305	6	0	0	0
 0065E62E	sub_65E62E	3	0	0	0
@@ -5045,6 +5146,7 @@ addr	name	calls	verified	mismatches	unverifiable
 006A5900	SceneMixedMedal::openRareWarnPopup $_18 __func::operator() (sub_6A5900)	12	0	0	12
 006A5A90	SceneMixedMedal::openRareWarnPopup $_36 __func::__clone(p) (sub_6A5A90)	24	0	0	0
 006A5AC2	SceneMixedMedal::openRareWarnPopup $_36 __func::operator() (sub_6A5AC2)	12	12	0	0
+006A5D9C	std::vector<cocos2d::ui::ImageView*>::__push_back_slow_path	9	9	0	0
 006A5F0C	sub_6A5F0C	4	0	0	0
 006A5F2C	nullsub_1519	6	0	0	0
 006A5FC8	sub_6A5FC8	4	0	0	0
@@ -5113,6 +5215,7 @@ addr	name	calls	verified	mismatches	unverifiable
 006B83C4	SceneSphereBoardSelect::calc_index	31319	31319	0	0
 006B84C4	SphereScrollView::create	4	1	0	3
 006B8550	SceneSphereBoardSelect::avaterBoardDispCheck	204	0	0	0
+006B8928	std::vector<shared_ptr<const master::Sphere>>::vector(const vector&)	9	8	0	0
 006B8974	SceneSphereBoardSelect::setSphereBoardList	1	1	0	0
 006B91A4	SceneSphereBoardSelect::getAvatarBoardGender	136	1	0	0
 006B92E0	SceneSphereBoardSelect::getAvatarBoardSpaceCheck	68	1	0	0
@@ -5140,12 +5243,19 @@ addr	name	calls	verified	mismatches	unverifiable
 006BBEEC	SceneSphereBoardSelect::initSphereBoardList $_7 __func::destroy	30	6	0	0
 006BBEF8	sub_6BBEF8	3	3	0	0
 006BC1A8	SceneSphereBoardSelect::initSphereBoardList $_6 __func::destroy_deallocate	2	0	0	0
+006BC1C8	SceneSphereBoardSelect::initSphereBoardList $_6::operator()(int, Widget*)	3	3	0	0
 006BC770	SceneSphereBoardSelect::initSphereBoardList::$_5 __clone(__base*)	2	0	0	0
 006BC790	SceneSphereBoardSelect::initSphereBoardList::$_5 destroy()	4	0	0	0
 006BC810	SceneSphereBoardSelect::initSphereBoardList::$_4 __clone(__base*)	2	0	0	0
 006BC830	SceneSphereBoardSelect::initSphereBoardList::$_4 destroy()	4	0	0	0
+006BC884	std::vector<shared_ptr<const master::Sphere>>::__push_back_slow_path	56	56	0	0
+006BCA04	std::set<int>::__insert_unique(hint, const int&)	1737	600	0	0
+006BCA7C	std::set<int>::__find_equal(hint)	2336	600	0	0
 006BCB58	std::set<int>::__insert_node_at	218529	1400	0	0
 006BCB88	std::set<int>::__find_equal	218529	1400	0	0
+006BCBD4	std::set<int>::__insert_unique(int&&)	1737	600	0	0
+006BCC18	std::set<int>::__node_insert_unique	2336	600	0	0
+006BCCF0	SceneSphereBoardSelect::changeSceneNext $_3::operator()	3	3	0	0
 006BCE78	SceneSphereBoard::create	8	0	0	5
 006BCF50	SceneSphereBoardSelect::init::$_2 __clone(__base*)	12	3	0	0
 006BCF70	SceneSphereBoardSelect::init::$_2 destroy()	14	4	0	0
@@ -5784,12 +5894,15 @@ addr	name	calls	verified	mismatches	unverifiable
 00701CEC	SceneRanking::runOutAnimationMain $_17 __func::destroy_deallocate	5	2	0	0
 00701D84	SceneRanking::runInAnimation $_16 __func::__clone(__base*)	6	1	0	0
 00701DA0	SceneRanking::runInAnimation $_16 __func::destroy	21	6	0	0
+00701DAC	SceneRanking::runInAnimation $_16::operator()()	4	4	0	0
 00701E9C	SceneRanking::changeScrollView $_15 __func::__clone(__base*)	10	2	0	0
 00701EC0	SceneRanking::changeScrollView $_15 __func::destroy	13	5	0	0
 00701F40	SceneRanking::init $_13 __func::__clone(__base*)	2	0	0	0
 00701F68	SceneRanking::init $_13 __func::destroy	3	0	0	0
+00701F72	SceneRanking::init $_13::operator() (category)	32	24	0	8
 00702020	SceneRanking::init $_12 __func::__clone(__base*)	2	0	0	0
 00702048	SceneRanking::init $_12 __func::destroy	3	0	0	0
+00702052	SceneRanking::init $_12::operator() (period)	24	24	0	0
 007020F4	SceneRanking::init $_10 __func::__clone(__base*)	2	0	0	0
 00702114	SceneRanking::init $_10 __func::destroy	3	0	0	0
 00702404	SceneRankingReward::create	2	0	2	0
@@ -6688,6 +6801,8 @@ addr	name	calls	verified	mismatches	unverifiable
 007615EC	StageUI::TutorialWidget::onTouchBegan	3	3	0	0
 00761726	StageUI::setBattleTurn	318	155	0	0
 00761740	StageUI::TutorialWidget::~TutorialWidget	2	2	0	0
+00761AFC	StageUI::openBattleMenuPopup $_8::operator()(bool) (closed)	4	0	0	0
+00761DD0	StageUI::openBattleMenuPopup $_6::operator() (Retire)	4	4	0	0
 007622B0	StageUI::openContinueDialog $_3 __func::destroy_deallocate	60	2	0	0
 007628C8	StageUI::openContinueDialog $_3 UlbE0_ __func::__clone()	5	0	0	0
 00762980	StageUI::openContinueDialog $_3 UlbE0_ __func::destroy_deallocate	6	0	0	0
@@ -6696,6 +6811,7 @@ addr	name	calls	verified	mismatches	unverifiable
 00762FB0	StageUI::openContinueDialog $_1 __func::destroy_deallocate	42	28	0	0
 00763460	StageUI::openRetireDialog $_0 __func::__clone()	30	7	0	0
 00763518	StageUI::openRetireDialog $_0 __func::destroy_deallocate	38	21	0	0
+00763544	StageUI::openRetireDialog $_0::operator()(bool)	1	1	0	0
 00763894	StageUI::openRetireDialog $_0 UlbE_ __func::__clone(__base*)	4	1	0	0
 007638B0	StageUI::openRetireDialog $_0 UlbE_ __func::destroy	5	2	0	0
 007638BA	sub_7638BA	8	0	0	8
@@ -6831,6 +6947,8 @@ addr	name	calls	verified	mismatches	unverifiable
 0076E914	std::unordered_map<unsigned long long, shared_ptr<SafeBuffer const>>::__node_insert_unique	1255	1130	0	0
 0076EB0C	std::unordered_map<unsigned long long, shared_ptr<SafeBuffer const>>::rehash	57	55	0	0
 0076EBE4	std::unordered_map<unsigned long long, shared_ptr<SafeBuffer const>>::__rehash	57	55	0	0
+0076ED00	std::unordered_map<unsigned long long, shared_ptr<const SafeBuffer>>::erase	262	262	0	0
+0076ED74	std::unordered_map<unsigned long long, shared_ptr<SafeBuffer const>>::remove	262	262	0	0
 0076EE6C	std::unordered_map<unsigned long long, shared_ptr<SafeBuffer const>>::find	24881	1585	0	0
 0076EFD4	MasterDataManager $_0 __func::__clone(__base*)	144	0	0	0
 0076EFF0	MasterDataManager $_0 __func::destroy	144	0	0	0

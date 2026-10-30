@@ -52,6 +52,13 @@ constexpr uint32_t Burst_create = 0x77A491;
 constexpr uint32_t SceneUtil_getMoneyStr = 0x461DC5;           // (sret string, -, unsigned long long)
 constexpr uint32_t SceneUtil_setButtonEnabled = 0x468625;      // (button, text, bool, bool)
 constexpr uint32_t SceneUtil_clearMedalNewMark = 0x46C4B5;
+constexpr uint32_t SceneUtil_openSellOkPopup = 0x474DCD;         // (int money, bool)
+constexpr uint32_t SceneUtil_callUpdateLockMedalAPI = 0x473DF5;  // (function<void(bool)> by value)
+constexpr uint32_t APIManager_executeUserMedalSell = 0x4C9A29;   // (api, const unordered_set<ull>&, const function&)
+constexpr uint32_t SceneManager_updateHeader = 0x611169;
+constexpr uint32_t SellMedalScrollView_clearSelectedMedals = 0x500465;
+constexpr uint32_t SellMedalScrollView_setSelectedMedal = 0x500081;   // (scroll, -, u64 id, bool on the stack)
+constexpr uint32_t FunctionVI_call = 0x4F321D;                   // std::function<void(int)>::operator()
 constexpr uint32_t SceneUtil_updateMedalPossessionLabel = 0x473A19;
 constexpr uint32_t SceneUtil_settingTitleLabel = 0x45D8D1;      // (node, const string& name, text id)
 constexpr uint32_t SceneUtil_textToCustomTextView = 0x45BF15;   // (Text*, const string& name)
@@ -93,6 +100,7 @@ constexpr uint32_t F_CAN_BACK = 0x304;
 constexpr uint32_t F_POPUP_CLOSES = 0x308; // vector<function<void(bool)>>: the sell popups' close handlers
 // SellMedalScrollView
 constexpr uint32_t SCROLL_ITEM_IDS = 0x628, SCROLL_ON_TAP = 0x638, SCROLL_ON_LONG_PRESS = 0x650;
+constexpr uint32_t SCROLL_INDEX = 0x544;      // IScrollProtocol: the first shown item
 
 // __func vtables (+8) of the lambdas
 constexpr uint32_t VT_BackKey = 0xF62B54;      // init {this}
@@ -107,6 +115,14 @@ constexpr uint32_t VT_SellConfirm = 0xF62918;  // openSellPopup {sell, close, th
 constexpr uint32_t VT_CloseButton = 0xF628EC;  // openSellPopup {}
 constexpr uint32_t VT_PopupClosed = 0xF62894;  // sub_65D71C {sell, close, window, layer, shadow, popup, this} (heap 0x20)
 constexpr uint32_t VT_CanClose = 0xF62868;     // openSellPopup {close}
+constexpr uint32_t VT_PopupGone = 0xF628C0;     // $_10's close end {layer, shadow, popup, this, sold} (heap 0x18)
+constexpr uint32_t VT_LockAnswer = 0xF62944;    // $_8's lock answer {this, this, close}
+constexpr uint32_t VT_SellAnswer = 0xF62970;    // the sell answer ($_13) {this, close}
+constexpr uint32_t VT_LockError = 0xF629C8;     // its error dialog {}
+constexpr uint32_t VT_SellError = 0xF6299C;     // $_13's error dialog {}
+constexpr uint32_t VT_LongPressAnswer = 0xF62A4C;   // $_6's info buttons {this, 0, id} (heap 0x18)
+constexpr uint32_t TOUCH_ENDED = 2;
+constexpr uint32_t S_FmtD = 0xDF86DE;          // "%d"
 constexpr uint32_t VT_Back = 0xF627E4;         // backScene {this}
 constexpr uint32_t VT_ToFusion = 0xF6283C;     // the back lambda (fusion) {back2}
 constexpr uint32_t VT_ToEvolve = 0xF62810;     // the back lambda (evolution) {back2, -, mixed id} (heap 0x18)
@@ -344,42 +360,10 @@ struct SceneSaleMedal {
         }
         vcall(area, node::addChild, {area, ld32(me + F_SCROLL)});
         // the user's medals, sorted by the filter
-        while (ld32(me + F_MEDALS + 4) != ld32(me + F_MEDALS)) {
-            const uint32_t last = ld32(me + F_MEDALS + 4) - 8;
-            st32(me + F_MEDALS + 4, last);
-            releaseIf(ld32(last + 4));
-        }
-        const uint32_t api = call(fn::APIManager_getInstance, {});
-        const uint32_t medalsCtl = ld32(api + API_USER_MEDALS + 4), medals = ld32(api + API_USER_MEDALS);
-        addRefIf(medalsCtl);
-        if (ld32(medals + 0x20)) {
-            const uint32_t record = f.alloc(MEDAL_RECORD);
-            for (uint32_t n = 0, at = 0;; at += MEDAL_RECORD) {
-                const uint32_t mdm = call(g::MedalDataManager_getInstance, {});
-                rw::call(g::SafeBuffer_read, {medals, record, ld32(medals + 0xC) + at, MEDAL_RECORD, at});
-                Frame m;
-                const uint32_t medal = m.alloc(8);
-                call(g::MedalDataManager_getMedalData, {medal, mdm, ld32(record), ld32(record + 4), 0, 0, 0, 0, 0, 0, 0,
-                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
-                pushShared(me + F_MEDALS, medal);
-                releaseIf(ld32(medal + 4));
-                if (!(++n < ld32(medals + 0x20))) break;
-            }
-        }
-        call(g::IMedalSortFilter_runSortFilter, {me + F_SORT_FILTER, SORT_SCENE_SALE});
+        const uint32_t medalsCtl = reloadMedals(me);
         const uint32_t ids = f.alloc(12);
         sortedIds(me, ids);
-        uint32_t showType;
-        {
-            const uint32_t state = f.alloc(8);
-            vcall(me, V_getSortFilterState, {state, me});
-            showType = call(g::IMedalSortFilter_getShowType, {me + F_SORT_FILTER, state, 1});
-            releaseIf(ld32(state + 4));
-        }
-        call(g::SellMedalScrollView_setMedalShowType, {ld32(me + F_SCROLL), showType});
-        st32(me + F_INDEX, 0);
-        call(g::IScrollProtocol_setIndex, {ld32(me + F_SCROLL), 0});
-        call(g::SellMedalScrollView_setMedalIDs, {ld32(me + F_SCROLL), ids, ld32(me + F_EXCLUDED), ld32(me + F_EXCLUDED + 4)});
+        showSorted(me, ids);
         vcall(me, V_runInAnimation, {me});
         vcall(me, node::addChild, {me, ld32(me + F_ROOT)});
         call(g::SceneUtil_updateMedalPossessionLabel, {ld32(me + F_ROOT)});
@@ -679,6 +663,217 @@ struct SceneSaleMedal {
         return out;
     }
 
+    // ------------------------------------------------------------------------------------------------ the medal list
+    // The user's medals again (from the API's UserMedal records, the list emptied first) and the sort filter run;
+    // returns the records' shared_ptr control block, held until the caller is done
+    static uint32_t reloadMedals(uint32_t me) {
+        while (ld32(me + F_MEDALS + 4) != ld32(me + F_MEDALS)) {
+            const uint32_t last = ld32(me + F_MEDALS + 4) - 8;
+            st32(me + F_MEDALS + 4, last);
+            releaseIf(ld32(last + 4));
+        }
+        const uint32_t api = call(fn::APIManager_getInstance, {});
+        const uint32_t medalsCtl = ld32(api + API_USER_MEDALS + 4), medals = ld32(api + API_USER_MEDALS);
+        addRefIf(medalsCtl);
+        if (ld32(medals + 0x20)) {
+            Frame f;
+            const uint32_t record = f.alloc(MEDAL_RECORD);
+            for (uint32_t n = 0, at = 0;; at += MEDAL_RECORD) {
+                const uint32_t mdm = call(g::MedalDataManager_getInstance, {});
+                rw::call(g::SafeBuffer_read, {medals, record, ld32(medals + 0xC) + at, MEDAL_RECORD, at});
+                Frame m;
+                const uint32_t medal = m.alloc(8);
+                call(g::MedalDataManager_getMedalData, {medal, mdm, ld32(record), ld32(record + 4), 0, 0, 0, 0, 0, 0, 0,
+                                                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+                pushShared(me + F_MEDALS, medal);
+                releaseIf(ld32(medal + 4));
+                if (!(++n < ld32(medals + 0x20))) break;
+            }
+        }
+        call(g::IMedalSortFilter_runSortFilter, {me + F_SORT_FILTER, SORT_SCENE_SALE});
+        return medalsCtl;
+    }
+    // The list shows the sorted medals `ids` from the top, in the sort filter's show type
+    static void showSorted(uint32_t me, uint32_t ids) {
+        uint32_t showType;
+        {
+            Frame f;
+            const uint32_t state = f.alloc(8);
+            vcall(me, V_getSortFilterState, {state, me});
+            showType = call(g::IMedalSortFilter_getShowType, {me + F_SORT_FILTER, state, 1});
+            releaseIf(ld32(state + 4));
+        }
+        call(g::SellMedalScrollView_setMedalShowType, {ld32(me + F_SCROLL), showType});
+        st32(me + F_INDEX, 0);
+        call(g::IScrollProtocol_setIndex, {ld32(me + F_SCROLL), 0});
+        call(g::SellMedalScrollView_setMedalIDs, {ld32(me + F_SCROLL), ids, ld32(me + F_EXCLUDED), ld32(me + F_EXCLUDED + 4)});
+    }
+
+    // ------------------------------------------------------------------------------------------------ the sell popup's lambdas
+    // $_10 (the popup closed) {sell, close, window, layer, shadow, popup, this}(sold): both buttons off (Cancel's
+    // sound when not sold), the window closes (its end below), the shadow fades out
+    static void popupClosed(uint32_t f, uint32_t soldRef) {
+        const uint8_t sold = ld8(soldRef);
+        const uint32_t me = ld32(f + 0x1C);
+        setTouchEnabled(ld32(f + 4), 0);
+        setTouchEnabled(ld32(f + 8), 0);
+        if (!sold) call(fn::AudioPlaySystemSECancel, {});
+        const uint32_t window = ld32(f + 0xC);
+        const uint32_t layer = ld32(f + 0x10), shadow = ld32(f + 0x14), popup = ld32(f + 0x18);
+        {
+            Frame fr;
+            const uint32_t gone = fr.alloc(20);
+            st32(gone + 16, 0);
+            const uint32_t obj = call(fn::operator_new, {0x18});
+            if (obj) {
+                st32(obj, VT_PopupGone);
+                st32(obj + 4, layer);
+                st32(obj + 8, shadow);
+                st32(obj + 12, popup);
+                st32(obj + 16, me);
+                st32(obj + 20, sold);
+            }
+            st32(gone + 16, obj);
+            call(g::Node_runAction, {window, SceneUtil::createClosePopupAnimation(window, gone)});
+            functionDestroy(gone);
+        }
+        call(g::Node_runAction, {ld32(f + 0x14), call(fn::FadeTo_create, {fbits(0.15f), 0})});
+    }
+    // $_10's close end {layer, shadow, popup, this, sold}: shadow and popup removed, the popup's close handler
+    // dropped from the scene's list; sold: the "sold" popup and the sell panel updated
+    static void popupGone(uint32_t f) {
+        const uint32_t me = ld32(f + 0x10);
+        vcall(ld32(f + 4), node::removeChild, {ld32(f + 4), ld32(f + 8), 1});
+        vcall(ld32(f + 4), node::removeChild, {ld32(f + 4), ld32(f + 0xC), 1});
+        const uint32_t last = ld32(me + F_POPUP_CLOSES + 4) - 24;     // pop_back
+        while (ld32(me + F_POPUP_CLOSES + 4) != last) {
+            const uint32_t end = ld32(me + F_POPUP_CLOSES + 4) - 24;
+            st32(me + F_POPUP_CLOSES + 4, end);
+            functionDestroy(end);
+        }
+        if (!ld8(f + 0x14)) return;
+        call(g::SceneUtil_openSellOkPopup, {ld32(me + F_SUM_MONEY), 0});
+        updateSellInfo(me);
+        updateSellButton(me);
+    }
+    // $_8 (Sell) {sell, close, this, this, close}: both buttons off, the loading indicator, the selected medals'
+    // lock state checked first (the answer below)
+    static void sellTouched(uint32_t f, uint32_t, uint32_t typeRef) {
+        if (ld32(typeRef) != TOUCH_ENDED) return;
+        const uint32_t me = ld32(f + 0xC);
+        call(fn::AudioPlaySystemSEDecide, {});
+        setTouchEnabled(ld32(f + 4), 0);
+        setTouchEnabled(ld32(f + 8), 0);
+        call(fn::SceneManager_enableLoadingIndicator, {sceneManager(), 1});
+        Frame fr;
+        const uint32_t answer = newFunction(fr, VT_LockAnswer, {me, ld32(f + 0x10), ld32(f + 0x14)});
+        call(g::SceneUtil_callUpdateLockMedalAPI, {answer});
+        functionDestroy(answer);
+    }
+    // $_8's lock answer {this, this, close}(ok): ok -> the sale request (the answer below); failed -> the API error
+    static void lockAnswer(uint32_t f, uint32_t okRef) {
+        if (ld8(okRef)) {
+            const uint32_t me = ld32(f + 4);
+            const uint32_t api = call(fn::APIManager_getInstance, {});
+            Frame fr;
+            const uint32_t answer = newFunction(fr, VT_SellAnswer, {ld32(f + 8), ld32(f + 0xC)});
+            call(g::APIManager_executeUserMedalSell, {api, me + F_SELECTED, answer});
+            functionDestroy(answer);
+            return;
+        }
+        call(fn::SceneManager_enableLoadingIndicator, {sceneManager(), 0});
+        apiErrorDialogIfShown(VT_LockError);
+    }
+    // $_13 (sold) {this, close}(ok): the header (Munny), the medal list rebuilt without the sold medals at the same
+    // scroll position, the counters and panels, the close button on again and the popup closed; failed -> the API
+    // error
+    static void sold(uint32_t f, uint32_t okRef) {
+        const uint8_t ok = ld8(okRef);
+        const uint32_t me = ld32(f + 4);
+        call(fn::SceneManager_enableLoadingIndicator, {sceneManager(), 0});
+        if (!ok) {
+            apiErrorDialogIfShown(VT_SellError);
+            return;
+        }
+        call(g::SceneManager_updateHeader, {sceneManager()});
+        const uint32_t medalsCtl = reloadMedals(me);
+        Frame fr;
+        const uint32_t ids = fr.alloc(12);
+        sortedIds(me, ids);
+        const uint32_t scroll = ld32(me + F_SCROLL);
+        call(g::SellMedalScrollView_clearSelectedMedals, {scroll});
+        st32(me + F_INDEX, ld32(ld32(me + F_SCROLL) + SCROLL_INDEX));
+        call(g::IScrollProtocol_setIndex, {ld32(me + F_SCROLL), ld32(me + F_INDEX)});
+        call(g::SellMedalScrollView_setMedalIDs, {ld32(me + F_SCROLL), ids, ld32(me + F_EXCLUDED), ld32(me + F_EXCLUDED + 4)});
+        {
+            const uint32_t list = ld32(me + F_SCROLL);
+            const uint32_t count = (ld32(list + SCROLL_ITEM_IDS + 4) - ld32(list + SCROLL_ITEM_IDS)) >> 3;
+            setTextC(ld32(me + F_BOX_NOW), stringBuffer(fr, {S_FmtD, count}));
+        }
+        updateSellButton(me);
+        call(g::SceneUtil_updateMedalPossessionLabel, {ld32(me + F_ROOT)});
+        updateHaveMoneynPanel(me);
+        setTouchEnabled(ld32(f + 8), 1);
+        call(g::SM_closeCurrentPopup, {sceneManager(), 1});
+        call(g::VectorULL_dtor, {ids});
+        releaseIf(medalsCtl);
+    }
+
+    // ------------------------------------------------------------------------------------------------ init's lambdas
+    // $_6 (a list medal long pressed) {this}(id): its info popup (no close callback)
+    static void longPressed(uint32_t f, uint32_t idRef) {
+        const uint32_t lo = ld32(idRef), hi = ld32(idRef + 4);
+        const uint32_t me = ld32(f + 4);
+        call(fn::AudioPlaySystemSEDecide, {});
+        Frame fr;
+        const uint32_t medal = fr.alloc(8);
+        medalDataById(medal, lo, hi);
+        openUserMedalInfo(medal, me, lo, hi, VT_LongPressAnswer, 0, 0);
+        releaseIf(ld32(medal + 4));
+    }
+    // $_6's info buttons {-, this, -, id}(type, bool): 2 / 3 -> the medal unselected, the list told its position
+    static void longPressAnswer(uint32_t f, uint32_t typeRef, uint32_t) {
+        if ((ld32(typeRef) & ~1u) != 2) return;
+        const uint32_t scroll = ld32(f + 8) + F_SCROLL;
+        const uint32_t lo = ld32(f + 0x10), hi = ld32(f + 0x14);
+        const uint32_t begin = ld32(ld32(scroll) + SCROLL_ITEM_IDS), end = ld32(ld32(scroll) + SCROLL_ITEM_IDS + 4);
+        uint32_t index = 0;
+        for (uint32_t i = 0, n = (end - begin) >> 3; i < n; i++) {
+            if (ld32(begin + 8 * i) == lo && ld32(begin + 8 * i + 4) == hi) {
+                index = i;
+                break;
+            }
+        }
+        {
+            Frame fr;
+            const uint32_t args = fr.alloc(8);
+            st32(args, 0);
+            rw::call_exact(g::SellMedalScrollView_setSelectedMedal, {ld32(scroll), 0, lo, hi});
+        }
+        call(g::FunctionVI_call, {ld32(scroll) + SCROLL_ON_TAP, index});
+    }
+    // $_4 (the sort changed) {this}: the selection dropped, the panels updated and the list shown from the top
+    static void sortChanged(uint32_t f) {
+        const uint32_t me = ld32(f + 4);
+        Frame fr;
+        const uint32_t ids = fr.alloc(12);
+        sortedIds(me, ids);
+        call(g::SellMedalScrollView_clearSelectedMedals, {ld32(me + F_SCROLL)});
+        updateSellInfo(me);
+        updateSellButton(me);
+        showSorted(me, ids);
+        call(g::VectorULL_dtor, {ids});
+    }
+    // $_1 (leaving) {}(done): the "new" marks cleared, then done(true)
+    static void finishScene(uint32_t, uint32_t doneFn) {
+        Frame fr;
+        const uint32_t done = fr.alloc(24);
+        call(fn::function_vb_copy, {done, doneFn});
+        call(g::SceneUtil_clearMedalNewMark, {});
+        call(fn::function_vb_call, {done, 1});
+        functionDestroy(done);
+    }
+
     // ------------------------------------------------------------------------------------------------ back
     // With an open popup: close it; otherwise (once) the list's callbacks dropped, the "new" marks cleared and
     // the scene runs out (then the back lambda).
@@ -812,3 +1007,12 @@ RW_FUNCTION(0x65D71C, "SceneSaleMedal::openSellPopup close-handler builder (sub_
 RW_FUNCTION(0x65D928, "SceneSaleMedal::backScene", SceneSaleMedal::backScene);
 RW_FUNCTION(0x65DA10, "SceneSaleMedal::finalize", SceneSaleMedal::finalize);
 RW_FUNCTION(0x65DB00, "SceneSaleMedal::backScene::$_12 operator() (sub_65DB00)", SceneSaleMedal::backDone);
+RW_FUNCTION(0x65E6EC, "SceneSaleMedal::openSellPopup $_10::operator()(bool)", SceneSaleMedal::popupClosed);
+RW_FUNCTION(0x65E8CE, "SceneSaleMedal::openSellPopup $_10 close end::operator()", SceneSaleMedal::popupGone);
+RW_FUNCTION(0x65EBA0, "SceneSaleMedal::openSellPopup $_8::operator() (Sell)", SceneSaleMedal::sellTouched);
+RW_FUNCTION(0x65ED1C, "SceneSaleMedal::openSellPopup $_8 lock answer::operator()(bool)", SceneSaleMedal::lockAnswer);
+RW_FUNCTION(0x65EEC8, "SceneSaleMedal::openSellPopup $_13::operator()(bool) (sold)", SceneSaleMedal::sold);
+RW_FUNCTION(0x65F6F0, "SceneSaleMedal::init $_6::operator()(ull) (long press)", SceneSaleMedal::longPressed);
+RW_FUNCTION(0x65F980, "SceneSaleMedal::init $_6 info buttons::operator()", SceneSaleMedal::longPressAnswer);
+RW_FUNCTION(0x65FB40, "SceneSaleMedal::init $_4::operator()(bool) (sort changed)", SceneSaleMedal::sortChanged);
+RW_FUNCTION(0x65FE58, "SceneSaleMedal::init $_1::operator()(function<void(bool)>)", SceneSaleMedal::finishScene);

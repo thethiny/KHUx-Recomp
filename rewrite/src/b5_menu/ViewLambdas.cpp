@@ -183,6 +183,116 @@ void rowTouchDrift(uint32_t functor, uint32_t touchRef, uint32_t) {
     if (!(d <= 20.0f || std::isnan(d))) st8(view + 0x3A4, 0);
 }
 
+// init's cell touch lambdas {view, cell, alternate cell}: the cell's touch area is the alternate one's when +0x344
+// is set; "Select_On" marks the pressed cell
+constexpr uint32_t S_SelectOn = 0xDFD1AC;   // "Select_On" (copied into a short string)
+constexpr uint32_t Size_copy = rwlib::cocos2d::Size::ctor_base__RKS0_, Size_assign = 0x8DF041, Size_ctor0 = 0x8DF01F;
+constexpr uint32_t Vec2_ctor0 = rwlib::cocos2d::Vec2::ctor_base__v;
+constexpr uint32_t FIXSFSI = 0xCD7240, MODSI = 0xCD6009;
+uint32_t touchCell(uint32_t f, uint32_t view) { return ld32(f + (ld8(view + 0x344) ? 0xC : 8)); }
+uint32_t selectMark(uint32_t cell) {
+    Frame fr;
+    const uint32_t name = fr.alloc(12);
+    st8(name, 18);
+    call(g::MEMCPY, {name + 1, S_SelectOn, 9});
+    st8(name + 10, 0);
+    const uint32_t mark = SceneUtil::searchNodeByName(cell, name);
+    strFree(name);
+    return mark;
+}
+// the touch in `cell`'s space at `local`
+void touchInCell(uint32_t local, uint32_t cell, uint32_t touch) {
+    Frame fr;
+    const uint32_t loc = fr.alloc(8);
+    call(g::Touch_getLocation, {loc, touch});
+    call(g::Node_convertToNodeSpace, {local, cell, loc});
+    call(g::Vec2_dtor, {loc});
+}
+
+// $_0 (touch began): while the list rests on a whole item, a touch inside the cell presses it (its x kept, the
+// mark shown)
+uint32_t cellTouchBegan(uint32_t f, uint32_t touchRef, uint32_t) {
+    const uint32_t view = ld32(f + 4);
+    if (ld8(view + 0x324)) return 0;
+    const uint32_t touch = ld32(touchRef);
+    const uint32_t pos = call(FIXSFSI, {ld32(view + 0x318)}), step = call(FIXSFSI, {ld32(view + 0x3B0)});
+    if (call(MODSI, {pos, step})) return 0;
+    Frame fr;
+    const uint32_t size = fr.alloc(8), rect = fr.alloc(16), loc = fr.alloc(8), local = fr.alloc(8);
+    call(Size_copy, {size, vcall(ld32(f + 8), node::getContentSize, {ld32(f + 8)})});
+    if (ld8(view + 0x344)) call(Size_assign, {size, vcall(ld32(f + 0xC), node::getContentSize, {ld32(f + 0xC)})});
+    call(g::Rect_ctor, {rect, 0, 0, ld32(size), ld32(size + 4)});
+    call(g::Touch_getLocation, {loc, touch});
+    touchInCell(local, touchCell(f, view), touch);
+    const uint32_t in = call(g::Rect_containsPoint, {rect, local});
+    call(g::Vec2_dtor, {local});
+    uint32_t pressed = 0;
+    if (in) {
+        {
+            Frame l;
+            const uint32_t at = l.alloc(8);
+            call(g::Touch_getLocation, {at, touch});
+            st32(view + 0x3A8, ld32(at));
+            call(g::Vec2_dtor, {at});
+        }
+        pressed = 1;
+        st8(view + 0x3A4, 1);
+        st8(view + 0x36B, 1);
+        st8(view + 0x36A, ld8(view + 0x390) ^ 1);
+        const uint32_t mark = selectMark(ld32(f + 8));
+        if (mark) vcall(mark, node::setVisible, {mark, 1});
+    }
+    call(g::Vec2_dtor, {loc});
+    call(g::Vec2_dtor, {rect});
+    return pressed;
+}
+
+// $_1 (touch moved): a press that drifts more than 20 sideways, or leaves the cell, is let go (the mark hidden)
+void cellTouchMoved(uint32_t f, uint32_t touchRef, uint32_t) {
+    const uint32_t view = ld32(f + 4);
+    if (!ld8(view + 0x3A4)) return;
+    const uint32_t touch = ld32(touchRef);
+    const uint32_t mark = selectMark(ld32(f + 8));
+    {
+        Frame l;
+        const uint32_t at = l.alloc(8);
+        const float start = ldf(view + 0x3A8);
+        call(g::Touch_getLocation, {at, touch});
+        const float x = ldf(at);
+        call(g::Vec2_dtor, {at});
+        const float d = std::fabs(start - x);
+        if (!(d <= 20.0f || std::isnan(d))) {
+            st8(view + 0x3A4, 0);
+            st8(view + 0x36B, 0);
+            if (mark) vcall(mark, node::setVisible, {mark, 0});
+        }
+    }
+    Frame fr;
+    const uint32_t loc = fr.alloc(8), size = fr.alloc(8), local = fr.alloc(8), rect = fr.alloc(16);
+    call(g::Touch_getLocation, {loc, touch});
+    call(Size_ctor0, {size});
+    call(Vec2_ctor0, {local});
+    const uint32_t cell = touchCell(f, view);
+    call(Size_assign, {size, vcall(cell, node::getContentSize, {cell})});
+    {
+        const uint32_t at = fr.alloc(8);
+        touchInCell(at, touchCell(f, view), touch);
+        st32(local, ld32(at));
+        st32(local + 4, ld32(at + 4));
+        call(g::Vec2_dtor, {at});
+    }
+    call(g::Rect_ctor, {rect, 0, 0, ld32(size), ld32(size + 4)});
+    if (!call(g::Rect_containsPoint, {rect, local})) {
+        st8(view + 0x3A4, 0);
+        st8(view + 0x36B, 0);
+        st8(view + 0x36A, 0);
+        if (mark) vcall(mark, node::setVisible, {mark, 0});
+    }
+    call(g::Vec2_dtor, {rect});
+    call(g::Vec2_dtor, {local});
+    call(g::Vec2_dtor, {loc});
+}
+
 // ------------------------------------------------------------------------------------------------ BaseSlideView
 // sub_5247B8, a button's touch lambda {.., button, view, a, b}: a release on a shown button of a shown view with a
 // target plays the decide sound, keeps (a, b) at +0x6E0, blocks taps for the popup time and calls the view's
@@ -321,6 +431,8 @@ RW_FUNCTION(0x515E30, "BaseEndlessrollView row touch moved (sub_515E30)", rowTou
 RW_FUNCTION(0x517F94, "BaseEndlessrollView touch ended (sub_517F94)", carouselTouchEnded);
 RW_FUNCTION(0x5188D0, "BaseEndlessrollView row tapped (sub_5188D0)", rowTapped);
 RW_FUNCTION(0x518A18, "BaseEndlessrollView row touch moved: drift (sub_518A18)", rowTouchDrift);
+RW_FUNCTION(0x519460, "BaseEndlessrollView::init $_0::operator() (cell touch began)", cellTouchBegan);
+RW_FUNCTION(0x519150, "BaseEndlessrollView::init $_1::operator() (cell touch moved)", cellTouchMoved);
 RW_FUNCTION(0x5247B8, "BaseSlideView button touch lambda (sub_5247B8)", slideButtonTouch);
 RW_FUNCTION(0x524A84, "BaseSlideView profile button touch lambda (sub_524A84)", profileButtonTouch);
 RW_FUNCTION(0x524C34, "BaseSlideView user detail lambda __clone() (sub_524C34)", userDetailClone);

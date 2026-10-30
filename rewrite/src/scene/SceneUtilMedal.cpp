@@ -1,5 +1,6 @@
 // SceneUtil: medal box popups (box limit raised, box full).
 #include "../core/SafeBuffer.hpp"
+#include "Captures.hpp"
 #include "SceneUi.hpp"
 
 using namespace scene;
@@ -193,3 +194,68 @@ void SceneUtil::openMedalOverDialog(uint32_t altMessage, uint32_t backScene, Add
     functionDestroy(cbCopy);
 }
 RW_FUNCTION(0x460250, "SceneUtil::openMedalOverDialog", SceneUtil::openMedalOverDialog);
+
+// ================================================================================================ the lambdas
+namespace {
+namespace medaldialogs {
+constexpr uint32_t SM_changeSceneLayer = 0x612B99;   // (sm, const function<Layer*()>&, bool, bool, FadeType)
+constexpr uint32_t MedalOver_close = 0x489EE1;       // sub_489EE0({window, layer, shadow, popup, callback}, bool)
+constexpr uint32_t SceneUtil_openMedalMaxUpDialog = 0x45E799;   // (function<void(bool,bool)> by value)
+constexpr uint32_t SceneUtil_isOverMedalSlot = 0x46A085;
+constexpr uint32_t BuyMagicStoneDialog_open = 0x588CAD;          // (function<void()> by value)
+constexpr uint32_t VT_SellLayer = 0xF54D74;          // $_21's scene layer create {back scene}
+constexpr uint32_t VT_MaxUpAnswer = 0xF54E24;        // $_19's max-up dialog answer (heap 0x30)
+constexpr uint32_t VT_MaxUpResultEnd = 0xF54E7C;     // $_17's end {layer, shadow, popup}
+constexpr uint32_t TOUCH_ENDED = 2;
+
+// $_21 (Sell) {window, layer, shadow, popup, callback, back scene +0x30}(sender, type): the decide sound, the
+// dialog closed (true), the medal sale screen
+void sellTouched(uint32_t f, uint32_t, uint32_t typeRef) {
+    if (ld32(typeRef) != TOUCH_ENDED) return;
+    call(fn::AudioPlaySystemSEDecide, {});
+    call(MedalOver_close, {f + 8, 1});
+    const uint32_t sm = sceneManager();
+    Frame fr;
+    const uint32_t create = newFunction(fr, VT_SellLayer, {ld32(f + 0x30)});
+    call(SM_changeSceneLayer, {sm, create, 1, 1, 1});
+    functionDestroy(create);
+}
+// $_19 (Extension) {window, layer, shadow, popup, callback}(sender, type): the decide sound, the max-up dialog (its
+// answer gets the captures)
+void extensionTouched(uint32_t f, uint32_t, uint32_t typeRef) {
+    if (ld32(typeRef) != TOUCH_ENDED) return;
+    call(fn::AudioPlaySystemSEDecide, {});
+    const caps::Layout OVER = {{caps::Cap::Words, 0, 16}, {caps::Cap::Fn, 0x10, 0, fn::function_vb_copy, fn::function_vb_move}};
+    caps::sendWith(OVER, 0x28, VT_MaxUpAnswer, f + 8, [](uint32_t answer) {
+        return call(SceneUtil_openMedalMaxUpDialog, {answer});
+    });
+}
+// $_19's answer {window, layer, shadow, popup, callback}(bought, short of jewels): short -> the jewel shop; the box
+// still over -> the dialog closed (false)
+void maxUpAnswered(uint32_t f, uint32_t boughtRef, uint32_t shortRef) {
+    if (!ld8(boughtRef) && ld8(shortRef)) {
+        Frame fr;
+        const uint32_t none = newEmptyFunction(fr);
+        call(BuyMagicStoneDialog_open, {none});
+        functionDestroy(none);
+    }
+    if (!call(SceneUtil_isOverMedalSlot, {0})) call(MedalOver_close, {f + 8, 0});
+}
+// $_17 (the max-up result's OK) {-, callback +8, popup, layer, shadow}(sender, type): the decide sound,
+// callback(true), the popup shrinks and the shadow fades
+void maxUpResultOk(uint32_t f, uint32_t, uint32_t typeRef) {
+    if (ld32(typeRef) != TOUCH_ENDED) return;
+    call(fn::AudioPlaySystemSEDecide, {});
+    call(fn::function_vb_call, {f + 8, 1});
+    const uint32_t popup = ld32(f + 0x20);
+    Frame fr;
+    const uint32_t end = newFunction(fr, VT_MaxUpResultEnd, {ld32(f + 0x24), ld32(f + 0x28), popup});
+    shrinkPopup(popup, end, ld32(f + 0x28));
+}
+}  // namespace medaldialogs
+}  // namespace
+
+RW_FUNCTION(0x489DDC, "SceneUtil::openMedalOverDialog $_21::operator() (Sell)", medaldialogs::sellTouched);
+RW_FUNCTION(0x48A8E4, "SceneUtil::openMedalOverDialog $_19::operator() (Extension)", medaldialogs::extensionTouched);
+RW_FUNCTION(0x48ABA4, "SceneUtil::openMedalOverDialog $_19 lambda(bool,bool)#1::operator()", medaldialogs::maxUpAnswered);
+RW_FUNCTION(0x48ADF0, "SceneUtil::openMedalMaxUpResultDialog $_17::operator() (OK)", medaldialogs::maxUpResultOk);

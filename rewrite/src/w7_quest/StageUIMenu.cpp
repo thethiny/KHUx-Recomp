@@ -353,7 +353,7 @@ RW_FUNCTION(0x761740, "StageUI::TutorialWidget::~TutorialWidget", stageui_menu::
 namespace {
 constexpr uint32_t SceneUtil_createClosePopupAnimation = 0x45BC61;
 constexpr uint32_t StageUI_openRetireDialog = 0x75FB9D, StageUI_openContinueDialog = 0x75FDB9;
-constexpr uint32_t APIManager_executeStageContinue = 0x4CB5ED, APIManager_openErrorDialog = 0x4C3C8D;
+constexpr uint32_t APIManager_executeStageContinue = 0x4CB5ED;
 constexpr uint32_t SceneAdventureSelect_callAdventureSelectAPI = 0x71D261;
 constexpr uint32_t BuyMagicStoneDialog_open = 0x588CAD;          // (const function<void()>&, bool)
 constexpr uint32_t FunctionFn_call = 0x634989;                   // function<void(function<void(bool)>)>::operator()
@@ -368,14 +368,13 @@ constexpr uint32_t VT_MenuRetireAnswer = 0xF6E3B0;  // the battle menu's retire 
 constexpr uint32_t VT_ContinueDialog = 0xF6E434;    // openContinueDialog $_3 {continue +8, this +0x20, give up +0x28} (0x40)
 constexpr uint32_t VT_ContinueRetire = 0xF6E460;    // $_3's retire answer {this +8, give up +0x10} (0x28)
 constexpr uint32_t VT_ContinueBuyAsk = 0xF6E48C;    // $_3's "buy Jewels?" answer {this +8, give up +0x10} (0x28)
-constexpr uint32_t VT_ContinueBuyClosed = 0xF6E4C0; // the Buy Jewels dialog closed {this +8, give up +0x10} (0x28)
+constexpr uint32_t VT_ContinueBuyClosed = 0xF6E4B8; // the Buy Jewels dialog closed {this +8, give up +0x10} (0x28)
 constexpr uint32_t VT_ContinueDone = 0xF6E4E4;      // executeStageContinue's answer {continue +8} (0x20)
 constexpr uint32_t VT_ContinueError = 0xF6E510;     // its error dialog (no captures)
 constexpr uint32_t VT_RetireDoneFn = 0xF6E5C0;      // the retire hook's answer (no captures; body sub_763664)
 constexpr uint32_t VT_RetireError = 0xF6E594;       // its error dialog (no captures)
 constexpr uint32_t F_RETIRE_HOOK = 0x78;            // StageUI: function<void(function<void(bool)>)>
 constexpr uint32_t API_JEWELS = 0xA4;               // APIManager: SafeBuffer (free Jewels at 0, paid at 4)
-constexpr uint32_t API_SHOW_ERROR = 0x14;
 constexpr uint32_t MISC_CONTINUE_COST = 113;
 constexpr int32_t TXT_BUY_JEWELS_TO_CONTINUE = 102600016;
 constexpr uint32_t TOUCH_ENDED = 2;
@@ -392,21 +391,13 @@ uint32_t heapThisFn(uint32_t fo, uint32_t vt, uint32_t self, uint32_t fn) {
     st32(fo + 16, obj);
     return obj;
 }
-void apiErrorDialog(uint32_t vt) {
-    if (!ld8(call(fn::APIManager_getInstance, {}) + API_SHOW_ERROR)) return;
-    const uint32_t api = call(fn::APIManager_getInstance, {});
-    Frame f;
-    const uint32_t fo = newFunction(f, vt, {});
-    call(APIManager_openErrorDialog, {api, fo, 1});
-    functionDestroy(fo);
-}
 }  // namespace
 
 namespace stageui_menu {
 
 // openBattleMenuPopup's closed {-, popup, layer, shadow, -, answer +0x18}(bool): the popup's close animation
 // (removing popup and shadow at its end), the shadow fading out, the answer
-uint32_t menuClosed(uint32_t functor, uint32_t okRef) {
+void menuClosed(uint32_t functor, uint32_t okRef) {
     const uint32_t ok = ld8(okRef);
     const uint32_t popup = ld32(functor + 8);
     {
@@ -417,38 +408,38 @@ uint32_t menuClosed(uint32_t functor, uint32_t okRef) {
     }
     call(Node_runAction, {ld32(functor + 0x10), call(fn::FadeTo_create, {fbits(0.1f), 0})});
     call(function_vb_call, {functor + 0x18, ok ? 1u : 0u});
-    return 0;
+    return;
 }
 // the close animation's end {layer, shadow, popup}
-uint32_t menuCloseEnd(uint32_t functor) {
+void menuCloseEnd(uint32_t functor) {
     const uint32_t layer = ld32(functor + 4);
     vcall(layer, node::removeChild, {layer, ld32(functor + 8), 1});
     vcall(ld32(functor + 4), node::removeChild, {ld32(functor + 4), ld32(functor + 0xC), 1});
-    return 0;
+    return;
 }
 // Retire {this}: the retire question (not while the menu is closing)
-uint32_t menuRetireTouched(uint32_t functor, uint32_t, uint32_t typeRef) {
-    if (ld32(typeRef) != TOUCH_ENDED) return 0;
+void menuRetireTouched(uint32_t functor, uint32_t, uint32_t typeRef) {
+    if (ld32(typeRef) != TOUCH_ENDED) return;
     const uint32_t self = ld32(functor + 4);
-    if (ld8(self + F_MENU_FLAG)) return 0;
+    if (ld8(self + F_MENU_FLAG)) return;
     Frame f;
     const uint32_t answer = newFunction(f, VT_MenuRetireAnswer, {});
     call(StageUI_openRetireDialog, {self, answer});
     functionDestroy(answer);
-    return 0;
+    return;
 }
 // Close {this}: the menu closes
-uint32_t menuCloseTouched(uint32_t functor, uint32_t, uint32_t typeRef) {
-    if (ld32(typeRef) != TOUCH_ENDED) return 0;
+void menuCloseTouched(uint32_t functor, uint32_t, uint32_t typeRef) {
+    if (ld32(typeRef) != TOUCH_ENDED) return;
     st8(ld32(functor + 4) + F_MENU_FLAG, 1);
     call(AudioPlaySystemSECancel, {});
     call(SM_closeCurrentPopup, {sceneManager(), 0});
-    return 0;
+    return;
 }
 
 // openContinueDialog $_3 {continue +8, this +0x20, give up +0x28}(yes): yes with enough Jewels (misc 113's cost,
 // free + paid) -> the continue request; yes without -> "buy Jewels?"; no -> the retire question
-uint32_t continueAnswer(uint32_t functor, uint32_t yesRef) {
+void continueAnswer(uint32_t functor, uint32_t yesRef) {
     const uint32_t self = ld32(functor + 0x20);
     if (!ld8(yesRef)) {
         Frame f;
@@ -460,7 +451,7 @@ uint32_t continueAnswer(uint32_t functor, uint32_t yesRef) {
         functionDestroy(answer);
         functionDestroy(inner);
         functionDestroy(copy);
-        return 0;
+        return;
     }
     int32_t cost;
     {
@@ -485,7 +476,7 @@ uint32_t continueAnswer(uint32_t functor, uint32_t yesRef) {
             strFree(s);
             sharedRelease(td);
             functionDestroy(copy);
-            return 0;
+            return;
         }
     }
     call(fn::SceneManager_enableLoadingIndicator, {sceneManager(), 1});
@@ -498,7 +489,7 @@ uint32_t continueAnswer(uint32_t functor, uint32_t yesRef) {
     call(APIManager_executeStageContinue, {api, done});
     functionDestroy(done);
     functionDestroy(copy);
-    return 0;
+    return;
 }
 // $_3's clone
 uint32_t continueClone(uint32_t functor) {
@@ -513,9 +504,10 @@ uint32_t continueClone(uint32_t functor) {
 }
 // "buy Jewels?" {this, give up}(yes): yes -> the Buy Jewels dialog (its close back here); no -> the continue
 // question again
-uint32_t continueBuyAnswer(uint32_t functor, uint32_t yesRef) {
+void continueBuyAnswer(uint32_t functor, uint32_t yesRef) {
     const uint32_t self = ld32(functor + 8);
-    if (!ld8(yesRef)) return call(StageUI_openContinueDialog, {self, functor + 0x10});
+    if (!ld8(yesRef)) call(StageUI_openContinueDialog, {self, functor + 0x10});
+        return;
     Frame f;
     const uint32_t copy = f.alloc(20), closed = f.alloc(20);
     call(function_vv_copy, {copy, functor + 0x10});
@@ -523,7 +515,7 @@ uint32_t continueBuyAnswer(uint32_t functor, uint32_t yesRef) {
     call(BuyMagicStoneDialog_open, {closed, 0});
     functionDestroy(closed);
     functionDestroy(copy);
-    return 0;
+    return;
 }
 // sub_7627F4(out, continue): executeStageContinue's answer, a heap $_1 {copy of continue}
 uint32_t makeContinueDone(uint32_t out, uint32_t fn) {
@@ -534,15 +526,15 @@ uint32_t makeContinueDone(uint32_t out, uint32_t fn) {
     return out;
 }
 // $_1 {continue}(ok): continued -> continue(); failed -> the API error dialog
-uint32_t continueDone(uint32_t functor, uint32_t okRef) {
+void continueDone(uint32_t functor, uint32_t okRef) {
     const uint8_t ok = ld8(okRef);
     call(fn::SceneManager_enableLoadingIndicator, {sceneManager(), 0});
     if (ok) call(fn::function_vv_call, {functor + 8});
-    else apiErrorDialog(VT_ContinueError);
-    return 0;
+    else apiErrorDialogIfShown(VT_ContinueError);
+    return;
 }
 // $_2 {continue}: the continue request again (the error dialog's retry)
-uint32_t continueRetry(uint32_t functor) {
+void continueRetry(uint32_t functor) {
     call(fn::SceneManager_enableLoadingIndicator, {sceneManager(), 1});
     const uint32_t api = call(fn::APIManager_getInstance, {});
     Frame f;
@@ -553,12 +545,12 @@ uint32_t continueRetry(uint32_t functor) {
     call(APIManager_executeStageContinue, {api, done});
     functionDestroy(done);
     functionDestroy(copy);
-    return 0;
+    return;
 }
 
 // openRetireDialog $_0 {-, this, -, answer +0x10}(yes): yes -> through the scene's retire hook (or straight to the
 // adventure select); the answer either way
-uint32_t retireAnswer(uint32_t functor, uint32_t yesRef) {
+void retireAnswer(uint32_t functor, uint32_t yesRef) {
     const uint8_t yes = ld8(yesRef);
     if (yes) {
         const uint32_t self = ld32(functor + 8);
@@ -573,14 +565,14 @@ uint32_t retireAnswer(uint32_t functor, uint32_t yesRef) {
         }
     }
     call(function_vb_call, {functor + 0x10, yes ? 1u : 0u});
-    return 0;
+    return;
 }
 // sub_763664(ok): retired -> the adventure select (its API first); failed -> the API error dialog
-uint32_t retireDone(uint32_t ok) {
+void retireDone(uint32_t ok) {
     call(fn::SceneManager_enableLoadingIndicator, {sceneManager(), 0});
     if (!ok) {
-        apiErrorDialog(VT_RetireError);
-        return 0;
+        apiErrorDialogIfShown(VT_RetireError);
+        return;
     }
     apiBusyDropPayment();
     {
@@ -590,7 +582,7 @@ uint32_t retireDone(uint32_t ok) {
         functionDestroy(none);
     }
     changeSceneLayerTo(GOT_CREATE_ADVENTURE_SELECT, 1, 1, 1);
-    return 0;
+    return;
 }
 
 }  // namespace stageui_menu

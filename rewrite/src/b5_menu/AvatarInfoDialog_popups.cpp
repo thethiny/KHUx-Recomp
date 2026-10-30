@@ -15,7 +15,7 @@ constexpr uint32_t SceneUtil_openOkDialog4Line = 0x45C775;
 constexpr uint32_t SM_getInstance = 0x60C26D, SM_enableLoadingIndicator = 0x60D169;
 constexpr uint32_t APIManager_getInstance = 0x4BA8C9, APIManager_openErrorDialog = 0x4C3C8D;
 constexpr uint32_t APIManager_executePartyApplicantReject = 0x4CFA9D;   // (api, u64 user, function)
-constexpr uint32_t APIManager_executePartyInvitationCancel = 0x4D0591;
+constexpr uint32_t APIManager_executePartyMemberExpel = 0x4D0591;
 constexpr uint32_t shared_release = 0xC8DBD1;
 }  // namespace g
 
@@ -118,7 +118,7 @@ void rejectAnswered(uint32_t functor, uint32_t okRef) {
     sendForUser(functor, okRef, g::APIManager_executePartyApplicantReject, 0xF574C4);
 }
 void invitationAnswered(uint32_t functor, uint32_t okRef) {
-    sendForUser(functor, okRef, g::APIManager_executePartyInvitationCancel, 0xF57548);
+    sendForUser(functor, okRef, g::APIManager_executePartyMemberExpel, 0xF57548);
 }
 
 // sub_53CCF8 / sub_53D33C, the request's callback {done}: the "done" message (OK calls done) or the error dialog

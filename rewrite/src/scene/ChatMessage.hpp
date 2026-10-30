@@ -14,12 +14,13 @@ constexpr uint32_t MSG_INFO = 0x20;       // 12 bytes, copied raw
 constexpr uint32_t MSG_TEXT = 0x2C;       // std::string
 constexpr uint32_t MSG_FLAG2 = 0x38;      // uint8
 constexpr uint32_t MSG_SIZE = 0x40;
+constexpr uint32_t AEABI_MEMCPY = 0x40E164;   // __aeabi_memcpy(dst, src, n): the info's 12 bytes
 
 inline void msgCopy(uint32_t dst, uint32_t src) {
     copyWords(dst + MSG_HEAD, src + MSG_HEAD, 16);
     st8(dst + MSG_FLAG, ld8(src + MSG_FLAG));
     strCopy(dst + MSG_NAME, src + MSG_NAME);
-    copyWords(dst + MSG_INFO, src + MSG_INFO, 12);
+    call(AEABI_MEMCPY, {dst + MSG_INFO, src + MSG_INFO, 12});
     strCopy(dst + MSG_TEXT, src + MSG_TEXT);
     st8(dst + MSG_FLAG2, ld8(src + MSG_FLAG2));
 }
@@ -27,7 +28,7 @@ inline void msgMove(uint32_t dst, uint32_t src) {
     copyWords(dst + MSG_HEAD, src + MSG_HEAD, 16);
     st8(dst + MSG_FLAG, ld8(src + MSG_FLAG));
     strMove(dst + MSG_NAME, src + MSG_NAME);
-    copyWords(dst + MSG_INFO, src + MSG_INFO, 12);
+    call(AEABI_MEMCPY, {dst + MSG_INFO, src + MSG_INFO, 12});
     strMove(dst + MSG_TEXT, src + MSG_TEXT);
     st8(dst + MSG_FLAG2, ld8(src + MSG_FLAG2));
 }

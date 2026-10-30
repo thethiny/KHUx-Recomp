@@ -109,3 +109,92 @@ struct UserTitlePopup {
 
 RW_FUNCTION(0x470724, "SceneUtil::openUserTitlePopup(const shared_ptr<UserTitle>&, int, function<void()>)",
             UserTitlePopup::open);
+
+namespace {
+namespace usertitle {
+constexpr uint32_t VT_ClosedEnd = 0xF546EC;   // $_56's end {layer, shadow, popup, titles, index, onClose} (heap 0x38)
+constexpr uint32_t SceneUtil_createClosePopupAnimation = 0x45BC61, SceneUtil_searchNodeByName = 0x45A9F5;
+constexpr uint32_t SceneUtil_openUserTitlePopup = 0x470725;
+constexpr uint32_t LWFNode_create = 0x7EDF31;            // (const char* path, -)
+constexpr uint32_t AEABI_MEMCPY = 0x40E164;
+constexpr uint32_t S_AreaPoint = 0xDF9FB4;               // "Area_Point"
+constexpr uint32_t S_RewardLwf = 0xDF9FBF;               // "lwf/battleresult/Result_Reward/Result_Reward.lwf"
+constexpr uint32_t TITLES_COUNT = 0x20, TOUCH_ENDED = 2;
+
+// $_57 (opened) {popup}: the title sound, the reward effect played at the popup's "Area_Point"
+void opened(uint32_t f) {
+    playLayerSE(SE_TITLE);
+    const uint32_t popup = ld32(f + 4);
+    uint32_t point;
+    {
+        Frame fr;
+        const uint32_t name = fr.alloc(12);   // the literal's inline short string
+        st8(name, 10 << 1);
+        call(AEABI_MEMCPY, {name + 1, S_AreaPoint, 10});
+        st8(name + 11, 0);
+        point = call(SceneUtil_searchNodeByName, {popup, name});
+        strFree(name);
+    }
+    const uint32_t lwf = call(LWFNode_create, {S_RewardLwf, 0});
+    const uint32_t parent = vcall(point, node::getParent, {point});
+    vcall(parent, node::addChild, {parent, lwf});
+    const uint32_t setPosition = ld32(ld32(lwf) + node::setPosition);
+    call(setPosition, {lwf, vcall(point, node::getPosition, {point})});
+}
+// $_56 (OK) {popup, layer, shadow, titles shared_ptr, index, onClose}(sender, type): the decide sound, the popup
+// shrinks (eased); its end goes on with the next title
+void okTouched(uint32_t f, uint32_t, uint32_t typeRef) {
+    if (ld32(typeRef) != TOUCH_ENDED) return;
+    call(fn::AudioPlaySystemSEDecide, {});
+    const uint32_t popup = ld32(f + 8);
+    Frame fr;
+    // the lambda's captures copied ({layer, shadow, popup, titles, index, onClose}), then into the heap __func
+    const uint32_t layer = ld32(f + 0xC), shadow = ld32(f + 0x10), sb = ld32(f + 0x14), ctrl = ld32(f + 0x18);
+    if (ctrl) call(fn::shared_add, {ctrl});
+    const uint32_t index = ld32(f + 0x1C);
+    const uint32_t onClose = fr.alloc(24);
+    call(fn::function_vv_copy, {onClose, f + 0x20});
+    const uint32_t end = fr.alloc(24);
+    st32(end + 16, 0);
+    const uint32_t h = call(fn::operator_new, {0x38});
+    if (h) {
+        st32(h, VT_ClosedEnd);
+        st32(h + 8, layer);
+        st32(h + 0xC, shadow);
+        st32(h + 0x10, popup);
+        st32(h + 0x14, sb);
+        st32(h + 0x18, ctrl);
+        if (ctrl) call(fn::shared_add, {ctrl});
+        st32(h + 0x1C, index);
+        call(fn::function_vv_move, {h + 0x20, onClose});
+        st32(h + 0x1C, index);
+    }
+    st32(end + 16, h);
+    // r0 holds the index here (the animation does not read it)
+    const uint32_t anim = call(SceneUtil_createClosePopupAnimation, {index, end});
+    call(fn::Node_runAction, {popup, call(g::EaseSineOut_create, {anim})});
+    functionDestroy(end);
+    functionDestroy(onClose);
+    if (ctrl) call(fn::shared_release, {ctrl});
+}
+// $_56's end {layer, shadow, popup, titles, index, onClose}: shadow and popup removed; the next title, or onClose
+void closedEnd(uint32_t f) {
+    vcall(ld32(f + 8), node::removeChild, {ld32(f + 8), ld32(f + 0xC), 1});
+    vcall(ld32(f + 8), node::removeChild, {ld32(f + 8), ld32(f + 0x10), 1});
+    const uint32_t next = ld32(f + 0x1C) + 1;
+    if (ld32(ld32(f + 0x14) + TITLES_COUNT) <= next) {
+        if (ld32(f + 0x30)) call(fn::function_vv_call, {f + 0x20});
+        return;
+    }
+    Frame fr;
+    const uint32_t onClose = fr.alloc(24);
+    call(fn::function_vv_copy, {onClose, f + 0x20});
+    call(SceneUtil_openUserTitlePopup, {f + 0x14, next, onClose});
+    functionDestroy(onClose);
+}
+}  // namespace usertitle
+}  // namespace
+
+RW_FUNCTION(0x4846DC, "SceneUtil::openUserTitlePopup $_57::operator() (opened)", usertitle::opened);
+RW_FUNCTION(0x484A2C, "SceneUtil::openUserTitlePopup $_56::operator() (OK)", usertitle::okTouched);
+RW_FUNCTION(0x484DCC, "SceneUtil::openUserTitlePopup $_56 lambda()#1::operator()", usertitle::closedEnd);

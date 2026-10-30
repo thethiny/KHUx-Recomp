@@ -709,3 +709,162 @@ RW_FUNCTION(0x5ACE24, "side menu notices list callback __func::operator()(bool) 
 RW_FUNCTION(0x474700, "SceneUtil::openWebViewInfoPopup(Layer*, ...)", OtherMenu::openWebViewInfoPopup);
 RW_FUNCTION(0x5AC6C0, "side menu party button lambda __func::operator() (sub_5AC6C0)", OtherMenu::partyTouched);
 RW_FUNCTION(0x81ABF0, "Java_org_cocos2dx_lib_Cocos2dxWebViewHelper_shouldStartLoading", OtherMenu::shouldStartLoading);
+
+namespace {
+// ------------------------------------------------------------------------------------------------ settings lambdas
+namespace option {
+constexpr uint32_t IB_SELECTED = 0x2C8;      // ImageButton: selected now
+constexpr uint32_t IB_FLAG_272 = 0x272;      // ImageButton: cleared when the popup closes
+constexpr uint32_t OPT_AP = 8, OPT_RELIEF = 9, OPT_EVENTS = 10;   // OptionState bytes (two volumes first)
+constexpr uint32_t Slider_getPercent = rwlib::cocos2d::ui::Slider::getPercent;
+constexpr uint32_t Widget_isTouchEnabled = rwlib::cocos2d::ui::Widget::isTouchEnabled;
+constexpr uint32_t AudioManager_getInstance = 0x5BECFD, AudioManager_getLayer = 0x5BF33D;
+constexpr uint32_t AudioLayer_setVolume = 0x5BF825;            // (layer, float, int)
+constexpr uint32_t AppState_getOptionState = 0x4EB16D, AppState_save = 0x4E8DC9;
+constexpr uint32_t APIManager_executeUserOptionUpdate = 0x4D3DC9;   // (api, const UserOption&, function<void(bool)>)
+constexpr uint32_t VT_OptionUpdated = 0xF547C8;   // $_138 {popup, shadow, layer} (inline)
+constexpr uint32_t VT_OptionClosedEnd = 0xF547F4; // its end {shadow, popup, layer}
+constexpr uint32_t VT_OptionError = 0xF54820;
+constexpr uint32_t BGM_LAYER = 0x7FFFFFFF, SE_LAYER = 0, SE_LAYER_2 = 10000;
+constexpr uint32_t TOUCH_ENDED = 2, SLIDER_CHANGED = 0;
+
+// an on / off button {other, -, this, state, -}(sender, type): the decide sound if the other one was selected, On
+// ticked and Off not (or the reverse), the option byte set
+void pairTouched(uint32_t f, uint32_t typeRef, uint32_t flag, bool value) {
+    if (ld32(typeRef) != TOUCH_ENDED) return;
+    if (ld8(ld32(f + 4) + IB_SELECTED)) call(fn::AudioPlaySystemSEDecide, {});
+    const uint32_t other = ld32(f + 4), self = ld32(f + 0xC);
+    const uint32_t on = value ? self : other, off = value ? other : self;
+    call(g::ImageButton_setSelectEnabled, {on, 1});
+    call(g::ImageButton_setIsSelected, {on, value});
+    call(g::ImageButton_setSelectEnabled, {off, 1});
+    call(g::ImageButton_setIsSelected, {off, !value});
+    st8(ld32(f + 0x10) + flag, value);
+}
+void apOn(uint32_t f, uint32_t, uint32_t t) { pairTouched(f, t, OPT_AP, true); }
+void apOff(uint32_t f, uint32_t, uint32_t t) { pairTouched(f, t, OPT_AP, false); }
+void reliefOn(uint32_t f, uint32_t, uint32_t t) { pairTouched(f, t, OPT_RELIEF, true); }
+void reliefOff(uint32_t f, uint32_t, uint32_t t) { pairTouched(f, t, OPT_RELIEF, false); }
+void eventsOn(uint32_t f, uint32_t, uint32_t t) { pairTouched(f, t, OPT_EVENTS, true); }
+void eventsOff(uint32_t f, uint32_t, uint32_t t) { pairTouched(f, t, OPT_EVENTS, false); }
+
+// audio layer `id`'s volume set (0..1: a slider's percent / 100)
+void layerVolume(uint32_t id, uint32_t volume) {
+    Frame fr;
+    const uint32_t layer = fr.alloc(8);
+    call(AudioManager_getLayer, {layer, call(AudioManager_getInstance, {}), id});
+    call(AudioLayer_setVolume, {ld32(layer), volume, 0});
+    sharedRelease(layer);
+}
+uint32_t sliderVolume(uint32_t slider) {
+    return fbits(float(int32_t(call(Slider_getPercent, {slider}))) / 100.0f);
+}
+// the BGM / SE slider {slider}(sender, event): moved -> the volume follows (SE: both SE layers)
+void bgmSlider(uint32_t f, uint32_t, uint32_t eventRef) {
+    if (ld32(eventRef) == SLIDER_CHANGED) layerVolume(BGM_LAYER, sliderVolume(ld32(f + 4)));
+}
+void seSlider(uint32_t f, uint32_t, uint32_t eventRef) {
+    if (ld32(eventRef) != SLIDER_CHANGED) return;
+    const uint32_t volume = sliderVolume(ld32(f + 4));
+    layerVolume(SE_LAYER, volume);
+    layerVolume(SE_LAYER_2, volume);
+}
+
+// $_53 (closed) {close, close, ap on / off, relief on / off, events on / off, bgm, se, popup, shadow, layer}: the
+// cancel sound; Close still on -> it is turned off, the buttons released, the volumes kept, AppState saved and the
+// options sent (the answer closes the popup)
+void closed(uint32_t f) {
+    call(fn::AudioPlaySystemSECancel, {});
+    if (call(Widget_isTouchEnabled, {ld32(f + 4)}) != 1) return;
+    vcall(ld32(f + 8), V_setTouchEnabled, {ld32(f + 8), 0});
+    for (uint32_t k = 0xC; k <= 0x20; k += 4) st8(ld32(f + k) + IB_FLAG_272, 0);
+    Frame fr;
+    const uint32_t state = fr.alloc(8);
+    call(AppState_getOptionState, {state, call(fn::AppState_getInstance, {})});
+    st32(ld32(state), sliderVolume(ld32(f + 0x24)));
+    st32(ld32(state) + 4, sliderVolume(ld32(f + 0x28)));
+    call(AppState_save, {call(fn::AppState_getInstance, {})});
+    const uint32_t opt = fr.alloc(4);
+    const uint32_t s = ld32(state);
+    st8(opt, ld8(s + OPT_AP) ? 1 : 0);
+    st8(opt + 2, ld8(s + OPT_EVENTS) ? 1 : 0);
+    st8(opt + 1, ld8(s + OPT_RELIEF) ? 1 : 0);
+    call(fn::SceneManager_enableLoadingIndicator, {sceneManager(), 1});
+    const uint32_t api = call(fn::APIManager_getInstance, {});
+    const uint32_t done = newFunction(fr, VT_OptionUpdated, {ld32(f + 0x2C), ld32(f + 0x30), ld32(f + 0x34)});
+    call(APIManager_executeUserOptionUpdate, {api, opt, done});
+    functionDestroy(done);
+    sharedRelease(state);
+}
+// $_138 (sent) {popup, shadow, layer}(ok): the indicator off; ok -> the popup closes; else the API error
+void updated(uint32_t f, uint32_t okRef) {
+    const uint32_t ok = ld8(okRef);
+    call(fn::SceneManager_enableLoadingIndicator, {sceneManager(), 0});
+    if (!ok) {
+        apiErrorDialogIfShown(VT_OptionError);
+        return;
+    }
+    const uint32_t popup = ld32(f + 4);
+    Frame fr;
+    const uint32_t end = newFunction(fr, VT_OptionClosedEnd, {ld32(f + 8), popup, ld32(f + 0xC)});
+    shrinkPopup(popup, end, ld32(f + 8));
+}
+}  // namespace option
+}  // namespace
+RW_FUNCTION(0x486A08, "SceneUtil::openOptionPopup $_45::operator() (AP on)", option::apOn);
+RW_FUNCTION(0x486B9C, "SceneUtil::openOptionPopup $_44::operator() (AP off)", option::apOff);
+RW_FUNCTION(0x4866D8, "SceneUtil::openOptionPopup $_48::operator() (relief on)", option::reliefOn);
+RW_FUNCTION(0x48686C, "SceneUtil::openOptionPopup $_47::operator() (relief off)", option::reliefOff);
+RW_FUNCTION(0x4863A8, "SceneUtil::openOptionPopup $_50::operator() (events on)", option::eventsOn);
+RW_FUNCTION(0x48653C, "SceneUtil::openOptionPopup $_49::operator() (events off)", option::eventsOff);
+RW_FUNCTION(0x486E00, "SceneUtil::openOptionPopup $_40::operator() (BGM slider)", option::bgmSlider);
+RW_FUNCTION(0x486C94, "SceneUtil::openOptionPopup $_41::operator() (SE slider)", option::seSlider);
+RW_FUNCTION(0x485CA0, "SceneUtil::openOptionPopup $_53::operator() (closed)", option::closed);
+RW_FUNCTION(0x485EC0, "SceneUtil::openOptionPopup $_138 lambda(bool)#1::operator() (options sent)", option::updated);
+
+namespace {
+namespace webinfo {
+constexpr uint32_t WebView_stopLoading = 0x81924B;
+constexpr uint32_t FunctionNode_call = 0x481E8D;   // std::function<void(Node*)>::operator()
+constexpr uint32_t SceneUtil_createClosePopupAnimation = 0x45BC61;
+constexpr uint32_t VT_ClosedEnd = 0xF542F8;        // $_80's end {onClose (Node*), popup, layer, shadow} (heap 0x30)
+
+// $_80 (closed) {close, web view, shadow, popup, onClose function<void(Node*)> +0x18, layer +0x30}(ok): Close ->
+// the cancel sound; Close off, the page stopped, the shadow fades, the popup shrinks (its end calls onClose)
+void closed(uint32_t f, uint32_t okRef) {
+    if (!ld8(okRef)) call(fn::AudioPlaySystemSECancel, {});
+    vcall(ld32(f + 8), V_setTouchEnabled, {ld32(f + 8), 0});
+    call(WebView_stopLoading, {ld32(f + 0xC)});
+    call(fn::Node_runAction, {ld32(f + 0x10), call(fn::FadeTo_create, {fbits(0.15f), 0})});
+    const uint32_t popup = ld32(f + 0x14);
+    Frame fr;
+    const uint32_t onClose = fr.alloc(24);
+    call(g::FunctionNode_copy, {onClose, f + 0x18});
+    const uint32_t layer = ld32(f + 0x30), shadow = ld32(f + 0x10);
+    const uint32_t end = fr.alloc(24);
+    st32(end + 16, 0);
+    const uint32_t h = call(fn::operator_new, {0x30});
+    if (h) {
+        st32(h, VT_ClosedEnd);
+        call(g::FunctionNode_move, {h + 8, onClose});
+        st32(h + 0x20, popup);
+        st32(h + 0x24, layer);
+        st32(h + 0x28, shadow);
+    }
+    st32(end + 16, h);
+    call(fn::Node_runAction, {popup, call(SceneUtil_createClosePopupAnimation, {popup, end})});
+    functionDestroy(end);
+    functionDestroy(onClose);
+}
+// $_80's end {onClose +8, popup, layer, shadow}: onClose(popup), shadow and popup removed, the touch effect on
+void closedEnd(uint32_t f) {
+    if (ld32(f + 0x18)) call(FunctionNode_call, {f + 8, ld32(f + 0x20)});
+    vcall(ld32(f + 0x24), node::removeChild, {ld32(f + 0x24), ld32(f + 0x28), 1});
+    vcall(ld32(f + 0x24), node::removeChild, {ld32(f + 0x24), ld32(f + 0x20), 1});
+    call(g::SM_setEnabledTouchEffect, {sceneManager(), 1});
+}
+}  // namespace webinfo
+}  // namespace
+
+RW_FUNCTION(0x481B08, "SceneUtil::openWebViewInfoPopup $_80::operator()(bool) (closed)", webinfo::closed);
+RW_FUNCTION(0x481E10, "SceneUtil::openWebViewInfoPopup $_80 lambda()#1::operator()", webinfo::closedEnd);

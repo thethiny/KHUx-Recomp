@@ -480,3 +480,119 @@ void SceneManager::destroyDelete(SceneManager *self) {
     call(fn::operator_delete, {mgrAddr(self)});
 }
 RW_FUNCTION(0x60CAF4, "SceneManager::~SceneManager(D0)", SceneManager::destroyDelete);
+
+// ------------------------------------------------------------------------------------------------ the chains' steps
+namespace {
+namespace chain {
+constexpr uint32_t GOT_CREATE_ADVENTURE = 0xFD669C, GOT_CREATE_DECK_EDIT = 0xFD66B0;
+constexpr uint32_t GOT_CREATE_SHOP_TOP = 0xFD66F8, GOT_CREATE_SPHERE_SELECT = 0xFD68A0;
+constexpr uint32_t SceneShopTop_callShopAPI = 0x68BB9D;            // (function<void(bool)> by value)
+constexpr uint32_t APIManager_executeStageGet160310 = 0x4CADB9, APIManager_executeRaidGet = 0x4CBEC5;
+constexpr uint32_t VT_AdvStages = 0xF5F060, VT_AdvRaid = 0xF5F08C;   // {flag 0}
+constexpr uint32_t SM_TUTORIAL_FLAG = 0x30A;
+
+// the tutorial's scene: changeSceneLayer(createSceneLayer<T>, true, true, fade) and the flag at +0x30A cleared
+void toScene(uint32_t createGot) {
+    changeSceneLayerTo(createGot, 1, 1, 1);
+    st8(sceneManager() + SM_TUTORIAL_FLAG, 0);
+}
+}  // namespace chain
+
+// ChainOfTutorialShop $_120: the shop (its API first, with the payment callback dropped)
+void shopStep(uint32_t) {
+    apiBusyDropPayment();
+    {
+        Frame f;
+        const uint32_t none = newEmptyFunction(f);
+        call(chain::SceneShopTop_callShopAPI, {none});
+        functionDestroy(none);
+    }
+    chain::toScene(chain::GOT_CREATE_SHOP_TOP);
+}
+// ChainOfTutorialDeckEdit $_119 / ChainOfTutorialSphere $_118: the deck screen / the Avatar Board list
+void deckEditStep(uint32_t) {
+    apiBusyDropPayment();
+    chain::toScene(chain::GOT_CREATE_DECK_EDIT);
+}
+void sphereStep(uint32_t) {
+    apiBusyDropPayment();
+    chain::toScene(chain::GOT_CREATE_SPHERE_SELECT);
+}
+// ChainOfTutorialAdventureSelect $_117: the 2016-03-10 stages, then (lambda(bool)) the raid; the adventure screen
+void adventureStep(uint32_t) {
+    {
+        const uint32_t api = call(fn::APIManager_getInstance, {});
+        Frame f;
+        const uint32_t next = newFunction(f, chain::VT_AdvStages, {0});
+        call(chain::APIManager_executeStageGet160310, {api, next});
+        functionDestroy(next);
+    }
+    chain::toScene(chain::GOT_CREATE_ADVENTURE);
+}
+void adventureStagesLoaded(uint32_t, uint32_t okRef) {
+    if (!ld8(okRef)) return;
+    const uint32_t api = call(fn::APIManager_getInstance, {});
+    Frame f;
+    const uint32_t next = newFunction(f, chain::VT_AdvRaid, {0});
+    call(chain::APIManager_executeRaidGet, {api, next});
+    functionDestroy(next);
+}
+// ChainOfTutorialAdventureSelect $_116: the adventure screen
+void adventureSceneStep(uint32_t) { chain::toScene(chain::GOT_CREATE_ADVENTURE); }
+}  // namespace
+
+RW_FUNCTION(0x6220D0, "SceneManager::ChainOfTutorialShop $_120::operator()", shopStep);
+RW_FUNCTION(0x622284, "SceneManager::ChainOfTutorialDeckEdit $_119::operator()", deckEditStep);
+RW_FUNCTION(0x62240C, "SceneManager::ChainOfTutorialSphere $_118::operator()", sphereStep);
+RW_FUNCTION(0x622594, "SceneManager::ChainOfTutorialAdventureSelect $_117::operator()", adventureStep);
+RW_FUNCTION(0x622728, "SceneManager::ChainOfTutorialAdventureSelect $_117 lambda(bool)::operator()", adventureStagesLoaded);
+RW_FUNCTION(0x6228E8, "SceneManager::ChainOfTutorialAdventureSelect $_116::operator()", adventureSceneStep);
+
+// ------------------------------------------------------------------------------------------------ tutorial_menu's steps
+namespace {
+namespace tmenu {
+constexpr uint32_t AppState_isClearTutorialPopupIDs = 0x4EB815;
+constexpr uint32_t SceneUtil_getNexTutorialphase = 0x472B31;
+constexpr uint32_t VT_MenuNext = 0xF60240;      // $_33's popup callback {a, b}
+constexpr uint32_t VT_MenuDone = 0xF6026C;      // $_125's popup callback {}
+constexpr uint32_t S_ButtonD = 0xE03266;        // "Button_%d"
+constexpr uint32_t SM_MENU_TUTORIAL = 0x588;    // SceneManager: byte, past phase 709
+constexpr uint32_t SM_TUTORIAL_FLAG = 0x30A;
+constexpr int32_t PHASE_MENU = 709;
+constexpr uint32_t TUTORIAL_MENU = 119, TUTORIAL_MENU_2 = 120;
+
+void finish() {
+    const uint32_t sm = sceneManager();
+    st8(sm + SM_MENU_TUTORIAL, int32_t(call(SceneUtil_getNexTutorialphase, {})) > PHASE_MENU ? 1 : 0);
+    st8(sceneManager() + SM_TUTORIAL_FLAG, 0);
+}
+}  // namespace tmenu
+
+// tutorial_menu $_33 {-, a, b, target}: tutorial 119 over the target (once)
+void menuTutorial(uint32_t f) {
+    if (call(tmenu::AppState_isClearTutorialPopupIDs, {call(fn::AppState_getInstance, {}), tmenu::TUTORIAL_MENU})) return;
+    Frame fr;
+    const uint32_t next = newFunction(fr, tmenu::VT_MenuNext, {ld32(f + 4), ld32(f + 8)});
+    openTutorialWithClose(tmenu::TUTORIAL_MENU, next, ld32(f + 0xC));
+    functionDestroy(next);
+    tmenu::finish();
+}
+// tutorial_menu $_125 {menu}: tutorial 120 over the menu's "Button_2"
+void menuTutorial2(uint32_t f) {
+    uint32_t target;
+    {
+        Frame t;
+        const uint32_t name = newStr(t, stringBuffer(t, {tmenu::S_ButtonD, 2}));
+        target = SceneUtil::searchNodeByName(ld32(f + 4), name);
+        strFree(name);
+    }
+    Frame fr;
+    const uint32_t done = newFunction(fr, tmenu::VT_MenuDone, {});
+    openTutorialWithClose(tmenu::TUTORIAL_MENU_2, done, target);
+    functionDestroy(done);
+    tmenu::finish();
+}
+}  // namespace
+
+RW_FUNCTION(0x633B68, "SceneManager::tutorial_menu $_33::operator()", menuTutorial);
+RW_FUNCTION(0x633D5C, "SceneManager::tutorial_menu $_125::operator()", menuTutorial2);

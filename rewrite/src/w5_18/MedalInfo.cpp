@@ -3,6 +3,7 @@
 // (init $_3 / $_5: the info popup with its button and close callbacks), its answer to those buttons
 // (onTapMedalInfoButton: select, Level Up or Evolve) and their scene-change lambdas, SceneUtil::openMedalInfoPopup,
 // and a SceneUtil text helper. SceneUtil::updateMedalInfo is in MedalInfoUpdate.cpp.
+#include "../scene/Captures.hpp"
 #include "../scene/SceneUi.hpp"
 
 #include <cmath>
@@ -730,3 +731,184 @@ RW_FUNCTION(0x73E108, "SceneMedalList Level Up lambda __func::operator() (sub_73
 RW_FUNCTION(0x59B380, "MedalListScrollView release lambda (sub_59B380)", MedalListScrollView::touchEnded);
 RW_FUNCTION(0x59B69C, "MedalListScrollView move lambda __func::operator() (sub_59B69C)", MedalListScrollView::touchMoved);
 RW_FUNCTION(0x59B8F8, "MedalListScrollView press lambda __func::operator() (sub_59B8F8)", MedalListScrollView::touchBegan);
+
+// ================================================================================================ the lambdas
+namespace {
+namespace medalinfo {
+using caps::Cap;
+constexpr uint32_t SM_closeCurrentPopup = 0x6216A1;
+constexpr uint32_t FunctionInfo_call = 0x4888E1;      // function<void(MedalInfoButtonType, bool)>::operator()
+constexpr uint32_t AppState_addWillLock = 0x4EB3E5, AppState_removeWillLock = 0x4EB485;
+constexpr uint32_t AppState_addWillUnLock = 0x4EB5A5, AppState_removeWillUnLock = 0x4EB645;   // (app, u64 id)
+constexpr uint32_t SceneUtil_openOkCancelDialog4Line = 0x45C951;   // (const string&, function<void(bool)>, a, b)
+constexpr uint32_t SceneUtil_searchNodeByName = 0x45A9F5, SceneUtil_showSupportMedalEffect = 0x46695D;
+constexpr uint32_t SceneUtil_createClosePopupAnimation = 0x45BC61;
+constexpr uint32_t APIManager_executeUserSupportUpdate = 0x4C9455;  // (api, -, u64 medal id, function<void(bool)>)
+constexpr uint32_t DeckMedalViewManager_getInstance = 0x527131, DeckMedalViewManager_updateDeckMedalViews = 0x5276AB;
+constexpr uint32_t AEABI_MEMCPY = 0x40E164;
+constexpr uint32_t VT_ClosedEnd = 0xF54B64;     // $_32's end {layer, shadow, root, on-close} (heap 0x30)
+constexpr uint32_t VT_PartnerAnswer = 0xF54C98; // $_26's dialog answer (heap 0x48)
+constexpr uint32_t VT_SupportUpdated = 0xF54CC4;   // $_25 {button, root, on-button} (heap 0x28)
+constexpr uint32_t VT_SupportError = 0xF54CF0;
+constexpr uint32_t S_DummyMedal = 0xDF8C16;     // "Dummy_Medal"
+constexpr uint32_t IB_SELECTED = 0x2C8, IB_FLAG_272 = 0x272;
+constexpr uint32_t BUTTON_MIX = 0, BUTTON_LIMIT_CUT = 1, BUTTON_PARTNER = 2;   // MedalInfoButtonType (as called)
+constexpr uint32_t TUTORIAL_MIX_CLOSE = 0x74, TUTORIAL_LEVEL_UP = 27;
+constexpr int32_t TXT_PARTNER_ASK = 101200025, TXT_PARTNER_SET = 101200026;
+constexpr uint32_t TOUCH_ENDED = 2;
+// on-button(type, true) when one is set
+void onButton(uint32_t fo, uint32_t type, uint32_t value) {
+    if (ld32(fo + 16)) call(FunctionInfo_call, {fo, type, value});
+}
+
+// $_29 / $_28 (Limit Cut / Level Up) {-, on-button +8}(sender, type): the decide sound, the popup closed (Level Up:
+// the tutorial's close function first), on-button(type, true)
+void limitCutTouched(uint32_t f, uint32_t, uint32_t typeRef) {
+    if (ld32(typeRef) != TOUCH_ENDED) return;
+    call(fn::AudioPlaySystemSEDecide, {});
+    call(SM_closeCurrentPopup, {sceneManager(), 0});
+    onButton(f + 8, BUTTON_LIMIT_CUT, 1);
+}
+void mixTouched(uint32_t f, uint32_t, uint32_t typeRef) {
+    if (ld32(typeRef) != TOUCH_ENDED) return;
+    call(fn::AudioPlaySystemSEDecide, {});
+    call(SM_closeCurrentPopup, {sceneManager(), 0});
+    execTutorialCloseIfSet(TUTORIAL_MIX_CLOSE);
+    onButton(f + 8, BUTTON_MIX, 1);
+}
+
+// $_24 (the favorite box) {-, medal +8, -, on-button +0x10}(sender, event): the medal queued to be locked /
+// unlocked (or taken off that queue), on-button(partner, ticked)
+void favoriteChanged(uint32_t f, uint32_t, uint32_t eventRef) {
+    const uint32_t event = ld32(eventRef);
+    call(fn::AudioPlaySystemSEDecide, {});
+    const uint32_t locked = ld8(ld32(f + 8) + 0x24);
+    const uint32_t app = call(g::AppState_getInstance, {});
+    const uint32_t medal = ld32(f + 8);
+    const uint32_t lo = ld32(medal), hi = ld32(medal + 4);
+    uint32_t op;
+    if (event)
+        op = locked ? AppState_addWillUnLock : AppState_removeWillLock;
+    else
+        op = locked ? AppState_removeWillUnLock : AppState_addWillLock;
+    call(op, {app, medal + 8, lo, hi});
+    onButton(f + 0x10, BUTTON_PARTNER, event ? 0 : 1);
+}
+
+// $_30 (opened) {hint}: the Level Up tutorial when hinted
+void opened(uint32_t f) {
+    if (!ld8(f + 4)) return;
+    Frame fr;
+    const uint32_t none = newEmptyFunction(fr), popup = fr.alloc(24);
+    call(g::SceneUtil_openTutorialPopup, {popup, TUTORIAL_LEVEL_UP, none, 0, 0, 0, 0});
+    functionDestroy(popup);
+    functionDestroy(none);
+}
+
+// $_26 (the partner button) {-, but11, on-button +0x10, medal +0x28, but11, root, on-button +0x38}(sender, type):
+// released while selectable -> "make this medal your partner?" (its answer gets the captures)
+void partnerTouched(uint32_t f, uint32_t, uint32_t typeRef) {
+    if (ld32(typeRef) != TOUCH_ENDED || !ld8(ld32(f + 8) + IB_SELECTED)) return;
+    call(fn::AudioPlaySystemSEDecide, {});
+    Frame fr;
+    const uint32_t td = textData(fr, TXT_PARTNER_ASK);
+    const uint32_t message = newStr(fr, textDataStr(td));
+    const caps::Layout PARTNER = {{Cap::Fn, 0, 0, g::FunctionInfo_copy, g::FunctionInfo_move},
+                                      {Cap::Shared, 0x18}, {Cap::Words, 0x20, 8},
+                                      {Cap::Fn, 0x28, 0, g::FunctionInfo_copy, g::FunctionInfo_move}};
+    caps::sendWith(PARTNER, 0x40, VT_PartnerAnswer, f + 0x10, [&](uint32_t answer) {
+        return call(SceneUtil_openOkCancelDialog4Line, {message, answer, 0, 0});
+    });
+    strFree(message);
+    sharedRelease(td);
+}
+// $_26's answer {-, on-button +8, medal +0x20, but11, root, on-button +0x30}(yes): yes (with an on-button) -> the
+// loading indicator and the partner sent (its answer $_25 gets {but11, root, on-button})
+void partnerAnswered(uint32_t f, uint32_t yesRef) {
+    if (!ld8(yesRef) || !ld32(f + 0x18)) return;
+    call(fn::SceneManager_enableLoadingIndicator, {sceneManager(), 1});
+    const uint32_t api = call(g::APIManager_getInstance, {});
+    const uint32_t medal = ld32(f + 0x20);
+    const uint32_t lo = ld32(medal), hi = ld32(medal + 4);
+    const caps::Layout SUPPORT = {{Cap::Words, 0, 8}, {Cap::Fn, 8, 0, g::FunctionInfo_copy, g::FunctionInfo_move}};
+    caps::sendWith(SUPPORT, 0x20, VT_SupportUpdated, f + 0x28, [&](uint32_t answer) {
+        return call(APIManager_executeUserSupportUpdate, {api, 0, lo, hi, answer});
+    });
+}
+// $_25 (the partner sent) {-, but11, root, on-button +0x10}(ok): the indicator off; ok -> "set as partner", the
+// medal's support effect off, the button unselected and released, on-button(partner, true); else the API error and
+// the button selected again
+void supportUpdated(uint32_t f, uint32_t okRef) {
+    const uint32_t ok = ld8(okRef);
+    call(fn::SceneManager_enableLoadingIndicator, {sceneManager(), 0});
+    if (!ok) {
+        apiErrorDialogIfShown(VT_SupportError);
+        call(g::ImageButton_setIsSelected, {ld32(f + 8), 1});
+        return;
+    }
+    okDialogText(TXT_PARTNER_SET);
+    uint32_t medalNode;
+    {
+        // "Dummy_Medal" as a long string (the literal's inline constructor)
+        Frame fr;
+        const uint32_t name = fr.alloc(12);
+        const uint32_t root = ld32(f + 0xC);
+        const uint32_t data = call(fn::operator_new, {0x10});
+        st32(name + 8, data);
+        st32(name, 0x11);
+        st32(name + 4, 11);
+        call(AEABI_MEMCPY, {data, S_DummyMedal, 11});
+        st8(data + 11, 0);
+        medalNode = call(SceneUtil_searchNodeByName, {root, name});
+        strFree(name);
+    }
+    call(SceneUtil_showSupportMedalEffect, {medalNode, 0});
+    call(g::ImageButton_setIsSelected, {ld32(f + 8), 0});
+    st8(ld32(f + 8) + IB_FLAG_272, 0);
+    onButton(f + 0x10, BUTTON_PARTNER, 1);
+}
+
+// $_32 (closed) {-, 5 widgets +8 (the third an ImageButton), root, layer, shadow, -, on-close +0x30}: the widgets
+// off, the popup shrinks (its end gets layer, shadow, root and on-close) and the shadow fades; the deck's medal
+// views redrawn
+void closed(uint32_t f) {
+    vcall(ld32(f + 8), V_setTouchEnabledW, {ld32(f + 8), 0});
+    vcall(ld32(f + 0xC), V_setTouchEnabledW, {ld32(f + 0xC), 0});
+    st8(ld32(f + 0x10) + IB_FLAG_272, 0);
+    vcall(ld32(f + 0x14), V_setTouchEnabledW, {ld32(f + 0x14), 0});
+    vcall(ld32(f + 0x18), V_setTouchEnabledW, {ld32(f + 0x18), 0});
+    const uint32_t root = ld32(f + 0x20);
+    const uint32_t layer = ld32(f + 0x24), shadow = ld32(f + 0x28);
+    {
+        Frame fr;
+        const uint32_t onClose = fr.alloc(24);
+        call(fn::function_vv_copy, {onClose, f + 0x30});
+        const uint32_t end = fr.alloc(24);
+        st32(end + 16, 0);
+        const uint32_t h = call(fn::operator_new, {0x30});
+        if (h) {
+            st32(h, VT_ClosedEnd);
+            st32(h + 8, layer);
+            st32(h + 0xC, shadow);
+            st32(h + 0x10, root);
+            call(fn::function_vv_move, {h + 0x18, onClose});
+        }
+        st32(end + 16, h);
+        call(fn::Node_runAction, {root, call(SceneUtil_createClosePopupAnimation, {root, end})});
+        functionDestroy(end);
+        functionDestroy(onClose);
+    }
+    call(fn::Node_runAction, {ld32(f + 0x28), call(fn::FadeTo_create, {fbits(0.1f), 0})});
+    call(DeckMedalViewManager_updateDeckMedalViews, {call(DeckMedalViewManager_getInstance, {})});
+}
+}  // namespace medalinfo
+}  // namespace
+
+RW_FUNCTION(0x488878, "SceneUtil::openMedalInfoPopup $_29::operator() (Limit Cut)", medalinfo::limitCutTouched);
+RW_FUNCTION(0x488AEC, "SceneUtil::openMedalInfoPopup $_28::operator() (Level Up)", medalinfo::mixTouched);
+RW_FUNCTION(0x489BD8, "SceneUtil::openMedalInfoPopup $_24::operator() (favorite)", medalinfo::favoriteChanged);
+RW_FUNCTION(0x488648, "SceneUtil::openMedalInfoPopup $_30::operator() (opened)", medalinfo::opened);
+RW_FUNCTION(0x488F24, "SceneUtil::openMedalInfoPopup $_26::operator() (partner)", medalinfo::partnerTouched);
+RW_FUNCTION(0x48944C, "SceneUtil::openMedalInfoPopup $_26 lambda(bool)#1::operator()", medalinfo::partnerAnswered);
+RW_FUNCTION(0x489724, "SceneUtil::openMedalInfoPopup $_25::operator()(bool) (partner sent)", medalinfo::supportUpdated);
+RW_FUNCTION(0x4881B8, "SceneUtil::openMedalInfoPopup $_32::operator()(bool) (closed)", medalinfo::closed);

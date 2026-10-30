@@ -438,3 +438,69 @@ RW_FUNCTION(0x738BF8, "SceneUnionRanking::init $_7 inner lambda __func::operator
             SceneUnionRanking::rollStop);
 RW_FUNCTION(0x6FB25C, "SceneLoginBonus openMemoryBonus lambda __func::operator() (sub_6FB25C)",
             SceneUnionRanking::memoryBonus);
+
+// ------------------------------------------------------------------------------------------------ the union names
+namespace {
+namespace un {
+constexpr uint32_t GOT_TI_TextRenderer = 0xFD6950, GOT_TI_LWFTextTTFRenderer = 0xFD6954;   // &typeinfo
+constexpr uint32_t dynamic_cast_ = 0xC9A171;                // __dynamic_cast(ptr, src, dst, hint)
+constexpr uint32_t string_compare = 0x47CBD5;               // std::string::compare(const char*)
+constexpr uint32_t Label_setAlignment = 0x884CB9;           // (label, TextHAlignment, TextVAlignment)
+constexpr uint32_t MEMCPY = 0x40E164;
+constexpr uint32_t ThrowOutOfRange = 0x47CCE1;
+constexpr uint32_t S_Font = 0xDF9F4D;                       // "cocostudio/publish/DFPSoGei-W5.TTF" (34)
+constexpr uint32_t S_Name1 = 0xE07286;                      // "name_1" .. "name_5", 7 bytes apart
+constexpr uint32_t FONT_LEN = 34, FONT_SIZE = 16, UNIONS = 5;
+constexpr int32_t TXT_UNION_1 = 103710001;                  // .. 103710005: the five unions' names
+constexpr uint32_t V_SET_TTF_CONFIG = 0x280, V_SET_STRING = 0x2A8, LABEL_V_ALIGN = 0x3E0;
+constexpr uint32_t RENDERER_LABEL = 0xC;                    // LWFTextTTFRenderer: its cocos2d::Label
+}  // namespace un
+}  // namespace
+
+// settingUnionRankingLwf $_0 {-, ranks (vector<int>)}(text name, renderer): the LWF's "name_1".."name_5" texts get
+// the font and the name of the union ranked there (ranks[k] is a union number, 1 based)
+static void unionNameText(uint32_t f, uint32_t name, uint32_t rendererRef) {
+    if (!ld32(rendererRef)) return;
+    const uint32_t ttf = call(un::dynamic_cast_, {ld32(rendererRef), ld32(un::GOT_TI_TextRenderer),
+                                                  ld32(un::GOT_TI_LWFTextTTFRenderer), 0});
+    if (!ttf) return;
+    const uint32_t label = ld32(ttf + un::RENDERER_LABEL);
+    Frame fr;
+    // TTFConfig {font path, size 16, glyphs 0, custom glyphs 0, no distance field, no outline, ...}
+    const uint32_t config = fr.alloc(0x24);
+    const uint32_t font = call(fn::operator_new, {0x30});
+    st32(config, 0x31);
+    st32(config + 4, un::FONT_LEN);
+    st32(config + 8, font);
+    call(un::MEMCPY, {font, un::S_Font, un::FONT_LEN});
+    st8(font + un::FONT_LEN, 0);
+    st32(config + 0xC, un::FONT_SIZE);
+    st32(config + 0x10, 0);
+    st32(config + 0x14, 0);
+    st8(config + 0x18, 0);
+    st32(config + 0x1C, 0);
+    st8(config + 0x20, 0);
+    st8(config + 0x21, 0);
+    vcall(label, un::V_SET_TTF_CONFIG, {label, config});
+    call(un::Label_setAlignment, {label, 0, ld32(label + un::LABEL_V_ALIGN)});
+    uint32_t names[un::UNIONS], texts[un::UNIONS];
+    for (uint32_t k = 0; k < un::UNIONS; k++) {
+        texts[k] = textData(fr, un::TXT_UNION_1 + int32_t(k));
+        names[k] = newStr(fr, textDataStr(texts[k]));
+    }
+    for (uint32_t k = un::UNIONS; k-- > 0;) sharedRelease(texts[k]);
+    for (uint32_t k = 0; k < un::UNIONS; k++) {
+        if (call(un::string_compare, {name, un::S_Name1 + 7 * k})) continue;
+        const uint32_t ranks = f + 4;
+        if ((ld32(ranks + 4) - ld32(ranks)) >> 2 <= k) call(un::ThrowOutOfRange, {ranks});
+        const uint32_t s = names[ld32(ld32(ranks) + 4 * k) - 1];
+        Frame t;
+        const uint32_t copy = newStr(t, strIsLong(s) ? ld32(s + 8) : s + 1);
+        vcall(label, un::V_SET_STRING, {label, copy});
+        strFree(copy);
+        break;
+    }
+    for (uint32_t k = un::UNIONS; k-- > 0;) strFree(names[k]);
+    strFree(config);
+}
+RW_FUNCTION(0x739B40, "SceneUnionRanking::settingUnionRankingLwf $_0::operator()", unionNameText);

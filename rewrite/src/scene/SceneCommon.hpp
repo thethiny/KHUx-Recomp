@@ -89,6 +89,7 @@ constexpr uint32_t function_vv_copy = 0x4683CD;      // std::function<void()>::f
 constexpr uint32_t function_vv_move = 0x47F905;      // std::function<void()>::function(function&&)
 constexpr uint32_t function_vv_call = 0x470E69;      // std::function<void()>::operator()
 constexpr uint32_t function_vb_copy = 0x45C84D;      // std::function<void(bool)>::function(const function&)
+constexpr uint32_t function_vb_call = 0x474139;      // std::function<void(bool)>::operator()
 constexpr uint32_t function_vb_move = 0x47BC69;      // std::function<void(bool)>::function(function&&)
 constexpr uint32_t function_vbb_move = 0x48B1E9;     // std::function<void(bool,bool)>::function(function&&)
 // cocos2d
@@ -128,6 +129,8 @@ constexpr uint32_t removeAllChildren = 0x138;
 constexpr uint32_t getTag = 0x148, setTag = 0x14C, getName = 0x150, setName = 0x154;
 constexpr uint32_t getOpacity = 0x20C, setOpacity = 0x214, setCascadeOpacityEnabled = 0x220;
 constexpr uint32_t getColor = 0x224, setColor = 0x22C, setCascadeColorEnabled = 0x238;
+// ui::Widget
+constexpr uint32_t setEnabled = 0x298, setTouchEnabled = 0x29C;
 }  // namespace node
 
 // ------------------------------------------------------------------------------------------------ cocos2d values
@@ -207,6 +210,19 @@ inline void strCopy(uint32_t dst, uint32_t src) {
         st32(dst + 8, ld32(src + 8));
     }
 }
+// a short std::string (up to 10 characters) built in place, as the compiler inlines a literal's constructor:
+// the size byte (length << 1), the characters, the terminator
+inline uint32_t shortStrAt(uint32_t s, const char *text) {
+    uint32_t n = 0;
+    while (text[n]) {
+        st8(s + 1 + n, uint8_t(text[n]));
+        n++;
+    }
+    st8(s, uint8_t(n << 1));
+    st8(s + 1 + n, 0);
+    return s;
+}
+inline uint32_t newShortStr(Frame &f, const char *text) { return shortStrAt(f.alloc(12), text); }
 // a temporary std::string on the guest stack built from a C string
 inline uint32_t newStr(Frame &f, uint32_t text) {
     uint32_t s = f.alloc(12);

@@ -850,7 +850,7 @@ static void rankingPeriodTouch(Self::Addr functor, Self::Addr, Self::Addr typep)
     if (self->changing) return;
     call(fn::AudioPlaySystemSEDecide, {});
     const int32_t next = self->period == PERIOD_CURRENT ? PERIOD_PREVIOUS : PERIOD_CURRENT;
-    call(0x6FDCF1, {functor + 8, uint32_t(next)});
+    call(0x6FDCF1, {functor + 8, uint32_t(next), 1});
 }
 RW_FUNCTION(0x702052, "SceneRanking::init $_12::operator() (period)", rankingPeriodTouch);
 

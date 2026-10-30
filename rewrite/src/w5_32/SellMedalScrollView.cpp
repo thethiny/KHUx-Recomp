@@ -23,6 +23,13 @@ constexpr uint32_t Widget_create = rwlib::cocos2d::ui::Widget::create;
 constexpr uint32_t ArmatureDataManager_getInstance = rwlib::cocostudio::ArmatureDataManager::getInstance, ArmatureDataManager_addArmatureFileInfo = rwlib::cocostudio::ArmatureDataManager::addArmatureFileInfo;
 constexpr uint32_t Armature_create = rwlib::cocostudio::Armature::create;
 constexpr uint32_t ThrowOutOfRange = 0x47CCE1;              // vector::at failure (does not return)
+constexpr uint32_t Touch_getLocation = rwlib::cocos2d::Touch::getLocation;
+constexpr uint32_t Node_convertToNodeSpace = rwlib::cocos2d::Node::convertToNodeSpace;
+constexpr uint32_t Rect_ctor = rwlib::cocos2d::Rect::ctor_base__ffff, Rect_containsPoint = rwlib::cocos2d::Rect::containsPoint;
+constexpr uint32_t IScrollProtocol_getItemIndex = 0x4F7DE1, IScrollProtocol_getLocalItemIndex = 0x4F7E39;
+constexpr uint32_t SceneUtil_createTapAnimation = 0x45BBA9;
+constexpr uint32_t FunctionVI_call = 0x4F321D;               // std::function<void(int)>::operator()
+constexpr uint32_t SellMedalScrollView_setSelectedMedal = 0x500081;   // (this, -, u64 id, bool on the stack)
 constexpr uint32_t VectorULL_dtor = 0x468499;
 constexpr uint32_t VectorULL_pushBackSlow = 0x4ECB6D;       // vector<ull>::__push_back_slow_path(const ull&)
 constexpr uint32_t MapULLBool_destroy = 0x5004F1;           // __tree<ull, bool>::destroy(node)
@@ -61,7 +68,7 @@ constexpr uint32_t F_DISABLED = 0x67C;        // std::vector<ull>: medals that c
 constexpr uint32_t F_EXCLUDED = 0x688;        // ull: a medal id the scene never lets be sold
 constexpr uint32_t F_TOUCH = 0x690;           // cells take touches
 constexpr uint32_t F_PRESSING = 0x691;        // a cell is held
-constexpr uint32_t F_PRESS_DONE = 0x69C;
+constexpr uint32_t F_PRESS_DONE = 0x69C;      // the press moved (or became a long press): no tap
 constexpr uint32_t F_PRESS_TIME = 0x6A0;      // float seconds held
 constexpr uint32_t F_PRESS_INDEX = 0x6A4;
 constexpr uint32_t F_VEC2 = 0x6A8;
@@ -69,6 +76,16 @@ constexpr uint32_t F_VEC2 = 0x6A8;
 constexpr uint32_t VT_TouchBegan = 0xF55D90;  // registItemTouchEvent $_0 {this, index}
 constexpr uint32_t VT_TouchMoved = 0xF55D64;  // $_1 {this, this}
 constexpr uint32_t VT_TouchEnded = 0xF55D0C;  // $_2 {this, index, this, index, this} (heap 0x18)
+constexpr uint32_t VT_TapDone = 0xF55D38;     // $_2's tap animation end (no captures)
+// the touch state (the BaseScrollView<ull> part ends at 0x690)
+constexpr uint32_t F_TAP_INDEX = 0x694, F_BEGIN_X = 0x698;
+constexpr uint32_t F_BEGIN_ITEM = 0x6A4, F_BEGIN_LOC = 0x6A8;   // Vec2
+constexpr uint32_t F_SWIPE_OK = 0x6B0;        // a sideways swipe may still select
+constexpr uint32_t F_SWIPE_LAST = 0x6B4;      // the item the swipe was over last
+constexpr uint32_t F_TOUCH_FREE = 0x6B8;      // cleared by a press, set by its end
+constexpr uint32_t F_SWIPE_FIRST = 0x6B9, F_SWIPE_FROM = 0x6BA;   // the swipe's first step / the state it toggles
+constexpr uint32_t F_MAX_COLUMN = 0x538;      // IScrollProtocol
+constexpr float MOVED = 20.0f, SWIPE_OFF_Y = 35.0f, SWIPE_X = 60.0f;
 // strings
 constexpr uint32_t S_Medal = 0xDFD05F, S_medalView = 0xDFD055, S_selectView = 0xDFD0BA;
 constexpr uint32_t S_AnimJson = 0xDFD065;     // "cocostudio/publish/Cursor_Anim_MedalSell.ExportJson"
@@ -136,7 +153,179 @@ struct SellMedalScrollView {
     static uint32_t isDisableMedal(uint32_t self, uint32_t medal);
     static void setSelectedMedal(uint32_t self, uint64_t id, uint32_t selected);
     static uint32_t getSelectedMedals(uint32_t out, uint32_t self);
+    static uint32_t touchBegan(uint32_t functor, uint32_t touchRef, uint32_t);
+    static void touchMoved(uint32_t functor, uint32_t touchRef, uint32_t);
+    static void touchEnded(uint32_t functor, uint32_t touchRef, uint32_t);
 };
+
+namespace {
+// selected[id] (std::map<ull, bool>::operator[], inserting false)
+uint8_t selectedOf(uint32_t s, uint32_t lo, uint32_t hi) {
+    Frame f;
+    const uint32_t key = f.alloc(8);
+    st32(key, lo);
+    st32(key + 4, hi);
+    return ld8(call(a::MapULLBool_index, {s + F_SELECTED, key}));
+}
+// the medal toggled (SellMedalScrollView::setSelectedMedal(id, !selected[id])), then the list's tap callback with
+// its tap index
+void toggle(uint32_t s, uint32_t lo, uint32_t hi) {
+    const uint32_t on = selectedOf(s, lo, hi) ? 0u : 1u;
+    {
+        Frame f;
+        const uint32_t args = f.alloc(8);
+        st32(args, on);
+        rw::call_exact(a::SellMedalScrollView_setSelectedMedal, {s, 0, lo, hi});
+    }
+    if (ld32(s + F_ON_TAP + 16)) call(a::FunctionVI_call, {s + F_ON_TAP, ld32(s + F_TAP_INDEX)});
+}
+uint32_t touchLocation(Frame &f, uint32_t touch) {
+    const uint32_t loc = f.alloc(8);
+    call(a::Touch_getLocation, {loc, touch});
+    return loc;
+}
+}  // namespace
+
+// $_0 (touch began) {this, row}: taps on, a press inside the row's cell starts: the press state, the touch
+// position, the item under it (also the swipe's start)
+uint32_t SellMedalScrollView::touchBegan(uint32_t f, uint32_t touchRef, uint32_t) {
+    const uint32_t s = ld32(f + 4);
+    if (!ld8(s + F_TOUCH) || !ld8(s + F_TOUCH_FREE)) return 0;
+    const uint32_t touch = ld32(touchRef);
+    Frame fr;
+    {
+        const uint32_t loc = touchLocation(fr, touch);
+        st32(s + F_BEGIN_X, ld32(loc));
+        call(a::Vec2_dtor, {loc});
+    }
+    const uint32_t row = ld32(ld32(s + F_ROWS) + 4 * ld32(f + 8));
+    const uint32_t local = fr.alloc(8), rect = fr.alloc(16);
+    {
+        const uint32_t loc = touchLocation(fr, touch);
+        call(a::Node_convertToNodeSpace, {local, row, loc});
+        call(a::Vec2_dtor, {loc});
+    }
+    const uint32_t w = ld32(vcall(row, node::getContentSize, {row}));
+    const uint32_t h = ld32(vcall(row, node::getContentSize, {row}) + 4);
+    call(a::Rect_ctor, {rect, 0, 0, w, h});
+    uint32_t pressed = 0;
+    if (call(a::Rect_containsPoint, {rect, local})) {
+        st8(s + F_TOUCH_FREE, 0);
+        st32(s + F_PRESS_TIME, 0);
+        pressed = 1;
+        st8(s + F_PRESSING, 1);
+        const uint32_t loc = touchLocation(fr, touch);
+        st32(s + F_BEGIN_LOC + 4, ld32(loc + 4));
+        st32(s + F_BEGIN_LOC, ld32(loc));
+        call(a::Vec2_dtor, {loc});
+        st8(s + F_PRESS_DONE, 0);
+        const uint32_t item = call(a::IScrollProtocol_getItemIndex, {s, ld32(f + 8)});
+        st32(s + F_BEGIN_ITEM, item);
+        st8(s + F_SWIPE_OK, 1);
+        st32(s + F_SWIPE_LAST, item);
+        st8(s + F_SWIPE_FROM, 0);
+        st8(s + F_SWIPE_FIRST, 1);
+    }
+    call(a::Vec2_dtor, {rect});
+    call(a::Vec2_dtor, {local});
+    return pressed;
+}
+
+// $_1 (touch moved) {this, this}: a move of MOVED marks the press moved (no tap); a vertical move of SWIPE_OFF_Y
+// ends the swipe; a sideways swipe of SWIPE_X over the items toggles each item passed whose selection matches the
+// one the swipe started on (the span capped to one item when it reaches the column count)
+void SellMedalScrollView::touchMoved(uint32_t f, uint32_t touchRef, uint32_t) {
+    const uint32_t touch = ld32(touchRef);
+    const uint32_t s = ld32(f + 4);
+    if (!ld8(s + F_PRESSING)) return;
+    Frame fr;
+    float swipeX, moveX, moveY;
+    {
+        const uint32_t loc = touchLocation(fr, touch);
+        swipeX = std::fabs(ldf(loc) - ldf(s + F_BEGIN_X));
+        call(a::Vec2_dtor, {loc});
+    }
+    {
+        const uint32_t loc = touchLocation(fr, touch);
+        moveX = std::fabs(ldf(loc) - ldf(s + F_BEGIN_LOC));
+        call(a::Vec2_dtor, {loc});
+    }
+    {
+        const uint32_t loc = touchLocation(fr, touch);
+        moveY = std::fabs(ldf(loc + 4) - ldf(s + F_BEGIN_LOC + 4));
+        call(a::Vec2_dtor, {loc});
+    }
+    if (moveY >= MOVED || moveX >= MOVED) st8(s + F_PRESS_DONE, 1);
+    if (moveY >= SWIPE_OFF_Y) st8(s + F_SWIPE_OK, 0);
+    if (!(swipeX >= SWIPE_X) || !ld8(s + F_SWIPE_OK)) return;
+    int32_t local;
+    {
+        const uint32_t loc = touchLocation(fr, touch);
+        local = int32_t(call(a::IScrollProtocol_getLocalItemIndex, {s, loc}));
+        call(a::Vec2_dtor, {loc});
+    }
+    if (local < 0) return;
+    const int32_t item = int32_t(call(a::IScrollProtocol_getItemIndex, {s, uint32_t(local)}));
+    const int32_t last = int32_t(ld32(s + F_SWIPE_LAST));
+    if (last == item) return;
+    int32_t from = item, n = 1;
+    if (last == -1) {
+        n = item >= 0 ? 1 : 0;
+    } else if (item == -1) {
+        from = last;
+    } else {
+        n = std::abs(last - item) + 1;
+        if (last < item) from = last;
+    }
+    if (n >= 1 && ld8(s + F_SWIPE_FIRST)) {
+        st8(s + F_SWIPE_FIRST, 0);
+        const uint32_t id = ld32(s + F_ITEM_IDS) + 8 * uint32_t(from);
+        st8(s + F_SWIPE_FROM, selectedOf(s, ld32(id), ld32(id + 4)));
+    }
+    if (!(int32_t(ld32(s + F_MAX_COLUMN)) > n)) n = 1;
+    for (int32_t k = 0; k < n; k++) {
+        const uint32_t id = ld32(s + F_ITEM_IDS) + 8 * uint32_t(from + k);
+        const uint32_t lo = ld32(id), hi = ld32(id + 4);
+        bool matches = selectedOf(s, lo, hi) && ld8(s + F_SWIPE_FROM);
+        if (!matches) matches = !selectedOf(s, lo, hi) && !ld8(s + F_SWIPE_FROM);
+        if (matches) toggle(ld32(f + 8), lo, hi);
+    }
+    st32(s + F_SWIPE_LAST, uint32_t(item));
+}
+
+// $_2 (touch ended) {this, row, this, row, this}: touches free again; a press that did not move on a medal taps
+// it: the row bounces (front while it does) and the medal's selection toggles; the press state cleared
+void SellMedalScrollView::touchEnded(uint32_t f, uint32_t, uint32_t) {
+    const uint32_t s = ld32(f + 4);
+    st8(s + F_TOUCH_FREE, 1);
+    const uint32_t item = call(a::IScrollProtocol_getItemIndex, {s, ld32(f + 8)});
+    st32(s + F_TAP_INDEX, item);
+    const uint32_t ids = ld32(s + F_ITEM_IDS);
+    if ((ld32(s + F_ITEM_IDS + 4) - ids) >> 3 <= item || !ld8(s + F_PRESSING) || ld8(s + F_PRESS_DONE) ||
+        !(ld32(ids + 8 * item) | ld32(ids + 8 * item + 4))) {
+        st8(s + F_PRESSING, 0);
+        return;
+    }
+    {
+        const uint32_t row = ld32(ld32(s + F_ROWS) + 4 * ld32(f + 8));
+        vcall(row, node::setLocalZOrder, {row, 1});
+        vcall(row, node::setScale, {row, fbits(1.0f)});
+        Frame fr;
+        const uint32_t done = newFunction(fr, VT_TapDone, {});
+        call(fn::Node_runAction, {row, call(a::SceneUtil_createTapAnimation, {row, done})});
+        functionDestroy(done);
+    }
+    const uint32_t s2 = ld32(f + 0xC);
+    const uint32_t row2 = ld32(ld32(s2 + F_ROWS) + 4 * ld32(f + 0x10));
+    vcall(row2, node::setLocalZOrder, {row2, 0});
+    if (ld8(s2 + F_PRESSING)) {
+        const uint32_t id = ld32(s2 + F_ITEM_IDS) + 8 * ld32(s2 + F_TAP_INDEX);
+        toggle(ld32(f + 0x14), ld32(id), ld32(id + 4));
+    }
+    st8(s2 + F_PRESSING, 0);
+    st8(s2 + F_PRESS_DONE, 0);
+    st8(s2 + F_SWIPE_OK, 0);
+}
 
 // ------------------------------------------------------------------------------------------ lifetime
 uint32_t SellMedalScrollView::create() {
@@ -580,3 +769,6 @@ RW_FUNCTION(0x4FFD24, "SellMedalScrollView::setMedalIDs", SellMedalScrollView::s
 RW_FUNCTION(0x4FFF58, "SellMedalScrollView::isDisableMedal", SellMedalScrollView::isDisableMedal);
 RW_FUNCTION(0x500080, "SellMedalScrollView::setSelectedMedal(unsigned long long, bool)", SellMedalScrollView::setSelectedMedal);
 RW_FUNCTION(0x5003B4, "SellMedalScrollView::getSelectedMedals", SellMedalScrollView::getSelectedMedals);
+RW_FUNCTION(0x500C44, "SellMedalScrollView::registItemTouchEvent $_0::operator() (touch began)", SellMedalScrollView::touchBegan);
+RW_FUNCTION(0x500870, "SellMedalScrollView::registItemTouchEvent $_1::operator() (touch moved)", SellMedalScrollView::touchMoved);
+RW_FUNCTION(0x50058C, "SellMedalScrollView::registItemTouchEvent $_2::operator() (touch ended)", SellMedalScrollView::touchEnded);

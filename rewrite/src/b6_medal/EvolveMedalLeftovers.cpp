@@ -47,8 +47,6 @@ constexpr uint32_t IInOutAnimation_runOutAnimation = 0x6F24B5;
 constexpr uint32_t Director_getInstance = rwlib::cocos2d::Director::getInstance;
 constexpr uint32_t DelayTime_create = rwlib::cocos2d::DelayTime::create, CallFunc_create = rwlib::cocos2d::CallFunc::create, Sequence_create = rwlib::cocos2d::Sequence::create;
 constexpr uint32_t AudioLWFNode_create = 0x5EB6B5, FlashMovieView_create = 0x5682A1;
-constexpr uint32_t HandlerMap_insert_unique = 0x530869, HandlerMap_destroy = 0x530811;
-constexpr uint32_t LWF_AddMovieEventHandler = rwlib::LWF::LWF::AddMovieEventHandler;
 constexpr uint32_t function_vb_call = 0x474139, function_vv_assign = 0x4EB9CD;
 constexpr uint32_t GOT_VEC2_ZERO = 0xFD605C, GOT_LINE_BREAK_TAG = 0xFD6930;
 }  // namespace g
@@ -130,25 +128,6 @@ void label(uint32_t root, uint32_t name, uint32_t len, int32_t id) {
     const uint32_t text = findNode(root, name, len);
     call(g::SceneUtil_setShadow, {text, 1});
     setTextId(text, id);
-}
-// the std::string at `pair` = "load" (short, built in place)
-void loadKey(uint32_t pair) {
-    st8(pair, 8);
-    st8(pair + 1, 'l');
-    st8(pair + 2, 'o');
-    st8(pair + 3, 'a');
-    st8(pair + 4, 'd');
-    st8(pair + 5, 0);
-}
-void addHandler(uint32_t lwf, uint32_t name, uint32_t pair) {
-    Frame f;
-    const uint32_t map = f.alloc(12);
-    st32(map + 4, 0);
-    st32(map + 8, 0);
-    st32(map, map + 4);
-    call(g::HandlerMap_insert_unique, {map, map + 4, pair});
-    call(g::LWF_AddMovieEventHandler, {lwf, name, map});
-    call(g::HandlerMap_destroy, {map, ld32(map + 4)});
 }
 
 uint32_t createScene() {
@@ -664,13 +643,13 @@ uint32_t evolveAnswer(uint32_t self, uint32_t okp) {
         call(g::MEMCPY, {text, S_drowMedal001, 12});
         st8(text + 12, 0);
         const uint32_t pair = f.alloc(40);
-        loadKey(pair);
+        lwfLoadKey(pair);
         const uint32_t fo = pair + 16;
         st32(fo, VT_ResultLoad);
         st32(fo + 4, lwfNode);
         st32(fo + 8, me);
         st32(fo + 16, fo);
-        addHandler(lwf, name, pair);
+        lwfAddMovieHandler(lwf, name, pair);
         functionDestroy(fo);
         strFree(pair);
         strFree(name);
@@ -686,7 +665,7 @@ uint32_t evolveAnswer(uint32_t self, uint32_t okp) {
             const uint32_t name = f.alloc(12);
             call(fn::string_init, {name, buf, call(g::STRLEN, {buf})});
             const uint32_t pair = f.alloc(40);
-            loadKey(pair);
+            lwfLoadKey(pair);
             const uint32_t fo = pair + 16;
             st32(fo + 16, 0);
             const uint32_t h = call(fn::operator_new, {0x18});
@@ -697,7 +676,7 @@ uint32_t evolveAnswer(uint32_t self, uint32_t okp) {
                 st32(h + 0x10, lwfNode);
             }
             st32(fo + 16, h);
-            addHandler(lwf, name, pair);
+            lwfAddMovieHandler(lwf, name, pair);
             functionDestroy(fo);
             strFree(pair);
             strFree(name);

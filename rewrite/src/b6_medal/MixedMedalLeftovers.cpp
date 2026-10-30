@@ -44,8 +44,6 @@ constexpr uint32_t Widget_addTouchEventListener = rwlib::cocos2d::ui::Widget::ad
 constexpr uint32_t ImageButton_create = 0x531239, ImageButton_setTargetView = 0x5318C1;
 constexpr uint32_t ImageButton_addTouchEventListener = 0x5315B1;
 constexpr uint32_t AudioLWFNode_create = 0x5EB6B5;
-constexpr uint32_t HandlerMap_insert_unique = 0x530869, HandlerMap_destroy = 0x530811;
-constexpr uint32_t LWF_AddMovieEventHandler = rwlib::LWF::LWF::AddMovieEventHandler;
 constexpr uint32_t WidgetVector_copy = 0x6A8799, WidgetVector_dtor = 0x485A8F, WidgetVector_deallocate = 0x6A2E65;
 constexpr uint32_t MaterialLess = 0x6A02C5;                      // the material order (comparator, a, b)
 constexpr uint32_t Sort3 = 0x6A0425, Sort4 = 0x6A04FB, Sort5 = 0x6A059B;
@@ -101,38 +99,12 @@ void label(uint32_t root, uint32_t name, uint32_t len, int32_t id) {
     call(g::SceneUtil_setShadow, {text, 1});
     setTextId(text, id);
 }
-void addHandler(uint32_t lwf, uint32_t name, uint32_t pair) {
-    Frame f;
-    const uint32_t map = f.alloc(12);
-    st32(map + 4, 0);
-    st32(map + 8, 0);
-    st32(map, map + 4);
-    call(g::HandlerMap_insert_unique, {map, map + 4, pair});
-    call(g::LWF_AddMovieEventHandler, {lwf, name, map});
-    call(g::HandlerMap_destroy, {map, ld32(map + 4)});
-}
-void loadKey(uint32_t pair) {
-    st8(pair, 8);
-    st8(pair + 1, 'l');
-    st8(pair + 2, 'o');
-    st8(pair + 3, 'a');
-    st8(pair + 4, 'd');
-    st8(pair + 5, 0);
-}
 void enterFrameKey(uint32_t pair) {
     st8(pair, 20);
     call(g::MEMCPY, {pair + 1, S_enterFrame, 10});
     st8(pair + 11, 0);
 }
-void rootName(uint32_t s) {
-    st8(s, 10);
-    st8(s + 1, '_');
-    st8(s + 2, 'r');
-    st8(s + 3, 'o');
-    st8(s + 4, 'o');
-    st8(s + 5, 't');
-    st8(s + 6, 0);
-}
+void rootName(uint32_t s) { shortStrAt(s, "_root"); }
 uint32_t strChars(uint32_t s) { return (ld8(s) & 1) ? ld32(s + 8) : s + 1; }
 // an LWF node centred in `parent` and added over it (z 9999)
 uint32_t centredLwf(uint32_t path, uint32_t parent) {
@@ -702,7 +674,7 @@ uint32_t guiltBonus(uint32_t self) {
         }
         st32(fo + 16, e);
         functionDestroy(l4 + 8);
-        addHandler(lwf, name, pair);
+        lwfAddMovieHandler(lwf, name, pair);
         functionDestroy(fo);
         strFree(pair);
         functionDestroy(l3 + 8);
@@ -755,7 +727,7 @@ uint32_t guiltShow(uint32_t self) {
         call(fn::string_init, {name, buf, call(g::STRLEN, {buf})});
         const uint32_t owner = ld32(self + 0x28);
         const uint32_t pair = f.alloc(40);
-        loadKey(pair);
+        lwfLoadKey(pair);
         const uint32_t fo = pair + 16;
         st32(fo + 16, 0);
         const uint32_t digit = value % 10;
@@ -768,7 +740,7 @@ uint32_t guiltShow(uint32_t self) {
             st32(h + 0x10, digit);
         }
         st32(fo + 16, h);
-        addHandler(lwf, name, pair);
+        lwfAddMovieHandler(lwf, name, pair);
         functionDestroy(fo);
         strFree(pair);
         strFree(name);
@@ -805,7 +777,7 @@ uint32_t guiltShow(uint32_t self) {
         }
         st32(fo + 16, h);
         call(g::WidgetVector_dtor, {l2 + 8});
-        addHandler(lwf, name, pair);
+        lwfAddMovieHandler(lwf, name, pair);
         functionDestroy(fo);
         strFree(pair);
         call(g::WidgetVector_dtor, {l + 8});
@@ -828,6 +800,71 @@ uint32_t guiltResultEnd(uint32_t self, uint32_t moviePtr) {
     call(g::GuiltFinish, {self + 8});
     return call(g::LWF_ClearAllEventHandlers, {ld32(ld32(self + 4) + LWFNODE_LWF)});
 }
+
+// ---------------------------------------------------------------- the result digits, the skip button, the change
+// popup's answer
+constexpr uint32_t S_ResultDigitLwf = 0xE0521B;  // "lwf/medal/guilt_bonus/GuiltBonus_Yfix%d/GuiltBonus_Yfix%d.lwf"
+constexpr uint32_t S_MaxDigitLwf = 0xE05259;     // "lwf/medal/guilt_bonus/GuiltBonus_Rfix%d/GuiltBonus_Rfix%d.lwf"
+constexpr uint32_t S_Empty = 0xDF8A1A;           // ""
+constexpr uint32_t V_ATTACH_LWF = 0x2F0;         // AudioLWFNode: (sret shared_ptr, node, path, movie, name, function)
+constexpr uint32_t V_SET_TOUCH_ENABLED = 0x29C;  // ui::Widget::setTouchEnabled
+constexpr uint32_t IMAGEBUTTON_SELECTABLE = 0x272, LWF_ROOT_MOVIE = 0x18;
+constexpr uint32_t VT_GuiltCloseEnd = 0xF65A74;  // the change popup's close end {layer, shadow, popup}
+constexpr uint32_t AudioLWFNode_stopAllSEs = 0x5EBB01;
+constexpr uint32_t SceneUtil_createClosePopupAnimation = 0x45BC61;
+
+// a "numN" load {n, owner, lwf node, digit}(Movie*): the first one hides the owner; the digit's LWF (`path` with
+// the digit) attached at the movie
+void digitLoad(uint32_t self, uint32_t moviePtr, uint32_t path) {
+    const uint32_t movie = ld32(moviePtr);
+    if (!ld32(self + 4)) vcall(ld32(self + 8), node::setVisible, {ld32(self + 8), 0});
+    const uint32_t lwfNode = ld32(self + 0xC);
+    const uint32_t attach = ld32(ld32(lwfNode) + V_ATTACH_LWF);
+    Frame f;
+    const uint32_t ret = f.alloc(8);
+    const uint32_t buf = stringBuffer(f, {path, ld32(self + 0x10), ld32(self + 0x10)});
+    const uint32_t none = newEmptyFunction(f);
+    call(attach, {ret, lwfNode, buf, movie, S_Empty, none});
+    releaseIf(ld32(ret + 4));
+    functionDestroy(none);
+    return;
+}
+void resultDigit(uint32_t self, uint32_t moviePtr) { digitLoad(self, moviePtr, S_ResultDigitLwf); }
+void maxDigit(uint32_t self, uint32_t moviePtr) { digitLoad(self, moviePtr, S_MaxDigitLwf); }
+
+// the skip button {button, lwf node}(sender, type): the animation jumps to its last frame, its sounds stop and the
+// button goes
+void guiltSkipTap(uint32_t self, uint32_t, uint32_t typep) {
+    if (ld32(typep) != 2) return;
+    call(fn::AudioPlaySystemSEDecide, {});
+    st8(ld32(self + 4) + IMAGEBUTTON_SELECTABLE, 0);
+    const uint32_t movie = ld32(ld32(ld32(self + 8) + LWFNODE_LWF) + LWF_ROOT_MOVIE);
+    call(rwlib::LWF::Movie::GotoAndPlay__i, {movie, ld32(movie + MOVIE_TOTAL_FRAMES)});
+    const uint32_t lwfNode = ld32(self + 8);
+    if (!lwfNode) return;
+    call(AudioLWFNode_stopAllSEs, {lwfNode});
+    vcall(ld32(self + 4), node::removeFromParent, {ld32(self + 4)});
+    return;
+}
+
+// openChangeGuiltPopup's answer {ok, close, window, layer, shadow, popup, function<void(bool)>}(yes): both buttons
+// off, the decide / cancel sound, the window closes (its end removes the popup), the shadow fades, the answer
+void guiltPopupClosed(uint32_t self, uint32_t yesRef) {
+    const uint8_t yes = ld8(yesRef);
+    vcall(ld32(self + 8), V_SET_TOUCH_ENABLED, {ld32(self + 8), 0});
+    vcall(ld32(self + 0xC), V_SET_TOUCH_ENABLED, {ld32(self + 0xC), 0});
+    call(yes ? fn::AudioPlaySystemSEDecide : fn::AudioPlaySystemSECancel, {});
+    const uint32_t window = ld32(self + 0x10);
+    {
+        Frame f;
+        const uint32_t end = newFunction(f, VT_GuiltCloseEnd, {ld32(self + 0x14), ld32(self + 0x18), ld32(self + 0x1C)});
+        call(fn::Node_runAction, {window, call(SceneUtil_createClosePopupAnimation, {window, end})});
+        functionDestroy(end);
+    }
+    call(fn::Node_runAction, {ld32(self + 0x18), call(g::FadeTo_create, {fbits(0.1f), 0})});
+    if (ld32(self + 0x30)) call(fn::function_vb_call, {self + 0x20, yes ? 1u : 0u});
+    return;
+}
 }  // namespace
 
 RW_FUNCTION(0x69CC54, "SceneMixedMedal::openSkillMixPopup(function<void(bool)>)", openSkillMixPopup);
@@ -842,3 +879,7 @@ RW_FUNCTION(0x6A1136, "SceneMixedMedal material cell touch (sub_6A1136)", materi
 RW_FUNCTION(0x6A1418, "SceneMixedMedal guilt bonus animation (sub_6A1418)", guiltBonus);
 RW_FUNCTION(0x6A20D8, "SceneMixedMedal guilt bonus result (sub_6A20D8)", guiltShow);
 RW_FUNCTION(0x6A2DE4, "SceneMixedMedal guilt result enterFrame end (sub_6A2DE4)", guiltResultEnd);
+RW_FUNCTION(0x6A2F08, "SceneMixedMedal::openResultPopup guilt result digit load (sub_6A2F08)", resultDigit);
+RW_FUNCTION(0x6A3270, "SceneMixedMedal::openResultPopup guilt max digit load (sub_6A3270)", maxDigit);
+RW_FUNCTION(0x6A35EC, "SceneMixedMedal::openResultPopup $_42 skip button (sub_6A35EC)", guiltSkipTap);
+RW_FUNCTION(0x6A5204, "SceneMixedMedal::openChangeGuiltPopup $_23::operator()(bool)", guiltPopupClosed);

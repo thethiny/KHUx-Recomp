@@ -749,3 +749,70 @@ static void storyInAnimationDone(uint32_t functor) {
     if (rw::load<uint32_t>(functor + 0x18)) rw::call(0x470E69, {functor + 8});   // std::function<void()>::operator()
 }
 RW_FUNCTION(0x72AA54, "SceneAdventureSelect::storyInAnimation::$_48 operator()", storyInAnimationDone);
+
+// ------------------------------------------------------------------------------------------------ the friends step
+namespace {
+constexpr uint32_t FacebookManager_getUserID = 0x4E57F9;       // (sret string, fb)
+constexpr uint32_t APIManager_executeLinkMembersGet = 0x4D3FB1; // (api, const vector<string>& ids, platform, const function<void(bool)>&)
+constexpr uint32_t StringVector_pushSlow = 0x484465;           // vector<string>::__push_back_slow_path(string&&)
+constexpr uint32_t StringVector_dtor = 0x47363F;
+constexpr uint32_t string_compare = 0x47CBD5;                  // std::string::compare(const char*)
+constexpr uint32_t S_Empty = 0xDF8A1A;
+constexpr uint32_t VT_selectApi_members2 = 0xF6D218;           // the linked members' answer {callback} (heap 0x20)
+constexpr uint32_t PLATFORM_FACEBOOK = 1;
+
+// callAdventureSelectAPI's last step ($_0's 7th lambda) {callback}(ok, -, string, friends*): logged in to Facebook ->
+// the player's own id added to the friends' ids and their linked members fetched (the callback with the answer);
+// not logged in -> the callback(true) at once
+void selectApiFriends(uint32_t functor, uint32_t okRef, uint32_t, uint32_t strArg, uint32_t friendsRef) {
+    Frame f;
+    const uint32_t moved = f.alloc(12);           // the string argument, taken over
+    strMove(moved, strArg);
+    const uint8_t ok = ld8(okRef);
+    uint32_t friends = ld32(friendsRef);
+    const uint32_t none = f.alloc(12);
+    st32(none, 0);
+    st32(none + 4, 0);
+    st32(none + 8, 0);
+    if (!ok || !friends || ld32(friends + 4) == ld32(friends)) friends = none;
+    const uint32_t user = f.alloc(12);
+    call(FacebookManager_getUserID, {user, call(FacebookManager_getInstance, {})});
+    if (call(string_compare, {user, S_Empty})) {
+        const uint32_t id = newStr(f, strIsLong(user) ? ld32(user + 8) : user + 1);
+        const uint32_t end = ld32(friends + 4);
+        if (end >= ld32(friends + 8)) {
+            call(StringVector_pushSlow, {friends, id});
+        } else {
+            uint32_t n = 0;
+            if (end) {
+                strMove(end, id);
+                n = ld32(friends + 4);
+            }
+            st32(friends + 4, n + 12);
+        }
+        strFree(id);
+        apiBusyDropPayment();
+        const uint32_t api = call(fn::APIManager_getInstance, {});
+        const uint32_t copy = f.alloc(24);
+        call(FunctionVB_copy, {copy, functor + 8});
+        const uint32_t next = f.alloc(24);
+        st32(next + 16, 0);
+        const uint32_t obj = call(fn::operator_new, {0x20});
+        if (obj) {
+            st32(obj, VT_selectApi_members2);
+            call(FunctionVB_move, {obj + 8, copy});
+        }
+        st32(next + 16, obj);
+        call(APIManager_executeLinkMembersGet, {api, friends, PLATFORM_FACEBOOK, next});
+        functionDestroy(next);
+        functionDestroy(copy);
+    } else {
+        apiBusyDropPayment(0);
+        if (ld32(functor + 8 + 16)) call(FunctionVB_call, {functor + 8, 1});
+    }
+    strFree(user);
+    call(StringVector_dtor, {none});
+    strFree(moved);
+}
+}  // namespace
+RW_FUNCTION(0x7331AC, "SceneAdventureSelect::callAdventureSelectAPI::$_0 (level 7: Facebook friends) operator()", selectApiFriends);

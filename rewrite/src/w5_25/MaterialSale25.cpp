@@ -260,3 +260,23 @@ RW_FUNCTION(0x6899D8, "SceneSellOutMaterialItem::openSellCheckDialog $_17 materi
             MaterialSale25::less);
 RW_FUNCTION(0x689B54, "std::__sort3<$_17 material comparator&, ull*> (sub_689B54)", MaterialSale25::sort3);
 RW_FUNCTION(0x474DCC, "SceneUtil::openSellOkPopup(int, bool)", MaterialSale25::openSellOkPopup);
+
+namespace {
+// openSellOkPopup $_83 (OK) {OK, popup, layer, shadow, -}: OK off, the decide sound, the popup shrinks (its end
+// {layer, shadow, +0x14}) and the shadow fades
+void sellOkTouched(uint32_t f) {
+    constexpr uint32_t VT_SellOkEnd = 0xF54248, SceneUtil_createClosePopupAnimation = 0x45BC61;
+    vcall(ld32(f + 4), node::setTouchEnabled, {ld32(f + 4), 0});
+    call(fn::AudioPlaySystemSEDecide, {});
+    const uint32_t popup = ld32(f + 8);
+    {
+        Frame fr;
+        const uint32_t end = newFunction(fr, VT_SellOkEnd, {ld32(f + 0xC), ld32(f + 0x10), ld32(f + 0x14)});
+        call(fn::Node_runAction, {popup, call(SceneUtil_createClosePopupAnimation, {ld32(f + 0xC), end})});
+        functionDestroy(end);
+    }
+    call(fn::Node_runAction, {ld32(f + 0x10), call(fn::FadeTo_create, {fbits(0.15f), 0})});
+}
+}  // namespace
+
+RW_FUNCTION(0x48168C, "SceneUtil::openSellOkPopup $_83::operator()", sellOkTouched);

@@ -82,7 +82,7 @@ constexpr uint32_t VT_CLOSE = 0xF58678;          // Close_Button touch: (dialog,
 constexpr uint32_t VT_PARTY = 0xF5859C;          // ImageButton_party touch (heap, 0x28 bytes)
 constexpr uint32_t VT_MEDAL_INFO = 0xF58570;     // the revolver's medal info button (no captures)
 constexpr uint32_t VT_LUX_GAUGE = 0xF58544;      // calcLuxGaugePer callback: (layer, Lux atlas)
-constexpr uint32_t VT_FB_SHARE = 0xF584B8;       // Button_FB_Share touch: (dialog)
+constexpr uint32_t VT_FB_SHARE = 0xF584C0;       // Button_FB_Share touch: (dialog)
 
 // texts
 constexpr int32_t TXT_MONEY = 100300001, TXT_MOGU = 103400001, TXT_LAST_LOGIN = 102100008, TXT_TIMEZONE = 102400001,

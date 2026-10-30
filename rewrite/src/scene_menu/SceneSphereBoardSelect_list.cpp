@@ -525,3 +525,143 @@ void Self::backToMyPage(Addr) {
     functionDestroy(layer);
 }
 RW_FUNCTION(0x6BB958, "SceneSphereBoardSelect::backScene $_14 __func::operator()", SceneSphereBoardSelect::backToMyPage);
+
+// ------------------------------------------------------------------------------------------------ the board list's lambdas
+namespace {
+namespace sb {
+constexpr uint32_t F_BUSY = 0x322, F_BOUGHT_FLAG = 0x330, F_TYPE = 0x2B0, F_SCROLL = 0x2B4;
+constexpr uint32_t SCROLL_SPHERES = 0x3C4;      // SphereScrollView: vector<shared_ptr<SafeBuffer>> (user sphere rows)
+constexpr uint32_t SM_FLAG_2F7 = 0x2F7;
+constexpr uint32_t SPHERE_KIND = 0x98, SPHERE_PRICE = 0xA4;   // master::Sphere
+constexpr uint32_t KIND_SHOP = 2, TYPE_NORMAL = 1;
+constexpr uint32_t USER_SPHERE_OWNED = 0x1C;    // map<int, UserSphere::Sphere> node: the board is owned
+constexpr uint32_t VT_BuyAnswer = 0xF66700;     // $_6's buy answer {cell}
+constexpr uint32_t VT_NextLayer = 0xF667B0;     // changeSceneNext $_3's layer factory {board}
+constexpr uint32_t S_SelectOn = 0xDFD1AC, S_JewelPanel = 0xDFD181, S_LBJewel = 0xDFD18D;
+constexpr uint32_t calc_index = 0x6B83C5, changeSceneNext = 0x6B8311;
+constexpr uint32_t openBoardBuyDialog = 0x6BA139;           // (-, function<void(bool, bool)>, board, price)
+constexpr uint32_t Sphere_create = 0x78CF21;                // master::Sphere::create(shared_ptr out, id)
+constexpr uint32_t UserSphereMap_find = 0x503479;           // map<int, UserSphere::Sphere>::find
+constexpr uint32_t AppState_removeNewAvatarBoardIDs = 0x4EBF6D, AppState_getNewAvatarBoardIDs = 0x4EBE3B;
+constexpr uint32_t SphereScrollView_setSphereBoardNewId = 0x503279;
+constexpr uint32_t IntVector_copy = 0x4AF707, IntVector_dtor = 0x478961;
+constexpr uint32_t BuyMagicStoneDialog_open = 0x588CAD;     // (const function<void()>&, bool)
+constexpr uint32_t SM_changeSceneLayer = 0x612B99;
+constexpr uint32_t MEMCPY = 0x40E164;
+
+// the board's "new" mark dropped when `id` is among the new boards (of this list's type: a shop board counts as
+// a normal one); `refresh` also gives the list the new ids again
+void dropNewMark(uint32_t me, uint32_t f, uint32_t id, bool refresh) {
+    const uint32_t ids = f + 0x10;
+    if (ld32(ids + 4) == ld32(ids)) return;
+    for (uint32_t k = 0; k < (ld32(ids + 4) - ld32(ids)) >> 2; k++) {
+        const uint32_t idk = ld32(ld32(ids) + 4 * k);
+        Frame fr;
+        const uint32_t sp = masterRow(fr, Sphere_create, idk);
+        const int32_t kind = safe32(ld32(sp), SPHERE_KIND);
+        const int32_t type = int32_t(ld32(me + F_TYPE));
+        if (id == idk && (type == kind || (kind == int32_t(KIND_SHOP) && type == int32_t(TYPE_NORMAL)))) {
+            call(AppState_removeNewAvatarBoardIDs, {call(fn::AppState_getInstance, {}), id});
+            if (refresh) {
+                const uint32_t copy = fr.alloc(12);
+                call(IntVector_copy, {copy, call(AppState_getNewAvatarBoardIDs, {call(fn::AppState_getInstance, {})})});
+                call(SphereScrollView_setSphereBoardNewId, {ld32(me + F_SCROLL), copy});
+                call(IntVector_dtor, {copy});
+            }
+            sharedRelease(sp);
+            return;
+        }
+        sharedRelease(sp);
+    }
+}
+}  // namespace sb
+}  // namespace
+
+// initSphereBoardList $_6 {this, user spheres (map, shared_ptr), new board ids}(index, cell): a board tapped - an
+// owned board (or a non-shop one) opens (its "new" mark dropped); a shop board not owned yet asks to buy it
+static void boardTapped(uint32_t f, uint32_t, uint32_t cellRef) {
+    const uint32_t me = ld32(f + 4);
+    if (ld8(me + sb::F_BUSY)) return;
+    const uint32_t cell = ld32(cellRef);
+    st8(me + sb::F_BOUGHT_FLAG, 0);
+    const int32_t index = int32_t(call(sb::calc_index, {me}));
+    const uint32_t row = ld32(ld32(ld32(me + sb::F_SCROLL) + sb::SCROLL_SPHERES) + 8 * uint32_t(index));
+    const uint32_t id = uint32_t(safe32(row, 0));
+    Frame f2;
+    const uint32_t key = f2.alloc(4);
+    st32(key, id);
+    const uint32_t sphere = masterRow(f2, sb::Sphere_create, id);
+    if (safe32(ld32(sphere), sb::SPHERE_KIND) == int32_t(sb::KIND_SHOP)) {
+        const uint32_t map = ld32(f + 8);
+        const uint32_t it = call(sb::UserSphereMap_find, {map, key});
+        if (it == map + 4) {
+            sharedRelease(sphere);
+            return;
+        }
+        if (!ld8(it + sb::USER_SPHERE_OWNED)) {
+            uint32_t mark;
+            {
+                Frame t;
+                const uint32_t name = t.alloc(12);
+                st8(name, 18);
+                call(sb::MEMCPY, {name + 1, sb::S_SelectOn, 9});
+                st8(name + 10, 0);
+                mark = SceneUtil::searchNodeByName(cell, name);
+                strFree(name);
+            }
+            if (mark) vcall(mark, node::setVisible, {mark, 0});
+            sb::dropNewMark(me, f, id, true);
+            Frame t;
+            const uint32_t answer = newFunction(t, sb::VT_BuyAnswer, {cell});
+            const int32_t price = safe32(ld32(sphere), sb::SPHERE_PRICE);
+            call(sb::openBoardBuyDialog, {0, answer, id, uint32_t(price)});
+            functionDestroy(answer);
+            sharedRelease(sphere);
+            return;
+        }
+    }
+    st8(sceneManager() + sb::SM_FLAG_2F7, 0);
+    sb::dropNewMark(me, f, id, false);
+    call(fn::AudioPlaySystemSEDecide, {});
+    call(sb::changeSceneNext, {me, id});
+    sharedRelease(sphere);
+}
+RW_FUNCTION(0x6BC1C8, "SceneSphereBoardSelect::initSphereBoardList $_6::operator()(int, Widget*)", boardTapped);
+
+// $_6's buy answer {cell}(bought, wantJewels): bought -> the cell shows the Jewel panel instead of the price;
+// short of Jewels -> the Buy Jewels dialog
+static void boardBuyAnswer(uint32_t f, uint32_t boughtRef, uint32_t jewelsRef) {
+    if (ld8(boughtRef)) {
+        uint32_t panel, price;
+        {
+            Frame t;
+            const uint32_t name = newStr(t, sb::S_JewelPanel);
+            panel = SceneUtil::searchNodeByName(ld32(f + 4), name);
+            strFree(name);
+        }
+        {
+            Frame t;
+            const uint32_t name = newShortStr(t, "LB_Jewel");
+            price = SceneUtil::searchNodeByName(ld32(f + 4), name);
+            strFree(name);
+        }
+        vcall(panel, node::setVisible, {panel, 1});
+        vcall(price, node::setVisible, {price, 0});
+    } else if (ld8(jewelsRef)) {
+        Frame t;
+        const uint32_t none = newEmptyFunction(t);
+        call(sb::BuyMagicStoneDialog_open, {none, 0});
+        functionDestroy(none);
+    }
+}
+RW_FUNCTION(0x6BC598, "SceneSphereBoardSelect::initSphereBoardList $_6 buy answer::operator()(bool, bool)", boardBuyAnswer);
+
+// changeSceneNext $_3 {board}: the board's scene (its layer factory {board})
+static void nextScene(uint32_t f) {
+    const uint32_t sm = sceneManager();
+    Frame t;
+    const uint32_t factory = newFunction(t, sb::VT_NextLayer, {ld32(f + 4)});
+    call(sb::SM_changeSceneLayer, {sm, factory, 1, 1, 1});
+    functionDestroy(factory);
+}
+RW_FUNCTION(0x6BCCF0, "SceneSphereBoardSelect::changeSceneNext $_3::operator()", nextScene);

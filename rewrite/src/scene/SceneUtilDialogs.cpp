@@ -377,3 +377,188 @@ void SceneUtil::openContinuPopup(Addr callback) {
     if (userPointCtl) call(fn::shared_release, {userPointCtl});
 }
 RW_FUNCTION(0x45DDE0, "SceneUtil::openContinuPopup", SceneUtil::openContinuPopup);
+
+// ================================================================================================ the lambdas
+namespace {
+namespace dialogs {
+constexpr uint32_t FunctionBB_call = 0x48B159;             // std::function<void(bool,bool)>::operator()
+constexpr uint32_t SceneUtil_openContinueDialog = 0x45D9F1; // (function<void(bool,bool)> by value)
+constexpr uint32_t SceneUtil_openOkCancelDialog4Line = 0x45C951;
+constexpr uint32_t VT_ContinueJewels = 0xF55008;           // $_8's dialog answer {callback (bool,bool)} (heap 0x20)
+constexpr uint32_t VT_ContinuPopupEnd = 0xF54F00, VT_ChargeApPopupEnd = 0xF55060;   // {layer, shadow, popup}
+constexpr int32_t TXT_CONTINUE_JEWELS = 103100007;
+
+// $_13 (openContinuPopup closed) {popup, layer, shadow, -, callback (bool) +0x18}(ok): the popup shrinks, the
+// shadow fades, callback(ok)
+void continuPopupClosed(uint32_t f, uint32_t okRef) {
+    const uint32_t ok = ld8(okRef);
+    const uint32_t popup = ld32(f + 8);
+    {
+        Frame fr;
+        const uint32_t end = newFunction(fr, VT_ContinuPopupEnd, {ld32(f + 0xC), ld32(f + 0x10), popup});
+        shrinkPopup(popup, end, ld32(f + 0x10));
+    }
+    call(fn::function_vb_call, {f + 0x18, ok != 0});
+}
+// $_7 (openChargeApPopup closed) {-, callback (bool) +8, popup, layer, shadow, OK, Close}(ok): callback(ok), the
+// decide / cancel sound, the popup shrinks, the shadow fades, both buttons off
+void chargeApPopupClosed(uint32_t f, uint32_t okRef) {
+    const uint32_t ok = ld8(okRef);
+    call(fn::function_vb_call, {f + 8, ok});
+    call(ok ? fn::AudioPlaySystemSEDecide : fn::AudioPlaySystemSECancel, {});
+    const uint32_t popup = ld32(f + 0x20);
+    {
+        Frame fr;
+        const uint32_t end = newFunction(fr, VT_ChargeApPopupEnd, {ld32(f + 0x24), ld32(f + 0x28), popup});
+        shrinkPopup(popup, end, ld32(f + 0x28));
+    }
+    vcall(ld32(f + 0x2C), node::setTouchEnabled, {ld32(f + 0x2C), 0});
+    vcall(ld32(f + 0x30), node::setTouchEnabled, {ld32(f + 0x30), 0});
+}
+// $_8 (openContinueDialog's answer) {-, callback (bool,bool) +8}(ok): ok -> callback(true, false); else "use
+// jewels to continue?" (its answer gets the callback)
+void continueAnswered(uint32_t f, uint32_t okRef) {
+    if (ld8(okRef)) {
+        call(FunctionBB_call, {f + 8, 1, 0});
+        return;
+    }
+    Frame fr;
+    const uint32_t td = textData(fr, TXT_CONTINUE_JEWELS);
+    const uint32_t message = newStr(fr, textDataStr(td));
+    const uint32_t cb = fr.alloc(24);
+    call(FunctionBB_copy, {cb, f + 8});
+    const uint32_t answer = fr.alloc(24);
+    st32(answer + 16, 0);
+    const uint32_t h = call(fn::operator_new, {0x20});
+    if (h) {
+        st32(h, VT_ContinueJewels);
+        call(fn::function_vbb_move, {h + 8, cb});
+    }
+    st32(answer + 16, h);
+    call(SceneUtil_openOkCancelDialog4Line, {message, answer, 0, 0});
+    functionDestroy(answer);
+    functionDestroy(cb);
+    strFree(message);
+    sharedRelease(td);
+}
+// $_8's answer {-, callback (bool,bool) +8}(yes): yes -> callback(false, false); no -> the continue dialog again
+void continueJewelsAnswered(uint32_t f, uint32_t yesRef) {
+    if (ld8(yesRef)) {
+        call(FunctionBB_call, {f + 8, 0, 0});
+        return;
+    }
+    Frame fr;
+    const uint32_t cb = fr.alloc(24);
+    call(FunctionBB_copy, {cb, f + 8});
+    call(SceneUtil_openContinueDialog, {cb});
+    functionDestroy(cb);
+}
+// openChargeApPopup $_135's AP countdown end {layer, a, b}: the countdown label forgotten, a and b removed
+void apCountdownEnd(uint32_t f) {
+    st32(sceneManager() + SceneManager_apRecoveryText, 0);
+    vcall(ld32(f + 4), node::removeChild, {ld32(f + 4), ld32(f + 8), 1});
+    vcall(ld32(f + 4), node::removeChild, {ld32(f + 4), ld32(f + 0xC), 1});
+}
+}  // namespace dialogs
+}  // namespace
+
+RW_FUNCTION(0x48B3A8, "SceneUtil::openContinuPopup $_13::operator()(bool) (closed)", dialogs::continuPopupClosed);
+RW_FUNCTION(0x48BF80, "SceneUtil::openChargeApPopup $_7::operator()(bool) (closed)", dialogs::chargeApPopupClosed);
+RW_FUNCTION(0x48BA34, "SceneUtil::openContinueDialog $_8::operator()(bool)", dialogs::continueAnswered);
+RW_FUNCTION(0x48BD38, "SceneUtil::openContinueDialog $_8 lambda(bool)#1::operator()", dialogs::continueJewelsAnswered);
+RW_FUNCTION(0x48C126, "SceneUtil::openChargeApPopup $_135 lambda()#1::operator()", dialogs::apCountdownEnd);
+
+namespace {
+namespace chargeap {
+constexpr uint32_t Misc_create = 0x786D5D, SafeBuffer_read = 0x45A269;
+constexpr uint32_t SceneUtil_hasMagicStone = 0x45DD29;          // (jewels needed) -> 1 when the player has them
+constexpr uint32_t APIManager_executeShopApRecover = 0x4CDF39;  // (api, function<void(bool)>)
+constexpr uint32_t SceneManager_updateHeader = 0x611169;
+constexpr uint32_t SceneUtil_openOkCancelDialog4Line = 0x45C951, SceneUtil_openOkDialog4Line = 0x45C775;
+constexpr uint32_t VT_Recovered = 0xF55168;      // $_3's request answer {callback (bool,bool)} (heap 0x20)
+constexpr uint32_t VT_NoJewels = 0xF5513C;       // the "not enough jewels" dialog's answer (heap 0x20)
+constexpr uint32_t VT_RecoveredOk = 0xF55194;    // the "AP recovered" dialog's answer (heap 0x20)
+constexpr uint32_t VT_RecoverError = 0xF551C0;
+constexpr uint32_t SE_ERROR = 509000180;
+constexpr int32_t TXT_NO_JEWELS = 102600016, TXT_RECOVERED = 102600019;
+
+// a heap __func `vt` {callback (bool,bool) moved from `cb`} into `answer`
+void callbackAnswer(uint32_t answer, uint32_t vt, uint32_t cb) {
+    st32(answer + 16, 0);
+    const uint32_t h = call(fn::operator_new, {0x20});
+    if (h) {
+        st32(h, vt);
+        call(fn::function_vbb_move, {h + 8, cb});
+    }
+    st32(answer + 16, h);
+}
+
+// $_3 (the AP popup closed) {-, callback (bool,bool) +8}(ok): ok -> with the jewels (master Misc 112): the AP
+// recovered (its answer gets the callback); without: the error sound and "not enough jewels" (likewise)
+void popupClosed(uint32_t f, uint32_t okRef) {
+    if (!ld8(okRef)) return;
+    uint32_t price;
+    {
+        Frame fr;
+        const uint32_t row = fr.alloc(8), value = fr.alloc(4);
+        call(Misc_create, {row, MISC_AP_RECOVERY});
+        const uint32_t sb = ld32(row);
+        call(SafeBuffer_read, {sb, value, ld32(sb + 0xC) + 4, 4, 4});
+        price = ld32(value);
+        sharedRelease(row);
+    }
+    Frame fr;
+    const uint32_t cb = fr.alloc(24);
+    if (call(SceneUtil_hasMagicStone, {price}) == 1) {
+        call(FunctionBB_copy, {cb, f + 8});
+        call(fn::SceneManager_enableLoadingIndicator, {sceneManager(), 1});
+        const uint32_t api = call(fn::APIManager_getInstance, {});
+        const uint32_t tmp = fr.alloc(24), answer = fr.alloc(24);
+        functionCopy(tmp, cb);
+        callbackAnswer(answer, VT_Recovered, tmp);
+        call(APIManager_executeShopApRecover, {api, answer});
+        functionDestroy(answer);
+        functionDestroy(tmp);
+    } else {
+        call(FunctionBB_copy, {cb, f + 8});
+        playLayerSE(SE_ERROR);
+        const uint32_t td = textData(fr, TXT_NO_JEWELS);
+        const uint32_t message = newStr(fr, textDataStr(td));
+        const uint32_t tmp = fr.alloc(24), answer = fr.alloc(24);
+        functionCopy(tmp, cb);
+        callbackAnswer(answer, VT_NoJewels, tmp);
+        call(SceneUtil_openOkCancelDialog4Line, {message, answer, 0, 0});
+        functionDestroy(answer);
+        functionDestroy(tmp);
+        strFree(message);
+        sharedRelease(td);
+    }
+    functionDestroy(cb);
+}
+// $_3's request answer {-, callback (bool,bool) +8}(ok): the indicator off; ok -> the header updated and "AP
+// recovered" (its answer gets the callback); else the API error
+void recovered(uint32_t f, uint32_t okRef) {
+    const uint32_t ok = ld8(okRef);
+    call(fn::SceneManager_enableLoadingIndicator, {sceneManager(), 0});
+    if (!ok) {
+        apiErrorDialogIfShown(VT_RecoverError);
+        return;
+    }
+    call(SceneManager_updateHeader, {sceneManager()});
+    Frame fr;
+    const uint32_t td = textData(fr, TXT_RECOVERED);
+    const uint32_t message = newStr(fr, textDataStr(td));
+    const uint32_t cb = fr.alloc(24), answer = fr.alloc(24);
+    call(FunctionBB_copy, {cb, f + 8});
+    callbackAnswer(answer, VT_RecoveredOk, cb);
+    call(SceneUtil_openOkDialog4Line, {message, answer, 0});
+    functionDestroy(answer);
+    functionDestroy(cb);
+    strFree(message);
+    sharedRelease(td);
+}
+}  // namespace chargeap
+}  // namespace
+
+RW_FUNCTION(0x48C4B0, "SceneUtil::openChargeApDialog $_3::operator()(bool)", chargeap::popupClosed);
+RW_FUNCTION(0x48CB44, "SceneUtil::openChargeApDialog $_3 lambda(bool)#1::operator()", chargeap::recovered);

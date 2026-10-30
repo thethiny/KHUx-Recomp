@@ -177,3 +177,69 @@ uint32_t popUpRaidBossInfo(uint32_t info, uint32_t done) {
 }  // namespace
 
 RW_FUNCTION(0x5072F4, "popUpRaidBossInfo(const RaidBase::Info&, function<void()>)", popUpRaidBossInfo);
+
+// ------------------------------------------------------------------------------------------------ an incentive row
+namespace {
+constexpr uint32_t S_TxtIncentiveLabelD = 0xDFD49E;   // "Txt_Incentive_Label%d"
+constexpr uint32_t S_ItemPanelD = 0xDFD4B4;           // "ItemPanel%d"
+constexpr uint32_t S_Empty = 0xDF8A1A;
+constexpr int32_t TXT_INCENTIVE = 103101055;
+constexpr uint32_t ITEM_PANEL_STEP = 88;
+constexpr uint32_t BattleUtil_calc_many_lux_level = 0x4970FD;   // (level gap, Lux base, count)
+constexpr uint32_t SceneUtil_setItemImageData = 0x46C71D;       // (string& image, string& frame, type, id, bool)
+constexpr uint32_t SceneUtil_setShadow = 0x45BD15;
+constexpr uint32_t RankingRewardScrollView_setIncentiveItem = 0x55E4D1;
+constexpr uint32_t TextData_format = 0x492929;                  // (string out, type, id, ...)
+constexpr uint32_t Vec2_ctor = rwlib::cocos2d::Vec2::ctor_base__ff, Vec2_dtor = rwlib::cocos2d::Vec2::dtor_base;
+
+// the node printf(fmt, n) under `root`
+uint32_t nodeFmt(uint32_t root, uint32_t fmt, uint32_t n) {
+    Frame f;
+    const uint32_t s = newStr(f, stringBuffer(f, {fmt, n}));
+    const uint32_t node = SceneUtil::searchNodeByName(root, s);
+    strFree(s);
+    return node;
+}
+}  // namespace
+
+// sub_5085C8(root, panels, k, type, param, id, count, Lux base, level gap, shown): incentive row k's label shown or
+// not; shown: the reward's icon in "ItemPanel<k+1>" (88 apart; Lux rewards scaled by the level gap) and the label's
+// text
+uint32_t incentiveRow(uint32_t root, uint32_t panels, uint32_t k, uint32_t type, uint32_t param, uint32_t id,
+                      uint32_t count, uint32_t luxBase, uint32_t levelGap, uint32_t shown) {
+    const uint32_t label = nodeFmt(root, S_TxtIncentiveLabelD, k + 1);
+    vcall(label, node::setVisible, {label, shown});
+    if (!shown) return 0x8AC;
+    const uint32_t n = (type == 4 || type == 11) ? call(BattleUtil_calc_many_lux_level, {levelGap, luxBase, count}) : count;
+    Frame f;
+    const uint32_t image = f.alloc(12), frame = f.alloc(12), frameCopy = f.alloc(12), imageCopy = f.alloc(12);
+    strInit(image, S_Empty, 0);
+    strInit(frame, S_Empty, 0);
+    call(SceneUtil_setItemImageData, {image, frame, type, id, 0});
+    const uint32_t panel = nodeFmt(panels, S_ItemPanelD, k + 1);
+    {
+        const uint32_t setPos = ld32(ld32(panel) + node::setPosition);
+        Frame p;
+        const uint32_t pos = p.alloc(8);
+        call(Vec2_ctor, {pos, fbits(float(int32_t(ITEM_PANEL_STEP * k))), fbits(0.0f)});
+        call(setPos, {panel, pos});
+        call(Vec2_dtor, {pos});
+    }
+    strCopy(frameCopy, frame);
+    strCopy(imageCopy, image);
+    call(RankingRewardScrollView_setIncentiveItem, {panel, type, param, id, frameCopy, imageCopy, n, k + 6, 0});
+    strFree(imageCopy);
+    strFree(frameCopy);
+    call(SceneUtil_setShadow, {label});
+    {
+        Frame t;
+        const uint32_t text = t.alloc(12);
+        call(TextData_format, {text, 0, uint32_t(TXT_INCENTIVE)});
+        setTextC(label, strIsLong(text) ? ld32(text + 8) : text + 1);
+        strFree(text);
+    }
+    strFree(frame);
+    strFree(image);
+    return 0x8AC;
+}
+RW_FUNCTION(0x5085C8, "RaidBossScrollView incentive row (sub_5085C8)", incentiveRow);
